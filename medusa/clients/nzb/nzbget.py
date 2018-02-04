@@ -80,7 +80,7 @@ def sendNZB(nzb, proper=False):
     addToTop = False
     nzbgetprio = 0
     category = app.NZBGET_CATEGORY
-    if nzb.show.is_anime:
+    if nzb.series.is_anime:
         category = app.NZBGET_CATEGORY_ANIME
 
     url = 'http{}://{}:{}@{}/xmlrpc'.format(
@@ -109,7 +109,7 @@ def sendNZB(nzb, proper=False):
             nzbgetprio = app.NZBGET_PRIORITY
         else:
             category = app.NZBGET_CATEGORY_BACKLOG
-            if nzb.show.is_anime:
+            if nzb.series.is_anime:
                 category = app.NZBGET_CATEGORY_ANIME_BACKLOG
 
     if nzb.quality != Quality.UNKNOWN:
@@ -118,8 +118,8 @@ def sendNZB(nzb, proper=False):
         dupescore += 10
 
     nzbcontent64 = None
-    if nzb.resultType == 'nzbdata':
-        data = nzb.extraInfo[0]
+    if nzb.result_type == 'nzbdata':
+        data = nzb.extra_info[0]
         nzbcontent64 = standard_b64encode(data)
 
     log.info('Sending NZB to NZBget')
@@ -141,7 +141,7 @@ def sendNZB(nzb, proper=False):
                     nzbcontent64
                 )
             else:
-                if nzb.resultType == 'nzb':
+                if nzb.result_type == 'nzb':
                     if not nzb.provider.login():
                         return False
 

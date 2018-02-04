@@ -2,9 +2,18 @@
 
 from __future__ import unicode_literals
 
+import logging
 import os
 import threading
+from posixpath import join
 
+from medusa import app
+from medusa.helpers import (
+    create_https_certificates,
+    generate_api_key,
+)
+from medusa.logger.adapters.style import BraceAdapter
+from medusa.server.api.v1.core import ApiHandler
 from medusa.server.api.v2.alias import AliasHandler
 from medusa.server.api.v2.alias_source import (
     AliasSourceHandler,
@@ -14,21 +23,48 @@ from medusa.server.api.v2.auth import AuthHandler
 from medusa.server.api.v2.base import NotFoundHandler
 from medusa.server.api.v2.config import ConfigHandler
 from medusa.server.api.v2.episode import EpisodeHandler
-from medusa.server.api.v2.log import LogHandler
 from medusa.server.api.v2.series import SeriesHandler
 from medusa.server.api.v2.series_asset import SeriesAssetHandler
 from medusa.server.api.v2.series_legacy import SeriesLegacyHandler
 from medusa.server.api.v2.series_operation import SeriesOperationHandler
+from medusa.server.web import (
+    CalendarHandler,
+    KeyHandler,
+    LoginHandler,
+    LogoutHandler,
+    TokenHandler,
+)
+from medusa.server.web.core.base import AuthenticatedStaticFileHandler
+from medusa.ws import MedusaWebSocketHandler
+
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from tornado.web import Application, RedirectHandler, StaticFileHandler, url
+from tornado.web import (
+    Application,
+    RedirectHandler,
+    StaticFileHandler,
+    url,
+)
 from tornroutes import route
-from .api.v1.core import ApiHandler
-from .web import CalendarHandler, KeyHandler, LoginHandler, LogoutHandler, TokenHandler
-from .web.core.base import AuthenticatedStaticFileHandler
-from .. import app, logger
-from ..helpers import create_https_certificates, generate_api_key
-from ..ws import MedusaWebSocketHandler
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
+log = BraceAdapter(log)
+
+
+def clean_url_path(*args, **kwargs):
+    """Make sure we end with a clean route."""
+    end_with_slash = kwargs.pop('end_with_slash', False)
+    build_path = ''
+    for arg in args:
+        build_path = join(build_path.strip('/'), arg.strip('/'))
+
+    build_path = '/' + build_path if build_path else ''
+
+    if end_with_slash:
+        build_path += '/'
+
+    return build_path
 
 
 def get_apiv2_handlers(base):
@@ -49,9 +85,6 @@ def get_apiv2_handlers(base):
 
         # /api/v2/config
         ConfigHandler.create_app_handler(base),
-
-        # /api/v2/log
-        LogHandler.create_app_handler(base),
 
         # /api/v2/alias-source/xem/operation
         AliasSourceOperationHandler.create_app_handler(base),
@@ -98,7 +131,13 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
 
         # web root
         if self.options['web_root']:
-            app.WEB_ROOT = self.options['web_root'] = ('/' + self.options['web_root'].lstrip('/').strip('/'))
+            app.WEB_ROOT = self.options['web_root'] = clean_url_path(self.options['web_root'])
+
+        # Configure root to selected theme.
+        app.WEB_ROOT = self.options['theme_path'] = clean_url_path(app.WEB_ROOT)
+
+        # Configure the directory to the theme's data root.
+        app.THEME_DATA_ROOT = self.options['theme_data_root'] = os.path.join(self.options['data_root'], app.THEME_NAME)
 
         # api root
         if not app.API_KEY:
@@ -119,12 +158,12 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
             if not (self.https_cert and os.path.exists(self.https_cert)) or not (
                     self.https_key and os.path.exists(self.https_key)):
                 if not create_https_certificates(self.https_cert, self.https_key):
-                    logger.log('Unable to create CERT/KEY files, disabling HTTPS')
+                    log.info('Unable to create CERT/KEY files, disabling HTTPS')
                     app.ENABLE_HTTPS = False
                     self.enable_https = False
 
             if not (os.path.exists(self.https_cert) and os.path.exists(self.https_key)):
-                logger.log('Disabled HTTPS because of missing CERT and KEY files', logger.WARNING)
+                log.warning('Disabled HTTPS because of missing CERT and KEY files')
                 app.ENABLE_HTTPS = False
                 self.enable_https = False
 
@@ -136,7 +175,7 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
             gzip=app.WEB_USE_GZIP,
             xheaders=app.HANDLE_REVERSE_PROXY,
             cookie_secret=app.WEB_COOKIE_SECRET,
-            login_url=r'{root}/login/'.format(root=self.options['web_root']),
+            login_url=r'{root}/login/'.format(root=self.options['theme_path']),
         )
 
         self.app.add_handlers('.*$', get_apiv2_handlers(self.options['api_v2_root']))
@@ -149,40 +188,40 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
         # Static File Handlers
         self.app.add_handlers('.*$', [
             # favicon
-            (r'{base}/(favicon\.ico)'.format(base=self.options['web_root']), StaticFileHandler,
-             {'path': os.path.join(self.options['data_root'], 'images/ico/favicon.ico')}),
+            (r'{base}/(favicon\.ico)'.format(base=self.options['theme_path']), StaticFileHandler,
+             {'path': os.path.join(self.options['theme_data_root'], 'assets', 'img/ico/favicon.ico')}),
 
             # images
-            (r'{base}/images/(.*)'.format(base=self.options['web_root']), StaticFileHandler,
-             {'path': os.path.join(self.options['data_root'], 'images')}),
+            (r'{base}/images/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
+             {'path': os.path.join(self.options['theme_data_root'], 'assets', 'img')}),
 
             # cached images
-            (r'{base}/cache/images/(.*)'.format(base=self.options['web_root']), StaticFileHandler,
+            (r'{base}/cache/images/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
              {'path': os.path.join(app.CACHE_DIR, 'images')}),
 
             # css
-            (r'{base}/css/(.*)'.format(base=self.options['web_root']), StaticFileHandler,
-             {'path': os.path.join(self.options['data_root'], 'css')}),
+            (r'{base}/css/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
+             {'path': os.path.join(self.options['theme_data_root'], 'assets', 'css')}),
 
             # javascript
-            (r'{base}/js/(.*)'.format(base=self.options['web_root']), StaticFileHandler,
-             {'path': os.path.join(self.options['data_root'], 'js')}),
+            (r'{base}/js/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
+             {'path': os.path.join(self.options['theme_data_root'], 'assets', 'js')}),
 
             # fonts
-            (r'{base}/fonts/(.*)'.format(base=self.options['web_root']), StaticFileHandler,
-             {'path': os.path.join(self.options['data_root'], 'fonts')}),
+            (r'{base}/fonts/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
+             {'path': os.path.join(self.options['theme_data_root'], 'assets', 'fonts')}),
 
             # videos
-            (r'{base}/videos/(.*)'.format(base=self.options['web_root']), StaticFileHandler,
+            (r'{base}/videos/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
              {'path': self.video_root}),
 
             # vue dist
-            (r'{base}/vue/dist/(.*)'.format(base=self.options['web_root']), StaticFileHandler,
-             {'path': os.path.join(self.options['vue_root'], 'dist')}),
+            (r'{base}/vue/dist/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
+             {'path': os.path.join(self.options['theme_data_root'], 'vue')}),
 
             # vue index.html
-            (r'{base}/vue/?.*()'.format(base=self.options['web_root']), AuthenticatedStaticFileHandler,
-             {'path': os.path.join(self.options['vue_root'], 'index.html'), 'default_filename': 'index.html'}),
+            (r'{base}/vue/?.*()'.format(base=self.options['theme_path']), AuthenticatedStaticFileHandler,
+             {'path': os.path.join(self.options['theme_data_root'], 'index.html'), 'default_filename': 'index.html'}),
         ])
 
         # API v1 handlers
@@ -198,8 +237,8 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
              RedirectHandler, {'url': '{base}/apibuilder/'.format(base=self.options['web_root'])}),
 
             # Webui login/logout handlers
-            (r'{base}/login(/?)'.format(base=self.options['web_root']), LoginHandler),
-            (r'{base}/logout(/?)'.format(base=self.options['web_root']), LogoutHandler),
+            (r'{base}/login(/?)'.format(base=self.options['theme_path']), LoginHandler),
+            (r'{base}/logout(/?)'.format(base=self.options['theme_path']), LogoutHandler),
 
             (r'{base}/token(/?)'.format(base=self.options['web_root']), TokenHandler),
 
@@ -210,7 +249,7 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
         ] + self._get_webui_routes())
 
     def _get_webui_routes(self):
-        webroot = self.options['web_root']
+        webroot = self.options['theme_path']
         route._routes = list(reversed([url(webroot + u.regex.pattern, u.handler_class, u.kwargs, u.name) for u in route.get_routes()]))
         return route.get_routes()
 
@@ -222,19 +261,20 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
             protocol = 'http'
             self.server = HTTPServer(self.app)
 
-        logger.log('Starting Medusa on {scheme}://{host}:{port}{web_root}/'.format
-                   (scheme=protocol,
-                    host=self.options['host'],
-                    port=self.options['port'],
-                    web_root=self.options['web_root']))
+        log.info('Starting Medusa on {scheme}://{host}:{port}{web_root}/'.format(
+            scheme=protocol,
+            host=self.options['host'],
+            port=self.options['port'],
+            web_root=self.options['theme_path'])
+        )
 
         try:
             self.server.listen(self.options['port'], self.options['host'])
         except Exception:
             if app.LAUNCH_BROWSER and not self.daemon:
                 app.instance.launch_browser('https' if app.ENABLE_HTTPS else 'http', self.options['port'], app.WEB_ROOT)
-                logger.log('Launching browser and exiting')
-            logger.log('Could not start the web server on port {port}, already in use!'.format(port=self.options['port']))
+                log.info('Launching browser and exiting')
+            log.warning('Could not start the web server on port {port}, already in use!'.format(port=self.options['port']))
             os._exit(1)  # pylint: disable=protected-access
 
         try:

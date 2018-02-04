@@ -44,14 +44,14 @@ class SearchResult(object):
         # the search provider
         self.provider = provider
 
-        # release show object
-        self.show = None
+        # release series object
+        self.series = None
 
         # URL to the NZB/torrent file
         self.url = u''
 
         # used by some providers to store extra info associated with the result
-        self.extraInfo = []
+        self.extra_info = []
 
         # quality of the release
         self.quality = Quality.UNKNOWN
@@ -93,7 +93,7 @@ class SearchResult(object):
         self.content = None
 
         # Result type like: nzb, nzbdata, torrent
-        self.resultType = u''
+        self.result_type = u''
 
         # Store the parse result, as it might be useful for other information later on.
         self.parsed_result = None
@@ -150,6 +150,22 @@ class SearchResult(object):
         if len(value) == 1:
             self._actual_episode = value[0]
 
+    @property
+    def show(self):
+        log.warning(
+            'Please use SearchResult.series and not show. Show has been deprecated.',
+            DeprecationWarning,
+        )
+        return self.series
+
+    @show.setter
+    def show(self, value):
+        log.warning(
+            'Please use SearchResult.series and not show. Show has been deprecated.',
+            DeprecationWarning,
+        )
+        self.series = value
+
     def __str__(self):
 
         if self.provider is None:
@@ -157,7 +173,7 @@ class SearchResult(object):
 
         my_string = u'{0} @ {1}\n'.format(self.provider.name, self.url)
         my_string += u'Extra Info:\n'
-        for extra in self.extraInfo:
+        for extra in self.extra_info:
             my_string += u' {0}\n'.format(extra)
 
         my_string += u'Episodes:\n'
@@ -172,22 +188,24 @@ class SearchResult(object):
         return my_string
 
     def file_name(self):
-        return u'{0}.{1}'.format(self.episodes[0].pretty_name(), self.resultType)
+        return u'{0}.{1}'.format(self.episodes[0].pretty_name(), self.result_type)
 
     def add_result_to_cache(self, cache):
         """Cache the item if needed."""
         if self.add_cache_entry:
             # FIXME: Added repr parsing, as that prevents the logger from throwing an exception.
             # This can happen when there are unicode decoded chars in the release name.
-            log.debug('Adding item from search to cache: {release_name!r}', release_name=self.name)
-            return cache.add_cache_entry(self.name, self.url, self.seeders,
-                                         self.leechers, self.size, self.pubdate, parsed_result=self.parsed_result)
+            log.debug('Adding item from search to cache: {release_name!r}'.format(release_name=self.name))
+            return cache.add_cache_entry(
+                self.name, self.url, self.seeders, self.leechers, self.size,
+                self.pubdate, parsed_result=self.parsed_result
+            )
         return None
 
     def create_episode_object(self):
         """Use this result to create an episode segment out of it."""
-        if self.actual_season and self.actual_episodes and self.show:
-            self.episodes = [self.show.get_episode(self.actual_season, ep) for ep in self.actual_episodes]
+        if self.actual_season and self.actual_episodes and self.series:
+            self.episodes = [self.series.get_episode(self.actual_season, ep) for ep in self.actual_episodes]
         return self.episodes
 
     def finish_search_result(self, provider):
@@ -200,15 +218,15 @@ class NZBSearchResult(SearchResult):
 
     def __init__(self, episodes, provider=None):
         super(NZBSearchResult, self).__init__(episodes, provider=provider)
-        self.resultType = u'nzb'
+        self.result_type = u'nzb'
 
 
 class NZBDataSearchResult(SearchResult):
-    """NZB result where the actual NZB XML data is stored in the extraInfo."""
+    """NZB result where the actual NZB XML data is stored in the extra_info."""
 
     def __init__(self, episodes, provider=None):
         super(NZBDataSearchResult, self).__init__(episodes, provider=provider)
-        self.resultType = u'nzbdata'
+        self.result_type = u'nzbdata'
 
 
 class TorrentSearchResult(SearchResult):
@@ -216,7 +234,7 @@ class TorrentSearchResult(SearchResult):
 
     def __init__(self, episodes, provider=None):
         super(TorrentSearchResult, self).__init__(episodes, provider=provider)
-        self.resultType = u'torrent'
+        self.result_type = u'torrent'
 
 
 class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
@@ -232,7 +250,7 @@ class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
         self.log = log
 
     def select_series(self, all_series):
-        from .helper.common import dateTimeFormat
+        from medusa.helper.common import dateTimeFormat
 
         search_results = []
         series_names = []

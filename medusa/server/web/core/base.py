@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import datetime
 import json
+import logging
 import os
 import re
 import time
@@ -15,23 +16,41 @@ from mako.lookup import TemplateLookup
 from mako.runtime import UNDEFINED
 from mako.template import Template as MakoTemplate
 
+from medusa import (
+    app,
+    classes,
+    db,
+    exception_handler,
+    helpers,
+    network_timezones,
+    ui,
+)
+from medusa.server.api.v1.core import function_mapper
+from medusa.show.coming_episodes import ComingEpisodes
+
 from requests.compat import urljoin
 
-from six import binary_type, iteritems, text_type
-
+from six import (
+    binary_type,
+    iteritems,
+    text_type,
+)
 from tornado.concurrent import run_on_executor
 from tornado.escape import utf8
 from tornado.gen import coroutine
 from tornado.ioloop import IOLoop
 from tornado.process import cpu_count
-from tornado.web import HTTPError, RequestHandler, StaticFileHandler, addslash, authenticated
-
+from tornado.web import (
+    HTTPError,
+    RequestHandler,
+    StaticFileHandler,
+    addslash,
+    authenticated,
+)
 from tornroutes import route
 
-from ...api.v1.core import function_mapper
-from .... import app, classes, db, exception_handler, helpers, logger, network_timezones, ui
-from ....show.coming_episodes import ComingEpisodes
-
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
 
 mako_lookup = None
 mako_cache = None
@@ -44,7 +63,7 @@ def get_lookup():
     global mako_path  # pylint: disable=global-statement
 
     if mako_path is None:
-        mako_path = os.path.join(app.PROG_DIR, 'views/')
+        mako_path = os.path.join(app.THEME_DATA_ROOT, 'templates/')
     if mako_cache is None:
         mako_cache = os.path.join(app.CACHE_DIR, 'mako')
     if mako_lookup is None:
@@ -134,10 +153,8 @@ class PageTemplate(MakoTemplate):
             kwargs['header'] = 'Mako Error'
             kwargs['backtrace'] = RichTraceback()
             for (filename, lineno, function, _) in kwargs['backtrace'].traceback:
-                logger.log(u'File {name}, line {line}, in {func}'.format
-                           (name=filename, line=lineno, func=function), logger.DEBUG)
-            logger.log(u'{name}: {error}'.format
-                       (name=kwargs['backtrace'].error.__class__.__name__, error=kwargs['backtrace'].error))
+                log.debug(u'File {name}, line {line}, in {func}'.format(name=filename, line=lineno, func=function))
+            log.info(u'{name}: {error}'.format(name=kwargs['backtrace'].error.__class__.__name__, error=kwargs['backtrace'].error))
             return get_lookup().get_template('500.mako').render_unicode(*args, **kwargs)
 
 
@@ -246,8 +263,7 @@ class WebHandler(BaseHandler):
             self.finish(results)
 
         except Exception:
-            logger.log(u'Failed doing web ui request {route!r}: {error}'.format
-                       (route=route, error=traceback.format_exc()), logger.DEBUG)
+            log.debug(u'Failed doing web ui request {route!r}: {error}'.format(route=route, error=traceback.format_exc()))
             raise HTTPError(404)
 
     @run_on_executor
@@ -294,7 +310,7 @@ class WebRoot(WebHandler):
         episodes = {}
 
         results = main_db_con.select(
-            b'SELECT episode, season, showid '
+            b'SELECT episode, season, indexer, showid '
             b'FROM tv_episodes '
             b'ORDER BY season ASC, episode ASC'
         )

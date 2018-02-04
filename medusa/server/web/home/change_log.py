@@ -2,12 +2,18 @@
 
 from __future__ import unicode_literals
 
+import logging
 import markdown2
+
+from medusa import app
+from medusa.server.web.core import PageTemplate
+from medusa.server.web.home.handler import Home
+from medusa.session.core import MedusaSafeSession
+
 from tornroutes import route
-from .handler import Home
-from ..core import PageTemplate
-from .... import app, logger
-from ....session.core import MedusaSafeSession
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
 
 
 @route('/changes(/?.*)')
@@ -22,7 +28,7 @@ class HomeChangeLog(Home):
         changes = HomeChangeLog.session.get_text(app.CHANGES_URL)
 
         if not changes:
-            logger.log('Could not load changes from repo, giving a link!', logger.DEBUG)
+            log.debug('Could not load changes from repo, giving a link!')
             changes = 'Could not load changes from the repo. [Click here for CHANGES.md]({url})'.format(url=app.CHANGES_URL)
 
         t = PageTemplate(rh=self, filename='markdown.mako')

@@ -14,7 +14,6 @@ def initialize():
     _check_python_version()
     _configure_syspath()
     _monkey_patch_fs_functions()
-    _monkey_patch_logging_functions()
     _early_basic_logging()
     _register_utf8_codec()
     _ssl_configuration()
@@ -53,13 +52,8 @@ def _register_utf8_codec():
 
 
 def _monkey_patch_fs_functions():
-    from . import filesystem
+    from medusa.init import filesystem
     filesystem.initialize()
-
-
-def _monkey_patch_logging_functions():
-    from . import logconfig
-    logconfig.initialize()
 
 
 def _early_basic_logging():
@@ -122,7 +116,9 @@ def _strptime_workaround():
 def _configure_guessit():
     """Replace guessit with a pre-configured one, so guessit.guessit() could be called directly in any place."""
     import guessit
-    from ..name_parser.guessit_parser import guessit as pre_configured_guessit
+    from medusa.name_parser.guessit_parser import (
+        guessit as pre_configured_guessit,
+    )
     guessit.guessit = pre_configured_guessit
 
 

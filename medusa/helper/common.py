@@ -99,8 +99,32 @@ http_status_code = {
     599: 'Network connect timeout error',
 }
 media_extensions = [
-    '3gp', 'avi', 'divx', 'dvr-ms', 'f4v', 'flv', 'img', 'iso', 'm2ts', 'm4v', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg',
-    'ogm', 'ogv', 'rmvb', 'tp', 'ts', 'vob', 'webm', 'wmv', 'wtv',
+    '3gp',
+    'asf',
+    'avi',
+    'divx',
+    'dvr-ms',
+    'f4v',
+    'flv',
+    'img',
+    'iso',
+    'm2ts',
+    'm4v',
+    'mkv',
+    'mov',
+    'mp4',
+    'mpeg',
+    'mpg',
+    'ogm',
+    'ogv',
+    'rmvb',
+    'tp',
+    'ts',
+    'vob',
+    'webm',
+    'wma',
+    'wmv',
+    'wtv',
 ]
 subtitle_extensions = ['ass', 'idx', 'srt', 'ssa', 'sub', 'mpl', 'smi']
 timeFormat = '%A %I:%M %p'
@@ -322,7 +346,7 @@ def enabled_providers(search_type):
     """
     Return providers based on search type: daily, backlog and manualsearch
     """
-    from .. import providers
+    from medusa import providers
     return [x for x in providers.sorted_provider_list(app.RANDOMIZE_PROVIDERS)
             if x.is_active() and x.get_id() not in app.BROKEN_PROVIDERS and
             hasattr(x, 'enable_{}'.format(search_type)) and

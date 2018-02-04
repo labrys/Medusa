@@ -133,19 +133,19 @@ class ForcedSearchQueue(generic_queue.GenericQueue):
                 return True
         return False
 
-    def get_all_ep_from_queue(self, show):
+    def get_all_ep_from_queue(self, series_obj):
         """
         Get QueueItems from the queue if the queue item is scheduled to search for the passed Show.
 
-        @param show: Show indexer_id
+        @param series_obj: Series object.
 
         @return: A list of ForcedSearchQueueItem or FailedQueueItem items
-        @todo: In future a show object should be passed instead of the indexer_id, as we might migrate
-        to a system with multiple indexer_id's for one added show.
         """
         ep_obj_list = []
         for cur_item in self.queue:
-            if isinstance(cur_item, (ForcedSearchQueueItem, FailedQueueItem)) and str(cur_item.show.indexerid) == show:
+            if isinstance(cur_item, (ForcedSearchQueueItem, FailedQueueItem)):
+                if series_obj and cur_item.show.identifier != series_obj.identifier:
+                    continue
                 ep_obj_list.append(cur_item)
         return ep_obj_list
 
@@ -382,12 +382,10 @@ class ForcedSearchQueueItem(generic_queue.QueueItem):
                 self.success = True
 
                 if self.manual_search_type == 'season':
-                    ui.notifications.message('We have found season packs for {show_name}'
-                                             .format(show_name=self.show.name),
+                    ui.notifications.message('We have found season packs for {show_name}'.format(show_name=self.show.name),
                                              'These should become visible in the manual select page.')
                 else:
-                    ui.notifications.message('We have found results for {ep}'
-                                             .format(ep=self.segment[0].pretty_name()),
+                    ui.notifications.message('We have found results for {ep}'.format(ep=self.segment[0].pretty_name()),
                                              'These should become visible in the manual select page.')
 
             else:
@@ -399,7 +397,6 @@ class ForcedSearchQueueItem(generic_queue.QueueItem):
                         'ep': self.segment[0].pretty_name()
                     }
                 )
-
         # TODO: Remove catch all exception.
         except Exception:
             self.success = False
@@ -447,7 +444,7 @@ class ManualSnatchQueueItem(generic_queue.QueueItem):
         self.started = True
 
         result = providers.get_provider_class(self.provider).get_result(self.segment)
-        result.show = self.show
+        result.series = self.show
         result.url = self.cached_result[b'url']
         result.quality = int(self.cached_result[b'quality'])
         result.name = self.cached_result[b'name']
@@ -494,7 +491,7 @@ class ManualSnatchQueueItem(generic_queue.QueueItem):
 
         except Exception:
             self.success = False
-            log.debug(traceback.format_exc())
+            log.exception('Manual snatch failed!. For result: {name}', {'name': result.name})
             ui.notifications.message('Error while snatching selected result',
                                      'Unable to snatch the result for <i>{name}</i>'.format(name=result.name))
 
