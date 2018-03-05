@@ -1,7 +1,6 @@
 <%!
     from datetime import datetime
     from time import time
-    from contextlib2 import suppress
     import os
     import re
     from medusa.app import (
@@ -11,6 +10,11 @@
     )
     from medusa.helper.common import pretty_file_size
     from medusa.show.show import Show
+
+    try:
+        from contextlib2 import suppress
+    except ImportError:
+        from contextlib import suppress
 
     mem_usage = None
     with suppress(ImportError):

@@ -327,7 +327,7 @@ class InitialSchema(db.SchemaUpgrade):
 
 class AddVersionToTvEpisodes(InitialSchema):
     def test(self):
-        return self.check_db_version() >= 40
+        return self.major_version >= 40
 
     def execute(self):
         backupDatabase(self.check_db_version())
@@ -342,7 +342,7 @@ class AddVersionToTvEpisodes(InitialSchema):
 
 class AddDefaultEpStatusToTvShows(AddVersionToTvEpisodes):
     def test(self):
-        return self.check_db_version() >= 41
+        return self.major_version >= 41
 
     def execute(self):
         backupDatabase(self.check_db_version())
@@ -355,7 +355,7 @@ class AddDefaultEpStatusToTvShows(AddVersionToTvEpisodes):
 
 class AlterTVShowsFieldTypes(AddDefaultEpStatusToTvShows):
     def test(self):
-        return self.check_db_version() >= 42
+        return self.major_version >= 42
 
     def execute(self):
         backupDatabase(self.check_db_version())
@@ -372,7 +372,7 @@ class AlterTVShowsFieldTypes(AddDefaultEpStatusToTvShows):
 
 class AddMinorVersion(AlterTVShowsFieldTypes):
     def test(self):
-        return self.check_db_version() >= 42 and self.has_column(b'db_version', b'db_minor_version')
+        return self.major_version >= 42 and self.has_column('db_version', 'db_minor_version')
 
     def inc_db_version(self):
         warnings.warn("Deprecated: Use inc_major_version or inc_minor_version instead", DeprecationWarning)
@@ -394,7 +394,7 @@ class AddMinorVersion(AlterTVShowsFieldTypes):
         backupDatabase(self.check_db_version())
 
         log.info(u'Add minor version numbers to database')
-        self.add_column(b'db_version', b'db_minor_version')
+        self.add_column('db_version', 'db_minor_version')
 
         self.inc_minor_version()
 

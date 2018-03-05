@@ -10,6 +10,8 @@ import tarfile
 import time
 from logging import DEBUG, WARNING
 
+import six
+
 from medusa import app, db, helpers, notifiers, ui
 from medusa.github_client import get_github_repo
 from medusa.logger.adapters.style import BraceAdapter
@@ -507,6 +509,8 @@ class GitUpdateManager(UpdateManager):
 
         if exit_status == 0 and output:
             cur_commit_hash = output.strip()
+            if isinstance(cur_commit_hash, six.binary_type):
+                cur_commit_hash = cur_commit_hash.decode('utf-8')
             if not re.match('^[a-z0-9]+$', cur_commit_hash):
                 log.warning(u"Output doesn't look like a hash, not using it")
                 return False
@@ -719,6 +723,8 @@ class GitUpdateManager(UpdateManager):
         branches, _, exit_status = self._run_git(self._git_path, 'ls-remote --heads %s' % app.GIT_REMOTE)  # @UnusedVariable
         if exit_status == 0 and branches:
             if branches:
+                if isinstance(branches, six.binary_type):
+                    branches = six.text_type(branches, 'utf-8')
                 return re.findall(r'refs/heads/(.*)', branches)
         return []
 

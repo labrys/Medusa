@@ -21,11 +21,15 @@ https://www.dropbox.com/developers/core/sdks/python
 from __future__ import absolute_import
 
 import logging
-from contextlib2 import suppress
 from requests.exceptions import RequestException
 from .exceptions import ApiException
 
 logger = logging.getLogger(__name__)
+
+try:
+    from contextlib2 import suppress
+except ImportError:
+    from contextlib import suppress
 
 
 class RESTClientObject(object):

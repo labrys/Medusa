@@ -9,7 +9,6 @@ import os
 import shutil
 import stat
 
-import shutil_custom
 from unrar2 import RarFile
 from unrar2.rar_exceptions import (
     ArchiveHeaderBroken,
@@ -33,7 +32,6 @@ from medusa.name_parser.parser import (
 from medusa.processing import failed, post
 from medusa.subtitles import accept_any, accept_unknown, get_embedded_subtitles
 
-shutil.copyfile = shutil_custom.copyfile_custom
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
@@ -636,7 +634,7 @@ class ProcessResult(object):
                     main_db_con = db.DBConnection()
                     sql_results = main_db_con.select("SELECT subtitles FROM tv_shows WHERE indexer = ? AND indexer_id = ? LIMIT 1",
                                                      [parse_result.series.indexer, parse_result.series.indexerid])
-                    return bool(sql_results[0][b'subtitles']) if sql_results else False
+                    return bool(sql_results[0]['subtitles']) if sql_results else False
 
                 log.warning('Empty indexer ID for: {name}'.format(name=name))
             except (InvalidNameException, InvalidShowException):

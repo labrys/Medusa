@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from six import text_type
+from six import text_type, PY2
 
 from medusa.helper.encoding import ss
 
@@ -10,6 +10,9 @@ def ex(e):
     :param e: The exception to convert into a unicode string
     :return: A unicode string from the exception text if it exists
     """
+    if not PY2:
+        return str(e)
+
     message = u''
 
     if not e or not e.args:

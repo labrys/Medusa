@@ -41,7 +41,7 @@ import threading
 import time
 
 from configobj import ConfigObj
-from six import text_type
+from six import text_type, PY2
 
 from medusa import (
     app, cache, db, event_queue, exception_handler,
@@ -70,6 +70,12 @@ from medusa.search.queue import ForcedSearchQueue, SearchQueue, SnatchQueue
 from medusa.server.core import AppWebServer
 from medusa.themes import read_themes
 from medusa.tv import Series
+
+try:
+    from importlib import reload
+except ImportError:
+    pass
+
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -190,12 +196,13 @@ class Application(object):
         if not hasattr(sys, 'setdefaultencoding'):
             reload(sys)
 
-        try:
-            # On non-unicode builds this will raise an AttributeError, if encoding type is not valid it throws a LookupError
-            sys.setdefaultencoding(app.SYS_ENCODING)  # pylint: disable=no-member
-        except (AttributeError, LookupError):
-            sys.exit('Sorry, you MUST add the Medusa folder to the PYTHONPATH environment variable or '
-                     'find another way to force Python to use {encoding} for string encoding.'.format(encoding=app.SYS_ENCODING))
+        if PY2:
+            try:
+                # On non-unicode builds this will raise an AttributeError, if encoding type is not valid it throws a LookupError
+                sys.setdefaultencoding(app.SYS_ENCODING)  # pylint: disable=no-member
+            except (AttributeError, LookupError):
+                sys.exit('Sorry, you MUST add the Medusa folder to the PYTHONPATH environment variable or '
+                         'find another way to force Python to use {encoding} for string encoding.'.format(encoding=app.SYS_ENCODING))
 
         self.console_logging = (not hasattr(sys, 'frozen')) or (app.MY_NAME.lower().find('-console') > 0)
 
@@ -2078,12 +2085,12 @@ class Application(object):
         app.showList = []
         for sql_show in sql_results:
             try:
-                cur_show = Series(sql_show[b'indexer'], sql_show[b'indexer_id'])
+                cur_show = Series(sql_show['indexer'], sql_show['indexer_id'])
                 cur_show.next_episode()
                 app.showList.append(cur_show)
             except Exception as error:
                 exception_handler.handle(error, 'There was an error creating the show in {location}',
-                                         location=sql_show[b'location'])
+                                         location=sql_show['location'])
 
     @staticmethod
     def restore_db(src_dir, dst_dir):

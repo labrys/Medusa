@@ -1,15 +1,24 @@
 <%!
+    import logging
     from medusa import app
     from medusa.common import Quality, qualityPresets, qualityPresetStrings
-%>
-<%
-if not show is UNDEFINED:
-    __quality = int(show.quality)
-else:
-    __quality = int(app.QUALITY_DEFAULT)
-allowed_qualities, preferred_qualities = Quality.split_quality(__quality)
-overall_quality = Quality.combine_qualities(allowed_qualities, preferred_qualities)
-selected = None
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    try:
+        __quality = int(show.quality)
+    except NameError:
+        __quality = int(app.QUALITY_DEFAULT)
+
+    log.debug(__quality)
+
+    allowed_qualities, preferred_qualities = Quality.split_quality(__quality)
+    overall_quality = Quality.combine_qualities(allowed_qualities, preferred_qualities)
+    log.debug(allowed_qualities)
+    log.debug(preferred_qualities)
+    log.debug(overall_quality)
+    selected = None
 %>
 <select id="qualityPreset" name="quality_preset" class="form-control form-control-inline input-sm">
     <option value="0">Custom</option>
@@ -22,7 +31,7 @@ selected = None
         <p><b><strong>Preferred</strong></b> qualities will replace those in <b><strong>allowed</strong></b>, even if they are lower.</p>
         <div style="padding-right: 40px; text-align: left; float: left;">
             <h5>Allowed</h5>
-            <% any_quality_list = filter(lambda x: x > Quality.NONE, Quality.qualityStrings) %>
+            <% any_quality_list = [x for x in Quality.qualityStrings if x > Quality.NONE] %>
             <select id="allowed_qualities" name="allowed_qualities" multiple="multiple" size="${len(any_quality_list)}" class="form-control form-control-inline input-sm">
             % for cur_quality in sorted(any_quality_list):
                 <option value="${cur_quality}" ${'selected="selected"' if cur_quality in allowed_qualities else ''}>${Quality.qualityStrings[cur_quality]}</option>
@@ -31,7 +40,7 @@ selected = None
         </div>
         <div style="text-align: left; float: left;">
             <h5>Preferred</h5>
-            <% preferred_quality_list = filter(lambda x: x >= Quality.SDTV and x < Quality.UNKNOWN, Quality.qualityStrings) %>
+            <% preferred_quality_list =  [x for x in Quality.qualityStrings if x >= Quality.SDTV and x < Quality.UNKNOWN] %>
             <select id="preferred_qualities" name="preferred_qualities" multiple="multiple" size="${len(preferred_quality_list)}" class="form-control form-control-inline input-sm">
             % for cur_quality in sorted(preferred_quality_list):
                 <option value="${cur_quality}" ${'selected="selected"' if cur_quality in preferred_qualities else ''}>${Quality.qualityStrings[cur_quality]}</option>

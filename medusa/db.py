@@ -237,6 +237,9 @@ class DBConnection(object):
         if query is None:
             return
 
+        if not isinstance(query, text_type):
+            query = text_type(query, 'utf-8')
+
         sql_results = None
         attempt = 0
 
@@ -315,13 +318,15 @@ class DBConnection(object):
 
         query = "UPDATE [" + tableName + "] SET " + ", ".join(genParams(valueDict)) + " WHERE " + " AND ".join(
             genParams(keyDict))
-
-        self.action(query, valueDict.values() + keyDict.values())
+        
+        values = list(valueDict.values()) + list(keyDict.values())
+        keys = list(valueDict.keys()) + list(keyDict.keys())
+        self.action(query, values)
 
         if self.connection.total_changes == changesBefore:
-            query = "INSERT INTO [" + tableName + "] (" + ", ".join(valueDict.keys() + keyDict.keys()) + ")" + \
-                    " VALUES (" + ", ".join(["?"] * len(valueDict.keys() + keyDict.keys())) + ")"
-            self.action(query, valueDict.values() + keyDict.values())
+            query = "INSERT INTO [" + tableName + "] (" + ", ".join(keys) + ")" + \
+                    " VALUES (" + ", ".join(["?"] * len(keys)) + ")"
+            self.action(query, values)
 
     def table_info(self, tableName):
         """
@@ -344,6 +349,9 @@ class DBConnection(object):
         :param x: text to parse
         :return: unicode result
         """
+        if isinstance(x, text_type):
+            return x
+
         try:
             # Just revert to the old code for now, until we can fix unicode
             return text_type(x, 'utf-8')
@@ -448,7 +456,7 @@ def _process_upgrade(connection, upgradeClass):
         try:
             instance.execute()
         except Exception as e:
-            log.debug("Error in " + str(upgradeClass.__name__) + ": " + ex(e))
+            log.debug("Error in " + str(upgradeClass.__name__) + ": " + str(e))
             raise
 
         log.debug(upgradeClass.__name__ + " upgrade completed")
@@ -468,6 +476,8 @@ class SchemaUpgrade(object):
         return len(self.connection.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (tableName, ))) > 0
 
     def has_column(self, tableName, column):
+        if not isinstance(column, text_type):
+            column = text_type(column, 'utf-8')
         return column in self.connection.table_info(tableName)
 
     def add_column(self, table, column, column_type="NUMERIC", default=0):
@@ -481,3 +491,7 @@ class SchemaUpgrade(object):
         new_version = self.check_db_version() + 1
         self.connection.action("UPDATE db_version SET db_version = ?", [new_version])
         return new_version
+
+    @property
+    def major_version(self):
+        return self.check_db_version()[0]

@@ -33,7 +33,6 @@ import guessit
 import requests
 from cachecontrol import CacheControlAdapter
 from cachecontrol.cache import DictCache
-from contextlib2 import suppress
 from imdbpie import imdbpie
 from requests.compat import urlparse
 from six import binary_type, string_types, text_type
@@ -64,6 +63,11 @@ try:
     from itertools import izip as zip
 except ImportError:
     pass  # zip will be 3.x series
+
+try:
+    from contextlib2 import suppress
+except ImportError:
+    from contextlib import suppress
 
 
 def indent_xml(elem, level=0):
@@ -707,11 +711,11 @@ def get_absolute_number_from_season_and_episode(series_obj, season, episode):
 
     if season and episode:
         main_db_con = db.DBConnection()
-        sql = b'SELECT * FROM tv_episodes WHERE indexer = ? AND showid = ? AND season = ? AND episode = ?'
+        sql = 'SELECT * FROM tv_episodes WHERE indexer = ? AND showid = ? AND season = ? AND episode = ?'
         sql_results = main_db_con.select(sql, [series_obj.indexer, series_obj.series_id, season, episode])
 
         if len(sql_results) == 1:
-            absolute_number = int(sql_results[0][b'absolute_number'])
+            absolute_number = int(sql_results[0]['absolute_number'])
             log.debug(
                 u'Found absolute number {absolute} for show {show} {ep}', {
                     'absolute': absolute_number,
@@ -1412,8 +1416,10 @@ def get_size(start_path='.'):
 def generate_api_key():
     """Return a new randomized API_KEY."""
     log.info(u'Generating New API key')
-    secure_hash = hashlib.sha512(str(time.time()))
-    secure_hash.update(str(random.SystemRandom().getrandbits(4096)))
+    timestamp = str(time.time())
+    secure_hash = hashlib.sha512(timestamp.encode('utf-8'))
+    randomizer = str(random.SystemRandom().getrandbits(4096))
+    secure_hash.update(randomizer.encode('utf-8'))
     return secure_hash.hexdigest()[:32]
 
 

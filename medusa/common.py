@@ -138,7 +138,7 @@ class Quality(object):
     UNKNOWN = 1 << 15  # 32768
 
     qualityStrings = NumDict({
-        None: "None",
+        # None: "None",
         NONE: "N/A",
         UNKNOWN: "Unknown",
         SDTV: "SDTV",
@@ -186,7 +186,7 @@ class Quality(object):
     })
 
     cssClassStrings = NumDict({
-        None: "None",
+        # None: "None",
         NONE: "N/A",
         UNKNOWN: "Unknown",
         SDTV: "SDTV",

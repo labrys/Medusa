@@ -92,7 +92,7 @@ class Notifier(object):
         if isinstance(message, six.text_type):
             message = message.encode('utf-8')
 
-        headers = {b'Content-Type': b'application/json'}
+        headers = {b'Content-Type': 'application/json'}
         data = {
             'text': message,
             'username': 'MedusaBot',
