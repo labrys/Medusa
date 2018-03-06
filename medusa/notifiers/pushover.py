@@ -35,27 +35,27 @@ class Notifier(object):
     def test_notify(self, userKey=None, apiKey=None):
         return self._notifyPushover('This is a test notification from Medusa', 'Test', userKey=userKey, apiKey=apiKey, force=True)
 
-    def _sendPushover(self, msg, title, sound=None, userKey=None, apiKey=None):
+    def _sendPushover(self, msg, title, sound=None, user_key=None, api_key=None):
         """
         Sends a pushover notification to the address provided.
 
         :param msg: The message to send (unicode)
         :param title: The title of the message
         :param sound: The notification sound to use
-        :param userKey: The pushover user id to send the message to (or to subscribe with)
-        :param apiKey: The pushover api key to use
+        :param user_key: The pushover user id to send the message to (or to subscribe with)
+        :param api_key: The pushover api key to use
         :returns: True if the message succeeded, False otherwise
         """
-        if userKey is None:
-            userKey = app.PUSHOVER_USERKEY
+        if user_key is None:
+            user_key = app.PUSHOVER_USERKEY
 
-        if apiKey is None:
-            apiKey = app.PUSHOVER_APIKEY
+        if api_key is None:
+            api_key = app.PUSHOVER_APIKEY
 
         if sound is None:
             sound = app.PUSHOVER_SOUND
 
-        log.debug(u'Pushover API KEY in use: {0}', apiKey)
+        log.debug(u'Pushover API KEY in use: {0}', api_key)
 
         # build up the URL and parameters
         msg = msg.strip()
@@ -64,8 +64,8 @@ class Notifier(object):
         try:
             if app.PUSHOVER_SOUND != 'default':
                 args = {
-                    'token': apiKey,
-                    'user': userKey,
+                    'token': api_key,
+                    'user': user_key,
                     'title': title.encode('utf-8'),
                     'message': msg.encode('utf-8'),
                     'timestamp': int(time.time()),
@@ -76,8 +76,8 @@ class Notifier(object):
             else:
                 # sound is default, so don't send it
                 args = {
-                    'token': apiKey,
-                    'user': userKey,
+                    'token': api_key,
+                    'user': user_key,
                     'title': title.encode('utf-8'),
                     'message': msg.encode('utf-8'),
                     'timestamp': int(time.time()),
@@ -109,8 +109,8 @@ class Notifier(object):
             elif e.code == 401:
 
                 # HTTP status 401 if the user doesn't have the service added
-                subscribeNote = self._sendPushover(msg, title, sound=sound, userKey=userKey, apiKey=apiKey)
-                if subscribeNote:
+                subscribe_note = self._sendPushover(msg, title, sound=sound, user_key=user_key, api_key=api_key)
+                if subscribe_note:
                     log.debug(u'Subscription sent')
                     return True
                 else:
@@ -172,4 +172,4 @@ class Notifier(object):
 
         log.debug(u'Sending notification for {0}', message)
 
-        return self._sendPushover(message, title, sound=sound, userKey=userKey, apiKey=apiKey)
+        return self._sendPushover(message, title, sound=sound, user_key=userKey, api_key=apiKey)

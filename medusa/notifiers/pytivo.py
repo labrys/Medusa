@@ -39,7 +39,7 @@ class Notifier(object):
             return False
 
         host = app.PYTIVO_HOST
-        shareName = app.PYTIVO_SHARE_NAME
+        share_name = app.PYTIVO_SHARE_NAME
         tsn = app.PYTIVO_TIVO_NAME
 
         # There are two more values required, the container and file.
@@ -55,28 +55,28 @@ class Notifier(object):
         #
 
         # Calculated values
-        showPath = ep_obj.series.location
-        showName = ep_obj.series.name
-        rootShowAndSeason = os.path.dirname(ep_obj.location)
-        absPath = ep_obj.location
+        show_path = ep_obj.series.location
+        show_name = ep_obj.series.name
+        root_show_and_season = os.path.dirname(ep_obj.location)
+        abs_path = ep_obj.location
 
         # Some show names have colons in them which are illegal in a path location, so strip them out.
         # (Are there other characters?)
-        showName = showName.replace(':', '')
+        show_name = show_name.replace(':', '')
 
-        root = showPath.replace(showName, '')
-        showAndSeason = rootShowAndSeason.replace(root, '')
+        root = show_path.replace(show_name, '')
+        show_and_season = root_show_and_season.replace(root, '')
 
-        container = shareName + '/' + showAndSeason
-        filename = '/' + absPath.replace(root, '')
+        container = share_name + '/' + show_and_season
+        filename = '/' + abs_path.replace(root, '')
 
         # Finally create the url and make request
-        requestUrl = 'http://' + host + '/TiVoConnect?' + urlencode(
+        request_url = 'http://' + host + '/TiVoConnect?' + urlencode(
             {'Command': 'Push', 'Container': container, 'File': filename, 'tsn': tsn})
 
-        log.debug(u'pyTivo notification: Requesting {0}', requestUrl)
+        log.debug(u'pyTivo notification: Requesting {0}', request_url)
 
-        request = Request(requestUrl)
+        request = Request(request_url)
 
         try:
             urlopen(request)

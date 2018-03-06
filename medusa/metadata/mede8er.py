@@ -315,8 +315,6 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
         override this method.
 
         :param show_obj: Series object for which to create the metadata
-        :param path: An absolute or relative path where we should put the file. Note that
-                the file name will be the default show_file_name.
         """
         data = self._show_data(show_obj)
 
@@ -365,9 +363,6 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
         override this method.
 
         :param ep_obj: an Episode object for which to create the metadata
-        :param file_name_path: The file name to use for this metadata
-            Note that the extension will be automatically added based
-            on _ep_nfo_extension. This should include an absolute path.
         """
         data = self._ep_data(ep_obj)
 

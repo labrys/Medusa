@@ -320,7 +320,8 @@ class DBConnection(object):
         # TODO: Make this return true/false on success/error
         changes_before = self.connection.total_changes
 
-        gen_params = lambda my_dict: [x + " = ?" for x in my_dict.keys()]
+        def gen_params(my_dict):
+            return [x + " = ?" for x in my_dict.keys()]
 
         query = "UPDATE [" + tableName + "] SET " + ", ".join(gen_params(valueDict)) + " WHERE " + " AND ".join(
             gen_params(keyDict))

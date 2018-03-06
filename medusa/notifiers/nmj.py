@@ -119,7 +119,7 @@ class Notifier(object):
                 return False
 
         # build up the request URL and parameters
-        UPDATE_URL = 'http://%(host)s:8008/metadata_database?%(params)s'
+        update_url = 'http://%(host)s:8008/metadata_database?%(params)s'
         params = {
             'arg0': 'scanner_start',
             'arg1': database,
@@ -127,12 +127,12 @@ class Notifier(object):
             'arg3': ''
         }
         params = urlencode(params)
-        updateUrl = UPDATE_URL % {'host': host, 'params': params}
+        update_url = update_url % {'host': host, 'params': params}
 
         # send the request to the server
         try:
-            req = Request(updateUrl)
-            log.debug(u'Sending NMJ scan update command via url: {0}', updateUrl)
+            req = Request(update_url)
+            log.debug(u'Sending NMJ scan update command via url: {0}', update_url)
             handle = urlopen(req)
             response = handle.read()
         except IOError as error:

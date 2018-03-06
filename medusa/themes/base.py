@@ -1,3 +1,4 @@
+# coding=utf-8
 """Base theme module."""
 import json
 import logging

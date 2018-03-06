@@ -24,8 +24,8 @@ class EpisodeHandler(BaseRequestHandler):
     def get(self, series_slug, episode_slug, path_param):
         """Query episode information.
 
+        :param episode_slug:
         :param series_slug: series slug. E.g.: tvdb1234
-        :param episode_number:
         :param path_param:
         """
         series_identifier = SeriesIdentifier.from_slug(series_slug)

@@ -47,7 +47,7 @@ def get_episode(series_id, season=None, episode=None, absolute=None, indexer=Non
     """
     Get a specific episode object based on show, season and episode number.
 
-    :param show: Series id
+    :param series_id:
     :param season: Season number
     :param episode: Episode number
     :param absolute: Optional if the episode number is a scene absolute number

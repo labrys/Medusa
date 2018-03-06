@@ -792,8 +792,8 @@ class Home(WebRoot):
         """
         Get series name scene exceptions per season.
 
-        :param indexer: The series indexer
-        :param indexer_id: The series indexer_id
+        :param indexername:
+        :param seriesid:
         :return: A json with the scene exceptions per season.
         """
         indexer_id = indexer_name_to_id(indexername)
@@ -2354,22 +2354,22 @@ class Home(WebRoot):
             'subtitles': subtitles_result
         })
 
-    def setSceneNumbering(self, indexername=None, seriesid=None, forSeason=None, forEpisode=None, forAbsolute=None, sceneSeason=None,
-                          sceneEpisode=None, sceneAbsolute=None):
+    def setSceneNumbering(self, indexername=None, seriesid=None, for_season=None, for_episode=None, for_absolute=None, scene_season=None,
+                          scene_episode=None, scene_absolute=None):
 
         # sanitize:
-        forSeason = None if forSeason in ['null', ''] else forSeason
-        forEpisode = None if forEpisode in ['null', ''] else forEpisode
-        forAbsolute = None if forAbsolute in ['null', ''] else forAbsolute
-        sceneSeason = None if sceneSeason in ['null', ''] else sceneSeason
-        sceneEpisode = None if sceneEpisode in ['null', ''] else sceneEpisode
-        sceneAbsolute = None if sceneAbsolute in ['null', ''] else sceneAbsolute
+        for_season = None if for_season in ['null', ''] else for_season
+        for_episode = None if for_episode in ['null', ''] else for_episode
+        for_absolute = None if for_absolute in ['null', ''] else for_absolute
+        scene_season = None if scene_season in ['null', ''] else scene_season
+        scene_episode = None if scene_episode in ['null', ''] else scene_episode
+        scene_absolute = None if scene_absolute in ['null', ''] else scene_absolute
 
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
 
         # Check if this is an anime, because we can't set the Scene numbering for anime shows
-        if series_obj.is_anime and forAbsolute is None:
+        if series_obj.is_anime and for_absolute is None:
             return json.dumps({
                 'success': False,
                 'errorMessage': 'You can\'t use the Scene numbering for anime shows. '
@@ -2377,7 +2377,7 @@ class Home(WebRoot):
                 'sceneSeason': None,
                 'sceneAbsolute': None,
             })
-        elif not series_obj.is_anime and (forSeason is None or forEpisode is None):
+        elif not series_obj.is_anime and (for_season is None or for_episode is None):
             return json.dumps({
                 'success': False,
                 'errorMessage': 'You can\'t use the Scene Absolute for non-anime shows. '
@@ -2388,20 +2388,20 @@ class Home(WebRoot):
         elif series_obj.is_anime:
             result = {
                 'success': True,
-                'forAbsolute': forAbsolute,
+                'forAbsolute': for_absolute,
             }
         else:
             result = {
                 'success': True,
-                'forSeason': forSeason,
-                'forEpisode': forEpisode,
+                'forSeason': for_season,
+                'forEpisode': for_episode,
             }
 
         # retrieve the episode object and fail if we can't get one
         if series_obj.is_anime:
-            ep_obj = series_obj.get_episode(absolute=forAbsolute)
+            ep_obj = series_obj.get_episode(absolute=for_absolute)
         else:
-            ep_obj = series_obj.get_episode(forSeason, forEpisode)
+            ep_obj = series_obj.get_episode(for_season, for_episode)
 
         if isinstance(ep_obj, str):
             result.update({
@@ -2412,44 +2412,44 @@ class Home(WebRoot):
             log.debug(
                 u'Set absolute scene numbering for {show} from {absolute} to'
                 u' {scene_absolute}'.format(
-                    show=seriesid, absolute=forAbsolute,
-                    scene_absolute=sceneAbsolute
+                    show=seriesid, absolute=for_absolute,
+                    scene_absolute=scene_absolute
                 )
             )
 
-            forAbsolute = int(forAbsolute)
-            if sceneAbsolute is not None:
-                sceneAbsolute = int(sceneAbsolute)
+            for_absolute = int(for_absolute)
+            if scene_absolute is not None:
+                scene_absolute = int(scene_absolute)
 
-            set_scene_numbering(series_obj, absolute_number=forAbsolute, sceneAbsolute=sceneAbsolute)
+            set_scene_numbering(series_obj, absolute_number=for_absolute, sceneAbsolute=scene_absolute)
         else:
             log.debug(
                 u'setEpisodeSceneNumbering for {show} from {season}x{episode}'
                 u' to {scene_season}x{scene_episode}'.format(
-                    show=series_obj.indexerid, season=forSeason,
-                    episode=forEpisode, scene_season=sceneSeason,
-                    scene_episode=sceneEpisode
+                    show=series_obj.indexerid, season=for_season,
+                    episode=for_episode, scene_season=scene_season,
+                    scene_episode=scene_episode
                 )
             )
 
-            forSeason = int(forSeason)
-            forEpisode = int(forEpisode)
-            if sceneSeason is not None:
-                sceneSeason = int(sceneSeason)
-            if sceneEpisode is not None:
-                sceneEpisode = int(sceneEpisode)
+            for_season = int(for_season)
+            for_episode = int(for_episode)
+            if scene_season is not None:
+                scene_season = int(scene_season)
+            if scene_episode is not None:
+                scene_episode = int(scene_episode)
 
-            set_scene_numbering(series_obj, season=forSeason, episode=forEpisode,
-                                sceneSeason=sceneSeason, sceneEpisode=sceneEpisode)
+            set_scene_numbering(series_obj, season=for_season, episode=for_episode,
+                                sceneSeason=scene_season, sceneEpisode=scene_episode)
 
         if series_obj.is_anime:
-            sn = get_scene_absolute_numbering(series_obj, forAbsolute)
+            sn = get_scene_absolute_numbering(series_obj, for_absolute)
             if sn:
                 result['sceneAbsolute'] = sn
             else:
                 result['sceneAbsolute'] = None
         else:
-            sn = get_scene_numbering(series_obj, forSeason, forEpisode)
+            sn = get_scene_numbering(series_obj, for_season, for_episode)
             if sn:
                 (result['sceneSeason'], result['sceneEpisode']) = sn
             else:

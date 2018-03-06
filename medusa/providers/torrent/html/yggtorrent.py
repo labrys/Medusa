@@ -25,7 +25,7 @@ log.logger.addHandler(logging.NullHandler())
 class YggtorrentProvider(TorrentProvider):
     """Yggtorrent Torrent provider."""
 
-    torrent_id = re.compile(r'\/(\d+)-')
+    torrent_id = re.compile(r'/(\d+)-')
 
     def __init__(self):
         """Initialize the class."""

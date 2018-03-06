@@ -640,8 +640,8 @@ class TVDB(BaseIndexer):
     def get_last_updated_seasons(self, show_list, from_time, weeks=1):
         """Return updated seasons for shows passed, using the from_time.
 
-        :param show_list[int]: The list of shows, where seasons updates are retrieved for.
-        :param from_time[int]: epoch timestamp, with the start date/time
+        :param show_list:
+        :param from_time:
         :param weeks: number of weeks to get updates for.
         """
         show_season_updates = {}

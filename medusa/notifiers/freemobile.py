@@ -27,7 +27,7 @@ class Notifier(object):
     def test_notify(self, cust_id=None, apiKey=None):
         return self._notifyFreeMobile('Test', 'This is a test notification from Medusa', cust_id, apiKey, force=True)
 
-    def _sendFreeMobileSMS(self, title, msg, cust_id=None, apiKey=None):
+    def _sendFreeMobileSMS(self, title, msg, cust_id=None, api_key=None):
         """
         Send a SMS notification
 
@@ -39,17 +39,17 @@ class Notifier(object):
         """
         if cust_id is None:
             cust_id = app.FREEMOBILE_ID
-        if apiKey is None:
-            apiKey = app.FREEMOBILE_APIKEY
+        if api_key is None:
+            api_key = app.FREEMOBILE_APIKEY
 
-        log.debug(u'Free Mobile in use with API KEY: {0}', apiKey)
+        log.debug(u'Free Mobile in use with API KEY: {0}', api_key)
 
         # build up the URL and parameters
         msg = msg.strip()
         msg_quoted = quote(title.encode('utf-8') + ': ' + msg.encode('utf-8'))
-        URL = 'https://smsapi.free-mobile.fr/sendmsg?user=' + cust_id + '&pass=' + apiKey + '&msg=' + msg_quoted
+        url = 'https://smsapi.free-mobile.fr/sendmsg?user=' + cust_id + '&pass=' + api_key + '&msg=' + msg_quoted
 
-        req = Request(URL)
+        req = Request(url)
         # send the request to Free Mobile
         try:
             urlopen(req)

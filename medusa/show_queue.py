@@ -50,7 +50,6 @@ log.addHandler(logging.NullHandler())
 
 
 class ShowQueueActions(object):
-
     """
 
     """
@@ -78,7 +77,6 @@ class ShowQueueActions(object):
 
 
 class ShowQueue(generic_queue.GenericQueue):
-
     """
 
     """
@@ -237,19 +235,19 @@ class ShowQueue(generic_queue.GenericQueue):
         if self.is_being_added(show):
             raise CantUpdateShowException(
                 u"{show_name} is still being added, wait until it is finished before you update."
-                .format(show_name=show.name))
+                    .format(show_name=show.name))
 
         if self.is_being_updated(show):
             raise CantUpdateShowException(
                 u"{show_name} is already being updated by Post-processor or manually started, "
                 u"can't update again until it's done."
-                .format(show_name=show.name))
+                    .format(show_name=show.name))
 
         if self.is_in_update_queue(show):
             raise CantUpdateShowException(
                 u"{show_name} is in process of being updated by Post-processor or manually started, "
                 u"can't update again until it's done."
-                .format(show_name=show.name))
+                    .format(show_name=show.name))
 
         queue_item_update_show = QueueItemUpdate(show) if season is None else QueueItemSeasonUpdate(show, season)
 
@@ -341,8 +339,8 @@ class ShowQueue(generic_queue.GenericQueue):
             lang = app.INDEXER_DEFAULT_LANGUAGE
 
         queue_item_obj = QueueItemAdd(indexer, indexer_id, showDir, default_status, quality, flatten_folders, lang,
-                                    subtitles, anime, scene, paused, blacklist, whitelist, default_status_after,
-                                    root_dir)
+                                      subtitles, anime, scene, paused, blacklist, whitelist, default_status_after,
+                                      root_dir)
 
         self.add_item(queue_item_obj)
 
@@ -547,7 +545,7 @@ class QueueItemAdd(ShowQueueItem):
                 )
                 ui.notifications.error(
                     'Unable to add show',
-                    'reason: {0}' .format(e.message)
+                    'reason: {0}'.format(e.message)
                 )
                 self._finish_early()
 
@@ -569,7 +567,7 @@ class QueueItemAdd(ShowQueueItem):
                 "Unable to add show",
                 "Unable to look up the show in {0} on {1} using ID {2} "
                 "Reason: {3}"
-                .format(self.showDir, indexerApi(self.indexer).name, self.indexer_id, e.message)
+                    .format(self.showDir, indexerApi(self.indexer).name, self.indexer_id, e.message)
             )
             self._finish_early()
             return
@@ -603,7 +601,7 @@ class QueueItemAdd(ShowQueueItem):
                 "Unable to add show",
                 "Unable to look up the show in {0} on {1} using ID {2}, not using the NFO. "
                 "Delete .nfo and try adding manually again.".
-                format(self.showDir, indexerApi(self.indexer).name, self.indexer_id)
+                    format(self.showDir, indexerApi(self.indexer).name, self.indexer_id)
             )
             self._finish_early()
             return
@@ -640,13 +638,13 @@ class QueueItemAdd(ShowQueueItem):
                 if self.whitelist:
                     self.show.release_groups.set_white_keywords(self.whitelist)
 
-            # # be smartish about this
-            # if self.show.genre and "talk show" in self.show.genre.lower():
-            #     self.show.air_by_date = 1
-            # if self.show.genre and "documentary" in self.show.genre.lower():
-            #     self.show.air_by_date = 0
-            # if self.show.classification and "sports" in self.show.classification.lower():
-            #     self.show.sports = 1
+                    # # be smartish about this
+                    # if self.show.genre and "talk show" in self.show.genre.lower():
+                    #     self.show.air_by_date = 1
+                    # if self.show.genre and "documentary" in self.show.genre.lower():
+                    #     self.show.air_by_date = 0
+                    # if self.show.classification and "sports" in self.show.classification.lower():
+                    #     self.show.sports = 1
 
         except IndexerException as e:
             log.error(u"Unable to add show due to an error with " + indexerApi(self.indexer).name + ": " + e.message)
@@ -852,7 +850,6 @@ class QueueItemSubtitle(ShowQueueItem):
         ShowQueueItem.__init__(self, ShowQueueActions.SUBTITLE, show)
 
     def run(self):
-
         """
 
         """
@@ -1146,9 +1143,11 @@ class QueueItemSeasonUpdate(ShowQueueItem):
         try:
             self.show.load_imdb_info()
         except ImdbAPIError as e:
-            log.info(u'{id}: Something wrong on IMDb api: {error_msg}'.format(id=self.show.series_id, error_msg=e.message))
+            log.info(
+                u'{id}: Something wrong on IMDb api: {error_msg}'.format(id=self.show.series_id, error_msg=e.message))
         except Exception as e:
-            log.warning(u'{id}: Error loading IMDb info: {error_msg}'.format(id=self.show.series_id, error_msg=e.message))
+            log.warning(
+                u'{id}: Error loading IMDb info: {error_msg}'.format(id=self.show.series_id, error_msg=e.message))
 
         # have to save show before reading episodes from db
         try:

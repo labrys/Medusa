@@ -269,38 +269,38 @@ class HomeAddShows(Home):
                         traktList=traktList, controller="addShows", action="trendingShows",
                         realpage="trendingShows")
 
-    def getTrendingShows(self, traktList=None):
+    def getTrendingShows(self, trakt_list=None):
         """Display the new show page which collects a tvdb id, folder, and extra options and posts them to addNewShow."""
         e = None
         t = PageTemplate(rh=self, filename="addShows_recommended.mako")
-        if traktList is None:
-            traktList = ""
+        if trakt_list is None:
+            trakt_list = ""
 
-        traktList = traktList.lower()
+        trakt_list = trakt_list.lower()
 
-        if traktList == "trending":
+        if trakt_list == "trending":
             page_url = "shows/trending"
-        elif traktList == "popular":
+        elif trakt_list == "popular":
             page_url = "shows/popular"
-        elif traktList == "anticipated":
+        elif trakt_list == "anticipated":
             page_url = "shows/anticipated"
-        elif traktList == "collected":
+        elif trakt_list == "collected":
             page_url = "shows/collected"
-        elif traktList == "watched":
+        elif trakt_list == "watched":
             page_url = "shows/watched"
-        elif traktList == "played":
+        elif trakt_list == "played":
             page_url = "shows/played"
-        elif traktList == "recommended":
+        elif trakt_list == "recommended":
             page_url = "recommendations/shows"
-        elif traktList == "newshow":
+        elif trakt_list == "newshow":
             page_url = 'calendars/all/shows/new/%s/30' % datetime.date.today().strftime("%Y-%m-%d")
-        elif traktList == "newseason":
+        elif trakt_list == "newseason":
             page_url = 'calendars/all/shows/premieres/%s/30' % datetime.date.today().strftime("%Y-%m-%d")
         else:
             page_url = "shows/anticipated"
 
         try:
-            (trakt_blacklist, recommended_shows, removed_from_medusa) = TraktPopular().fetch_popular_shows(page_url=page_url, trakt_list=traktList)
+            (trakt_blacklist, recommended_shows, removed_from_medusa) = TraktPopular().fetch_popular_shows(page_url=page_url, trakt_list=trakt_list)
         except Exception as e:
             # print traceback.format_exc()
             trakt_blacklist = False

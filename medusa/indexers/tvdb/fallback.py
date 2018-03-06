@@ -1,3 +1,4 @@
+# coding=utf-8
 """Plex or other tvdb fallback sources."""
 
 import datetime

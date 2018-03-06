@@ -188,6 +188,7 @@ class Show(object):
         """
         Change the pause state of a show.
 
+        :param series_id:
         :param indexer_id: The unique id of the show to update
         :param pause: ``True`` to pause the show, ``False`` to resume the show, ``None`` to toggle the pause state
         :return: A tuple containing:
@@ -213,6 +214,7 @@ class Show(object):
         """
         Try to refresh a show.
 
+        :param series_id:
         :param indexer_id: The unique id of the show to refresh
         :return: A tuple containing:
          - an error message if the show could not be refreshed, ``None`` otherwise

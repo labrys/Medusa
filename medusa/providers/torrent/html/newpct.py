@@ -25,7 +25,7 @@ class NewpctProvider(TorrentProvider):
 
     search_regex = re.compile(r'(.*) S0?(\d+)E0?(\d+)')
     anime_search_regex = re.compile(r'(.*) (\d+)')
-    torrent_id = re.compile(r'\/(\d{6,7})_')
+    torrent_id = re.compile(r'/(\d{6,7})_')
 
     def __init__(self):
         """Initialize the class."""

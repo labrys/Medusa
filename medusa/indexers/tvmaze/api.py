@@ -478,9 +478,6 @@ class TVmaze(BaseIndexer):
         """Search tvmaze for a show, using an external id.
 
         Accepts as kwargs, so you'l need to add the externals as key/values.
-        :param tvrage: The tvrage id.
-        :param thetvdb: The tvdb id.
-        :param imdb: An imdb id (inc. tt).
         :returns: A dict with externals, including the tvmaze id.
         """
         mapping = {'thetvdb': 'tvdb_id', 'tvrage': 'tvrage_id', 'imdb': 'imdb_id'}

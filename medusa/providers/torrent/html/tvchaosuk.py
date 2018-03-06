@@ -172,7 +172,7 @@ class TVChaosUKProvider(TorrentProvider):
                         title = re.sub(r'(.*)(?i)Series', r'\1Season', title)
 
                     # Strip year from the end or we can't parse it!
-                    title = re.sub(r'(.*)[\. ]?\(\d{4}\)', r'\1', title)
+                    title = re.sub(r'(.*)[. ]?\(\d{4}\)', r'\1', title)
                     title = re.sub(r'\s+', r' ', title)
 
                     torrent_size = row('td')[labels.index('Size')].get_text(strip=True)

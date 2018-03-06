@@ -261,11 +261,11 @@ class GenericMetadata(object):
 
             try:
                 with io.open(nfo_file_path, u'rb') as xmlFileObj:
-                    showXML = etree.ElementTree(file=xmlFileObj)
+                    show_xml = etree.ElementTree(file=xmlFileObj)
 
-                indexerid = showXML.find(u'id')
+                indexerid = show_xml.find(u'id')
 
-                root = showXML.getroot()
+                root = show_xml.getroot()
                 if indexerid is not None:
                     indexerid.text = str(show_obj.indexerid)
                 else:
@@ -274,7 +274,7 @@ class GenericMetadata(object):
                 # Make it purdy
                 helpers.indent_xml(root)
 
-                showXML.write(nfo_file_path, encoding=u'UTF-8')
+                show_xml.write(nfo_file_path, encoding=u'UTF-8')
                 helpers.chmod_as_parent(nfo_file_path)
 
                 return True
@@ -593,13 +593,13 @@ class GenericMetadata(object):
                 )
                 continue
 
-            seasonData = get_image(season_url)
+            season_data = get_image(season_url)
 
-            if not seasonData:
+            if not season_data:
                 log.debug(u'No season poster data available, skipping this season')
                 continue
 
-            result += [self._write_image(seasonData, season_poster_file_path)]
+            result += [self._write_image(season_data, season_poster_file_path)]
 
         if result:
             return all(result)
@@ -641,13 +641,13 @@ class GenericMetadata(object):
                 )
                 continue
 
-            seasonData = get_image(season_url)
+            season_data = get_image(season_url)
 
-            if not seasonData:
+            if not season_data:
                 log.debug(u'No season banner data available, skipping this season')
                 continue
 
-            result += [self._write_image(seasonData, season_banner_file_path)]
+            result += [self._write_image(season_data, season_banner_file_path)]
 
         if result:
             return all(result)
@@ -705,9 +705,9 @@ class GenericMetadata(object):
                 os.makedirs(image_dir)
                 helpers.chmod_as_parent(image_dir)
 
-            outFile = io.open(image_path, u'wb')
-            outFile.write(image_data)
-            outFile.close()
+            out_file = io.open(image_path, u'wb')
+            out_file.write(image_data)
+            out_file.close()
             helpers.chmod_as_parent(image_path)
         except IOError as e:
             exception_handler.handle(e, u'Unable to write image to {location}', location=image_path)
@@ -896,22 +896,22 @@ class GenericMetadata(object):
 
         try:
             with io.open(metadata_path, u'rb') as xmlFileObj:
-                showXML = etree.ElementTree(file=xmlFileObj)
+                show_xml = etree.ElementTree(file=xmlFileObj)
 
-            if (showXML.findtext(u'title') is None or
-                    (showXML.findtext(u'tvdbid') is None and showXML.findtext(u'id') is None)):
+            if (show_xml.findtext(u'title') is None or
+                    (show_xml.findtext(u'tvdbid') is None and show_xml.findtext(u'id') is None)):
                 log.debug(
                     u'Invalid info in tvshow.nfo (missing name or id): {0} {1} {2}',
-                    showXML.findtext(u'title'), showXML.findtext(u'tvdbid'), showXML.findtext(u'id'),
+                    show_xml.findtext(u'title'), show_xml.findtext(u'tvdbid'), show_xml.findtext(u'id'),
                 )
                 return empty_return
 
-            name = showXML.findtext(u'title')
+            name = show_xml.findtext(u'title')
 
-            if showXML.findtext(u'tvdbid'):
-                indexer_id = int(showXML.findtext(u'tvdbid'))
-            elif showXML.findtext(u'id'):
-                indexer_id = int(showXML.findtext(u'id'))
+            if show_xml.findtext(u'tvdbid'):
+                indexer_id = int(show_xml.findtext(u'tvdbid'))
+            elif show_xml.findtext(u'id'):
+                indexer_id = int(show_xml.findtext(u'id'))
             else:
                 log.warning(u'Empty <id> or <tvdbid> field in NFO, unable to find a ID')
                 return empty_return
@@ -922,8 +922,8 @@ class GenericMetadata(object):
                 return empty_return
 
             indexer = None
-            if showXML.findtext(u'episodeguide/url'):
-                epg_url = showXML.findtext(u'episodeguide/url').lower()
+            if show_xml.findtext(u'episodeguide/url'):
+                epg_url = show_xml.findtext(u'episodeguide/url').lower()
                 if str(indexer_id) in epg_url:
                     if u'thetvdb.com' in epg_url:
                         indexer = INDEXER_TVDB

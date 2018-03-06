@@ -95,16 +95,16 @@ class Notifier(object):
             name = title
 
         if host is None:
-            hostParts = app.GROWL_HOST.split(':')
+            host_parts = app.GROWL_HOST.split(':')
         else:
-            hostParts = host.split(':')
+            host_parts = host.split(':')
 
-        if len(hostParts) != 2 or hostParts[1] == '':
+        if len(host_parts) != 2 or host_parts[1] == '':
             port = 23053
         else:
-            port = int(hostParts[1])
+            port = int(host_parts[1])
 
-        growlHosts = [(hostParts[0], port)]
+        growl_hosts = [(host_parts[0], port)]
 
         opts = {
             'name': name,
@@ -122,7 +122,7 @@ class Notifier(object):
 
         opts['icon'] = True
 
-        for pc in growlHosts:
+        for pc in growl_hosts:
             opts['host'] = pc[0]
             opts['port'] = pc[1]
             log.debug(
@@ -148,16 +148,16 @@ class Notifier(object):
         opts = {}
 
         if host is None:
-            hostParts = app.GROWL_HOST.split(':')
+            host_parts = app.GROWL_HOST.split(':')
         else:
-            hostParts = host.split(':')
+            host_parts = host.split(':')
 
-        if len(hostParts) != 2 or hostParts[1] == '':
+        if len(host_parts) != 2 or host_parts[1] == '':
             port = 23053
         else:
-            port = int(hostParts[1])
+            port = int(host_parts[1])
 
-        opts['host'] = hostParts[0]
+        opts['host'] = host_parts[0]
         opts['port'] = port
 
         if password is None:

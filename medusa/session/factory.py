@@ -1,3 +1,4 @@
+# coding=utf-8
 """Session class factory methods."""
 
 import logging

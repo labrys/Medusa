@@ -57,9 +57,9 @@ class Notifier(object):
             xml = parseString(response1)
             time.sleep(300.0 / 1000.0)
             for node in xml.getElementsByTagName('path'):
-                xmlTag = node.toxml()
-                xmlData = xmlTag.replace('<path>', '').replace('</path>', '').replace('[=]', '')
-                url_db = 'http://' + host + ':8008/metadata_database?arg0=check_database&arg1=' + xmlData
+                xml_tag = node.toxml()
+                xml_data = xml_tag.replace('<path>', '').replace('</path>', '').replace('[=]', '')
+                url_db = 'http://' + host + ':8008/metadata_database?arg0=check_database&arg1=' + xml_data
                 reqdb = Request(url_db)
                 handledb = urlopen(reqdb)
                 responsedb = handledb.read()
@@ -67,15 +67,15 @@ class Notifier(object):
                 returnvalue = xmldb.getElementsByTagName('returnValue')[0].toxml().replace('<returnValue>', '').replace(
                     '</returnValue>', '')
                 if returnvalue == '0':
-                    DB_path = xmldb.getElementsByTagName('database_path')[0].toxml().replace(
+                    db_path = xmldb.getElementsByTagName('database_path')[0].toxml().replace(
                         '<database_path>', '').replace('</database_path>', '').replace('[=]', '')
-                    if dbloc == 'local' and DB_path.find('localhost') > -1:
+                    if dbloc == 'local' and db_path.find('localhost') > -1:
                         app.NMJv2_HOST = host
-                        app.NMJv2_DATABASE = DB_path
+                        app.NMJv2_DATABASE = db_path
                         return True
-                    if dbloc == 'network' and DB_path.find('://') > -1:
+                    if dbloc == 'network' and db_path.find('://') > -1:
                         app.NMJv2_HOST = host
-                        app.NMJv2_DATABASE = DB_path
+                        app.NMJv2_DATABASE = db_path
                         return True
 
         except IOError as e:

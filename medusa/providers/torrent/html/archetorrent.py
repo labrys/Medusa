@@ -156,7 +156,7 @@ class ArcheTorrentProvider(TorrentProvider):
                     size = convert_size(torrent_size, default=-1)
 
                     date_raw = torrent('a')[2]['onmouseover']
-                    pubdate_raw = re.search(r'Poster le: <\/b>(\d{2}-\d{2}-\d{4})', date_raw)
+                    pubdate_raw = re.search(r'Poster le: </b>(\d{2}-\d{2}-\d{4})', date_raw)
                     pubdate = self.parse_pubdate(pubdate_raw.group(1), dayfirst=True)
 
                     item = {

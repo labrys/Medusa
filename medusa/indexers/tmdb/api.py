@@ -569,9 +569,6 @@ class Tmdb(BaseIndexer):
         """Search tmdb for a show, using an external id.
 
         Accepts as kwargs, so you'l need to add the externals as key/values.
-        :param tvrage_id: The tvrage id.
-        :param tvdb_id: The tvdb id.
-        :param imdb_id: An imdb id (inc. tt).
         :returns: A dict with externals, including the tvmaze id.
         """
         wanted_externals = ['tvdb_id', 'imdb_id', 'tvrage_id']

@@ -1,3 +1,4 @@
+# coding=utf-8
 """Custom exceptions used or raised by tvdb_api."""
 
 __author__ = "p0psicles"
