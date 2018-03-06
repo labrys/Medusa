@@ -9,8 +9,6 @@ import mimetypes
 import os
 import sys
 
-import six
-
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
@@ -24,8 +22,6 @@ def initialize():
     _register_utf8_codec()
     _configure_syspath()
     _unload_system_dogpile()
-    if six.PY2:
-        _monkey_patch_fs_functions()
     # configuration
     _configure_mimetypes()
     _configure_ssl()
@@ -94,11 +90,6 @@ def _register_utf8_codec():
             return utf8
     log.debug('Registering codecs')
     codecs.register(_register_utf8)
-
-
-def _monkey_patch_fs_functions():
-    from medusa.init import filesystem
-    filesystem.initialize()
 
 
 def _early_basic_logging():

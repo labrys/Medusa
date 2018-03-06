@@ -484,7 +484,7 @@ def save_subs(tv_episode, video, found_subtitles, video_path=None):
     show_indexerid = tv_episode.series.indexerid
     status = tv_episode.status
     subtitles_dir = get_subtitles_dir(video_path)
-    saved_subtitles = save_subtitles(video, found_subtitles, directory=_encode(subtitles_dir),
+    saved_subtitles = save_subtitles(video, found_subtitles, directory=subtitles_dir,
                                      single=not app.SUBTITLES_MULTI)
 
     for subtitle in saved_subtitles:
@@ -628,66 +628,6 @@ def get_current_subtitles(tv_episode):
         return get_subtitles(video)
 
 
-def _encode(value, fallback=None):
-    """Encode the value using the specified encoding.
-
-    It fallbacks to the specified encoding or SYS_ENCODING if not defined
-
-    :param value: the value to be encoded
-    :type value: str
-    :param encoding: the encoding to be used
-    :type encoding: str
-    :param fallback: the fallback encoding to be used
-    :type fallback: str
-    :return: the encoded value
-    :rtype: str
-    """
-    encoding = 'utf-8' if os.name != 'nt' else app.SYS_ENCODING
-
-    try:
-        return value.encode(encoding)
-    except UnicodeEncodeError:
-        log.debug(
-            u'Failed to encode to {encoding},'
-            u' falling back to {fallback}: {value!r}', {
-                'encoding': encoding,
-                'fallback': fallback or app.SYS_ENCODING,
-                'value': value,
-            }
-        )
-        return value.encode(fallback or app.SYS_ENCODING)
-
-
-def _decode(value, fallback=None):
-    """Decode the value using the specified encoding.
-
-    It fallbacks to the specified encoding or SYS_ENCODING if not defined
-
-    :param value: the value to be encoded
-    :type value: str
-    :param encoding: the encoding to be used
-    :type encoding: str
-    :param fallback: the fallback encoding to be used
-    :type fallback: str
-    :return: the decoded value
-    :rtype: unicode
-    """
-    encoding = 'utf-8' if os.name != 'nt' else app.SYS_ENCODING
-
-    try:
-        return text_type(value, encoding)
-    except UnicodeDecodeError:
-        log.debug(
-            u'Failed to decode to {encoding},'
-            u' falling back to {fallback}: {value!r}', {
-                'encoding': encoding,
-                'fallback': fallback or app.SYS_ENCODING,
-                'value': value,
-            }
-        )
-        return text_type(value, fallback or app.SYS_ENCODING)
-
-
 def get_subtitle_description(subtitle):
     """Return a human readable name/description for the given subtitle (if possible).
 
@@ -754,8 +694,7 @@ def get_video(tv_episode, video_path, subtitles_dir=None, subtitles=True, embedd
         log.debug(u'Found cached video information under key {}', key)
         return cached_payload['video']
 
-    video_path = _encode(video_path)
-    subtitles_dir = _encode(subtitles_dir or get_subtitles_dir(video_path))
+    subtitles_dir = subtitles_dir or get_subtitles_dir(video_path)
 
     log.debug(u'Scanning video {}...', video_path)
 
@@ -804,7 +743,7 @@ def get_subtitles_dir(video_path):
         return os.path.dirname(video_path)
 
     if os.path.isabs(app.SUBTITLES_DIR):
-        return _decode(app.SUBTITLES_DIR)
+        return app.SUBTITLES_DIR
 
     new_subtitles_path = os.path.join(os.path.dirname(video_path), app.SUBTITLES_DIR)
     if helpers.make_dir(new_subtitles_path):
@@ -1079,7 +1018,7 @@ class SubtitlesFinder(object):
 
             ep_num = episode_num(ep_to_sub['season'], ep_to_sub['episode']) or \
                 episode_num(ep_to_sub['season'], ep_to_sub['episode'], numbering='absolute')
-            subtitle_path = _encode(ep_to_sub['location'], fallback='utf-8')
+            subtitle_path = ep_to_sub['location']
             if not os.path.isfile(subtitle_path):
                 log.debug(
                     u'Episode file does not exist,'

@@ -1581,7 +1581,7 @@ class CMD_SearchIndexers(ApiCall):
                 indexer_api = indexerApi(_indexer).indexer(**indexer_api_params)
 
                 try:
-                    api_data = indexer_api[str(self.name).encode()]
+                    api_data = indexer_api[str(self.name)]
                 except (IndexerShowNotFound, IndexerShowIncomplete, IndexerError):
                     log.warning(u'API :: Unable to find show with id {0}', self.indexerid)
                     continue
