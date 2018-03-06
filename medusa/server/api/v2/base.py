@@ -55,7 +55,7 @@ class BaseRequestHandler(RequestHandler):
             except jwt.DecodeError:
                 return self._unauthorized('Invalid token.')
         elif authorization.startswith('Basic'):
-            auth_decoded = base64.decodestring(authorization[6:])
+            auth_decoded = base64.decodebytes(authorization[6:])
             username, password = auth_decoded.split(':', 2)
             if username != app.WEB_USERNAME or password != app.WEB_PASSWORD:
                 return self._unauthorized('Invalid user/pass.')

@@ -300,7 +300,7 @@ class WebRoot(WebHandler):
             return (helpers.remove_article(x), x)[not x or app.SORT_ARTICLE]
 
         main_db_con = db.DBConnection(row_type='dict')
-        shows = sorted(app.showList, lambda x, y: cmp(titler(x.name), titler(y.name)))
+        shows = sorted(app.showList, key=lambda x: titler(x.name))
         episodes = {}
 
         results = main_db_con.select(
