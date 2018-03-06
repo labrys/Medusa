@@ -446,7 +446,9 @@ class GitUpdateManager(UpdateManager):
     @staticmethod
     def _run_git(git_path, args):
 
-        output = err = exit_status = None
+        output = ''
+        err = ''
+        exit_status = ''
 
         if not git_path:
             log.warning(u"No git specified, can't use git commands")
@@ -458,7 +460,10 @@ class GitUpdateManager(UpdateManager):
         # String will be updated as soon we check github
         app.NEWEST_VERSION_STRING = None
 
-        cmd = git_path + ' ' + args
+        cmd = '{git} {args}'.format(
+            git=git_path,
+            args=args,
+        )
 
         try:
             log.debug(u'Executing {cmd} with your shell in {dir}', {'cmd': cmd, 'dir': app.PROG_DIR})
@@ -467,8 +472,9 @@ class GitUpdateManager(UpdateManager):
             output, err = p.communicate()
             exit_status = p.returncode
 
-            if output:
-                output = output.strip()
+            if output and not isinstance(output, six.text_type):
+                output = six.text_type(output, 'utf-8')
+            output = output.strip()
 
         except OSError:
             log.info(u"Command {cmd} didn't work", {'cmd': cmd})

@@ -66,21 +66,13 @@ class GenericQueue(object):
                 if self.queue:
 
                     # sort by priority
-                    def sorter(x, y):
+                    def sorter(x):
                         """
                         Sorts by priority descending then time ascending.
                         """
-                        if x.priority == y.priority:
-                            if y.added == x.added:
-                                return 0
-                            elif y.added < x.added:
-                                return 1
-                            elif y.added > x.added:
-                                return -1
-                        else:
-                            return y.priority - x.priority
+                        return x.priority, x.added
 
-                    self.queue.sort(cmp=sorter)
+                    self.queue.sort(key=sorter)
                     if self.queue[0].priority < self.min_priority:
                         return
 

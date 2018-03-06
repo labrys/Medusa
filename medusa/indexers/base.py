@@ -12,7 +12,7 @@ from itertools import chain
 from operator import itemgetter
 
 import requests
-from six import integer_types
+from six import integer_types, text_type
 
 from medusa.indexers.exceptions import (
     IndexerAttributeNotFound,
@@ -76,7 +76,7 @@ class BaseIndexer(object):
             self.config['cache_location'] = self._get_temp_dir()
         elif cache is False:
             self.config['cache_enabled'] = False
-        elif isinstance(cache, basestring):
+        elif isinstance(cache, text_type):
             self.config['cache_enabled'] = True
             self.config['cache_location'] = cache
         else:
@@ -283,7 +283,7 @@ class BaseIndexer(object):
 
     def __getitem__(self, key):
         """Handle tvdb_instance['seriesname'] calls. The dict index should be the show id."""
-        if isinstance(key, (integer_types, long)):
+        if isinstance(key, integer_types):
             # Item is integer, treat as show id
             if key not in self.shows:
                 self._get_show_data(key, self.config['language'])

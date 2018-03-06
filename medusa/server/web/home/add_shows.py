@@ -58,7 +58,7 @@ class HomeAddShows(Home):
         if not lang or lang == 'null':
             lang = app.INDEXER_DEFAULT_LANGUAGE
 
-        search_term = search_term.encode('utf-8')
+        search_term = search_term
 
         search_terms = [search_term]
 

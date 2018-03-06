@@ -71,7 +71,7 @@ class RecommendedShow(object):
         self.votes = show_attr.get('votes')
         if self.votes and not isinstance(self.votes, int):
             trans_mapping = {ord(c): None for c in ['.', ',']}
-            self.votes = int(self.votes.decode('utf-8').translate(trans_mapping))
+            self.votes = int(self.votes.translate(trans_mapping))
 
         self.image_href = show_attr.get('image_href')
         self.image_src = show_attr.get('image_src')

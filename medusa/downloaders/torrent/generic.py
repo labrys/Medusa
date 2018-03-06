@@ -50,7 +50,7 @@ class GenericClient(object):
         self.session = MedusaSession()
         self.session.auth = (self.username, self.password)
 
-    def _request(self, method='get', params=None, data=None, files=None, cookies=None):
+    def _request(self, method='get', params=None, data=None, files=None, cookies=None, json=None):
 
         if time.time() > self.last_time + 1800 or not self.auth:
             self.last_time = time.time()

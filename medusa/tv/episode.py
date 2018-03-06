@@ -1303,7 +1303,7 @@ class Episode(TV):
         if not self.dirty:
             return
 
-        new_value_dict = {b'indexerid': self.indexerid,
+        new_value_dict = {'indexerid': self.indexerid,
                           'name': self.name,
                           'description': self.description,
                           'subtitles': ','.join(self.subtitles),

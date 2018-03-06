@@ -1,7 +1,7 @@
 # coding=utf-8
 
 
-from requests.compat import is_py3
+import six
 from requests import RequestException
 
 
@@ -11,7 +11,7 @@ class BaseError(Exception):
         self.value = value
 
     def __str__(self):
-        return self.value if is_py3 else unicode(self.value).encode('utf-8')
+        return six.text_type(self.value, 'utf-8')
 
 
 class GeneralError(BaseError):

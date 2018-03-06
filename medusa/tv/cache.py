@@ -352,8 +352,8 @@ class Cache(object):
         cache_db_con = self._get_db()
         cache_db_con.upsert(
             table,
-            {b'time': int(value or 0)},
-            {b'provider': self.provider_id}
+            {'time': int(value or 0)},
+            {'provider': self.provider_id}
         )
 
     def should_update(self):
