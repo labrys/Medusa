@@ -6,12 +6,12 @@ import logging
 from collections import OrderedDict
 from time import time
 
-from pytvmaze import TVMaze
+import pytvmaze
 from pytvmaze.exceptions import (
     BaseError, CastNotFound, IDNotFound,
     ShowIndexError, ShowNotFound, UpdateNotFound,
 )
-from six import integer_types, string_types, text_type
+from six import integer_types, string_types, text_type, iteritems
 
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
 from medusa.indexers.exceptions import (
@@ -53,7 +53,7 @@ class TVmaze(BaseIndexer):
                                          'hu': 19, 'ja': 25, 'he': 24, 'ko': 32, 'sv': 8, 'sl': 30}
 
         # Initiate the pytvmaze API
-        self.tvmaze_api = TVMaze(session=self.config['session'])
+        self.tvmaze_api = pytvmaze.TVMaze(session=self.config['session'])
 
         self.config['artwork_prefix'] = '{base_url}{image_size}{file_path}'
 
@@ -100,7 +100,7 @@ class TVmaze(BaseIndexer):
         for item in tvmaze_response:
             return_dict = {}
             try:
-                for key, value in item.__dict__.iteritems():
+                for key, value in iteritems(item.__dict__):
                     if value is None or value == []:
                         continue
 

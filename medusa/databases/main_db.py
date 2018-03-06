@@ -99,17 +99,17 @@ class MainSanityCheck(db.DBSanityCheck):
                         len(sql_results))
 
         for archivedEp in sql_results:
-            fixedStatus = common.Quality.composite_status(common.ARCHIVED, common.Quality.UNKNOWN)
+            fixed_status = common.Quality.composite_status(common.ARCHIVED, common.Quality.UNKNOWN)
             existing = archivedEp['location'] and os.path.exists(archivedEp['location'])
             if existing:
                 quality = common.Quality.name_quality(archivedEp['location'], archivedEp['anime'], extend=False)
-                fixedStatus = common.Quality.composite_status(common.ARCHIVED, quality)
+                fixed_status = common.Quality.composite_status(common.ARCHIVED, quality)
 
             log.info(
                 u'Changing status from {old_status} to {new_status} for'
                 u' {id}: {ep} at {location} (File {result})',
                 {'old_status': common.statusStrings[common.ARCHIVED],
-                 'new_status': common.statusStrings[fixedStatus],
+                 'new_status': common.statusStrings[fixed_status],
                  'id': archivedEp['showid'],
                  'ep': episode_num(archivedEp['season'],
                                    archivedEp['episode']),
@@ -117,7 +117,7 @@ class MainSanityCheck(db.DBSanityCheck):
                  'result': 'EXISTS' if existing else 'NOT FOUND', }
             )
 
-            self.connection.action("UPDATE tv_episodes SET status = %i WHERE episode_id = %i" % (fixedStatus, archivedEp['episode_id']))
+            self.connection.action("UPDATE tv_episodes SET status = %i WHERE episode_id = %i" % (fixed_status, archivedEp['episode_id']))
 
     def fix_duplicate_episodes(self):
 
@@ -182,11 +182,11 @@ class MainSanityCheck(db.DBSanityCheck):
 
     def fix_unaired_episodes(self):
 
-        curDate = datetime.date.today()
+        cur_date = datetime.date.today()
 
         sql_results = self.connection.select(
             "SELECT episode_id FROM tv_episodes WHERE (airdate > ? or airdate = 1) AND status in (?,?) AND season > 0",
-            [curDate.toordinal(), common.SKIPPED, common.WANTED])
+            [cur_date.toordinal(), common.SKIPPED, common.WANTED])
 
         for cur_unaired in sql_results:
             log.info(u'Fixing unaired episode status for episode_id: {0!s}',

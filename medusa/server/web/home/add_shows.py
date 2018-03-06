@@ -97,11 +97,24 @@ class HomeAddShows(Home):
                     log.info(u'Error searching for show: {error}'.format(error=e.message))
 
         for i, shows in iteritems(results):
-            final_results.extend({(indexerApi(i).name, i, indexerApi(i).config['show_url'], int(show['id']),
-                                   show['seriesname'].encode('utf-8'), show['firstaired'] or 'N/A',
-                                   show.get('network', '').encode('utf-8') or 'N/A') for show in shows})
+            indexer_api = indexerApi(i)
+            result_set = {
+                (
+                    indexer_api.name,
+                    i,
+                    indexer_api.config['show_url'],
+                    int(show['id']),
+                    show['seriesname'],
+                    show['firstaired'] or 'N/A',
+                    show.get('network', '') or 'N/A',
+                )
+                for show in shows
+            }
+            final_results.extend(result_set)
 
         lang_id = indexerApi().config['langabbv_to_id'][lang]
+        log.debug(final_results)
+        log.debug(lang_id)
         return json.dumps({'results': final_results, 'langid': lang_id})
 
     def massAddTable(self, rootDir=None):

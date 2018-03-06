@@ -182,7 +182,7 @@ class DateTime(datetime.datetime):
             except Exception:
                 pass
 
-        return result.decode(app.SYS_ENCODING)
+        return result
 
     # display Datetime in application Format
     @StaticOrInstance

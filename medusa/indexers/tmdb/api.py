@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 import tmdbsimple as tmdb
 from dateutil import parser
 from requests.exceptions import RequestException
-from six import integer_types, string_types, text_type
+from six import integer_types, string_types, text_type, iteritems
 
 from medusa.app import TMDB_API_KEY
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
@@ -312,7 +312,7 @@ class Tmdb(BaseIndexer):
 
         images = self.tmdb.TV(sid).images(params=params)
         bid = images['id']
-        for image_type, images in {'poster': images['posters'], 'fanart': images['backdrops']}.iteritems():
+        for image_type, images in iteritems({'poster': images['posters'], 'fanart': images['backdrops']}):
             try:
                 if image_type not in _images:
                     _images[image_type] = {}

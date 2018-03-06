@@ -38,7 +38,7 @@ from datetime import datetime
 from datetime import date
 
 # python 2 and python 3 compatibility library
-from six import iteritems, text_type
+from six import iteritems, text_type, string_types
 from .auth.tvdb import TVDBAuth
 from .configuration import Configuration
 from .exceptions import ApiException
@@ -232,7 +232,7 @@ class ApiClient(object):
         if data is None:
             return None
 
-        if type(klass) in (str, unicode):
+        if isinstance(klass, string_types):
             if klass.startswith('list['):
                 sub_kls = re.match('list\[(.*)\]', klass).group(1)
                 return [self.__deserialize(sub_data, sub_kls)
@@ -246,13 +246,13 @@ class ApiClient(object):
             # convert str to class
             # for native types
             if klass in ['int', 'float', 'str', 'bool',
-                         'date', 'datetime', 'object', 'unicode']:
+                         'date', 'datetime', 'object', 'unicode', 'text_type']:
                 klass = eval(klass)
             # for model types
             else:
                 klass = eval('models.' + klass)
 
-        if klass in [int, float, str, bool, unicode]:
+        if klass in [int, float, str, bool, string_types]:
             return self.__deserialize_primitive(data, klass)
         elif klass == object:
             return self.__deserialize_object(data)

@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 from requests.compat import urljoin
 from requests.exceptions import RequestException
-from six import string_types, text_type
+from six import string_types, text_type, iteritems
 from tvdbapiv2 import (
     ApiClient,
     EpisodesApi,
@@ -118,7 +118,7 @@ class TVDB(BaseIndexer):
                             if isinstance(value, dict) and isinstance(key_mapping[attribute], dict):
                                 # Let's map the children, i'm only going 1 deep, because usecases that I need it for,
                                 # I don't need to go any further
-                                for k, v in value.iteritems():
+                                for k, v in iteritems(value):
                                     if key_mapping.get(attribute)[k]:
                                         return_dict[key_mapping[attribute][k]] = v
 

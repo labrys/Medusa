@@ -145,7 +145,7 @@ class Show(object):
     def overall_stats():
         db = DBConnection()
         shows = app.showList
-        today = str(date.today().toordinal())
+        today = date.today().toordinal()
 
         downloaded_status = Quality.DOWNLOADED + Quality.ARCHIVED
         snatched_status = Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_BEST
