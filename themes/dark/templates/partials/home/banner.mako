@@ -75,7 +75,7 @@
                 </tbody>
             % endif
             <tbody>
-            <% my_show_list.sort(lambda x, y: cmp(x.name, y.name)) %>
+            <% my_show_list.sort(key=lambda x: x.name) %>
             % for cur_show in my_show_list:
             <%
                 cur_airs_next = ''

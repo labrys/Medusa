@@ -249,6 +249,11 @@ class WebHandler(BaseHandler):
     @authenticated
     @coroutine
     def get(self, route, *args, **kwargs):
+        log.debug(
+            'Route: {!r} '
+            'args: {!r} '
+            'kwargs: {!r} '.format(route, args, kwargs)
+        )
         try:
             # route -> method obj
             route = route.strip('/').replace('.', '_') or 'index'

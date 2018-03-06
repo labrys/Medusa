@@ -43,9 +43,9 @@ class ComingEpisodes(object):
 
     categories = ['later', 'missed', 'soon', 'today']
     sorts = {
-        'date': (lambda a, b: cmp(a['localtime'], b['localtime'])),
-        'network': (lambda a, b: cmp((a['network'], a['localtime']), (b['network'], b['localtime']))),
-        'show': (lambda a, b: cmp((a['show_name'], a['localtime']), (b['show_name'], b['localtime']))),
+        'date': (lambda a: a['localtime']),
+        'network': (lambda a: a['network'], a['localtime']),
+        'show': (lambda a: a['show_name'], a['localtime']),
     }
 
     def __init__(self):
@@ -126,7 +126,7 @@ class ComingEpisodes(object):
             results[index]['localtime'] = DateTime.convert_to_setting(
                 parse_date_time(item['airdate'], item['airs'], item['network']))
 
-        results.sort(ComingEpisodes.sorts[sort])
+        results.sort(key=ComingEpisodes.sorts[sort])
 
         if not group:
             return results
