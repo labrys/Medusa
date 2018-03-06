@@ -126,6 +126,12 @@ class IssueSubmitter(object):
     def submit_github_issue(self, version_checker, max_issues=500):
         """Submit errors to github."""
         def result(message, level=logging.WARNING):
+            """
+
+            :param message:
+            :param level:
+            :return:
+            """
             log.log(level, message)
             return [(message, None)]
 

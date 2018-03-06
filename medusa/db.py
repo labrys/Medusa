@@ -1,3 +1,4 @@
+# coding=utf-8
 import logging
 import os.path
 import re
@@ -34,6 +35,10 @@ def db_filename(filename=None, suffix=None):
 
 
 class DBConnection(object):
+    """
+
+    """
+
     def __init__(self, filename=None, suffix=None, row_type=None):
 
         self.filename = filename or app.APPLICATION_DB
@@ -61,7 +66,8 @@ class DBConnection(object):
                 self._set_row_factory()
 
         except sqlite3.OperationalError:
-            log.warning(u'Please check your database owner/permissions: {}'.format(db_filename(self.filename, self.suffix)))
+            log.warning(
+                u'Please check your database owner/permissions: {}'.format(db_filename(self.filename, self.suffix)))
         except Exception as e:
             log.debug(u"DB error: " + ex(e))
             raise
@@ -97,8 +103,8 @@ class DBConnection(object):
         except sqlite3.OperationalError as e:
             # This errors user should be able to fix it.
             if 'unable to open database file' in e.args[0] or \
-               'database is locked' in e.args[0] or \
-               'database or disk is full' in e.args[0]:
+                            'database is locked' in e.args[0] or \
+                            'database or disk is full' in e.args[0]:
                 log.warning(u'DB error: {0!r}'.format(e))
             else:
                 log.info(u"Query: '{0}'. Arguments: '{1}'".format(query, args))
@@ -312,18 +318,18 @@ class DBConnection(object):
         :param keyDict:  columns in table to update/insert
         """
         # TODO: Make this return true/false on success/error
-        changesBefore = self.connection.total_changes
+        changes_before = self.connection.total_changes
 
-        genParams = lambda myDict: [x + " = ?" for x in myDict.keys()]
+        gen_params = lambda my_dict: [x + " = ?" for x in my_dict.keys()]
 
-        query = "UPDATE [" + tableName + "] SET " + ", ".join(genParams(valueDict)) + " WHERE " + " AND ".join(
-            genParams(keyDict))
-        
+        query = "UPDATE [" + tableName + "] SET " + ", ".join(gen_params(valueDict)) + " WHERE " + " AND ".join(
+            gen_params(keyDict))
+
         values = list(valueDict.values()) + list(keyDict.values())
         keys = list(valueDict.keys()) + list(keyDict.keys())
         self.action(query, values)
 
-        if self.connection.total_changes == changesBefore:
+        if self.connection.total_changes == changes_before:
             query = "INSERT INTO [" + tableName + "] (" + ", ".join(keys) + ")" + \
                     " VALUES (" + ", ".join(["?"] * len(keys)) + ")"
             self.action(query, values)
@@ -372,7 +378,7 @@ class DBConnection(object):
         :param tableName: table name to check
         :return: True if table exists, False if it does not
         """
-        return len(self.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (tableName, ))) > 0
+        return len(self.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (tableName,))) > 0
 
     def has_column(self, tableName, column):
         """
@@ -399,14 +405,26 @@ class DBConnection(object):
 
 
 def sanity_check_database(connection, sanity_check):
+    """
+
+    :param connection:
+    :param sanity_check:
+    """
     sanity_check(connection).check()
 
 
 class DBSanityCheck(object):
+    """
+
+    """
+
     def __init__(self, connection):
         self.connection = connection
 
     def check(self):
+        """
+
+        """
         pass
 
 
@@ -426,6 +444,11 @@ def upgrade_database(connection, schema):
 
 
 def pretty_name(class_name):
+    """
+
+    :param class_name:
+    :return:
+    """
     return ' '.join([x.group() for x in re.finditer("([A-Z])([a-z0-9]+)", class_name)])
 
 
@@ -443,7 +466,6 @@ def restore_database(version):
     if not helpers.restore_versioned_file(db_filename(suffix='v' + str(version)), version):
         log.error(u"Database restore failed, abort upgrading database")
         sys.exit()
-        return False
     else:
         return True
 
@@ -469,29 +491,63 @@ def _process_upgrade(connection, upgradeClass):
 
 # Base migration class. All future DB changes should be subclassed from this class
 class SchemaUpgrade(object):
+    """
+
+    """
+
     def __init__(self, connection):
         self.connection = connection
 
     def has_table(self, tableName):
-        return len(self.connection.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (tableName, ))) > 0
+        """
+
+        :param tableName:
+        :return:
+        """
+        return len(self.connection.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (tableName,))) > 0
 
     def has_column(self, tableName, column):
+        """
+
+        :param tableName:
+        :param column:
+        :return:
+        """
         if not isinstance(column, text_type):
             column = text_type(column, 'utf-8')
         return column in self.connection.table_info(tableName)
 
     def add_column(self, table, column, column_type="NUMERIC", default=0):
+        """
+
+        :param table:
+        :param column:
+        :param column_type:
+        :param default:
+        """
         self.connection.action("ALTER TABLE [%s] ADD %s %s" % (table, column, column_type))
         self.connection.action("UPDATE [%s] SET %s = ?" % (table, column), (default,))
 
     def check_db_version(self):
+        """
+
+        :return:
+        """
         return self.connection.check_db_version()
 
     def inc_db_version(self):
+        """
+
+        :return:
+        """
         new_version = self.check_db_version() + 1
         self.connection.action("UPDATE db_version SET db_version = ?", [new_version])
         return new_version
 
     @property
     def major_version(self):
+        """
+
+        :return:
+        """
         return self.check_db_version()[0]

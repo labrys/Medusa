@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import logging
 import os
@@ -36,6 +37,10 @@ name_sports_presets = (
 
 
 class TVShow(object):  # pylint: disable=too-few-public-methods
+    """
+
+    """
+
     def __init__(self):
         self.name = "Show Name"
         self.genre = "Comedy"
@@ -79,6 +84,10 @@ class TVShow(object):  # pylint: disable=too-few-public-methods
 
 
 class TVEpisode(tv.Episode):  # pylint: disable=too-many-instance-attributes
+    """
+
+    """
+
     def __init__(self, season, episode, absolute_number, name):  # pylint: disable=super-init-not-called
         super(TVEpisode, self).__init__(None, season, episode)
         self.related_episodes = []
@@ -222,6 +231,14 @@ def validate_name(pattern, multi=None, anime_type=None,  # pylint: disable=too-m
 
 def generate_sample_ep(multi=None, abd=False, sports=False, anime_type=None):
     # make a fake episode object
+    """
+
+    :param multi:
+    :param abd:
+    :param sports:
+    :param anime_type:
+    :return:
+    """
     ep = TVEpisode(2, 3, 3, "Ep Name")
 
     # pylint: disable=protected-access
@@ -249,29 +266,38 @@ def generate_sample_ep(multi=None, abd=False, sports=False, anime_type=None):
 
             ep.release_name = 'Show.Name.003-004.HDTV.x264-RLSGROUP'
 
-            secondEp = TVEpisode(2, 4, 4, "Ep Name (2)")
-            secondEp.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
-            secondEp.release_name = ep.release_name
+            second_ep = TVEpisode(2, 4, 4, "Ep Name (2)")
+            second_ep.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
+            second_ep.release_name = ep.release_name
 
-            ep.related_episodes.append(secondEp)
+            ep.related_episodes.append(second_ep)
         else:
             ep.release_name = 'Show.Name.S02E03E04E05.HDTV.x264-RLSGROUP'
 
-            secondEp = TVEpisode(2, 4, 4, "Ep Name (2)")
-            secondEp.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
-            secondEp.release_name = ep.release_name
+            second_ep = TVEpisode(2, 4, 4, "Ep Name (2)")
+            second_ep.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
+            second_ep.release_name = ep.release_name
 
-            thirdEp = TVEpisode(2, 5, 5, "Ep Name (3)")
-            thirdEp.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
-            thirdEp.release_name = ep.release_name
+            third_ep = TVEpisode(2, 5, 5, "Ep Name (3)")
+            third_ep.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
+            third_ep.release_name = ep.release_name
 
-            ep.related_episodes.append(secondEp)
-            ep.related_episodes.append(thirdEp)
+            ep.related_episodes.append(second_ep)
+            ep.related_episodes.append(third_ep)
 
     return ep
 
 
 def test_name(pattern, multi=None, abd=False, sports=False, anime_type=None):
+    """
+
+    :param pattern:
+    :param multi:
+    :param abd:
+    :param sports:
+    :param anime_type:
+    :return:
+    """
     ep = generate_sample_ep(multi, abd, sports, anime_type)
 
     return {'name': ep.formatted_filename(pattern, multi, anime_type), 'dir': ep.formatted_dir(pattern, multi)}

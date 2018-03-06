@@ -1,3 +1,4 @@
+# coding=utf-8
 """Torrent checker module."""
 
 import logging

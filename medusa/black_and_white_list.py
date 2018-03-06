@@ -1,4 +1,4 @@
-
+# coding=utf-8
 """Black and White List module."""
 
 from __future__ import unicode_literals

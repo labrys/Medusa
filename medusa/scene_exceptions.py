@@ -130,8 +130,7 @@ def get_all_scene_exceptions(series_obj):
     """
     Get all scene exceptions for a show ID.
 
-    :param indexer_id: Indexer.
-    :param series_id: Series id.
+    :param series_obj:
     :return: dict of exceptions (e.g. exceptions_cache[season][exception_name])
     """
     return exceptions_cache.get((series_obj.indexer, series_obj.series_id), defaultdict(set))

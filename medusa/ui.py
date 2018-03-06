@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import json
 
@@ -102,6 +103,10 @@ class Notification(object):
 
 class ProgressIndicator(object):
 
+    """
+
+    """
+
     def __init__(self, percentComplete=0, currentStatus=None):
         self.percentComplete = percentComplete
         self.currentStatus = currentStatus or {'title': ''}
@@ -115,6 +120,11 @@ class ProgressIndicators(object):
 
     @staticmethod
     def get_indicator(name):
+        """
+
+        :param name:
+        :return:
+        """
         if name not in ProgressIndicators._pi:
             return []
 
@@ -128,6 +138,11 @@ class ProgressIndicators(object):
 
     @staticmethod
     def set_indicator(name, indicator):
+        """
+
+        :param name:
+        :param indicator:
+        """
         ProgressIndicators._pi[name].append(indicator)
 
 
@@ -139,15 +154,31 @@ class QueueProgressIndicator(object):
         self.name = name
 
     def num_total(self):
+        """
+
+        :return:
+        """
         return len(self.queueItemList)
 
     def num_finished(self):
+        """
+
+        :return:
+        """
         return len([x for x in self.queueItemList if not x.is_in_queue()])
 
     def num_remaining(self):
+        """
+
+        :return:
+        """
         return len([x for x in self.queueItemList if x.is_in_queue()])
 
     def next_name(self):
+        """
+
+        :return:
+        """
         for curItem in [app.show_queue_scheduler.action.currentItem] + app.show_queue_scheduler.action.queue:  # @UndefinedVariable
             if curItem in self.queueItemList:
                 return curItem.name
@@ -155,16 +186,24 @@ class QueueProgressIndicator(object):
         return "Unknown"
 
     def percent_complete(self):
-        numFinished = self.num_finished()
-        numTotal = self.num_total()
+        """
 
-        if numTotal == 0:
+        :return:
+        """
+        num_finished = self.num_finished()
+        num_total = self.num_total()
+
+        if num_total == 0:
             return 0
         else:
-            return int(float(numFinished) / float(numTotal) * 100)
+            return int(float(num_finished) / float(num_total) * 100)
 
 
 class LoadingTVShow(object):
+    """
+
+    """
+
     def __init__(self, show_dir):
         self.show_dir = show_dir
         self.series = None

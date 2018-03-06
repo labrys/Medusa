@@ -1,3 +1,4 @@
+# coding=utf-8
 import logging
 import threading
 import time
@@ -21,6 +22,10 @@ log = BraceAdapter(log)
 
 
 class ShowUpdater(object):
+    """
+
+    """
+
     def __init__(self):
         self.lock = threading.Lock()
         self.am_active = False
@@ -29,6 +34,10 @@ class ShowUpdater(object):
 
     def run(self, force=False):
 
+        """
+
+        :param force:
+        """
         self.am_active = True
         refresh_shows = []  # A list of shows, that need to be refreshed
         season_updates = []  # A list of show seasons that have passed their next_update timestamp
@@ -304,6 +313,10 @@ class ShowUpdater(object):
 
 
 class UpdateCache(db.DBConnection):
+    """
+
+    """
+
     def __init__(self):
         super(UpdateCache, self).__init__('cache.db')
 

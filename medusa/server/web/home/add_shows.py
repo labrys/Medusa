@@ -63,7 +63,7 @@ class HomeAddShows(Home):
         search_terms = [search_term]
 
         # If search term ends with what looks like a year, enclose it in ()
-        matches = re.match(r'^(.+ |)([12][0-9]{3})$', search_term)
+        matches = re.match(r'^(.+ )([12][0-9]{3})$', search_term)
         if matches:
             search_terms.append('%s(%s)' % (matches.group(1), matches.group(2)))
 

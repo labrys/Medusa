@@ -13,6 +13,10 @@ log.addHandler(logging.NullHandler())
 
 
 class Event(object):
+    """
+
+    """
+
     def __init__(self, event_type):
         self._type = event_type
 
@@ -23,6 +27,10 @@ class Event(object):
 
 
 class Events(threading.Thread):
+    """
+
+    """
+
     def __init__(self, callback):
         super(Events, self).__init__()
         self.queue = Queue()
@@ -33,6 +41,10 @@ class Events(threading.Thread):
         self.stop = threading.Event()
 
     def put(self, event_type):
+        """
+
+        :param event_type:
+        """
         self.queue.put(event_type)
 
     def run(self):

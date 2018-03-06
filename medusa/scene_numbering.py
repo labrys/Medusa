@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import logging
 import time
@@ -65,6 +66,7 @@ def get_scene_absolute_numbering(series_obj, absolute_number, fallback_to_xem=Tr
     returns the TVDB numbering.
     (so the return values will always be set)
 
+    :param absolute_number:
     :param series_obj: Series object.
     ;param absolute_number: int
     :param fallback_to_xem: bool If set (the default), check xem for matches if there is no local scene numbering
@@ -189,7 +191,7 @@ def find_xem_numbering(series_obj, season, episode):
     Returns the scene numbering, as retrieved from xem.
     Refreshes/Loads as needed.
 
-    :param indexer_id: int
+    :param series_obj:
     :param season: int
     :param episode: int
     :return: (int, int) a tuple of scene_season, scene_episode, or None if there is no special mapping.
@@ -213,7 +215,7 @@ def find_xem_absolute_numbering(series_obj, absolute_number):
     Returns the scene numbering, as retrieved from xem.
     Refreshes/Loads as needed.
 
-    :param indexer_id: int
+    :param series_obj:
     :param absolute_number: int
     :return: int
     """
@@ -235,7 +237,7 @@ def get_indexer_numbering_for_xem(series_obj, sceneSeason, sceneEpisode):
     """
     Reverse of find_xem_numbering: lookup a tvdb season and episode using scene numbering.
 
-    :param indexer_id: int
+    :param series_obj:
     :param sceneSeason: int
     :param sceneEpisode: int
     :return: (int, int) a tuple of (season, episode)
@@ -260,7 +262,8 @@ def get_indexer_absolute_numbering_for_xem(series_obj, sceneAbsoluteNumber, scen
     """
     Reverse of find_xem_numbering: lookup a tvdb season and episode using scene numbering.
 
-    :param indexer_id: int
+    :param series_obj:
+    :param scene_season:
     :param sceneAbsoluteNumber: int
     :return: int
     """
@@ -393,8 +396,9 @@ def get_xem_absolute_numbering_for_show(series_obj):
 def xem_refresh(series_obj, force=False):
     """
     Refresh data from xem for a tv show.
+    :param series_obj:
+    :param force:
 
-    :param indexer_id: int
     """
     if not series_obj or series_obj.series_id < 1:
         return
@@ -402,14 +406,14 @@ def xem_refresh(series_obj, force=False):
     indexer_id = series_obj.indexer
     series_id = series_obj.series_id
 
-    MAX_REFRESH_AGE_SECS = 86400  # 1 day
+    max_refresh_age_in_secs = 86400  # 1 day
 
     main_db_con = db.DBConnection()
     rows = main_db_con.select("SELECT last_refreshed FROM xem_refresh WHERE indexer = ? and indexer_id = ?",
                               [indexer_id, series_id])
     if rows:
-        lastRefresh = int(rows[0]['last_refreshed'])
-        refresh = int(time.mktime(datetime.datetime.today().timetuple())) > lastRefresh + MAX_REFRESH_AGE_SECS
+        last_refresh = int(rows[0]['last_refreshed'])
+        refresh = int(time.mktime(datetime.datetime.today().timetuple())) > last_refresh + max_refresh_age_in_secs
     else:
         refresh = True
 

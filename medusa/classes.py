@@ -1,3 +1,4 @@
+# coding=utf-8
 """Collection of generic used classes."""
 import logging
 
@@ -116,6 +117,10 @@ class SearchResult(object):
 
     @property
     def actual_episode(self):
+        """
+
+        :return:
+        """
         return self._actual_episode
 
     @actual_episode.setter
@@ -124,6 +129,10 @@ class SearchResult(object):
 
     @property
     def actual_episodes(self):
+        """
+
+        :return:
+        """
         return self._actual_episodes
 
     @actual_episodes.setter
@@ -134,6 +143,10 @@ class SearchResult(object):
 
     @property
     def show(self):
+        """
+
+        :return:
+        """
         log.warning(
             'Please use SearchResult.series and not show. Show has been deprecated.',
             DeprecationWarning,
@@ -170,6 +183,10 @@ class SearchResult(object):
         return my_string
 
     def file_name(self):
+        """
+
+        :return:
+        """
         return u'{0}.{1}'.format(self.episodes[0].pretty_name(), self.result_type)
 
     def add_result_to_cache(self, cache):
@@ -191,6 +208,10 @@ class SearchResult(object):
         return self.episodes
 
     def finish_search_result(self, provider):
+        """
+
+        :param provider:
+        """
         self.size = provider._get_size(self.item)
         self.pubdate = provider._get_pubdate(self.item)
 
@@ -232,6 +253,11 @@ class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
         self.log = log
 
     def select_series(self, all_series):
+        """
+
+        :param all_series:
+        :return:
+        """
         from medusa.helper.common import dateTimeFormat
 
         search_results = []
@@ -277,6 +303,11 @@ class ShowListUI(object):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def select_series(all_series):
+        """
+
+        :param all_series:
+        :return:
+        """
         try:
             # try to pick a show that's in my show list
             show_id_list = [int(x.indexerid) for x in app.showList]

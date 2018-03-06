@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import logging
 import os.path
@@ -248,8 +249,8 @@ def change_backlog_frequency(freq):
 def change_propers_frequency(check_propers_interval):
     """
     Change frequency of backlog thread.
+    :param check_propers_interval:
 
-    :param freq: New frequency
     """
     if not app.DOWNLOAD_PROPERS:
         return
@@ -313,14 +314,14 @@ def change_version_notify(version_notify):
 
     :param version_notify: New frequency
     """
-    oldSetting = app.VERSION_NOTIFY
+    old_setting = app.VERSION_NOTIFY
 
     app.VERSION_NOTIFY = version_notify
 
     if not version_notify:
         app.NEWEST_VERSION_STRING = None
 
-    if oldSetting is False and version_notify is True:
+    if old_setting is False and version_notify is True:
         app.version_check_scheduler.force_run()
 
 
@@ -592,6 +593,15 @@ def minimax(val, default, low, high):
 # Check_setting_int                                                            #
 ################################################################################
 def check_setting_int(config, cfg_name, item_name, def_val, silent=True):
+    """
+
+    :param config:
+    :param cfg_name:
+    :param item_name:
+    :param def_val:
+    :param silent:
+    :return:
+    """
     try:
         my_val = config[cfg_name][item_name]
         if str(my_val).lower() == 'true':
@@ -621,6 +631,15 @@ def check_setting_int(config, cfg_name, item_name, def_val, silent=True):
 # Check_setting_bool                                                           #
 ################################################################################
 def check_setting_bool(config, cfg_name, item_name, def_val, silent=True):
+    """
+
+    :param config:
+    :param cfg_name:
+    :param item_name:
+    :param def_val:
+    :param silent:
+    :return:
+    """
     return bool(check_setting_int(config=config, cfg_name=cfg_name, item_name=item_name, def_val=def_val, silent=silent))
 
 
@@ -628,6 +647,15 @@ def check_setting_bool(config, cfg_name, item_name, def_val, silent=True):
 # Check_setting_float                                                          #
 ################################################################################
 def check_setting_float(config, cfg_name, item_name, def_val, silent=True):
+    """
+
+    :param config:
+    :param cfg_name:
+    :param item_name:
+    :param def_val:
+    :param silent:
+    :return:
+    """
     try:
         my_val = float(config[cfg_name][item_name])
         if str(my_val) == str(None):
@@ -650,6 +678,17 @@ def check_setting_float(config, cfg_name, item_name, def_val, silent=True):
 # Check_setting_str                                                            #
 ################################################################################
 def check_setting_str(config, cfg_name, item_name, def_val, silent=True, valid_values=None, **kwargs):
+    """
+
+    :param config:
+    :param cfg_name:
+    :param item_name:
+    :param def_val:
+    :param silent:
+    :param valid_values:
+    :param kwargs:
+    :return:
+    """
     if kwargs:
         raise ValueError(kwargs)
     # For passwords you must include the word `password` in the item_name
@@ -752,6 +791,16 @@ def check_provider_setting(config, provider, attr_type, attr, default=None, sile
 # Load Provider Setting                                                        #
 ################################################################################
 def load_provider_setting(config, provider, attr_type, attr, default=None, silent=True, **kwargs):
+    """
+
+    :param config:
+    :param provider:
+    :param attr_type:
+    :param attr:
+    :param default:
+    :param silent:
+    :param kwargs:
+    """
     if hasattr(provider, attr):
         value = check_provider_setting(config, provider, attr_type, attr, default, silent, **kwargs)
         setattr(provider, attr, value)
@@ -761,6 +810,13 @@ def load_provider_setting(config, provider, attr_type, attr, default=None, silen
 # Load Provider Setting                                                        #
 ################################################################################
 def save_provider_setting(config, provider, attr, **kwargs):
+    """
+
+    :param config:
+    :param provider:
+    :param attr:
+    :param kwargs:
+    """
     if hasattr(provider, attr):
         section = kwargs.pop('section', provider.get_id().upper())
         setting = '{name}_{attr}'.format(name=provider.get_id(), attr=attr)
@@ -771,6 +827,10 @@ def save_provider_setting(config, provider, attr, **kwargs):
 
 
 class ConfigMigrator(object):
+    """
+
+    """
+
     def __init__(self, config_obj):
         """Initializes a config migrator that can take the config from the version indicated in the config file up to the version required by Medusa."""
         self.config_obj = config_obj
@@ -917,27 +977,27 @@ class ConfigMigrator(object):
         else:
             ep_string = naming_ep_type[ep_type]
 
-        finalName = ''
+        final_name = ''
 
         # start with the show name
         if use_show_name and show_name:
-            finalName += show_name + naming_sep_type[sep_type]
+            final_name += show_name + naming_sep_type[sep_type]
 
         # add the season/ep stuff
-        finalName += ep_string
+        final_name += ep_string
 
         # add the episode name
         if use_ep_name and ep_name:
-            finalName += naming_sep_type[sep_type] + ep_name
+            final_name += naming_sep_type[sep_type] + ep_name
 
         # add the quality
         if use_quality and ep_quality:
-            finalName += naming_sep_type[sep_type] + ep_quality
+            final_name += naming_sep_type[sep_type] + ep_quality
 
         if use_periods:
-            finalName = re.sub(r'\s+', '.', finalName)
+            final_name = re.sub(r'\s+', '.', final_name)
 
-        return finalName
+        return final_name
 
     # Migration v2: Dummy migration to sync backup number with config version number
     def _migrate_v2(self):

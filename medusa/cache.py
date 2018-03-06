@@ -17,6 +17,7 @@ class MutexLock(AbstractFileLock):
 
         :param filename:
         """
+        super().__init__(filename)
         self.mutex = ReadWriteMutex()
 
     def acquire_read_lock(self, wait):

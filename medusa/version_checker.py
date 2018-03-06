@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import logging
 import os
@@ -41,6 +42,10 @@ class CheckVersion(object):
 
     def run(self, force=False):
 
+        """
+
+        :param force:
+        """
         self.am_active = True
 
         # Update remote branches and store in app.GIT_REMOTE_BRANCHES
@@ -68,6 +73,10 @@ class CheckVersion(object):
         self.am_active = False
 
     def run_backup_if_safe(self):
+        """
+
+        :return:
+        """
         return self.safe_to_update() is True and self._run_backup() is True
 
     def _run_backup(self):
@@ -139,7 +148,17 @@ class CheckVersion(object):
 
     def safe_to_update(self):
 
+        """
+
+        :return:
+        """
+
         def db_safe(self):
+            """
+
+            :param self:
+            :return:
+            """
             message = {
                 'equal': {
                     'type': DEBUG,
@@ -163,6 +182,10 @@ class CheckVersion(object):
                 return False
 
         def postprocessor_safe():
+            """
+
+            :return:
+            """
             if not app.auto_post_processor_scheduler.action.am_active:
                 log.debug(u'We can proceed with the update. Post-Processor is not running')
                 return True
@@ -171,6 +194,10 @@ class CheckVersion(object):
                 return False
 
         def showupdate_safe():
+            """
+
+            :return:
+            """
             if not app.show_update_scheduler.action.am_active:
                 log.debug(u'We can proceed with the update. Shows are not being updated')
                 return True
@@ -320,10 +347,18 @@ class CheckVersion(object):
         return news
 
     def need_update(self):
+        """
+
+        :return:
+        """
         if self.updater:
             return self.updater.need_update()
 
     def update(self):
+        """
+
+        :return:
+        """
         if self.updater:
             # update branch with current config branch value
             self.updater.branch = app.BRANCH
@@ -333,11 +368,19 @@ class CheckVersion(object):
                 return self.updater.update()
 
     def list_remote_branches(self):
+        """
+
+        :return:
+        """
         if self.updater:
             app.GIT_REMOTE_BRANCHES = self.updater.list_remote_branches()
         return app.GIT_REMOTE_BRANCHES
 
     def get_branch(self):
+        """
+
+        :return:
+        """
         if self.updater:
             return self.updater.branch
 
@@ -345,18 +388,34 @@ class CheckVersion(object):
 class UpdateManager(object):
     @staticmethod
     def get_github_org():
+        """
+
+        :return:
+        """
         return app.GIT_ORG
 
     @staticmethod
     def get_github_repo():
+        """
+
+        :return:
+        """
         return app.GIT_REPO
 
     @staticmethod
     def get_update_url():
+        """
+
+        :return:
+        """
         return app.WEB_ROOT + "/home/update/?pid=" + str(app.PID)
 
 
 class GitUpdateManager(UpdateManager):
+    """
+
+    """
+
     def __init__(self):
         self._git_path = self._find_working_git()
         self.github_org = self.get_github_org()
@@ -371,17 +430,33 @@ class GitUpdateManager(UpdateManager):
         self._cur_version = ''
 
     def get_cur_commit_hash(self):
+        """
+
+        :return:
+        """
         return self._cur_commit_hash
 
     def get_newest_commit_hash(self):
+        """
+
+        :return:
+        """
         return self._newest_commit_hash
 
     def get_cur_version(self):
+        """
+
+        :return:
+        """
         if self._cur_commit_hash or self._find_installed_version():
             self._cur_version = self._run_git(self._git_path, 'describe --tags --abbrev=0 {0}'.format(self._cur_commit_hash))[0]
         return self._cur_version
 
     def get_newest_version(self):
+        """
+
+        :return:
+        """
         if self._newest_commit_hash:
             self._cur_version = self._run_git(self._git_path, "describe --tags --abbrev=0 " + self._newest_commit_hash)[0]
         else:
@@ -389,9 +464,17 @@ class GitUpdateManager(UpdateManager):
         return self._cur_version
 
     def get_num_commits_behind(self):
+        """
+
+        :return:
+        """
         return self._num_commits_behind
 
     def get_num_commits_ahead(self):
+        """
+
+        :return:
+        """
         return self._num_commits_ahead
 
     def _find_working_git(self):
@@ -587,6 +670,10 @@ class GitUpdateManager(UpdateManager):
     def set_newest_text(self):
 
         # if we're up to date then don't set this
+        """
+
+        :return:
+        """
         app.NEWEST_VERSION_STRING = None
 
         if self._num_commits_behind > 0 or self._is_hard_reset_allowed():
@@ -618,6 +705,10 @@ class GitUpdateManager(UpdateManager):
 
     def need_update(self):
 
+        """
+
+        :return:
+        """
         if self.branch != self._find_installed_branch():
             log.debug(u'Branch checkout: {0}->{1}', self._find_installed_branch(), self.branch)
             return True
@@ -723,6 +814,10 @@ class GitUpdateManager(UpdateManager):
 
     def list_remote_branches(self):
         # update remote origin url
+        """
+
+        :return:
+        """
         self.update_remote_origin()
         app.BRANCH = self._find_installed_branch()
 
@@ -735,6 +830,9 @@ class GitUpdateManager(UpdateManager):
         return []
 
     def update_remote_origin(self):
+        """
+
+        """
         self._run_git(self._git_path, 'config remote.%s.url %s' % (app.GIT_REMOTE, app.GIT_REMOTE_URL))
         if app.GIT_AUTH_TYPE == 0:
             if app.GIT_USERNAME:
@@ -753,6 +851,10 @@ class GitUpdateManager(UpdateManager):
 
 
 class SourceUpdateManager(UpdateManager):
+    """
+
+    """
+
     def __init__(self):
         self.github_org = self.get_github_org()
         self.github_repo = self.get_github_repo()
@@ -773,27 +875,55 @@ class SourceUpdateManager(UpdateManager):
         return app.CUR_COMMIT_BRANCH if app.CUR_COMMIT_BRANCH else "master"
 
     def get_cur_commit_hash(self):
+        """
+
+        :return:
+        """
         return self._cur_commit_hash
 
     def get_newest_commit_hash(self):
+        """
+
+        :return:
+        """
         return self._newest_commit_hash
 
     @staticmethod
     def get_cur_version():
+        """
+
+        :return:
+        """
         return ""
 
     @staticmethod
     def get_newest_version():
+        """
+
+        :return:
+        """
         return ""
 
     def get_num_commits_behind(self):
+        """
+
+        :return:
+        """
         return self._num_commits_behind
 
     def get_num_commits_ahead(self):
+        """
+
+        :return:
+        """
         return self._num_commits_ahead
 
     def need_update(self):
         # need this to run first to set self._newest_commit_hash
+        """
+
+        :return:
+        """
         try:
             self._check_github_for_update()
         except Exception as error:
@@ -863,6 +993,10 @@ class SourceUpdateManager(UpdateManager):
     def set_newest_text(self):
 
         # if we're up to date then don't set this
+        """
+
+        :return:
+        """
         app.NEWEST_VERSION_STRING = None
 
         if not self._cur_commit_hash:
@@ -978,5 +1112,9 @@ class SourceUpdateManager(UpdateManager):
 
     @staticmethod
     def list_remote_branches():
+        """
+
+        :return:
+        """
         gh = get_github_repo(app.GIT_ORG, app.GIT_REPO)
         return [x.name for x in gh.get_branches() if x]

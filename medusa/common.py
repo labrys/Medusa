@@ -1,3 +1,4 @@
+# coding=utf-8
 """Common interface for Quality and Status."""
 
 import operator
@@ -237,6 +238,12 @@ class Quality(object):
 
     @staticmethod
     def combine_qualities(allowed_qualities, preferred_qualities):
+        """
+
+        :param allowed_qualities:
+        :param preferred_qualities:
+        :return:
+        """
         any_quality = 0
         best_quality = 0
         if allowed_qualities:
@@ -247,6 +254,11 @@ class Quality(object):
 
     @staticmethod
     def split_quality(quality):
+        """
+
+        :param quality:
+        :return:
+        """
         if quality is None:
             quality = Quality.NONE
         allowed_qualities = []
@@ -439,12 +451,23 @@ class Quality(object):
 
     @staticmethod
     def composite_status(status, quality):
+        """
+
+        :param status:
+        :param quality:
+        :return:
+        """
         if quality is None:
             quality = Quality.NONE
         return status + 100 * quality
 
     @staticmethod
     def quality_downloaded(status):
+        """
+
+        :param status:
+        :return:
+        """
         return (status - DOWNLOADED) / 100
 
     @staticmethod
@@ -515,9 +538,9 @@ class Quality(object):
         # If SDDVD
         if quality == 2:
             rel_type = ' BDRip'
-            if re.search(r'br(-| |\.)?(rip|mux)', name):
+            if re.search(r'br[- .]?(rip|mux)', name):
                 rel_type = ' BRRip'
-            elif re.search(r'dvd(-| |\.)?(rip|mux)', name):
+            elif re.search(r'dvd[- .]?(rip|mux)', name):
                 rel_type = ' DVDRip'
 
         # If any WEB type

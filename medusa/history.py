@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 
 from medusa import db
@@ -20,7 +21,7 @@ def _log_history_item(action, ep_obj, quality, resource,
     :param provider: provider used
     :param version: tracked version of file (defaults to -1)
     """
-    logDate = datetime.datetime.today().strftime(History.date_format)
+    log_date = datetime.datetime.today().strftime(History.date_format)
     resource = ss(resource)
 
     main_db_con = db.DBConnection()
@@ -29,7 +30,7 @@ def _log_history_item(action, ep_obj, quality, resource,
         "(action, date, indexer_id, showid, season, episode, quality, "
         "resource, provider, version, proper_tags, manually_searched, info_hash, size) "
         "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        [action, logDate, ep_obj.series.indexer, ep_obj.series.series_id, ep_obj.season, ep_obj.episode, quality,
+        [action, log_date, ep_obj.series.indexer, ep_obj.series.series_id, ep_obj.season, ep_obj.episode, quality,
          resource, provider, version, proper_tags, manually_searched, info_hash, size])
 
 
@@ -48,9 +49,9 @@ def log_snatch(searchResult):
         info_hash = searchResult.hash.lower() if searchResult.hash else None
         size = searchResult.size
 
-        providerClass = searchResult.provider
-        if providerClass is not None:
-            provider = providerClass.name
+        provider_class = searchResult.provider
+        if provider_class is not None:
+            provider = provider_class.name
         else:
             provider = "unknown"
 
@@ -91,8 +92,6 @@ def log_subtitle(ep_obj, status, subtitle_result):
     """
     Log download of subtitle.
 
-    :param showid: Showid of download
-    :param season: Show season
     :param ep_obj: Show episode object
     :param status: Status of download
     :param subtitle_result: Result object

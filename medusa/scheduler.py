@@ -13,6 +13,10 @@ log.logger.addHandler(logging.NullHandler())
 
 
 class Scheduler(threading.Thread):
+    """
+
+    """
+
     def __init__(self, action, cycleTime=datetime.timedelta(minutes=10), run_delay=datetime.timedelta(minutes=0),
                  start_time=None, threadName="ScheduledThread", silent=True):
         super(Scheduler, self).__init__()
@@ -55,6 +59,10 @@ class Scheduler(threading.Thread):
             return datetime.timedelta(seconds=0)
 
     def force_run(self):
+        """
+
+        :return:
+        """
         if not self.action.am_active:
             self.force = True
             return True

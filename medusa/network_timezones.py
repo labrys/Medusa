@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import logging
 import re
@@ -162,4 +163,9 @@ def parse_date_time(d, t, network):
 
 
 def test_timeformat(time_string):
+    """
+
+    :param time_string:
+    :return:
+    """
     return time_regex.search(time_string) is not None

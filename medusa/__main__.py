@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Usage: python -m medusa [OPTION]...
 
@@ -1214,7 +1215,19 @@ class Application(object):
 
         try:
             def restore_cache(src_folder, dest_folder):
+                """
+
+                :param src_folder:
+                :param dest_folder:
+                :return:
+                """
+
                 def path_leaf(path):
+                    """
+
+                    :param path:
+                    :return:
+                    """
                     head, tail = os.path.split(path)
                     return tail or os.path.basename(head)
 

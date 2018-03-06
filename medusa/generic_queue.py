@@ -14,6 +14,10 @@ class QueuePriorities(object):
 
 
 class GenericQueue(object):
+    """
+
+    """
+
     def __init__(self):
         self.currentItem = None
         self.queue = []
@@ -88,6 +92,10 @@ class GenericQueue(object):
 
 
 class QueueItem(threading.Thread):
+    """
+
+    """
+
     def __init__(self, name, action_id=0):
         super(QueueItem, self).__init__()
         self.name = name.replace(" ", "-").upper()
