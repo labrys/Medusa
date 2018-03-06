@@ -44,8 +44,8 @@ class ComingEpisodes(object):
     categories = ['later', 'missed', 'soon', 'today']
     sorts = {
         'date': (lambda a: a['localtime']),
-        'network': (lambda a: a['network'], a['localtime']),
-        'show': (lambda a: a['show_name'], a['localtime']),
+        'network': (lambda a: (a['network'], a['localtime'])),
+        'show': (lambda a: (a['show_name'], a['localtime'])),
     }
 
     def __init__(self):

@@ -269,10 +269,11 @@ class HomeAddShows(Home):
                         traktList=traktList, controller="addShows", action="trendingShows",
                         realpage="trendingShows")
 
-    def getTrendingShows(self, trakt_list=None):
+    def getTrendingShows(self, traktList=None):
         """Display the new show page which collects a tvdb id, folder, and extra options and posts them to addNewShow."""
         e = None
         t = PageTemplate(rh=self, filename="addShows_recommended.mako")
+        trakt_list = traktList
         if trakt_list is None:
             trakt_list = ""
 
