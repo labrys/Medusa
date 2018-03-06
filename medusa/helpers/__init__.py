@@ -190,12 +190,11 @@ def make_dir(path):
 def search_indexer_for_show_id(show_name, indexer=None, series_id=None, ui=None):
     """Contact indexer to check for information on shows by showid.
 
+    :param series_id:
     :param show_name: Name of show
     :type show_name: str
     :param indexer: Which indexer to use
     :type indexer: int
-    :param indexer_id: Which indexer ID to look for
-    :type indexer_id: int
     :param ui: Custom UI for indexer use
     :return:
     """
@@ -702,7 +701,7 @@ def update_anime_support():
 def get_absolute_number_from_season_and_episode(series_obj, season, episode):
     """Find the absolute number for a show episode.
 
-    :param show: Show object
+    :param series_obj:
     :param season: Season number
     :param episode: Episode number
     :return: The absolute number

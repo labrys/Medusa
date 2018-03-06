@@ -291,7 +291,7 @@ def sanitize_filename(filename):
     :return: The ``filename``cleaned
     """
     if isinstance(filename, (str, text_type)):
-        filename = re.sub(r'[\\/\*]', '-', filename)
+        filename = re.sub(r'[\\/*]', '-', filename)
         filename = re.sub(r'[:"<>|?]', '', filename)
         filename = re.sub(r'™', '', filename)  # Trade Mark Sign unicode: \u2122
         filename = filename.strip(' .')

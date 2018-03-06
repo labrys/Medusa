@@ -1,3 +1,5 @@
+certifi
+chardet
 six
 beautifulsoup4
 CacheControl

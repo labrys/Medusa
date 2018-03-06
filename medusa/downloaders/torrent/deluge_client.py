@@ -389,8 +389,8 @@ class DelugeAPI(GenericClient):
         elif ratio and float(ratio) == -1:
             # Disable stop at ratio to seed forever
             post_data = {"method": "core.set_torrent_stop_at_ratio",
-                                    "params": [result.hash, False],
-                                    "id": 5}
+                         "params": [result.hash, False],
+                         "id": 5}
 
             self._request(method='post', json=post_data)
 

@@ -68,6 +68,7 @@ def send_nzb_get(params, nzb):
     """
     Sends an NZB to SABnzbd via the API using a get request.
 
+    :param params:
     :param nzb: The NZBSearchResult object to send to SAB
     :return: result of the communication with sabnzbd (True/False)
     """
