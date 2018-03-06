@@ -1884,7 +1884,7 @@ class Home(WebRoot):
         if series_obj is None:
             return self._genericMessage('Error', 'Unable to find the specified show')
         else:
-            show_name = quote_plus(series_obj.name.encode('utf-8'))
+            show_name = quote_plus(series_obj.name)
 
         if app.KODI_UPDATE_ONLYFIRST:
             host = app.KODI_HOST[0].strip()

@@ -127,7 +127,7 @@ class Notifier(object):
         data = {'apikey': prowl_api,
                 'application': title,
                 'event': event,
-                'description': message.encode('utf-8'),
+                'description': message,
                 'priority': prowl_priority}
 
         try:

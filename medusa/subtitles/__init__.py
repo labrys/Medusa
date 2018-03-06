@@ -329,7 +329,7 @@ def list_subtitles(tv_episode, video_path=None, limit=40):
     subtitles_list = pool.list_subtitles(video, languages)
     scored_subtitles = score_subtitles(subtitles_list, video)[:limit]
     for subtitle, _ in scored_subtitles:
-        cache.set(subtitle_key.format(id=subtitle.id).encode('utf-8'), subtitle)
+        cache.set(subtitle_key.format(id=subtitle.id), subtitle)
 
     log.debug("Scores computed for release: {release}",
               {'release': os.path.basename(video_path)})
@@ -361,7 +361,7 @@ def save_subtitle(tv_episode, subtitle_id, video_path=None):
     :return:
     :rtype: list of str
     """
-    subtitle = cache.get(subtitle_key.format(id=subtitle_id).encode('utf-8'))
+    subtitle = cache.get(subtitle_key.format(id=subtitle_id))
     if subtitle == NO_VALUE:
         log.error('Unable to find cached subtitle ID: {}', subtitle_id)
         return

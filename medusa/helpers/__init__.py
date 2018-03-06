@@ -604,7 +604,7 @@ def chmod_as_parent(child_path):
     parent_path_stat = os.stat(parent_path)
     parent_mode = stat.S_IMODE(parent_path_stat[stat.ST_MODE])
 
-    child_path_stat = os.stat(child_path.encode(app.SYS_ENCODING))
+    child_path_stat = os.stat(child_path)
     child_path_mode = stat.S_IMODE(child_path_stat[stat.ST_MODE])
 
     if os.path.isfile(child_path):
@@ -657,7 +657,7 @@ def fix_set_group_id(child_path):
 
     if parent_mode & stat.S_ISGID:
         parent_gid = parent_stat[stat.ST_GID]
-        child_stat = os.stat(child_path.encode(app.SYS_ENCODING))
+        child_stat = os.stat(child_path)
         child_gid = child_stat[stat.ST_GID]
 
         if child_gid == parent_gid:
@@ -948,8 +948,8 @@ def check_url(url):
 def anon_url(*url):
     """Return a URL string consisting of the Anonymous redirect URL and an arbitrary number of values appended."""
     # normalize to byte
-    url = [u.encode('utf-8') if isinstance(u, text_type) else binary_type(u) for u in url]
-    return '' if None in url else '{0}{1}'.format(app.ANON_REDIRECT, ''.join(url)).decode('utf-8')
+    url = [u if isinstance(u, text_type) else binary_type(u) for u in url]
+    return '' if None in url else '{0}{1}'.format(app.ANON_REDIRECT, ''.join(url))
 
 # Encryption
 # ==========
@@ -1416,9 +1416,9 @@ def generate_api_key():
     """Return a new randomized API_KEY."""
     log.info(u'Generating New API key')
     timestamp = str(time.time())
-    secure_hash = hashlib.sha512(timestamp.encode('utf-8'))
+    secure_hash = hashlib.sha512(timestamp)
     randomizer = str(random.SystemRandom().getrandbits(4096))
-    secure_hash.update(randomizer.encode('utf-8'))
+    secure_hash.update(randomizer)
     return secure_hash.hexdigest()[:32]
 
 

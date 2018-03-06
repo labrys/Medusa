@@ -46,7 +46,7 @@ class Notifier(object):
 
         # build up the URL and parameters
         msg = msg.strip()
-        msg_quoted = quote(title.encode('utf-8') + ': ' + msg.encode('utf-8'))
+        msg_quoted = quote(title + ': ' + msg)
         url = 'https://smsapi.free-mobile.fr/sendmsg?user=' + cust_id + '&pass=' + api_key + '&msg=' + msg_quoted
 
         req = Request(url)

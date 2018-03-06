@@ -298,7 +298,7 @@ class TIVOMetadata(generic.GenericMetadata):
 
             with io.open(nfo_file_path, 'wb') as nfo_file:
                 # Calling encode directly, b/c often descriptions have wonky characters.
-                nfo_file.write(data.encode('utf-8'))
+                nfo_file.write(data)
 
             helpers.chmod_as_parent(nfo_file_path)
 

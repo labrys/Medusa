@@ -155,7 +155,7 @@ class DateTime(datetime.datetime):
             except Exception:
                 DateTime.has_locale = False
 
-        return result.decode(app.SYS_ENCODING)
+        return result
 
     # display Date in application Format
     @StaticOrInstance
@@ -261,4 +261,4 @@ class DateTime(datetime.datetime):
             except Exception:
                 DateTime.has_locale = False
 
-        return result.decode(app.SYS_ENCODING)
+        return result

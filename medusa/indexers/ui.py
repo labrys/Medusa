@@ -56,8 +56,8 @@ class ConsoleUI(BaseUI):
             # TODO: Change into something more generic.
             print('{0} -> {1} [{2}] # http://thetvdb.com/?tab=series&id={3}&lid={4}{5}'.format(
                 i_show,
-                cshow['seriesname'].encode('UTF-8', 'ignore'),
-                cshow['language'].encode('UTF-8', 'ignore'),
+                cshow['seriesname'],
+                cshow['language'],
                 str(cshow['id']),
                 cshow['lid'],
                 extra

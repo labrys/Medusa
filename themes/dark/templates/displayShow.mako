@@ -256,7 +256,7 @@
                                 for rootDir in app.ROOT_DIRS:
                                     if rootDir.startswith('/'):
                                         filename = filename.replace(rootDir, "")
-                                filename = app.DOWNLOAD_URL + urllib.quote(filename.encode('utf8'))
+                                filename = app.DOWNLOAD_URL + urllib.quote(filename)
                             %>
                             <a href="${filename}">Download</a>
                         % endif

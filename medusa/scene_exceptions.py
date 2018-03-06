@@ -198,7 +198,7 @@ def update_scene_exceptions(series_obj, scene_exceptions, season=-1):
     exceptions_cache[(series_obj.indexer, series_obj.series_id)].clear()
 
     decoded_scene_exceptions = (
-        exception.decode('utf-8')
+        exception
         for exception in scene_exceptions
     )
     for exception in decoded_scene_exceptions:
@@ -429,7 +429,7 @@ def _get_anidb_exceptions(force):
 
                 if anime and anime.name != show.name:
                     series_id = int(show.series_id)
-                    exceptions[series_id] = [{anime.name.decode('utf-8'): -1}]
+                    exceptions[series_id] = [{anime.name: -1}]
 
         set_last_refresh('anidb')
 

@@ -16,15 +16,15 @@ def ss(var):
     var = _to_unicode(var)
 
     try:
-        var = var.encode(app.SYS_ENCODING)
+        var = var
     except Exception:
         try:
-            var = var.encode('utf-8')
+            var = var
         except Exception:
             try:
-                var = var.encode(app.SYS_ENCODING, 'replace')
+                var = var
             except Exception:
-                var = var.encode('utf-8', 'ignore')
+                var = var
 
     return var
 
