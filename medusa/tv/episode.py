@@ -124,9 +124,11 @@ class RelativeNumber(Identifier):
         self.season = season
         self.episode = episode
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Magic method."""
         return self.season is not None and self.episode is not None
+
+    __nonzero__ = __bool__
 
     def __repr__(self):
         """Magic method."""
@@ -157,9 +159,11 @@ class AbsoluteNumber(EpisodeNumber):
         """
         self.episode = abs_episode
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Magic method."""
         return self.episode is not None
+
+    __nonzero__ = __bool__
 
     def __repr__(self):
         """Magic method."""
@@ -189,9 +193,11 @@ class AirByDateNumber(EpisodeNumber):
         """
         self.air_date = air_date
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Magic method."""
         return self.air_date is not None
+
+    __nonzero__ = __bool__
 
     def __repr__(self):
         """Magic method."""

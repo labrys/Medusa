@@ -9,11 +9,11 @@ from medusa.indexers.config import INDEXER_TVDB
 class Identifier(object):
     """Base identifier class."""
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Magic method."""
         raise NotImplementedError
 
-    __bool__ = __nonzero__
+    __nonzero__ = __bool__
 
     def __ne__(self, other):
         """Magic method."""

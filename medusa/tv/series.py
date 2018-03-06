@@ -156,13 +156,15 @@ class SeriesIdentifier(Identifier):
         indexer_api = indexerApi(self.indexer.id)
         return indexer_api.indexer(**indexer_api.api_params)
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Magic method."""
         return self.indexer is not None and self.id is not None
 
+    __nonzero__ = __bool__
+
     def __repr__(self):
         """Magic method."""
-        return '<SeriesIdentifier [{0!r} - {1}]>'.format(self.indexer, self.id)
+        return '<SeriesIdentifier: {0} {1}>'.format(self.indexer, self.id)
 
     def __str__(self):
         """Magic method."""

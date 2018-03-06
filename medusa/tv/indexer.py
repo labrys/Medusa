@@ -33,9 +33,11 @@ class Indexer(Identifier):
         """Slug name."""
         return indexer_id_to_name(self.id)
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Magic method bool."""
         return self.id is not None
+
+    __nonzero__ = __bool__
 
     def __repr__(self):
         """Magic method."""
