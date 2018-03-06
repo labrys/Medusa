@@ -546,9 +546,9 @@ class Quality(object):
         # If any WEB type
         if quality in (32, 64, 1024, 8192):
             rel_type = ' WEB'
-            if re.search(r'web(-| |\.)?dl', name):
+            if re.search(r'web[- .]?dl', name):
                 rel_type = ' WEB-DL'
-            elif re.search(r'web(-| |\.)?(rip|mux)', name):
+            elif re.search(r'web[- .]?(rip|mux)', name):
                 rel_type = ' WEBRip'
 
         return rel_type + codec
