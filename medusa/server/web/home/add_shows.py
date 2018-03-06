@@ -320,7 +320,7 @@ class HomeAddShows(Home):
 
         try:
             recommended_shows = ImdbPopular().fetch_popular_shows()
-        except (RequestException, StandardError) as e:
+        except (RequestException, Exception) as e:
             recommended_shows = None
 
         return t.render(title="Popular Shows", header="Popular Shows",

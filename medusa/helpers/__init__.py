@@ -941,7 +941,7 @@ def check_url(url):
         conn = http_client.HTTPConnection(host)
         conn.request('HEAD', path)
         return conn.getresponse().status in good_codes
-    except StandardError:
+    except Exception:
         return None
 
 
