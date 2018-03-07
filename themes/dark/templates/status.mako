@@ -5,6 +5,7 @@
     from medusa.show_queue import ShowQueueActions
     from medusa.helper.common import dateTimeFormat
     from random import choice
+    from six import iteritems
 %>
 <%block name="content">
 <%
@@ -47,7 +48,7 @@
             </tr>
         </thead>
         <tbody>
-            % for schedulerName, scheduler in schedulerList.iteritems():
+            % for schedulerName, scheduler in iteritems(schedulerList):
                <% service = getattr(app, scheduler) %>
            <tr>
                <td>${schedulerName}</td>
