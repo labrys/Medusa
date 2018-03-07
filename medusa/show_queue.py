@@ -196,7 +196,7 @@ class ShowQueue(generic_queue.GenericQueue):
         return self._is_being_processed(show, (ShowQueueActions.REMOVE,))
 
     def _get_loading_show_list(self):
-        return [x for x in self.queue + [self.currentItem] if x is not None and x.isLoading]
+        return [x for x in self.queue + [self.currentItem] if x is not None and x.is_loading]
 
     def get_queue_action_message(self, show):
         """

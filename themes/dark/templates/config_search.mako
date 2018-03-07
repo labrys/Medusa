@@ -2,6 +2,7 @@
 <%!
     from medusa import app
     from medusa.downloaders import torrent
+    from six import iteritems
 %>
 <%block name="content">
 % if not header is UNDEFINED:
@@ -560,7 +561,7 @@
                                         <span class="component-desc">
                                             <select name="torrent_auth_type" id="torrent_auth_type" class="form-control input-sm">
                                             <% http_authtype = {'none': "None", 'basic': "Basic", 'digest': "Digest"} %>
-                                            % for authvalue, authname in http_authtype.iteritems():
+                                            % for authvalue, authname in iteritems(http_authtype):
                                                 <option id="torrent_auth_type_value" value="${authvalue}" ${'selected="selected"' if app.TORRENT_AUTH_TYPE == authvalue else ''}>${authname}</option>
                                             % endfor
                                             </select>
