@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 import tmdbsimple as tmdb
 from dateutil import parser
 from requests.exceptions import RequestException
-from six import integer_types, iteritems
+from six import iteritems
 
 from medusa.app import TMDB_API_KEY
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)

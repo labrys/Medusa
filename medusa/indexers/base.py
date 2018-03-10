@@ -12,7 +12,6 @@ from itertools import chain
 from operator import itemgetter
 
 import requests
-from six import integer_types
 
 from medusa.indexers.exceptions import (
     IndexerAttributeNotFound,
@@ -276,7 +275,7 @@ class BaseIndexer(object):
 
     def __getitem__(self, key):
         """Handle tvdb_instance['seriesname'] calls. The dict index should be the show id."""
-        if isinstance(key, integer_types):
+        if isinstance(key, int):
             # Item is integer, treat as show id
             if key not in self.shows:
                 self._get_show_data(key, self.config['language'])
@@ -370,7 +369,7 @@ class Show(dict):
             return dict.__getitem__(self.data, key)
 
         # Data wasn't found, raise appropriate error
-        if isinstance(key, integer_types) or key.isdigit():
+        if isinstance(key, int) or key.isdigit():
             # Episode number x was not found
             raise IndexerSeasonNotFound('Could not find season {0!r}'.format(key))
         else:

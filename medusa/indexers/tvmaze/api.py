@@ -11,7 +11,7 @@ from pytvmaze.exceptions import (
     BaseError, CastNotFound, IDNotFound,
     ShowIndexError, ShowNotFound, UpdateNotFound,
 )
-from six import integer_types, str, iteritems
+from six import iteritems
 
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
 from medusa.indexers.exceptions import (
@@ -136,7 +136,7 @@ class TVmaze(BaseIndexer):
                             key = key_mappings[key]
 
                         # Set value to key
-                        return_dict[key] = value if isinstance(value, (float, integer_types)) else value
+                        return_dict[key] = value if isinstance(value, (float, int)) else value
 
                 # For episodes
                 if hasattr(item, 'season_number') and getattr(item, 'episode_number') is None:

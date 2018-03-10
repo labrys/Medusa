@@ -36,7 +36,7 @@ def log_url(response, **kwargs):
             body = ''
 
         # try to log post data using various codecs to decode
-        if isinstance(body, unicode):
+        if isinstance(body, str):
             log.debug('With post data: {0}', body)
             return
 
