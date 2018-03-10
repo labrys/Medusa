@@ -21,7 +21,7 @@ log.addHandler(logging.NullHandler())
 log = BraceAdapter(log)
 
 
-class ShowUpdater(object):
+class ShowUpdater:
     """
 
     """

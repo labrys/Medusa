@@ -778,7 +778,7 @@ def delete_unwanted_subtitles(dirpath, filename):
             )
 
 
-class SubtitlesFinder(object):
+class SubtitlesFinder:
     """The SubtitlesFinder will be executed every hour but will not necessarily search and download subtitles.
 
     Only if the defined rule is true.

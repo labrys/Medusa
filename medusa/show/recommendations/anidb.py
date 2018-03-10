@@ -20,7 +20,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class AnidbPopular(object):  # pylint: disable=too-few-public-methods
+class AnidbPopular:  # pylint: disable=too-few-public-methods
     def __init__(self):
         """Class retrieves a specified recommended show list from Trakt.
 

@@ -16,7 +16,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class FailedProcessor(object):
+class FailedProcessor:
     """Take appropriate action when a download fails to complete."""
 
     def __init__(self, dirName, nzbName):

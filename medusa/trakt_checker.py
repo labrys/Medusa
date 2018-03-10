@@ -57,7 +57,7 @@ def set_episode_to_wanted(show, season, episode):
         })
 
 
-class TraktChecker(object):
+class TraktChecker:
     """Trakt checker class."""
 
     def __init__(self):

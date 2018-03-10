@@ -36,7 +36,7 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-class ProcessResult(object):
+class ProcessResult:
 
     IGNORED_FOLDERS = ('@eaDir', '#recycle',)
 

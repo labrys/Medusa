@@ -27,7 +27,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class ProperFinder(object):  # pylint: disable=too-few-public-methods
+class ProperFinder:  # pylint: disable=too-few-public-methods
     """Proper finder class."""
 
     def __init__(self):

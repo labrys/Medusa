@@ -26,7 +26,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class DailySearcher(object):  # pylint:disable=too-few-public-methods
+class DailySearcher:  # pylint:disable=too-few-public-methods
     """Daily search class."""
 
     def __init__(self):

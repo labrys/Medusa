@@ -33,7 +33,7 @@ from medusa.network_timezones import parse_date_time
 from medusa.tv.series import SeriesIdentifier
 
 
-class ComingEpisodes(object):
+class ComingEpisodes:
     """
     Missed:   yesterday...(less than 1 week)
     Today:    today

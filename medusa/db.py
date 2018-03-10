@@ -31,7 +31,7 @@ def db_filename(filename=None, suffix=None):
     return os.path.join(app.DATA_DIR, filename)
 
 
-class DBConnection(object):
+class DBConnection:
     """
 
     """
@@ -393,7 +393,7 @@ def sanity_check_database(connection, sanity_check):
     sanity_check(connection).check()
 
 
-class DBSanityCheck(object):
+class DBSanityCheck:
     """
 
     """
@@ -470,7 +470,7 @@ def _process_upgrade(connection, upgradeClass):
 
 
 # Base migration class. All future DB changes should be subclassed from this class
-class SchemaUpgrade(object):
+class SchemaUpgrade:
     """
 
     """

@@ -20,7 +20,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def __init__(self):
         self.session = MedusaSession()
         self.session.headers.update({

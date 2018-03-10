@@ -27,7 +27,7 @@ imdb_show_details_cache = ExpiringKeyValue(cache_timeout=3600 * 24 * 7)  # Cache
 tvdb_mapping_cache = ExpiringKeyValue(cache_timeout=3600 * 24 * 7)  # Cache 7 days
 
 
-class ImdbPopular(object):
+class ImdbPopular:
     """Gets a list of most popular TV series from imdb."""
 
     def __init__(self):

@@ -9,7 +9,7 @@ MESSAGE = 'notice'
 ERROR = 'error'
 
 
-class Notifications(object):
+class Notifications:
     """A queue of Notification objects."""
 
     def __init__(self):
@@ -65,7 +65,7 @@ class Notifications(object):
 notifications = Notifications()
 
 
-class Notification(object):
+class Notification:
     """Represents a single notification. Tracks its own timeout and a list of which clients have seen it before."""
 
     def __init__(self, title, message='', notification_type=None, timeout=None):
@@ -101,18 +101,18 @@ class Notification(object):
         return self
 
 
-class ProgressIndicator(object):
+class ProgressIndicator:
 
     """
 
     """
 
-    def __init__(self, percentComplete=0, currentStatus=None):
-        self.percentComplete = percentComplete
-        self.currentStatus = currentStatus or {'title': ''}
+    def __init__(self, percent_complete=0, current_status=None):
+        self.percentComplete = percent_complete
+        self.currentStatus = current_status or {'title': ''}
 
 
-class ProgressIndicators(object):
+class ProgressIndicators:
     _pi = {'massUpdate': [],
            'massAdd': [],
            'dailyUpdate': []
@@ -146,11 +146,11 @@ class ProgressIndicators(object):
         ProgressIndicators._pi[name].append(indicator)
 
 
-class QueueProgressIndicator(object):
+class QueueProgressIndicator:
     """A class used by the UI to show the progress of the queue or a part of it."""
 
-    def __init__(self, name, queueItemList):
-        self.queueItemList = queueItemList
+    def __init__(self, name, queue_item_list):
+        self.queueItemList = queue_item_list
         self.name = name
 
     def num_total(self):
@@ -199,7 +199,7 @@ class QueueProgressIndicator(object):
             return int(float(num_finished) / float(num_total) * 100)
 
 
-class LoadingTVShow(object):
+class LoadingTVShow:
     """
 
     """

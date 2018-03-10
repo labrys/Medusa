@@ -73,7 +73,7 @@ time_presets = ('%I:%M:%S %p', '%H:%M:%S')
 
 
 # helper class
-class StaticOrInstance(object):
+class StaticOrInstance:
     """
 
     """

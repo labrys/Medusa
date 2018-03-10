@@ -6,7 +6,7 @@ import threading
 from medusa.indexers.config import INDEXER_TVDB
 
 
-class Identifier(object):
+class Identifier:
     """Base identifier class."""
 
     def __bool__(self):
@@ -20,7 +20,7 @@ class Identifier(object):
         return not self == other
 
 
-class TV(object):
+class TV:
     """Base class for Series and Episode."""
 
     def __init__(self, indexer, indexerid, ignored_properties):

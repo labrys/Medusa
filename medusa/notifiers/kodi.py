@@ -19,7 +19,7 @@ log.logger.addHandler(logging.NullHandler())
 session = MedusaSession()
 
 
-class Notifier(object):
+class Notifier:
     """Kodi notifier class."""
 
     def _get_kodi_version(self, host, username, password, dest_app='KODI'):

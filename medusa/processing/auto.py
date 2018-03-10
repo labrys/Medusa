@@ -27,7 +27,7 @@ from medusa.processing import tv
 logger = logging.getLogger(__name__)
 
 
-class PostProcessor(object):
+class PostProcessor:
     """Post Processor Scheduler Action."""
 
     def __init__(self):

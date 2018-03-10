@@ -34,7 +34,7 @@ class MissingTvdbMapping(Exception):
     """Exception used when a show can't be mapped to a tvdb indexer id."""
 
 
-class RecommendedShow(object):
+class RecommendedShow:
     """Base class for show recommendations."""
 
     def __init__(self, rec_show_prov, series_id, title, mapped_indexer, mapped_series_id, **show_attr):

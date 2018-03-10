@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-class BaseUI(object):
+class BaseUI:
     """Default non-interactive UI, which auto-selects first results."""
 
     def __init__(self, config, enable_logging=None):

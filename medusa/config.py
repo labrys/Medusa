@@ -825,7 +825,7 @@ def save_provider_setting(config, provider, attr, **kwargs):
         config[section][setting] = value
 
 
-class ConfigMigrator(object):
+class ConfigMigrator:
     """
 
     """

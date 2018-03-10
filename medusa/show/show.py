@@ -37,7 +37,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Show(object):
+class Show:
     def __init__(self):
         pass
 

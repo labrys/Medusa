@@ -39,7 +39,7 @@ _STAFF NOTIFIED_: @{org}/support @{org}/moderators
 """
 
 
-class IssueSubmitter(object):
+class IssueSubmitter:
     """GitHub issue submitter."""
 
     MISSING_CREDENTIALS = 'Please set your GitHub Username and Password in the config.  Unable to submit issue ticket to GitHub.'

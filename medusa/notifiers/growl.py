@@ -14,7 +14,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def test_notify(self, host, password):
         self._sendRegistration(host, password)
         return self._sendGrowl('Test Growl', 'Testing Growl settings from Medusa', 'Test', host, password,

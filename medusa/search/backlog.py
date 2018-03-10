@@ -34,7 +34,7 @@ class BacklogSearchScheduler(scheduler.Scheduler):
             return datetime.date.fromordinal(self.action._last_backlog + backlog_frequency_in_days)
 
 
-class BacklogSearcher(object):
+class BacklogSearcher:
     """Backlog Searcher class."""
 
     def __init__(self):

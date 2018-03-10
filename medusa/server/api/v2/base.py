@@ -365,7 +365,7 @@ def set_nested_value(data, key, value):
     data[keys[-1]] = value
 
 
-class PatchField(object):
+class PatchField:
     """Represent a field to be patched."""
 
     def __init__(self, target_type, attr, attr_type,

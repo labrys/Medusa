@@ -15,7 +15,7 @@ log.addHandler(logging.NullHandler())
 log = BraceAdapter(log)
 
 
-class BlackAndWhiteList(object):
+class BlackAndWhiteList:
     """Black and White List."""
 
     def __init__(self, series_obj):

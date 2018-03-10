@@ -13,7 +13,7 @@ log.logger.addHandler(logging.NullHandler())
 themes = []
 
 
-class Theme(object):
+class Theme:
     """Base theme class."""
 
     def __init__(self, **kwargs):

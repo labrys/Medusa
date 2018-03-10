@@ -59,7 +59,7 @@ log.logger.addHandler(logging.NullHandler())
 recent_results = {}
 
 
-class GenericProvider(object):
+class GenericProvider:
     """Generic provider."""
 
     NZB = 'nzb'

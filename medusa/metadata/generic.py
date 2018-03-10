@@ -30,7 +30,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class GenericMetadata(object):
+class GenericMetadata:
     """
     Base class for all metadata providers. Default behavior is meant to mostly
     follow KODI 12+ metadata standards. Has support for:

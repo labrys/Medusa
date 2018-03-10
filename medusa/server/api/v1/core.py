@@ -2249,7 +2249,7 @@ class CMD_ShowGetBanner(ApiCall):
         """Get the banner of a show."""
         return {
             'outputType': 'image',
-            'image': ShowBanner(Show.find_by_id(INDEXER_TVDB, self.indexerid)),
+            'image': ShowBanner(Show.find_by_id(app.showList, INDEXER_TVDB, self.indexerid)),
         }
 
 
@@ -2277,7 +2277,7 @@ class CMD_ShowGetNetworkLogo(ApiCall):
         """
         return {
             'outputType': 'image',
-            'image': ShowNetworkLogo(Show.find_by_id(INDEXER_TVDB, self.indexerid)),
+            'image': ShowNetworkLogo(Show.find_by_id(app.showList, INDEXER_TVDB, self.indexerid)),
         }
 
 
@@ -2303,7 +2303,7 @@ class CMD_ShowGetFanArt(ApiCall):
         """Get the fan art of a show."""
         return {
             'outputType': 'image',
-            'image': ShowFanArt(Show.find_by_id(INDEXER_TVDB, self.indexerid)),
+            'image': ShowFanArt(Show.find_by_id(app.showList, INDEXER_TVDB, self.indexerid)),
         }
 
 

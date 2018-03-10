@@ -31,7 +31,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class NameParser(object):
+class NameParser:
     """Responsible to parse release names."""
 
     def __init__(self, series=None, try_indexers=False, naming_pattern=False, parse_method=None,
@@ -348,7 +348,7 @@ class NameParser(object):
                            proper_tags=helpers.ensure_list(guess.get('proper_tag')), version=guess.get('version', -1))
 
 
-class ParseResult(object):
+class ParseResult:
     """Represent the release information for a given name."""
 
     def __init__(self, guess, series_name=None, season_number=None, episode_numbers=None, ab_episode_numbers=None,
@@ -473,7 +473,7 @@ class ParseResult(object):
         return self.guess.get('video_codec')
 
 
-class NameParserCache(object):
+class NameParserCache:
     """Name parser cache."""
 
     def __init__(self, max_size=1000):

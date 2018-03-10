@@ -11,7 +11,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def notify_snatch(self, ep_name, is_proper):
         if app.SYNOLOGYNOTIFIER_NOTIFY_ONSNATCH:
             self._send_synologyNotifier(ep_name, common.notifyStrings[(common.NOTIFY_SNATCH, common.NOTIFY_SNATCH_PROPER)[is_proper]])

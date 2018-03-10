@@ -75,7 +75,7 @@ LANGUAGE_TAGS = {
 }
 
 
-class PostProcessor(object):
+class PostProcessor:
     """A class which will process a media file according to the post processing settings in the config."""
 
     EXISTS_LARGER = 1

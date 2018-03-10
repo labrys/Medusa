@@ -2,6 +2,8 @@
 
 """Various helper methods."""
 
+from urllib.parse import splittype
+from contextlib import suppress
 import base64
 import ctypes
 import datetime
@@ -53,20 +55,6 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-try:
-    from urllib.parse import splittype
-except ImportError:
-    from urllib2 import splittype
-
-try:
-    from itertools import izip as zip
-except ImportError:
-    pass  # zip will be 3.x series
-
-try:
-    from contextlib2 import suppress
-except ImportError:
-    from contextlib import suppress
 
 
 def indent_xml(elem, level=0):

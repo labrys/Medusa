@@ -69,7 +69,7 @@ class MedusaSession(BaseSession):
         cache_control = kwargs.pop('cache_control', None)
 
         # Initialize request.session after we've done the pop's.
-        super(MedusaSession, self).__init__(**kwargs)
+        super(MedusaSession, self).__init__()
 
         # Add cache control of provided as a dict. Needs to be attached after super init.
         if cache_control:

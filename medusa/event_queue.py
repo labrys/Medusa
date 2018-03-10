@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-class Event(object):
+class Event:
     def __init__(self, event_type):
         self._type = event_type
 

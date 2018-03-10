@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-class BraceMessage(object):
+class BraceMessage:
     """Lazily convert a Brace-formatted message."""
 
     def __init__(self, msg, *args, **kwargs):

@@ -12,7 +12,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def test_notify(self, nma_api, nma_priority):
         return self._sendNMA(nma_api, nma_priority, event='Test', message='Testing NMA settings from Medusa',
                              force=True)

@@ -23,7 +23,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class GenericClient(object):
+class GenericClient:
     """Base class for all torrent downloaders."""
 
     def __init__(self, name, host=None, username=None, password=None):

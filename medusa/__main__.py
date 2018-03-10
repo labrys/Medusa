@@ -82,7 +82,7 @@ log.addHandler(logging.NullHandler())
 log = BraceAdapter(log)
 
 
-class Application(object):
+class Application:
     """Main application module."""
 
     def __init__(self):

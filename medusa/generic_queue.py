@@ -7,13 +7,13 @@ import threading
 log = logging.getLogger()
 
 
-class QueuePriorities(object):
+class QueuePriorities:
     LOW = 10
     NORMAL = 20
     HIGH = 30
 
 
-class GenericQueue(object):
+class GenericQueue:
     """
 
     """

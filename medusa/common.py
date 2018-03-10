@@ -111,7 +111,7 @@ MULTI_EP_STRINGS = NumDict({
 })
 
 
-class Quality(object):
+class Quality:
     """Determine quality and set status codes."""
 
     NONE = 0  # 0
@@ -900,7 +900,7 @@ statusStrings = StatusStrings({
 })
 
 
-class Overview(object):
+class Overview:
     UNAIRED = UNAIRED  # 1
     SNATCHED = SNATCHED  # 2
     WANTED = WANTED  # 3

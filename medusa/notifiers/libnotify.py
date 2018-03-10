@@ -45,7 +45,7 @@ def diagnose():
     return u"<p>Error: Unable to send notification."
 
 
-class Notifier(object):
+class Notifier:
     def __init__(self):
         self.Notify = None
         self.gobject = None

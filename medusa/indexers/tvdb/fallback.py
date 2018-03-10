@@ -18,7 +18,7 @@ from medusa.indexers.exceptions import (
 logger = logging.getLogger(__name__)
 
 
-class PlexFallBackConfig(object):
+class PlexFallBackConfig:
     """Update the plex fallback config options.
 
     This will update the plex fallback config options, every time it is updated through the UI.
@@ -58,7 +58,7 @@ class PlexFallBackConfig(object):
         return self.func(*args, **kwargs)
 
 
-class PlexFallback(object):
+class PlexFallback:
     """Fallback to plex if tvdb fails to connect.
 
     Decorator that can be used to catch an exception and fallback to the plex proxy.

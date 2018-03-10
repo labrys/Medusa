@@ -164,7 +164,7 @@ class DelugeDAPI(GenericClient):
             self.remove_torrent(info_hash)
 
 
-class DelugeRPC(object):
+class DelugeRPC:
     """Deluge RPC client class."""
 
     host = 'localhost'

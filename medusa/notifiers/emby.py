@@ -14,7 +14,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
 
     def _notify_emby(self, message, host=None, emby_apikey=None):
         """

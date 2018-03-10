@@ -116,7 +116,7 @@ class CacheDBConnection(db.DBConnection):
                 raise
 
 
-class Cache(object):
+class Cache:
     """Cache class."""
 
     def __init__(self, provider, **kwargs):

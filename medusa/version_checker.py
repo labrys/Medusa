@@ -25,7 +25,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class CheckVersion(object):
+class CheckVersion:
     """Version check class meant to run as a thread object with the sr scheduler."""
 
     def __init__(self):
@@ -385,7 +385,7 @@ class CheckVersion(object):
             return self.updater.branch
 
 
-class UpdateManager(object):
+class UpdateManager:
     @staticmethod
     def get_github_org():
         """

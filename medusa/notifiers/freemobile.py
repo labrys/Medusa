@@ -23,7 +23,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def test_notify(self, cust_id=None, apiKey=None):
         return self._notifyFreeMobile('Test', 'This is a test notification from Medusa', cust_id, apiKey, force=True)
 

@@ -27,7 +27,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class BaseIndexer(object):
+class BaseIndexer:
     """Base class for indexer api's."""
 
     def __init__(self,

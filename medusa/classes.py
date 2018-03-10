@@ -17,7 +17,7 @@ class ApplicationURLopener(FancyURLopener, object):
     version = USER_AGENT
 
 
-class SearchResult(object):
+class SearchResult:
     """Represents a search result from an indexer."""
 
     def __init__(self, episodes=None, provider=None):
@@ -240,7 +240,7 @@ class TorrentSearchResult(SearchResult):
         self.result_type = u'torrent'
 
 
-class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
+class AllShowsListUI:  # pylint: disable=too-few-public-methods
     """This class is for indexer api.
 
     Instead of prompting with a UI to pick the desired result out of a
@@ -289,7 +289,7 @@ class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
         return search_results
 
 
-class ShowListUI(object):  # pylint: disable=too-few-public-methods
+class ShowListUI:  # pylint: disable=too-few-public-methods
     """This class is for tvdb-api.
 
     Instead of prompting with a UI to pick the desired result out of a
@@ -321,7 +321,7 @@ class ShowListUI(object):  # pylint: disable=too-few-public-methods
         return all_series[0]
 
 
-class Viewer(object):
+class Viewer:
     """Keep the Errors to be displayed in the UI."""
 
     def __init__(self):

@@ -36,7 +36,7 @@ name_sports_presets = (
 )
 
 
-class TVShow(object):  # pylint: disable=too-few-public-methods
+class TVShow:  # pylint: disable=too-few-public-methods
     """
 
     """

@@ -27,7 +27,7 @@ log.logger.addHandler(logging.NullHandler())
 API_URL = 'https://api.pushover.net/1/messages.json'
 
 
-class Notifier(object):
+class Notifier:
     def __init__(self):
         pass
 

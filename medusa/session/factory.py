@@ -12,10 +12,7 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-try:
-    from urllib.parse import splittype
-except ImportError:
-    from urllib2 import splittype
+from urllib.parse import splittype
 
 
 def add_cache_control(session, cache_control_config):

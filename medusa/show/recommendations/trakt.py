@@ -25,7 +25,7 @@ log.logger.addHandler(logging.NullHandler())
 missing_posters = ExpiringList(cache_timeout=3600 * 24 * 3)  # Cache 3 days
 
 
-class TraktPopular(object):
+class TraktPopular:
     """This class retrieves a speficed recommended show list from Trakt.
 
     The list of returned shows is mapped to a RecommendedShow object
