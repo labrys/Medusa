@@ -7,7 +7,7 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [!!python/unicode Medusa/0.1.17 (Windows; 10; 87a3c54f-d2da-11e7-b715-1c1b0d9d2a41)]
     method: GET
-    uri: http://www.newpct.com/ultimas-descargas
+    uri: http://www.tvsinpagar.com/ultimas-descargas
   response:
     body:
       string: !!binary |
@@ -582,7 +582,7 @@ interactions:
       Cookie: [PHPSESSID=r1j49v1otvv3e63b36utuqlnm1]
       User-Agent: [!!python/unicode Medusa/0.1.17 (Windows; 10; 87a3c54f-d2da-11e7-b715-1c1b0d9d2a41)]
     method: GET
-    uri: http://www.newpct.com/descargar-serie/babylon-berlin/capitulo-26/hdtv/
+    uri: http://www.tvsinpagar.com/descargar-serie/babylon-berlin/capitulo-26/hdtv/
   response:
     body:
       string: !!binary |

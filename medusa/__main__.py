@@ -1121,8 +1121,8 @@ class Application:
 
             update_interval = datetime.timedelta(minutes=app.BACKLOG_FREQUENCY)
             app.backlog_search_scheduler = BacklogSearchScheduler(BacklogSearcher(),
-                                                                  cycleTime=update_interval,
-                                                                  threadName='BACKLOG',
+                                                                  cycle_time=update_interval,
+                                                                  thread_name='BACKLOG',
                                                                   run_delay=update_interval)
 
             if app.CHECK_PROPERS_INTERVAL in app.PROPERS_SEARCH_INTERVAL:
@@ -1172,8 +1172,8 @@ class Application:
     @staticmethod
     def get_backlog_cycle_time():
         """Return backlog cycle frequency."""
-        cycletime = app.DAILYSEARCH_FREQUENCY * 2 + 7
-        return max([cycletime, 720])
+        cycle_time = app.DAILYSEARCH_FREQUENCY * 2 + 7
+        return max([cycle_time, 720])
 
     @staticmethod
     def restore_cache_folder(cache_folder):

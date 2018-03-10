@@ -29,7 +29,7 @@ class Scheduler(threading.Thread):
             temp_now = datetime.datetime.now() + cycle_time
             self.lastRun = datetime.datetime(temp_now.year, temp_now.month, temp_now.day, temp_now.hour, 0, 0, 0) + self.run_delay - cycle_time
         self.action = action
-        self.cycleTime = cycle_time
+        self.cycle_time = cycle_time
         self.start_time = start_time
 
         self.name = thread_name
@@ -46,7 +46,7 @@ class Scheduler(threading.Thread):
         """
         if self.isAlive():
             if self.start_time is None:
-                return self.cycleTime - (datetime.datetime.now() - self.lastRun)
+                return self.cycle_time - (datetime.datetime.now() - self.lastRun)
             else:
                 time_now = datetime.datetime.now()
                 start_time_today = datetime.datetime.combine(time_now.date(), self.start_time)
@@ -79,14 +79,14 @@ class Scheduler(threading.Thread):
                     if self.force:
                         should_run = True
                     # check if interval has passed
-                    elif current_time - self.lastRun >= self.cycleTime:
+                    elif current_time - self.lastRun >= self.cycle_time:
                         # check if wanting to start around certain time taking interval into account
                         if self.start_time is not None:
                             hour_diff = current_time.time().hour - self.start_time.hour
-                            if not hour_diff < 0 and hour_diff < self.cycleTime.seconds / 3600:
+                            if not hour_diff < 0 and hour_diff < self.cycle_time.seconds / 3600:
                                 should_run = True
                             else:
-                                # set lastRun to only check start_time after another cycleTime
+                                # set lastRun to only check start_time after another cycle_time
                                 self.lastRun = current_time
                         else:
                             should_run = True

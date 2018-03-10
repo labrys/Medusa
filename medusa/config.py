@@ -199,7 +199,7 @@ def change_auto_postprocessor_frequency(freq):
     if app.AUTOPOSTPROCESSOR_FREQUENCY < app.MIN_AUTOPOSTPROCESSOR_FREQUENCY:
         app.AUTOPOSTPROCESSOR_FREQUENCY = app.MIN_AUTOPOSTPROCESSOR_FREQUENCY
 
-    app.auto_post_processor_scheduler.cycleTime = datetime.timedelta(minutes=app.AUTOPOSTPROCESSOR_FREQUENCY)
+    app.auto_post_processor_scheduler.cycle_time = datetime.timedelta(minutes=app.AUTOPOSTPROCESSOR_FREQUENCY)
 
 
 def change_torrent_checker_frequency(freq):
@@ -213,7 +213,7 @@ def change_torrent_checker_frequency(freq):
     if app.TORRENT_CHECKER_FREQUECY < app.MIN_TORRENT_CHECKER_FREQUENCY:
         app.TORRENT_CHECKER_FREQUECY = app.MIN_TORRENT_CHECKER_FREQUENCY
 
-    app.torrent_checker_scheduler.cycleTime = datetime.timedelta(minutes=app.TORRENT_CHECKER_FREQUECY)
+    app.torrent_checker_scheduler.cycle_time = datetime.timedelta(minutes=app.TORRENT_CHECKER_FREQUECY)
 
 
 def change_daily_search_frequency(freq):
@@ -227,7 +227,7 @@ def change_daily_search_frequency(freq):
     if app.DAILYSEARCH_FREQUENCY < app.MIN_DAILYSEARCH_FREQUENCY:
         app.DAILYSEARCH_FREQUENCY = app.MIN_DAILYSEARCH_FREQUENCY
 
-    app.daily_search_scheduler.cycleTime = datetime.timedelta(minutes=app.DAILYSEARCH_FREQUENCY)
+    app.daily_search_scheduler.cycle_time = datetime.timedelta(minutes=app.DAILYSEARCH_FREQUENCY)
 
 
 def change_backlog_frequency(freq):
@@ -242,7 +242,7 @@ def change_backlog_frequency(freq):
     if app.BACKLOG_FREQUENCY < app.MIN_BACKLOG_FREQUENCY:
         app.BACKLOG_FREQUENCY = app.MIN_BACKLOG_FREQUENCY
 
-    app.backlog_search_scheduler.cycleTime = datetime.timedelta(minutes=app.BACKLOG_FREQUENCY)
+    app.backlog_search_scheduler.cycle_time = datetime.timedelta(minutes=app.BACKLOG_FREQUENCY)
 
 
 def change_propers_frequency(check_propers_interval):
@@ -262,7 +262,7 @@ def change_propers_frequency(check_propers_interval):
     else:
         update_interval = datetime.timedelta(hours=1)
     app.CHECK_PROPERS_INTERVAL = check_propers_interval
-    app.proper_finder_scheduler.cycleTime = update_interval
+    app.proper_finder_scheduler.cycle_time = update_interval
 
 
 def change_update_frequency(freq):
@@ -276,7 +276,7 @@ def change_update_frequency(freq):
     if app.UPDATE_FREQUENCY < app.MIN_UPDATE_FREQUENCY:
         app.UPDATE_FREQUENCY = app.MIN_UPDATE_FREQUENCY
 
-    app.version_check_scheduler.cycleTime = datetime.timedelta(hours=app.UPDATE_FREQUENCY)
+    app.version_check_scheduler.cycle_time = datetime.timedelta(hours=app.UPDATE_FREQUENCY)
 
 
 def change_show_update_hour(freq):

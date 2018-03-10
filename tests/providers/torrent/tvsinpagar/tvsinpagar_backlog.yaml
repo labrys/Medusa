@@ -8,7 +8,7 @@ interactions:
       Cookie: [PHPSESSID=r1j49v1otvv3e63b36utuqlnm1]
       User-Agent: [!!python/unicode Medusa/0.1.17 (Windows; 10; 87a3c54f-d2da-11e7-b715-1c1b0d9d2a41)]
     method: GET
-    uri: http://www.newpct.com/descargar-serie/macgyver-2016/capitulo-22/hdtv/
+    uri: http://www.tvsinpagar.com/descargar-serie/macgyver-2016/capitulo-22/hdtv/
   response:
     body:
       string: !!binary |
@@ -747,7 +747,7 @@ interactions:
       Cookie: [PHPSESSID=r1j49v1otvv3e63b36utuqlnm1]
       User-Agent: [!!python/unicode Medusa/0.1.17 (Windows; 10; 87a3c54f-d2da-11e7-b715-1c1b0d9d2a41)]
     method: GET
-    uri: http://www.newpct.com/descargar-seriehd/macgyver-2016/capitulo-22/hdtv-720p-ac3-5-1/
+    uri: http://www.tvsinpagar.com/descargar-seriehd/macgyver-2016/capitulo-22/hdtv-720p-ac3-5-1/
   response:
     body:
       string: !!binary |
@@ -1486,7 +1486,7 @@ interactions:
       Cookie: [PHPSESSID=r1j49v1otvv3e63b36utuqlnm1]
       User-Agent: [!!python/unicode Medusa/0.1.17 (Windows; 10; 87a3c54f-d2da-11e7-b715-1c1b0d9d2a41)]
     method: GET
-    uri: http://www.newpct.com/descargar-serievo/macgyver-2016/capitulo-22/
+    uri: http://www.tvsinpagar.com/descargar-serievo/macgyver-2016/capitulo-22/
   response:
     body:
       string: !!binary |

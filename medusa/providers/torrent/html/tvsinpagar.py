@@ -1,6 +1,6 @@
 # coding=utf-8
 
-"""Provider code for Newpct."""
+"""Provider code for TVsinpagar."""
 
 from __future__ import unicode_literals
 
@@ -20,8 +20,8 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class NewpctProvider(TorrentProvider):
-    """Newpct Torrent provider."""
+class TVsinpagarProvider(TorrentProvider):
+    """TVsinpagar Torrent provider."""
 
     search_regex = re.compile(r'(.*) S0?(\d+)E0?(\d+)')
     anime_search_regex = re.compile(r'(.*) (\d+)')
@@ -29,13 +29,13 @@ class NewpctProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(NewpctProvider, self).__init__('Newpct')
+        super(TVsinpagarProvider, self).__init__('TVsinpagar')
 
         # Credentials
         self.public = True
 
         # URLs
-        self.url = 'http://www.newpct.com'
+        self.url = 'http://www.tvsinpagar.com'
         self.urls = OrderedDict([
             ('daily', urljoin(self.url, 'ultimas-descargas')),
             ('torrent_url', urljoin(self.url, 'descargar-torrent/{0}_{1}.html')),
@@ -185,11 +185,11 @@ class NewpctProvider(TorrentProvider):
 
     def _parse_title(self, search_string):
         if self.series and self.series.is_anime:
-            search_matches = NewpctProvider.anime_search_regex.match(search_string)
+            search_matches = TVsinpagarProvider.anime_search_regex.match(search_string)
             name = search_matches.group(1)
             chapter = '1{0}'.format(search_matches.group(2))
         else:
-            search_matches = NewpctProvider.search_regex.match(search_string)
+            search_matches = TVsinpagarProvider.search_regex.match(search_string)
             name = search_matches.group(1)
             chapter = '{0}{1}'.format(search_matches.group(2), search_matches.group(3))
 
@@ -223,11 +223,11 @@ class NewpctProvider(TorrentProvider):
 
         torrent_info = torrent_content.find('div', class_='entry-left')
         spans = torrent_info('span', class_='imp')
-        size = spans[1].contents[1].strip()
-        pubdate_raw = spans[2].contents[1].strip()
+        size = spans[0].contents[1].strip()
+        pubdate_raw = spans[1].contents[1].strip()
 
         dl_script = torrent_dl.find('script', type='text/javascript').get_text(strip=True)
-        item_id = try_int(NewpctProvider.torrent_id.search(dl_script).group(1))
+        item_id = try_int(TVsinpagarProvider.torrent_id.search(dl_script).group(1))
 
         if mode == 'RSS' and not self.torrent_id_counter:
             self.torrent_id_counter = item_id
@@ -235,4 +235,4 @@ class NewpctProvider(TorrentProvider):
         return title, item_id, size, pubdate_raw
 
 
-provider = NewpctProvider()
+provider = TVsinpagarProvider()

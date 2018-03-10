@@ -244,7 +244,7 @@ class Cache:
                 # and store up to max_recent_items in cache
                 limit = min(index, self.provider.max_recent_items)
                 entries = data['entries']
-                log.debug('Entries: {key}'.format(key=entries))
+                log.debug('Entries: {key}', {'key': entries})
                 self.provider.recent_results = entries[0:limit]
 
         except AuthException as error:
