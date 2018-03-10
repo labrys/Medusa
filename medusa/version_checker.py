@@ -531,7 +531,6 @@ class GitUpdateManager(UpdateManager):
 
         output = ''
         err = ''
-        exit_status = ''
 
         if not git_path:
             log.warning(u"No git specified, can't use git commands")
@@ -553,6 +552,7 @@ class GitUpdateManager(UpdateManager):
             p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                  shell=True, cwd=app.PROG_DIR)
             output, err = p.communicate()
+            output = output.decode()
             exit_status = p.returncode
             output = output.strip()
 
@@ -582,6 +582,7 @@ class GitUpdateManager(UpdateManager):
             log.warning(u'{cmd} returned : {output}. Treat as error for now', {'cmd': cmd, 'output': output})
             exit_status = 1
 
+        log.debug('{} {} {}'.format(output, err, exit_status))
         return output, err, exit_status
 
     def _find_installed_version(self):

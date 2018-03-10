@@ -197,7 +197,7 @@ class HomeAddShows(Home):
         Display new show page which collects a tvdb id, folder, and extra options and posts them to addNewShow.
         """
         t = PageTemplate(rh=self, filename='addShows_newShow.mako')
-
+        log.debug('Attempting to add show: {}'.format(show_to_add))
         indexer, show_dir, indexer_id, show_name = self.split_extra_show(show_to_add)
         use_provided_info = bool(indexer_id and indexer and show_name)
 

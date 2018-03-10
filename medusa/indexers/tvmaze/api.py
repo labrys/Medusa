@@ -392,8 +392,7 @@ class TVmaze(BaseIndexer):
                 raise IndexerError("config['language'] was None, this should not happen")
             get_show_in_language = language
         else:
-            log.debug(
-                'Configured language {0} override show language of {1}', (
+            log.debug('Configured language {0}. override show language of {1}'.format(
                     self.config['language'],
                     language
                 )

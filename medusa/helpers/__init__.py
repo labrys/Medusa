@@ -1038,7 +1038,7 @@ def get_show(name, try_indexers=False):
         if not series:
             match_name_only = (
                 s.name for s in app.showList
-                if s.imdb_year in s.name and
+                if str(s.imdb_year) in s.name and
                    series_name.lower() == s.name.lower().replace(u' ({year})'.format(year=s.imdb_year), u'')
             )
             for found_series in match_name_only:

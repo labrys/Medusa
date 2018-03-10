@@ -194,6 +194,8 @@ class Cache(object):
         if not self.should_update():
             return
 
+        log.debug('Updating cache')
+
         try:
             data = self._get_rss_data()
             data['entries'] = self.provider.remove_duplicate_mappings(data['entries'])
@@ -206,6 +208,7 @@ class Cache(object):
 
                 # get last 5 rss cache results
                 recent_results = self.provider.recent_results
+                log.debug('Recent results: {}'.format(recent_results))
 
                 # counter for number of items found in cache
                 found_recent_results = 0
@@ -213,8 +216,11 @@ class Cache(object):
                 results = []
                 index = 0
                 for index, item in enumerate(data['entries'] or []):
-                    if item['link'] in {cache_item['link']
-                                        for cache_item in recent_results}:
+                    log.debug('{} {}'.format(index, item))
+                    if item['link'] in {
+                        cache_item['link']
+                        for cache_item in recent_results
+                    }:
                         found_recent_results += 1
 
                     if found_recent_results >= self.provider.stop_at:
@@ -237,7 +243,9 @@ class Cache(object):
                 # finished processing, let's save the newest x (index) items
                 # and store up to max_recent_items in cache
                 limit = min(index, self.provider.max_recent_items)
-                self.provider.recent_results = data['entries'][0:limit]
+                entries = data['entries']
+                log.debug('Entries: {key}'.format(key=entries))
+                self.provider.recent_results = entries[0:limit]
 
         except AuthException as error:
             log.error('Authentication error: {0!r}', error)
