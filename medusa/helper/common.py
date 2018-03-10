@@ -9,15 +9,10 @@ import re
 import traceback
 from fnmatch import fnmatch
 
-from six import PY3, text_type
-
 from medusa import app
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
-
-if PY3:
-    long = int
 
 dateFormat = '%Y-%m-%d'
 dateTimeFormat = '%Y-%m-%d %H:%M:%S'
@@ -151,7 +146,7 @@ def is_sync_file(filename):
     :param filename: The filename to check
     :return: ``True`` if the ``filename`` is a sync file, ``False`` otherwise
     """
-    if isinstance(filename, (str, text_type)):
+    if isinstance(filename, str):
         extension = filename.rpartition('.')[2].lower()
 
         return (extension in app.SYNC_FILES or
@@ -167,7 +162,7 @@ def is_torrent_or_nzb_file(filename):
     :param filename: The filename to check
     :return: ``True`` if the ``filename`` is a NZB file or a torrent file, ``False`` otherwise
     """
-    if not isinstance(filename, (str, text_type)):
+    if not isinstance(filename, str):
         return False
 
     return filename.rpartition('.')[2].lower() in ['nzb', 'torrent']
@@ -244,7 +239,7 @@ def convert_size(size, default=None, use_decimal=False, **kwargs):
     finally:
         try:
             if result != default:
-                result = long(result)
+                result = int(result)
                 result = max(result, 0)
         except (TypeError, ValueError):
             pass
@@ -259,7 +254,7 @@ def remove_extension(filename):
     :param filename: The filename from which we want to remove the extension
     :return: The ``filename`` without its extension.
     """
-    if isinstance(filename, (str, text_type)) and '.' in filename:
+    if isinstance(filename, str) and '.' in filename:
         basename, _, extension = filename.rpartition('.')
 
         if basename and extension.lower() in ['nzb', 'torrent'] + media_extensions:
@@ -275,7 +270,7 @@ def replace_extension(filename, new_extension):
     :param new_extension: The new extension to apply on the ``filename``
     :return: The ``filename`` with the new extension
     """
-    if isinstance(filename, (str, text_type)) and '.' in filename:
+    if isinstance(filename, str) and '.' in filename:
         basename, _, _ = filename.rpartition('.')
 
         if basename:
@@ -290,7 +285,7 @@ def sanitize_filename(filename):
     :param filename: The filename to clean
     :return: The ``filename``cleaned
     """
-    if isinstance(filename, (str, text_type)):
+    if isinstance(filename, str):
         filename = re.sub(r'[\\/*]', '-', filename)
         filename = re.sub(r'[:"<>|?]', '', filename)
         filename = re.sub(r'™', '', filename)  # Trade Mark Sign unicode: \u2122

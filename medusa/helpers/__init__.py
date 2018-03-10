@@ -35,7 +35,6 @@ from cachecontrol import CacheControlAdapter
 from cachecontrol.cache import DictCache
 from imdbpie import imdbpie
 from requests.compat import urlparse
-from six import binary_type, string_types, text_type
 from six.moves import http_client
 
 from medusa import app, db
@@ -379,8 +378,11 @@ def symlink(src, dst):
     :type dst: str
     """
     if os.name == 'nt':
-        if ctypes.windll.kernel32.CreateSymbolicLinkW(text_type(dst), text_type(src),
-                                                      1 if os.path.isdir(src) else 0) in [0, 1280]:
+        if ctypes.windll.kernel32.CreateSymbolicLinkW(
+                dst,
+                src,
+                1 if os.path.isdir(src) else 0
+        ) in [0, 1280]:
             raise ctypes.WinError()
     else:
         os.symlink(src, dst)
@@ -1037,8 +1039,11 @@ def get_show(name, try_indexers=False):
                 series = Show.find_by_id(app.showList, indexer_id, series_id)
 
         if not series:
-            match_name_only = (s.name for s in app.showList if text_type(s.imdb_year) in s.name and
-                               series_name.lower() == s.name.lower().replace(u' ({year})'.format(year=s.imdb_year), u''))
+            match_name_only = (
+                s.name for s in app.showList
+                if s.imdb_year in s.name and
+                   series_name.lower() == s.name.lower().replace(u' ({year})'.format(year=s.imdb_year), u'')
+            )
             for found_series in match_name_only:
                 log.warning("Consider adding '{name}' in scene exceptions for series '{series}'".format
                             (name=series_name, series=found_series))
@@ -1062,7 +1067,7 @@ def is_hidden_folder(folder):
 
     def has_hidden_attribute(filepath):
         try:
-            attrs = ctypes.windll.kernel32.GetFileAttributesW(text_type(filepath))
+            attrs = ctypes.windll.kernel32.GetFileAttributesW(filepath)
             assert attrs != -1
             result = bool(attrs & 2)
         except (AttributeError, AssertionError):
@@ -1748,7 +1753,7 @@ def ensure_list(value):
     return sorted(value) if isinstance(value, list) else [value] if value is not None else []
 
 
-def canonical_name(obj, fmt=u'{key}:{value}', separator=u'|', ignore_list=frozenset()):
+def canonical_name(obj, fmt='{key}:{value}', separator='|', ignore_list=frozenset()):
     """Create a canonical name from a release name or a guessed dictionary.
 
     The return value is always unicode.
@@ -1765,10 +1770,11 @@ def canonical_name(obj, fmt=u'{key}:{value}', separator=u'|', ignore_list=frozen
     :rtype: text_type
     """
     guess = obj if isinstance(obj, dict) else guessit.guessit(obj)
-    return text_type(
-        text_type(separator).join(
-            [text_type(fmt).format(key=unicodify(k), value=unicodify(v))
-             for k, v in guess.items() if k not in ignore_list]))
+    return separator.join([
+        fmt.format(key=k, value=v)
+        for k, v in guess.items()
+        if k not in ignore_list
+    ])
 
 
 def get_broken_providers():

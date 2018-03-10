@@ -278,8 +278,6 @@ class NameParser(object):
         :return:
         :rtype: ParseResult
         """
-        name = helpers.unicodify(name)
-
         if self.naming_pattern:
             cache_result = False
 

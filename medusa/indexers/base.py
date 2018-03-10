@@ -12,7 +12,7 @@ from itertools import chain
 from operator import itemgetter
 
 import requests
-from six import integer_types, text_type
+from six import integer_types
 
 from medusa.indexers.exceptions import (
     IndexerAttributeNotFound,
@@ -69,7 +69,7 @@ class BaseIndexer(object):
             self.config['cache_location'] = self._get_temp_dir()
         elif cache is False:
             self.config['cache_enabled'] = False
-        elif isinstance(cache, text_type):
+        elif isinstance(cache, str):
             self.config['cache_enabled'] = True
             self.config['cache_location'] = cache
         else:
@@ -509,20 +509,19 @@ class Episode(dict):
         if term is None:
             raise TypeError('must supply string to search for (contents)')
 
-        term = unicode(term).lower()
+        term = term.lower()
         for cur_key, cur_value in self.items():
-            cur_key, cur_value = unicode(cur_key).lower(), unicode(cur_value).lower()
+            cur_key = cur_key.lower()
+            cur_value = cur_value.lower()
             if key is not None and cur_key != key:
                 # Do not search this key
                 continue
-            if cur_value.find(unicode(term).lower()) > -1:
+            if cur_value.find(term.lower()) > -1:
                 return self
 
 
 class Actors(list):
     """Hold all Actor instances for a show."""
-
-    pass
 
 
 class Actor(dict):
