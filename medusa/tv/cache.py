@@ -9,8 +9,6 @@ import logging
 import traceback
 from time import time
 
-from six import text_type
-
 from medusa import (
     app,
     db,
@@ -399,7 +397,7 @@ class Cache(object):
             # get quality of release
             quality = parse_result.quality
 
-            assert isinstance(name, text_type)
+            assert isinstance(name, str)
 
             # get release group
             release_group = parse_result.release_group

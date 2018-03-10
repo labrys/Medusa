@@ -19,7 +19,6 @@ from collections import (
 from itertools import groupby
 
 from imdbpie import imdbpie
-from six import text_type
 
 from medusa import (
     app,
@@ -147,7 +146,7 @@ class SeriesIdentifier(Identifier):
     @property
     def slug(self):
         """Slug."""
-        return text_type(self)
+        return str(self)
 
     @property
     def api(self):
@@ -518,7 +517,7 @@ class Series(TV):
     @airs.setter
     def airs(self, value):
         """Set episode time that series usually airs."""
-        self._airs = text_type(value).replace('am', ' AM').replace('pm', ' PM').replace('  ', ' ').strip()
+        self._airs = value.replace('am', ' AM').replace('pm', ' PM').replace('  ', ' ').strip()
 
     @property
     def poster(self):
@@ -610,7 +609,7 @@ class Series(TV):
 
         if season is not None:
             sql_selection += ' AND season IN (?)'
-            sql_args.append(','.join(map(text_type, season)))
+            sql_args.append(','.join(map(str, season)))
 
         if has_location:
             sql_selection += " AND location != ''"
@@ -1025,7 +1024,7 @@ class Series(TV):
             cur_episode = int(cur_result['episode'])
             cur_indexer = int(cur_result['indexer'])
             cur_show_id = int(cur_result['showid'])
-            cur_show_name = text_type(cur_result['show_name'])
+            cur_show_name = cur_result['show_name']
 
             delete_ep = False
 
@@ -1592,7 +1591,7 @@ class Series(TV):
             'year': safe_get(imdb_info, ('base', 'year')),
             'akas': '',
             'genres': '|'.join(safe_get(imdb_genres, ('genres',))),
-            'rating': text_type(safe_get(imdb_info, ('ratings', 'rating'))),
+            'rating': safe_get(imdb_info, ('ratings', 'rating')),
             'votes': safe_get(imdb_info, ('ratings', 'ratingCount')),
             'runtimes': safe_get(imdb_info, ('base', 'runningTimeInMinutes')),
             'certificates': '',
@@ -1994,7 +1993,7 @@ class Series(TV):
         data = NonEmptyDict()
         data['id'] = NonEmptyDict()
         data['id'][self.indexer_name] = self.series_id
-        data['id']['imdb'] = text_type(self.imdb_id)
+        data['id']['imdb'] = self.imdb_id
         data['title'] = self.name
         data['indexer'] = self.indexer_name  # e.g. tvdb
         data['network'] = self.network  # e.g. CBS

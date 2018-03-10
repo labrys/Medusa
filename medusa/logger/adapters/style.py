@@ -9,8 +9,6 @@ import functools
 import logging
 import traceback
 
-from six import text_type
-
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
@@ -56,7 +54,7 @@ class BraceMessage(object):
         sep = ', '
         kw_repr = '{key}={value!r}'
         name = self.__class__.__name__
-        args = sep.join(map(text_type, self.args))
+        args = sep.join(self.args)
         kwargs = sep.join(kw_repr.format(key=k, value=v)
                           for k, v in self.kwargs.items())
         return '{cls}({args})'.format(

@@ -3,7 +3,6 @@
 import logging
 
 from pynma import pynma
-from six import text_type
 
 from medusa import app, common
 from medusa.helper.common import http_code_description
@@ -55,7 +54,7 @@ class Notifier(object):
 
         if nma_api is None:
             nma_api = app.NMA_API
-        elif isinstance(nma_api, text_type):
+        elif isinstance(nma_api, str):
             nma_api = [nma_api]
 
         if nma_priority is None:

@@ -7,7 +7,7 @@ import logging
 from requests.auth import HTTPBasicAuth
 from requests.compat import unquote_plus
 from requests.exceptions import HTTPError, RequestException
-from six import string_types, text_type
+from six import string_types
 
 from medusa import app, common
 from medusa.logger.adapters.style import BraceAdapter
@@ -90,7 +90,7 @@ class Notifier(object):
             password = app.KODI_PASSWORD
 
         # Sanitize host when not passed as a list
-        if isinstance(host, (string_types, text_type)):
+        if isinstance(host, str):
             host = host.split(',')
 
         # suppress notifications if the notifier is disabled but the notify options are checked

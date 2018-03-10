@@ -28,7 +28,6 @@ from collections import OrderedDict
 import adba
 import rarfile
 from rarfile import Error as RarError, NeedFirstVolume
-from six import text_type
 
 from medusa import (
     app,

@@ -7,8 +7,6 @@ import logging
 import os
 import re
 
-from six import text_type
-
 from medusa import helpers
 from medusa.helper.common import (
     dateFormat, episode_num as ep_num,
@@ -195,7 +193,7 @@ class WDTVMetadata(generic.GenericMetadata):
                 return None
 
             if ep_obj.season == 0 and not getattr(my_ep, 'firstaired', None):
-                my_ep['firstaired'] = text_type(datetime.date.fromordinal(1))
+                my_ep['firstaired'] = datetime.date.fromordinal(1)
 
             if not (getattr(my_ep, 'episodename', None) and getattr(my_ep, 'firstaired', None)):
                 return None
@@ -207,7 +205,7 @@ class WDTVMetadata(generic.GenericMetadata):
 
             # TODO: get right EpisodeID
             episode_id = etree.SubElement(episode, 'id')
-            episode_id.text = text_type(ep_to_write.indexerid)
+            episode_id.text = ep_to_write.indexerid
 
             title = etree.SubElement(episode, 'title')
             title.text = ep_obj.pretty_name()
@@ -221,19 +219,19 @@ class WDTVMetadata(generic.GenericMetadata):
                 episode_name.text = ep_to_write.name
 
             season_number = etree.SubElement(episode, 'season_number')
-            season_number.text = text_type(ep_to_write.season)
+            season_number.text = ep_to_write.season
 
             episode_num = etree.SubElement(episode, 'episode_number')
-            episode_num.text = text_type(ep_to_write.episode)
+            episode_num.text = ep_to_write.episode
 
             first_aired = etree.SubElement(episode, 'firstaired')
 
             if ep_to_write.airdate != datetime.date.fromordinal(1):
-                first_aired.text = text_type(ep_to_write.airdate)
+                first_aired.text = ep_to_write.airdate
 
             if getattr(my_show, 'firstaired', None):
                 try:
-                    year_text = text_type(datetime.datetime.strptime(my_show['firstaired'], dateFormat).year)
+                    year_text = datetime.datetime.strptime(my_show['firstaired'], dateFormat).year
                     if year_text:
                         year = etree.SubElement(episode, 'year')
                         year.text = year_text

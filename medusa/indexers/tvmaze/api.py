@@ -11,7 +11,7 @@ from pytvmaze.exceptions import (
     BaseError, CastNotFound, IDNotFound,
     ShowIndexError, ShowNotFound, UpdateNotFound,
 )
-from six import integer_types, string_types, text_type, iteritems
+from six import integer_types, string_types, iteritems
 
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
 from medusa.indexers.exceptions import (
@@ -129,18 +129,18 @@ class TVmaze(BaseIndexer):
                         # Do some value sanitizing
                         if isinstance(value, list):
                             if all(isinstance(x, (string_types, integer_types)) for x in value):
-                                value = list_separator.join(text_type(v) for v in value)
+                                value = list_separator.join(value)
 
                         # Try to map the key
                         if key in key_mappings:
                             key = key_mappings[key]
 
                         # Set value to key
-                        return_dict[key] = text_type(value) if isinstance(value, (float, integer_types)) else value
+                        return_dict[key] = value if isinstance(value, (float, integer_types)) else value
 
                 # For episodes
                 if hasattr(item, 'season_number') and getattr(item, 'episode_number') is None:
-                    return_dict['episodenumber'] = text_type(index_special_episodes)
+                    return_dict['episodenumber'] = index_special_episodes
                     return_dict['seasonnumber'] = 0
                     index_special_episodes += 1
 
@@ -418,7 +418,7 @@ class TVmaze(BaseIndexer):
         # Get external ids.
         # As the external id's are not part of the shows default response, we need to make an additional call for it.
         # Im checking for the external value. to make sure only externals with a value get in.
-        self._set_show_data(tvmaze_id, 'externals', {external_id: text_type(getattr(self.shows[tvmaze_id], external_id, None))
+        self._set_show_data(tvmaze_id, 'externals', {external_id: getattr(self.shows[tvmaze_id], external_id, None)
                                                      for external_id in ['tvdb_id', 'imdb_id', 'tvrage_id']
                                                      if getattr(self.shows[tvmaze_id], external_id, None)})
 

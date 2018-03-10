@@ -5,7 +5,7 @@ import logging
 import re
 
 from babelfish import Country
-from six import string_types, text_type
+from six import string_types
 
 from medusa import helpers
 from medusa.app import TVDB_API_KEY
@@ -114,7 +114,7 @@ class KODI_12PlusMetadata(generic.GenericMetadata):
 
         if getattr(my_show, 'rating', None):
             rating = etree.SubElement(tv_node, 'rating')
-            rating.text = text_type(my_show['rating'])
+            rating.text = my_show['rating']
 
         if getattr(my_show, 'firstaired', None):
             try:
@@ -299,7 +299,7 @@ class KODI_12PlusMetadata(generic.GenericMetadata):
 
             if getattr(my_ep, 'rating', None):
                 rating = etree.SubElement(episode, 'rating')
-                rating.text = text_type(my_ep['rating'])
+                rating.text = my_ep['rating']
 
             if getattr(my_ep, 'writer', None) and isinstance(my_ep['writer'], string_types):
                 for writer in self._split_info(my_ep['writer']):

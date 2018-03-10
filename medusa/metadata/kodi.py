@@ -3,8 +3,6 @@
 
 import os
 
-from six import text_type
-
 from medusa.helper.common import replace_extension
 from medusa.metadata import kodi_12plus
 
@@ -99,7 +97,7 @@ class KODIMetadata(kodi_12plus.KODI_12PlusMetadata):
         if season == 0:
             season_poster_filename = 'season-specials'
         else:
-            season_poster_filename = 'season' + text_type(season).zfill(2)
+            season_poster_filename = 'season' + season.zfill(2)
 
         return os.path.join(show_obj.location, season_poster_filename + '.tbn')
 

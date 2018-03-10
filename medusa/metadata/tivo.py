@@ -7,8 +7,6 @@ import io
 import logging
 import os
 
-from six import text_type
-
 from medusa import helpers
 from medusa.helper.common import episode_num
 from medusa.indexers.api import indexerApi
@@ -176,7 +174,7 @@ class TIVOMetadata(generic.GenericMetadata):
                 return None
 
             if ep_obj.season == 0 and not getattr(my_ep, 'firstaired', None):
-                my_ep['firstaired'] = text_type(datetime.date.fromordinal(1))
+                my_ep['firstaired'] = datetime.date.fromordinal(1)
 
             if not (getattr(my_ep, 'episodename', None) and getattr(my_ep, 'firstaired', None)):
                 return None

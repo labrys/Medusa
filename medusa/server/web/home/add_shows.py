@@ -11,7 +11,7 @@ import re
 from requests import RequestException
 from requests.compat import unquote_plus
 from simpleanidb import REQUEST_HOT
-from six import iteritems, text_type
+from six import iteritems
 from tornroutes import route
 from traktor import TraktApi
 
@@ -616,7 +616,7 @@ class HomeAddShows(Home):
 
         # grab a list of other shows to add, if provided
         shows_to_add = [
-            unquote_plus(text_type(show, 'utf-8'))
+            unquote_plus(show.decode())
             for show in generate(shows_to_add)
         ]
 

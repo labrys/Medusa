@@ -136,7 +136,6 @@ def is_subtitle(file_path):
     """Return whether the file is a subtitle or not.
 
     :param file_path: path to the file
-    :type file_path: text_type
     :return: True if it is a subtitle, else False
     :rtype: bool
     """
@@ -147,9 +146,7 @@ def get_extension(file_path):
     """Return the file extension without leading dot.
 
     :param file_path: path to the file
-    :type file_path: text_type
     :return: extension or empty string
-    :rtype: text_type
     """
     return os.path.splitext(file_path)[1][1:]
 
@@ -329,7 +326,7 @@ def link(src, dst):
     :type dst: str
     """
     if os.name == 'nt':
-        if ctypes.windll.kernel32.CreateHardLinkW(text_type(dst), text_type(src), 0) == 0:
+        if ctypes.windll.kernel32.CreateHardLinkW(dst, src, 0) == 0:
             raise ctypes.WinError()
     else:
         os.link(src, dst)
@@ -1709,20 +1706,6 @@ def is_ip_private(ip):
     return bool(priv_lo.match(ip) or priv_24.match(ip) or priv_20.match(ip) or priv_16.match(ip))
 
 
-def unicodify(value):
-    """Return the value as unicode.
-
-    :param value:
-    :type value: str
-    :return:
-    :rtype: str
-    """
-    if isinstance(value, string_types) and not isinstance(value, text_type):
-        return text_type(value, 'utf-8', 'replace')
-
-    return value
-
-
 def single_or_list(value, allow_multi=False):
     """Return a single value or a list.
 
@@ -1757,17 +1740,6 @@ def canonical_name(obj, fmt='{key}:{value}', separator='|', ignore_list=frozense
     """Create a canonical name from a release name or a guessed dictionary.
 
     The return value is always unicode.
-
-    :param obj:
-    :type obj: str or dict
-    :param fmt:
-    :type fmt: str or unicode
-    :param separator:
-    :type separator: str or unicode
-    :param ignore_list:
-    :type ignore_list: set
-    :return:
-    :rtype: text_type
     """
     guess = obj if isinstance(obj, dict) else guessit.guessit(obj)
     return separator.join([

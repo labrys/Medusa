@@ -18,7 +18,7 @@ from babelfish import (
     language_converters,
 )
 from dogpile.cache.api import NO_VALUE
-from six import iteritems, string_types, text_type
+from six import iteritems, string_types
 from subliminal import (
     ProviderPool,
     compute_score,
@@ -305,17 +305,7 @@ def score_subtitles(subtitles_list, video):
 
 
 def list_subtitles(tv_episode, video_path=None, limit=40):
-    """List subtitles for the given episode in the given path.
-
-    :param tv_episode:
-    :type tv_episode: medusa.tv.Episode
-    :param video_path:
-    :type video_path: text_type
-    :param limit:
-    :type limit: int
-    :return:
-    :rtype: list of dict
-    """
+    """List subtitles for the given episode in the given path."""
     subtitles_dir = get_subtitles_dir(video_path)
     release_name = tv_episode.release_name
 
@@ -349,17 +339,7 @@ def list_subtitles(tv_episode, video_path=None, limit=40):
 
 
 def save_subtitle(tv_episode, subtitle_id, video_path=None):
-    """Save the subtitle with the given id.
-
-    :param tv_episode:
-    :type tv_episode: medusa.tv.Episode
-    :param subtitle_id:
-    :type subtitle_id: text_type
-    :param video_path:
-    :type video_path: text_type
-    :return:
-    :rtype: list of str
-    """
+    """Save the subtitle with the given id."""
     subtitle = cache.get(subtitle_key.format(id=subtitle_id))
     if subtitle == NO_VALUE:
         log.error('Unable to find cached subtitle ID: {}', subtitle_id)
@@ -381,17 +361,11 @@ def download_subtitles(tv_episode, video_path=None, subtitles=True, embedded_sub
     Checks whether subtitles are needed or not
 
     :param tv_episode: the episode to download subtitles
-    :type tv_episode: medusa.tv.Episode
     :param video_path: the video path. If none, the episode location will be used
-    :type video_path: str
     :param subtitles: True if existing external subtitles should be taken into account
-    :type subtitles: bool
     :param embedded_subtitles: True if embedded subtitles should be taken into account
-    :type embedded_subtitles: bool
     :param lang:
-    :type lang: str
     :return: a sorted list of the opensubtitles codes for the downloaded subtitles
-    :rtype: list of str
     """
     video_path = video_path or tv_episode.location
     show_name = tv_episode.series.name
@@ -636,19 +610,19 @@ def get_subtitle_description(subtitle):
     :rtype: str
     """
     desc = None
-    sub_id = text_type(subtitle.id)
+    sub_id = subtitle.id
     if hasattr(subtitle, 'hash') and subtitle.hash:
-        desc = text_type(subtitle.hash)
+        desc = subtitle.hash
     if hasattr(subtitle, 'filename') and subtitle.filename:
         desc = subtitle.filename
     elif hasattr(subtitle, 'version') and subtitle.version:
-        desc = text_type(subtitle.version)
+        desc = subtitle.version
     elif hasattr(subtitle, 'name') and subtitle.name:
         desc = subtitle.name
     if hasattr(subtitle, 'release') and subtitle.release:
         desc = subtitle.release
     if hasattr(subtitle, 'releases') and subtitle.releases:
-        desc = text_type(subtitle.releases)
+        desc = subtitle.releases
 
     return sub_id if not desc else desc
 

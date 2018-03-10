@@ -18,8 +18,6 @@
 from collections import namedtuple
 from datetime import datetime, timedelta
 
-from six import text_type
-
 from medusa.common import Quality
 from medusa.helper.common import try_int
 
@@ -105,7 +103,7 @@ class History(object):
 
     @staticmethod
     def _get_actions(action):
-        action = action.lower() if isinstance(action, (str, text_type)) else ''
+        action = action.lower() if isinstance(action, str) else ''
 
         result = None
         if action == 'downloaded':

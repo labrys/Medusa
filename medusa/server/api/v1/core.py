@@ -29,7 +29,7 @@ from collections import OrderedDict
 from datetime import date, datetime
 
 from requests.compat import unquote_plus
-from six import iteritems, text_type
+from six import iteritems
 from tornado.web import RequestHandler
 
 from medusa import (
@@ -1619,7 +1619,7 @@ class CMD_SearchIndexers(ApiCall):
 
                 # found show
                 results = [{INDEXER_IDS[_indexer]: int(my_show.data['id']),
-                            'name': text_type(my_show.data['seriesname']),
+                            'name': my_show.data['seriesname'],
                             'first_aired': my_show.data['firstaired'],
                             'indexer': int(_indexer)}]
                 break

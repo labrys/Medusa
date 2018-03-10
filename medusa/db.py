@@ -344,23 +344,6 @@ class DBConnection(object):
             columns[column['name']] = {'type': column['type']}
         return columns
 
-    # @staticmethod
-    # def _unicode_text_factory(x):
-    #     """
-    #     Convert text to unicode.
-    #
-    #     :param x: text to parse
-    #     :return: unicode result
-    #     """
-    #     if isinstance(x, str):
-    #         return x
-    #
-    #     try:
-    #         # Just revert to the old code for now, until we can fix unicode
-    #         return text_type(x, 'utf-8')
-    #     except Exception:
-    #         return text_type(x, app.SYS_ENCODING, errors="ignore")
-
     @staticmethod
     def _dict_factory(cursor, row):
         d = {}

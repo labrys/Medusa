@@ -4,7 +4,7 @@ import logging
 import platform
 import sys
 
-from six import iteritems, text_type
+from six import iteritems
 from tornado.escape import json_decode
 
 from medusa import (
@@ -104,7 +104,7 @@ class ConfigHandler(BaseRequestHandler):
         config_data['databaseVersion']['major'] = app.MAJOR_DB_VERSION
         config_data['databaseVersion']['minor'] = app.MINOR_DB_VERSION
         config_data['os'] = platform.platform()
-        config_data['locale'] = '.'.join([text_type(loc or 'Unknown') for loc in app.LOCALE])
+        config_data['locale'] = '.'.join([loc or 'Unknown' for loc in app.LOCALE])
         config_data['localUser'] = app.OS_USER or 'Unknown'
         config_data['programDir'] = app.PROG_DIR
         config_data['configFile'] = app.CONFIG_FILE
@@ -181,8 +181,10 @@ class ConfigHandler(BaseRequestHandler):
         config_data['backlogOverview']['period'] = app.BACKLOG_PERIOD
         config_data['backlogOverview']['status'] = app.BACKLOG_STATUS
         config_data['indexers'] = NonEmptyDict()
-        config_data['indexers']['config'] = {text_type(indexer_id): indexer['identifier'] for indexer_id,
-                                             indexer in iteritems(indexerConfig)}
+        config_data['indexers']['config'] = {
+            indexer_id: indexer['identifier']
+            for indexer_id, indexer in iteritems(indexerConfig)
+        }
 
         if not identifier:
             return self._paginate([config_data])

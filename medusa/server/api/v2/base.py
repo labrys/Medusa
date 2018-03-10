@@ -10,7 +10,7 @@ from datetime import date, datetime
 
 import jwt
 from babelfish.language import Language
-from six import string_types, text_type
+from six import string_types
 from tornado.httpclient import HTTPError
 from tornado.web import RequestHandler
 
@@ -300,7 +300,7 @@ class BaseRequestHandler(RequestHandler):
         :param value:
         :return:
         """
-        if isinstance(value, text_type):
+        if isinstance(value, str):
             return value.lower() == 'true'
 
         return cls._parse(value, bool)
@@ -340,7 +340,7 @@ def json_default_encoder(o):
     if isinstance(o, date):
         return o.isoformat()
 
-    return text_type(o)
+    return o
 
 
 def iter_nested_items(data, prefix=''):

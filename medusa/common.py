@@ -494,11 +494,8 @@ class Quality(object):
         Get Scene naming parameters from filename and quality.
 
         :param name: filename to check
-        :type name: text_type
         :param quality: int of quality to make sure we get the right release type
-        :type quality: int
         :return: release type and/or encoder type for scene quality naming
-        :rtype: text_type
         """
         rel_type = ''
         name = name.lower()

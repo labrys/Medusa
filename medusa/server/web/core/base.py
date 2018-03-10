@@ -19,7 +19,6 @@ from requests.compat import urljoin
 from six import (
     binary_type,
     iteritems,
-    text_type,
 )
 from tornado.concurrent import run_on_executor
 from tornado.escape import utf8
@@ -274,7 +273,7 @@ class WebHandler(BaseHandler):
                 if len(value) == 1:
                     kwargs[arg] = value[0]
                 if isinstance(kwargs[arg], binary_type):
-                    kwargs[arg] = text_type(kwargs[arg], 'utf-8')
+                    kwargs[arg] = kwargs[arg].decode()
 
             result = function(**kwargs)
             return result

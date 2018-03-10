@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 from requests.compat import urljoin
 from requests.exceptions import RequestException
-from six import string_types, text_type, iteritems
+from six import string_types, iteritems
 from tvdbapiv2 import (
     ApiClient,
     EpisodesApi,
@@ -579,7 +579,7 @@ class TVDB(BaseIndexer):
             self._set_show_data(sid, k, v)
 
         # Create the externals structure
-        self._set_show_data(sid, 'externals', {'imdb_id': text_type(getattr(self[sid], 'imdb_id', ''))})
+        self._set_show_data(sid, 'externals', {'imdb_id': getattr(self[sid], 'imdb_id', '')})
 
         # get episode data
         if self.config['episodes_enabled']:
