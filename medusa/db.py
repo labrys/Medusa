@@ -8,10 +8,7 @@ import threading
 import time
 import warnings
 
-from six import text_type
-
 from medusa import app
-from medusa.helper.exceptions import ex
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -50,7 +47,6 @@ class DBConnection(object):
                 db_locks[self.filename] = threading.Lock()
 
                 self.connection = sqlite3.connect(db_filename(self.filename, self.suffix), 20, check_same_thread=False)
-                self.connection.text_factory = DBConnection._unicode_text_factory
 
                 db_cons[self.filename] = self.connection
             else:
@@ -69,7 +65,7 @@ class DBConnection(object):
             log.warning(
                 u'Please check your database owner/permissions: {}'.format(db_filename(self.filename, self.suffix)))
         except Exception as e:
-            log.debug(u"DB error: " + ex(e))
+            log.debug(u"DB error: {}".format(e))
             raise
 
     def _set_row_factory(self):
@@ -213,17 +209,16 @@ class DBConnection(object):
                     if self.connection:
                         self.connection.rollback()
                     if "unable to open database file" in e.args[0] or "database is locked" in e.args[0]:
-                        log.warning(u"DB error: " + ex(e))
+                        log.warning(u"DB error: {}".format(e))
                         attempt += 1
                         time.sleep(1)
                     else:
-                        log.debug(u"DB error: " + ex(e))
+                        log.debug(u"DB error: {}".format(e))
                         raise
                 except sqlite3.DatabaseError as e:
-                    sql_results = []
                     if self.connection:
                         self.connection.rollback()
-                    log.debug(u"Fatal error executing query: " + ex(e))
+                    log.debug(u"Fatal error executing query: {}".format(e))
                     raise
 
             # time.sleep(0.02)
@@ -243,8 +238,9 @@ class DBConnection(object):
         if query is None:
             return
 
-        if not isinstance(query, text_type):
-            query = text_type(query, 'utf-8')
+        if isinstance(query, bytes):
+            log.debug('Decoding query: {!r}'.format(query))
+            query = query.decode()
 
         sql_results = None
         attempt = 0
@@ -265,14 +261,14 @@ class DBConnection(object):
                     break
                 except sqlite3.OperationalError as e:
                     if "unable to open database file" in e.args[0] or "database is locked" in e.args[0]:
-                        log.warning(u"DB error: " + ex(e))
+                        log.warning(u"DB error: {}".format(e))
                         attempt += 1
                         time.sleep(1)
                     else:
-                        log.debug(u"DB error: " + ex(e))
+                        log.debug(u"DB error: {}".format(e))
                         raise
                 except sqlite3.DatabaseError as e:
-                    log.debug(u"Fatal error executing query: " + ex(e))
+                    log.debug(u"Fatal error executing query: {}".format(e))
                     raise
 
             # time.sleep(0.02)
@@ -348,22 +344,22 @@ class DBConnection(object):
             columns[column['name']] = {'type': column['type']}
         return columns
 
-    @staticmethod
-    def _unicode_text_factory(x):
-        """
-        Convert text to unicode.
-
-        :param x: text to parse
-        :return: unicode result
-        """
-        if isinstance(x, text_type):
-            return x
-
-        try:
-            # Just revert to the old code for now, until we can fix unicode
-            return text_type(x, 'utf-8')
-        except Exception:
-            return text_type(x, app.SYS_ENCODING, errors="ignore")
+    # @staticmethod
+    # def _unicode_text_factory(x):
+    #     """
+    #     Convert text to unicode.
+    #
+    #     :param x: text to parse
+    #     :return: unicode result
+    #     """
+    #     if isinstance(x, str):
+    #         return x
+    #
+    #     try:
+    #         # Just revert to the old code for now, until we can fix unicode
+    #         return text_type(x, 'utf-8')
+    #     except Exception:
+    #         return text_type(x, app.SYS_ENCODING, errors="ignore")
 
     @staticmethod
     def _dict_factory(cursor, row):
@@ -514,8 +510,6 @@ class SchemaUpgrade(object):
         :param column:
         :return:
         """
-        if not isinstance(column, text_type):
-            column = text_type(column, 'utf-8')
         return column in self.connection.table_info(tableName)
 
     def add_column(self, table, column, column_type="NUMERIC", default=0):

@@ -16,7 +16,6 @@ from medusa import (
     helpers,
     tv,
 )
-from medusa.helper.exceptions import ex
 from medusa.providers.torrent.torrent_provider import TorrentProvider
 
 log = logging.getLogger(__name__)
@@ -136,12 +135,12 @@ class TorrentRssProvider(TorrentProvider):
                 except Exception as error:
                     self.dump_html(torrent_file)
                     return {'result': False,
-                            'message': 'Torrent link is not a valid torrent file: {0}'.format(ex(error))}
+                            'message': 'Torrent link is not a valid torrent file: {0}'.format(error)}
 
             return {'result': True, 'message': 'RSS feed Parsed correctly'}
 
         except Exception as error:
-            return {'result': False, 'message': 'Error when trying to load RSS: {0}'.format(ex(error))}
+            return {'result': False, 'message': 'Error when trying to load RSS: {0}'.format(error)}
 
     @staticmethod
     def dump_html(data):

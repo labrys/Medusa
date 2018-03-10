@@ -5,7 +5,6 @@ import time
 import traceback
 
 from medusa import db
-from medusa.helper.exceptions import ex
 from medusa.indexers.api import indexerApi
 from medusa.scene_exceptions import safe_session
 
@@ -477,7 +476,7 @@ def xem_refresh(series_obj, force=False):
 
         except Exception as e:
             log.warning(u"Exception while refreshing XEM data for show ID {0}"
-                        u" on {1}: {2}".format(series_id, series_obj.indexer_name, ex(e)))
+                        u" on {1}: {2}".format(series_id, series_obj.indexer_name, e))
             log.debug(traceback.format_exc())
 
 

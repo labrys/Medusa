@@ -11,7 +11,6 @@ from six import string_types, text_type
 
 from medusa import helpers
 from medusa.helper.common import dateFormat, episode_num, replace_extension
-from medusa.helper.exceptions import ex
 from medusa.indexers.api import indexerApi
 from medusa.indexers.exceptions import (
     IndexerEpisodeNotFound,
@@ -346,7 +345,7 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
         except IOError as error:
             log.error(
                 'Unable to write file to {location} - are you sure the folder is writable? {error}',
-                {'location': nfo_file_path, 'error': ex(error)}
+                {'location': nfo_file_path, 'error': error}
             )
             return False
 
@@ -390,7 +389,7 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
 
         except IOError as e:
             log.error('Unable to write file to {location} - are you sure the folder is writable? {error}',
-                      {'location': nfo_file_path, 'error': ex(e)})
+                      {'location': nfo_file_path, 'error': e})
             return False
 
         return True

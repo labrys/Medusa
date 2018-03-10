@@ -9,7 +9,6 @@ from requests.compat import urlencode
 from six.moves.http_client import HTTPException, HTTPSConnection
 
 from medusa import app, common, db
-from medusa.helper.encoding import ss
 from medusa.logger.adapters.style import BraceAdapter
 
 try:
@@ -29,7 +28,6 @@ class Notifier(object):
         return self._send_prowl(prowl_api, prowl_priority, event='Test', message='Testing Prowl settings from Medusa', force=True)
 
     def notify_snatch(self, ep_name, is_proper):
-        ep_name = ss(ep_name)
         if app.PROWL_NOTIFY_ONSNATCH:
             show = self._parse_episode(ep_name)
             recipients = self._generate_recipients(show)
@@ -41,7 +39,6 @@ class Notifier(object):
                                      message=ep_name + ' :: ' + time.strftime(app.DATE_PRESET + ' ' + app.TIME_PRESET))
 
     def notify_download(self, ep_name):
-        ep_name = ss(ep_name)
         if app.PROWL_NOTIFY_ONDOWNLOAD:
             show = self._parse_episode(ep_name)
             recipients = self._generate_recipients(show)
@@ -53,7 +50,6 @@ class Notifier(object):
                                      message=ep_name + ' :: ' + time.strftime(app.DATE_PRESET + ' ' + app.TIME_PRESET))
 
     def notify_subtitle_download(self, ep_name, lang):
-        ep_name = ss(ep_name)
         if app.PROWL_NOTIFY_ONSUBTITLEDOWNLOAD:
             show = self._parse_episode(ep_name)
             recipients = self._generate_recipients(show)
@@ -153,8 +149,6 @@ class Notifier(object):
 
     @staticmethod
     def _parse_episode(ep_name):
-        ep_name = ss(ep_name)
-
         sep = ' - '
         titles = ep_name.split(sep)
         titles.sort(key=len, reverse=True)

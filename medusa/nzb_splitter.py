@@ -3,8 +3,6 @@ import logging
 import re
 
 from medusa import classes
-from medusa.helper.encoding import ss
-from medusa.helper.exceptions import ex
 from medusa.name_parser.parser import (
     InvalidNameException,
     InvalidShowException, NameParser,
@@ -97,7 +95,7 @@ def create_nzb_string(file_elements, xmlns):
     for cur_file in file_elements:
         root_element.append(strip_xmlns(cur_file, xmlns))
 
-    return ETree.tostring(ss(root_element))
+    return ETree.tostring(root_element)
 
 
 def save_nzb(nzb_name, nzb_string):
@@ -112,7 +110,7 @@ def save_nzb(nzb_name, nzb_string):
             nzb_fh.write(nzb_string)
 
     except EnvironmentError as error:
-        log.error(u"Unable to save NZB: " + ex(error))  # pylint: disable=no-member
+        log.error(u"Unable to save NZB: {}".format(error))  # pylint: disable=no-member
 
 
 def strip_xmlns(element, xmlns):

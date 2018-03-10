@@ -554,9 +554,6 @@ class GitUpdateManager(UpdateManager):
                                  shell=True, cwd=app.PROG_DIR)
             output, err = p.communicate()
             exit_status = p.returncode
-
-            if output and not isinstance(output, six.text_type):
-                output = six.text_type(output, 'utf-8')
             output = output.strip()
 
         except OSError:
@@ -824,8 +821,6 @@ class GitUpdateManager(UpdateManager):
         branches, _, exit_status = self._run_git(self._git_path, 'ls-remote --heads %s' % app.GIT_REMOTE)  # @UnusedVariable
         if exit_status == 0 and branches:
             if branches:
-                if isinstance(branches, six.binary_type):
-                    branches = six.text_type(branches, 'utf-8')
                 return re.findall(r'refs/heads/(.*)', branches)
         return []
 

@@ -14,7 +14,7 @@ import time
 from medusa import app, db, helpers
 from medusa.common import Quality, cpu_presets
 from medusa.helper.common import enabled_providers
-from medusa.helper.exceptions import AuthException, ex
+from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.name_parser.parser import (
     InvalidNameException,
@@ -123,7 +123,7 @@ class ProperFinder(object):  # pylint: disable=too-few-public-methods
             try:
                 cur_propers = cur_provider.find_propers(recently_aired)
             except AuthException as e:
-                log.debug('Authentication error: {error}', {'error': ex(e)})
+                log.debug('Authentication error: {error}', {'error': e})
                 continue
 
             # if they haven't been added by a different provider than add the proper to the list

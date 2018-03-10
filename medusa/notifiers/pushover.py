@@ -19,7 +19,6 @@ from medusa.common import (
     NOTIFY_SUBTITLE_DOWNLOAD,
     notifyStrings,
 )
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
@@ -95,7 +94,7 @@ class Notifier(object):
         except HTTPError as e:
             # if we get an error back that doesn't have an error code then who knows what's really happening
             if not hasattr(e, 'code'):
-                log.error(u'Pushover notification failed. {}', ex(e))
+                log.error(u'Pushover notification failed. {}', e)
                 return False
             else:
                 log.error(u'Pushover notification failed. Error code: {0}', e.code)

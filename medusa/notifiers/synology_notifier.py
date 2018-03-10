@@ -5,7 +5,6 @@ import os
 import subprocess
 
 from medusa import app, common
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
@@ -47,4 +46,4 @@ class Notifier(object):
             out, _ = p.communicate()
             log.debug(u'Script result: {0}', out)
         except OSError as e:
-            log.info(u'Unable to run synodsmnotify: {0}', ex(e))
+            log.info(u'Unable to run synodsmnotify: {0}', e)

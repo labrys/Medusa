@@ -50,7 +50,6 @@ from medusa.helper.exceptions import (
     EpisodeNotFoundException,
     MultipleEpisodesInDatabaseException,
     NoNFOException,
-    ex,
 )
 from medusa.helper.mappings import NonEmptyDict
 from medusa.indexers.api import indexerApi
@@ -688,7 +687,7 @@ class Episode(TV):
                 '{id}: {indexer} threw up an error: {error_msg}', {
                     'id': self.series.series_id,
                     'indexer': indexerApi(self.indexer).name,
-                    'error_msg': ex(error),
+                    'error_msg': error,
                 }
             )
             return False
@@ -724,7 +723,7 @@ class Episode(TV):
                 '{id}: {indexer} threw up an error: {error_msg}', {
                     'id': self.series.series_id,
                     'indexer': indexerApi(self.indexer).name,
-                    'error_msg': ex(error),
+                    'error_msg': error,
                 }
             )
 
@@ -976,12 +975,12 @@ class Episode(TV):
                     series_xml = ETree.ElementTree(file=nfo_file)
                 except (SyntaxError, ValueError) as error:
                     log.error('{id}: Error loading the NFO, backing up the NFO and skipping for now: {error_msg}',
-                              {'id': self.series.series_id, 'error_msg': ex(error)})
+                              {'id': self.series.series_id, 'error_msg': error})
                     try:
                         os.rename(nfo_file, nfo_file + '.old')
                     except Exception as error:
                         log.warning('{id}: Error renaming the NFO. Delete it or fix it: {error_msg}',
-                                    {'id': self.series.series_id, 'error_msg': ex(error)})
+                                    {'id': self.series.series_id, 'error_msg': error})
                     raise NoNFOException('Error in NFO format')
 
                 for ep_details in list(series_xml.iter('episodedetails')):
@@ -1438,7 +1437,7 @@ class Episode(TV):
                 parse_result = NameParser(series=series, naming_pattern=True).parse(name)
             except (InvalidNameException, InvalidShowException) as error:
                 log.debug('Unable to parse release_group: {error_msg}',
-                          {'error_msg': ex(error)})
+                          {'error_msg': error})
                 return ''
 
             if not parse_result.release_group:

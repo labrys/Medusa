@@ -11,7 +11,6 @@ from six import text_type
 
 from medusa import helpers
 from medusa.helper.common import episode_num
-from medusa.helper.exceptions import ex
 from medusa.indexers.api import indexerApi
 from medusa.indexers.exceptions import (
     IndexerEpisodeNotFound,
@@ -305,7 +304,7 @@ class TIVOMetadata(generic.GenericMetadata):
         except EnvironmentError as e:
             log.error(
                 u'Unable to write file to {path} - are you sure the folder is writable? {error}',
-                {'path': nfo_file_path, 'error': ex(e)}
+                {'path': nfo_file_path, 'error': e}
             )
             return False
 

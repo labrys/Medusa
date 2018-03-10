@@ -6,29 +6,6 @@ from six import text_type
 from medusa import app
 
 
-def ss(var):
-    """
-    Converts string to Unicode, fallback encoding is forced UTF-8
-
-    :param var: String to convert
-    :return: Converted string
-    """
-    var = _to_unicode(var)
-
-    try:
-        var = var
-    except Exception:
-        try:
-            var = var
-        except Exception:
-            try:
-                var = var
-            except Exception:
-                var = var
-
-    return var
-
-
 def _fix_list_encoding(var):
     """
     Converts each item in a list to Unicode

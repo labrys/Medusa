@@ -11,7 +11,7 @@ import re
 from requests import RequestException
 from requests.compat import unquote_plus
 from simpleanidb import REQUEST_HOT
-from six import iteritems
+from six import iteritems, text_type
 from tornroutes import route
 from traktor import TraktApi
 
@@ -29,6 +29,7 @@ from medusa.show.recommendations.anidb import AnidbPopular
 from medusa.show.recommendations.imdb import ImdbPopular
 from medusa.show.recommendations.trakt import TraktPopular
 from medusa.show.show import Show
+from medusa.helpers.utils import generate
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -610,15 +611,14 @@ class HomeAddShows(Home):
         """
         Receives a dir list and add them. Adds the ones with given TVDB IDs first, then forwards along to the newShow page.
         """
+        log.debug('Attempting to add: {!r}'.format(shows_to_add))
         prompt_for_settings = promptForSettings
 
         # grab a list of other shows to add, if provided
-        if not shows_to_add:
-            shows_to_add = []
-        elif not isinstance(shows_to_add, list):
-            shows_to_add = [shows_to_add]
-
-        shows_to_add = [unquote_plus(x) for x in shows_to_add]
+        shows_to_add = [
+            unquote_plus(text_type(show, 'utf-8'))
+            for show in generate(shows_to_add)
+        ]
 
         prompt_for_settings = config.checkbox_to_value(prompt_for_settings)
 
@@ -626,6 +626,7 @@ class HomeAddShows(Home):
         dirs_only = []
         # separate all the ones with Indexer IDs
         for cur_dir in shows_to_add:
+            log.debug('Prcessing: {!r}'.format(cur_dir))
             if '|' in cur_dir:
                 split_vals = cur_dir.split('|')
                 if len(split_vals) < 3:

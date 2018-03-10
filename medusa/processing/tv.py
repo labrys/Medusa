@@ -23,7 +23,7 @@ from medusa.downloaders import torrent
 from medusa.helper.common import is_sync_file
 from medusa.helper.exceptions import (
     EpisodePostProcessingFailedException,
-    FailedPostProcessingFailedException, ex,
+    FailedPostProcessingFailedException,
 )
 from medusa.name_parser.parser import (
     InvalidNameException,
@@ -374,14 +374,14 @@ class ProcessResult(object):
                 log.info("Deleting folder (if it's empty): {0}".format(folder))
                 os.rmdir(folder)
             except (OSError, IOError) as error:
-                log.warning('Unable to delete folder: {0}: {1}'.format(folder, ex(error)))
+                log.warning('Unable to delete folder: {0}: {1}'.format(folder, error))
                 return False
         else:
             try:
                 log.info('Deleting folder: {0}'.format(folder))
                 shutil.rmtree(folder)
             except (OSError, IOError) as error:
-                log.warning('Unable to delete folder: {0}: {1}'.format(folder, ex(error)))
+                log.warning('Unable to delete folder: {0}: {1}'.format(folder, error))
                 return False
 
         return True
@@ -419,11 +419,11 @@ class ProcessResult(object):
                 try:
                     os.chmod(cur_file_path, stat.S_IWRITE)
                 except OSError as error:
-                    self.log(logging.DEBUG, 'Cannot change permissions of {0}: {1}'.format(cur_file_path, ex(error)))
+                    self.log(logging.DEBUG, 'Cannot change permissions of {0}: {1}'.format(cur_file_path, error))
             try:
                 os.remove(cur_file_path)
             except OSError as error:
-                self.log(logging.DEBUG, 'Unable to delete file {0}: {1}'.format(cur_file, ex(error)))
+                self.log(logging.DEBUG, 'Unable to delete file {0}: {1}'.format(cur_file, error))
 
     def unrar(self, path, rar_files, force=False):
         """
@@ -485,7 +485,7 @@ class ProcessResult(object):
                 except InvalidRARArchive:
                     failure = ('Invalid Rar Archive', 'Unpacking Failed with an Invalid Rar Archive Error')
                 except Exception as error:
-                    failure = (ex(error), 'Unpacking failed for an unknown reason')
+                    failure = (error, 'Unpacking failed for an unknown reason')
 
                 if failure is not None:
                     self.log(logging.WARNING, 'Failed unpacking archive {0}: {1}'.format(archive, failure[0]))
@@ -548,7 +548,7 @@ class ProcessResult(object):
             except EpisodePostProcessingFailedException as error:
                 processor = None
                 self.result = False
-                process_fail_message = ex(error)
+                process_fail_message = error
 
             if processor:
                 self._output.append(processor.output)
@@ -600,7 +600,7 @@ class ProcessResult(object):
             except FailedPostProcessingFailedException as error:
                 processor = None
                 self.result = False
-                process_fail_message = ex(error)
+                process_fail_message = error
 
             if processor:
                 self._output.append(processor.output)

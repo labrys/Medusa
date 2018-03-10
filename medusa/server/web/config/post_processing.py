@@ -16,7 +16,6 @@ from medusa import (
     naming,
     ui,
 )
-from medusa.helper.exceptions import ex
 from medusa.server.web.config.handler import Config
 from medusa.server.web.core import PageTemplate
 
@@ -233,5 +232,5 @@ class ConfigPostProcessing(Config):
             log.error('Rar Not Supported: Can not read the content of test file')
             return 'not supported'
         except Exception as msg:
-            log.error('Rar Not Supported: {error}'.format(error=ex(msg)))
+            log.error('Rar Not Supported: {error}'.format(error=msg))
             return 'not supported'

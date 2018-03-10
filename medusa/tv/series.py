@@ -61,7 +61,6 @@ from medusa.helper.exceptions import (
     MultipleShowObjectsException,
     ShowDirectoryNotFoundException,
     ShowNotFoundException,
-    ex,
 )
 from medusa.helper.mappings import NonEmptyDict
 from medusa.helpers.externals import get_externals, load_externals_from_db
@@ -934,7 +933,7 @@ class Series(TV):
                     u"{id}: Episode {location} returned an exception {error_msg}", {
                         'id': self.series_id,
                         'location': media_file,
-                        'error_msg': ex(error),
+                        'error_msg': error,
                     }
                 )
                 continue
@@ -1686,7 +1685,7 @@ class Series(TV):
                         'id': self.series_id,
                         'action': action,
                         'cache_file': cache_file,
-                        'error_msg': ex(error),
+                        'error_msg': error,
                     }
                 )
 
@@ -1724,7 +1723,7 @@ class Series(TV):
                         'id': self.series_id,
                         'action': action,
                         'location': self.raw_location,
-                        'error_msg': ex(error),
+                        'error_msg': error,
                     }
                 )
 

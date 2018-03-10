@@ -3,7 +3,6 @@ import datetime
 
 from medusa import db
 from medusa.common import FAILED, Quality, SNATCHED, SUBTITLED
-from medusa.helper.encoding import ss
 from medusa.show.history import History
 
 
@@ -22,8 +21,6 @@ def _log_history_item(action, ep_obj, quality, resource,
     :param version: tracked version of file (defaults to -1)
     """
     log_date = datetime.datetime.today().strftime(History.date_format)
-    resource = ss(resource)
-
     main_db_con = db.DBConnection()
     main_db_con.action(
         "INSERT INTO history "

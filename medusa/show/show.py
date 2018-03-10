@@ -30,7 +30,6 @@ from medusa.helper.exceptions import (
     CantRefreshShowException,
     CantRemoveShowException,
     MultipleShowObjectsException,
-    ex,
 )
 from medusa.logger.adapters.style import BraceAdapter
 
@@ -63,7 +62,7 @@ class Show(object):
             try:
                 app.show_queue_scheduler.action.remove_show(show, bool(remove_files))
             except CantRemoveShowException as exception:
-                return ex(exception), show
+                return exception, show
 
         return None, show
 
@@ -228,7 +227,7 @@ class Show(object):
         try:
             app.show_queue_scheduler.action.refresh_show(series_obj)
         except CantRefreshShowException as exception:
-            return ex(exception), series_obj
+            return exception, series_obj
 
         return None, series_obj
 

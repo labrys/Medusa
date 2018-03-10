@@ -8,7 +8,6 @@ import socket
 import gntp
 
 from medusa import app, common
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))

@@ -7,7 +7,6 @@ import requests
 from six import iteritems
 
 from medusa import app, common
-from medusa.helper.exceptions import ex
 from medusa.helpers.utils import generate
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.session.core import MedusaSession
@@ -135,7 +134,7 @@ class Notifier(object):
             try:
                 response = self.session.get(url)
             except requests.RequestException as error:
-                log.warning(u'PLEX: Error while trying to contact Plex Media Server: {0}', ex(error))
+                log.warning(u'PLEX: Error while trying to contact Plex Media Server: {0}', error)
                 failed_hosts.add(cur_host)
                 continue
 
@@ -145,7 +144,7 @@ class Notifier(object):
                 if response.status_code == 401:
                     log.warning(u'PLEX: Unauthorized. Please set TOKEN or USERNAME and PASSWORD in Plex settings')
                 else:
-                    log.warning(u'PLEX: Error while trying to contact Plex Media Server: {0}', ex(error))
+                    log.warning(u'PLEX: Error while trying to contact Plex Media Server: {0}', error)
                 failed_hosts.add(cur_host)
                 continue
             else:
@@ -201,7 +200,7 @@ class Notifier(object):
             try:
                 response = self.session.get(url)
             except requests.RequestException as error:
-                log.warning(u'PLEX: Error updating library section for Plex Media Server: {0}', ex(error))
+                log.warning(u'PLEX: Error updating library section for Plex Media Server: {0}', error)
                 failed_hosts.add(cur_host)
             else:
                 del response  # request succeeded so response is not needed

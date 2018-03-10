@@ -8,7 +8,6 @@ from six.moves.urllib.error import HTTPError
 from six.moves.urllib.request import Request, urlopen
 
 from medusa import app
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
@@ -88,7 +87,7 @@ class Notifier(object):
                 log.error(u'pyTivo notification: Error, the server could not fulfill the request - {0}', e.code)
             return False
         except Exception as e:
-            log.error(u'PYTIVO: Unknown exception: {0}', ex(e))
+            log.error(u'PYTIVO: Unknown exception: {0}', e)
             return False
         else:
             log.info(u'pyTivo notification: Successfully requested transfer of file')

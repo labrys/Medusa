@@ -42,7 +42,6 @@ import threading
 import time
 
 from configobj import ConfigObj
-from six import text_type, PY2
 
 from medusa import (
     app, cache, db, event_queue, exception_handler,
@@ -178,32 +177,6 @@ class Application(object):
         app.PROG_DIR = os.path.dirname(app.MY_FULLNAME)
         app.DATA_DIR = app.PROG_DIR
         app.MY_ARGS = args
-
-        try:
-            locale.setlocale(locale.LC_ALL, '')
-            app.SYS_ENCODING = locale.getpreferredencoding()
-        except (locale.Error, IOError):
-            app.SYS_ENCODING = 'UTF-8'
-
-        # pylint: disable=no-member
-        if (not app.SYS_ENCODING or
-                app.SYS_ENCODING.lower() in ('ansi_x3.4-1968', 'us-ascii', 'ascii', 'charmap') or
-                (sys.platform.startswith('win') and
-                    sys.getwindowsversion()[0] >= 6 and
-                    text_type(getattr(sys.stdout, 'device', sys.stdout).encoding).lower() in ('cp65001', 'charmap'))):
-            app.SYS_ENCODING = 'UTF-8'
-
-        # TODO: Continue working on making this unnecessary, this hack creates all sorts of hellish problems
-        if not hasattr(sys, 'setdefaultencoding'):
-            reload(sys)
-
-        if PY2:
-            try:
-                # On non-unicode builds this will raise an AttributeError, if encoding type is not valid it throws a LookupError
-                sys.setdefaultencoding(app.SYS_ENCODING)  # pylint: disable=no-member
-            except (AttributeError, LookupError):
-                sys.exit('Sorry, you MUST add the Medusa folder to the PYTHONPATH environment variable or '
-                         'find another way to force Python to use {encoding} for string encoding.'.format(encoding=app.SYS_ENCODING))
 
         self.console_logging = (not hasattr(sys, 'frozen')) or (app.MY_NAME.lower().find('-console') > 0)
 

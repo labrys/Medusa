@@ -40,7 +40,6 @@ from medusa.helper.common import (
     remove_extension,
     subtitle_extensions,
 )
-from medusa.helper.exceptions import ex
 from medusa.helpers import is_media_file, is_rar_file
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.show.show import Show
@@ -793,7 +792,7 @@ def delete_unwanted_subtitles(dirpath, filename):
             os.remove(os.path.join(dirpath, filename))
         except OSError as error:
             log.info(u"Couldn't delete subtitle: {}. Error: {}",
-                     filename, ex(error))
+                     filename, error)
         else:
             log.debug(
                 u"Deleted {filename} because we don't want subtitle language"
@@ -1164,6 +1163,6 @@ def run_subs_scripts(video_path, scripts, *args):
             log.debug(u'Script result: {}', out)
 
         except Exception as error:
-            log.info(u'Unable to run subtitles script: {}', ex(error))
+            log.info(u'Unable to run subtitles script: {}', error)
 
     invalidate_video_cache(video_path)

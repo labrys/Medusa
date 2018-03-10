@@ -70,7 +70,6 @@ from medusa.helper.exceptions import (
     CantRefreshShowException,
     CantUpdateShowException,
     ShowDirectoryNotFoundException,
-    ex,
 )
 from medusa.indexers.api import indexerApi
 from medusa.indexers.exceptions import (
@@ -1850,7 +1849,7 @@ class Home(WebRoot):
         try:
             app.show_queue_scheduler.action.update_show(series_obj)
         except CantUpdateShowException as e:
-            ui.notifications.error('Unable to update this show.', ex(e))
+            ui.notifications.error('Unable to update this show.', e)
 
         # just give it some time
         time.sleep(cpu_presets[app.CPU_PRESET])

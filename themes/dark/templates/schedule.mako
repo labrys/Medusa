@@ -350,7 +350,7 @@
             % if airday == day:
                 % try:
                     <% day_has_show = True %>
-                    <% airtime = date_time.DateTime.fromtimestamp(time.mktime(cur_result['localtime'].timetuple())).sbftime() %>
+                    <% airtime = date_time.DateTime.fromtimestamp(time.mktime(cur_result['localtime'].timetuple())).display_time() %>
                     % if app.TRIM_ZERO:
                         <% airtime = re.sub(r'0(\d:\d\d)', r'\1', airtime, 0, re.IGNORECASE | re.MULTILINE) %>
                     % endif

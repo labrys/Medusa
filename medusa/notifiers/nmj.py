@@ -8,7 +8,6 @@ from requests.compat import urlencode
 from six.moves.urllib.request import Request, urlopen
 
 from medusa import app
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 try:
@@ -115,7 +114,7 @@ class Notifier(object):
                     log.warning(u'NMJ: Problem with Popcorn Hour on host {0}: {1}', host, error.code)
                 return False
             except Exception as error:
-                log.error(u'NMJ: Unknown exception: {0}', ex(error))
+                log.error(u'NMJ: Unknown exception: {0}', error)
                 return False
 
         # build up the request URL and parameters
@@ -142,7 +141,7 @@ class Notifier(object):
                 log.warning(u'NMJ: Problem with Popcorn Hour on host {0}: {1}', host, error.code)
             return False
         except Exception as error:
-            log.error(u'NMJ: Unknown exception: {0}', ex(error))
+            log.error(u'NMJ: Unknown exception: {0}', error)
             return False
 
         # try to parse the resulting XML

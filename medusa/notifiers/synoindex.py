@@ -5,7 +5,6 @@ import os
 import subprocess
 
 from medusa import app
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
@@ -46,7 +45,7 @@ class Notifier(object):
                 out, _ = p.communicate()
                 log.debug(u'Script result: {0}', out)
             except OSError as e:
-                log.error(u'Unable to run synoindex: {0}', ex(e))
+                log.error(u'Unable to run synoindex: {0}', e)
 
     def deleteFolder(self, cur_path):
         self.makeObject('-D', cur_path)
@@ -71,4 +70,4 @@ class Notifier(object):
                 out, _ = p.communicate()
                 log.debug(u'Script result: {0}', out)
             except OSError as e:
-                log.error(u'Unable to run synoindex: {0}', ex(e))
+                log.error(u'Unable to run synoindex: {0}', e)

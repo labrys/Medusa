@@ -38,10 +38,7 @@ from medusa.helper.common import (
     enabled_providers,
     episode_num,
 )
-from medusa.helper.exceptions import (
-    AuthException,
-    ex,
-)
+from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.generic_provider import GenericProvider
 from medusa.show import naming
@@ -83,7 +80,7 @@ def _download_result(result):
             helpers.chmod_as_parent(file_name)
 
         except EnvironmentError as e:
-            log.error(u'Error trying to save NZB to black hole: {0}', ex(e))
+            log.error(u'Error trying to save NZB to black hole: {0}', e)
             new_result = False
     elif result.result_type == u'torrent':
         new_result = res_provider.download_result(result)
@@ -460,7 +457,7 @@ def search_for_needed_episodes(force=False):
         try:
             cur_found_results = cur_provider.search_rss(episodes)
         except AuthException as error:
-            log.error(u'Authentication error: {0}', ex(error))
+            log.error(u'Authentication error: {0}', error)
             continue
 
         # pick a single result for each episode, respecting existing results
@@ -607,7 +604,7 @@ def search_providers(series_obj, episodes, forced_search=False, down_cur_quality
                 search_results = cur_provider.find_search_results(series_obj, episodes, search_mode, forced_search,
                                                                   down_cur_quality, manual_search, manual_search_type)
             except AuthException as error:
-                log.error(u'Authentication error: {0}', ex(error))
+                log.error(u'Authentication error: {0}', error)
                 break
 
             if search_results:

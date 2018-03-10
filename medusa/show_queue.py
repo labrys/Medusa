@@ -4,7 +4,6 @@ import os
 import traceback
 
 from imdbpie.exceptions import ImdbAPIError
-from six import binary_type, text_type
 from traktor import TraktException
 
 from medusa import (
@@ -421,12 +420,7 @@ class QueueItemAdd(ShowQueueItem):
 
     def __init__(self, indexer, indexer_id, showDir, default_status, quality, flatten_folders, lang, subtitles, anime,
                  scene, paused, blacklist, whitelist, default_status_after, root_dir):
-
-        if isinstance(showDir, binary_type):
-            self.showDir = text_type(showDir, 'utf-8')
-        else:
-            self.showDir = showDir
-
+        self.showDir = showDir
         self.indexer = indexer
         self.indexer_id = indexer_id
         self.default_status = default_status

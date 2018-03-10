@@ -11,7 +11,6 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 
 from medusa import app, db
-from medusa.helper.encoding import ss
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
@@ -40,8 +39,6 @@ class Notifier(object):
         ep_name: The name of the episode that was snatched
         title: The title of the notification (optional)
         """
-        ep_name = ss(ep_name)
-
         if app.USE_EMAIL and app.EMAIL_NOTIFY_ONSNATCH:
             show = self._parseEp(ep_name)
             to = self._generate_recipients(show)
@@ -87,8 +84,6 @@ class Notifier(object):
         ep_name: The name of the episode that was downloaded
         title: The title of the notification (optional)
         """
-        ep_name = ss(ep_name)
-
         if app.USE_EMAIL and app.EMAIL_NOTIFY_ONDOWNLOAD:
             show = self._parseEp(ep_name)
             to = self._generate_recipients(show)
@@ -134,8 +129,6 @@ class Notifier(object):
         ep_name: The name of the episode that was downloaded
         lang: Subtitle language wanted
         """
-        ep_name = ss(ep_name)
-
         if app.USE_EMAIL and app.EMAIL_NOTIFY_ONSUBTITLEDOWNLOAD:
             show = self._parseEp(ep_name)
             to = self._generate_recipients(show)
@@ -325,8 +318,6 @@ class Notifier(object):
 
     @staticmethod
     def _parseEp(ep_name):
-        ep_name = ss(ep_name)
-
         sep = ' - '
         titles = ep_name.split(sep)
         titles.sort(key=len, reverse=True)

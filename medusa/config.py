@@ -6,7 +6,6 @@ import re
 import sys
 
 from requests.compat import urlsplit
-from six import string_types, text_type
 from six.moves.urllib.parse import urlunsplit, uses_netloc
 
 from medusa import app, db, helpers, naming, scheduler
@@ -563,7 +562,7 @@ def convert_csv_string_to_list(value, delimiter=',', trim=False):
     :param trim: Optionally trim the individual list items.
     :return: The delimited value as a list.
     """
-    if not isinstance(value, (string_types, text_type)):
+    if not isinstance(value, str):
         return value
 
     with suppress(AttributeError, ValueError):
@@ -740,7 +739,7 @@ def check_setting_list(config, cfg_name, item_name, default=None, silent=True, t
             config[cfg_name][item_name] = my_val
 
     if split_value:
-        if isinstance(my_val, string_types):
+        if isinstance(my_val, str):
             my_val = split_and_strip(my_val, split_value)
 
     # Make an attempt to cast the lists values.

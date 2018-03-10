@@ -24,7 +24,6 @@
 from __future__ import print_function
 
 from medusa import db
-from medusa.helper.encoding import ss
 from medusa.notifiers.emailnotify import Notifier as EmailNotifier
 from medusa.notifiers.prowl import Notifier as ProwlNotifier
 from medusa.server.web import Home
@@ -100,7 +99,7 @@ class NotifierTests(test.AppTestDBCase):
         shows = self.legacy_shows + self.shows
         for show in shows:
             for episode in show.episodes:
-                ep_name = ss(episode._format_pattern('%SN - %Sx%0E - %EN - ') + episode.quality)  # pylint: disable=protected-access
+                ep_name = episode._format_pattern('%SN - %Sx%0E - %EN - ') + episode.quality  # pylint: disable=protected-access
                 show_name = email_notifier._parseEp(ep_name)  # pylint: disable=protected-access
                 recipients = email_notifier._generate_recipients(show_name)  # pylint: disable=protected-access
                 self._debug_spew("- Email Notifications for " + show.name + " (episode: " + episode.name + ") will be sent to:")
@@ -125,7 +124,7 @@ class NotifierTests(test.AppTestDBCase):
         # Now, iterate through all shows using the Prowl API generation routines that are used in the notifier proper
         for show in self.shows:
             for episode in show.episodes:
-                ep_name = ss(episode._format_pattern('%SN - %Sx%0E - %EN - ') + episode.quality)  # pylint: disable=protected-access
+                ep_name = episode._format_pattern('%SN - %Sx%0E - %EN - ') + episode.quality  # pylint: disable=protected-access
                 show_name = prowl_notifier._parse_episode(ep_name)  # pylint: disable=protected-access
                 recipients = prowl_notifier._generate_recipients(show_name)  # pylint: disable=protected-access
                 self._debug_spew("- Prowl Notifications for " + show.name + " (episode: " + episode.name + ") will be sent to:")

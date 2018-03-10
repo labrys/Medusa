@@ -11,7 +11,6 @@ from six import iterkeys
 
 from medusa import app, exception_handler, helpers
 from medusa.helper.common import replace_extension
-from medusa.helper.exceptions import ex
 from medusa.helper.metadata import get_image
 from medusa.indexers.config import INDEXER_TMDB, INDEXER_TVDB, INDEXER_TVMAZE
 from medusa.indexers.exceptions import (
@@ -286,7 +285,7 @@ class GenericMetadata(object):
             except IOError as e:
                 log.error(
                     u'Unable to write file to {location} - are you sure the folder is writeable? {error}',
-                    {u'location': nfo_file_path, u'error': ex(e)}
+                    {u'location': nfo_file_path, u'error': e}
                 )
 
     def create_fanart(self, show_obj):
@@ -941,7 +940,7 @@ class GenericMetadata(object):
         except Exception as error:
             log.warning(
                 u'There was an error parsing your existing metadata file: {location} error: {error}',
-                {u'location': metadata_path, u'error': ex(error)}
+                {u'location': metadata_path, u'error': error}
             )
             return empty_return
 

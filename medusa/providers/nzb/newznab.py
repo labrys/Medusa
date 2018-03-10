@@ -23,7 +23,6 @@ from medusa.helper.common import (
     convert_size,
     try_int,
 )
-from medusa.helper.encoding import ss
 from medusa.helpers.utils import split_and_strip
 from medusa.indexers.config import (
     INDEXER_TMDB,
@@ -314,7 +313,7 @@ class NewznabProvider(NZBProvider):
         except (AttributeError, TypeError):
             return self._check_auth()
 
-        log.info(ss(err_desc))
+        log.info(err_desc)
 
         return False
 
