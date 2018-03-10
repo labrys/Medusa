@@ -2,7 +2,6 @@
 
 from __future__ import unicode_literals
 
-from six import string_types
 from tornroutes import route
 
 from medusa.processing import tv
@@ -25,7 +24,7 @@ class HomePostProcess(Home):
                        is_priority=None, delete_on='0', failed='0', proc_type='auto', ignore_subs=None, *args, **kwargs):
 
         def argToBool(argument):
-            if isinstance(argument, string_types):
+            if isinstance(argument, str):
                 _arg = argument.strip().lower()
             else:
                 _arg = argument

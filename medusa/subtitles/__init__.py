@@ -18,7 +18,7 @@ from babelfish import (
     language_converters,
 )
 from dogpile.cache.api import NO_VALUE
-from six import iteritems, string_types
+from six import iteritems
 from subliminal import (
     ProviderPool,
     compute_score,
@@ -158,7 +158,7 @@ def needs_subtitles(subtitles):
     if not wanted:
         return False
 
-    if isinstance(subtitles, string_types):
+    if isinstance(subtitles, str):
         subtitles = {subtitle.strip() for subtitle in subtitles.split(',') if subtitle.strip()}
 
     if app.SUBTITLES_MULTI:

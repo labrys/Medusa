@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 from requests.compat import urljoin
 from requests.exceptions import RequestException
-from six import string_types, iteritems
+from six import iteritems
 from tvdbapiv2 import (
     ApiClient,
     EpisodesApi,
@@ -109,7 +109,7 @@ class TVDB(BaseIndexer):
                             continue
 
                         if isinstance(value, list):
-                            if list_separator and all(isinstance(x, string_types) for x in value):
+                            if list_separator and all(isinstance(x, str) for x in value):
                                 value = list_separator.join(value)
                             else:
                                 value = [self._object_to_dict(x, key_mapping) for x in value]

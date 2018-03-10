@@ -7,8 +7,6 @@ import io
 import logging
 import os
 
-from six import string_types
-
 from medusa import helpers
 from medusa.helper.common import dateFormat, episode_num, replace_extension
 from medusa.indexers.api import indexerApi
@@ -271,7 +269,7 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
 
                 if getattr(my_show, '_actors', None) or getattr(my_ep, 'gueststars', None):
                     cast = etree.SubElement(episode, 'cast')
-                    if getattr(my_ep, 'gueststars', None) and isinstance(my_ep['gueststars'], string_types):
+                    if getattr(my_ep, 'gueststars', None) and isinstance(my_ep['gueststars'], str):
                         for actor in (x.strip() for x in my_ep['gueststars'].split('|') if x.strip()):
                             cur_actor = etree.SubElement(cast, 'actor')
                             cur_actor.text = actor

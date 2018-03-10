@@ -10,7 +10,6 @@ from datetime import date, datetime
 
 import jwt
 from babelfish.language import Language
-from six import string_types
 from tornado.httpclient import HTTPError
 from tornado.web import RequestHandler
 
@@ -403,7 +402,7 @@ class StringField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(StringField, self).__init__(target_type, attr, string_types, validator=validator, converter=converter,
+        super(StringField, self).__init__(target_type, attr, str, validator=validator, converter=converter,
                                           default_value=default_value, post_processor=post_processor)
 
 
@@ -437,7 +436,7 @@ class BooleanField(PatchField):
 class EnumField(PatchField):
     """Patch enumeration fields."""
 
-    def __init__(self, target_type, attr, enums, attr_type=text_type,
+    def __init__(self, target_type, attr, enums, attr_type=str,
                  converter=None, default_value=None, post_processor=None):
         """Constructor."""
         super(EnumField, self).__init__(target_type, attr, attr_type, validator=lambda v: v in enums,

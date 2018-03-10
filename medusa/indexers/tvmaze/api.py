@@ -11,7 +11,7 @@ from pytvmaze.exceptions import (
     BaseError, CastNotFound, IDNotFound,
     ShowIndexError, ShowNotFound, UpdateNotFound,
 )
-from six import integer_types, string_types, iteritems
+from six import integer_types, str, iteritems
 
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
 from medusa.indexers.exceptions import (
@@ -128,7 +128,7 @@ class TVmaze(BaseIndexer):
                     else:
                         # Do some value sanitizing
                         if isinstance(value, list):
-                            if all(isinstance(x, (string_types, integer_types)) for x in value):
+                            if all(isinstance(x, (str, int)) for x in value):
                                 value = list_separator.join(value)
 
                         # Try to map the key

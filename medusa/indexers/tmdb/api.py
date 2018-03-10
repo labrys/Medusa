@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 import tmdbsimple as tmdb
 from dateutil import parser
 from requests.exceptions import RequestException
-from six import integer_types, string_types, iteritems
+from six import integer_types, iteritems
 
 from medusa.app import TMDB_API_KEY
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
@@ -110,7 +110,7 @@ class Tmdb(BaseIndexer):
 
                     # Do some value sanitizing
                     if isinstance(value, list) and key not in ['episode_run_time']:
-                        if all(isinstance(x, (string_types, integer_types)) for x in value):
+                        if all(isinstance(x, (str, int)) for x in value):
                             value = list_separator.join(value)
 
                     # Process genres

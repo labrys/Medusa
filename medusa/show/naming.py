@@ -9,8 +9,6 @@ import logging
 import os
 import re
 
-from six import string_types
-
 from medusa import app
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.name_parser.parser import (
@@ -78,7 +76,7 @@ def contains_at_least_one_word(name, words):
     if not (name and words):
         return False
 
-    if isinstance(words, string_types):
+    if isinstance(words, str):
         words = words.split(',')
     items = [(re.compile(r'(^|[\W_])%s($|[\W_])' % word.strip(), re.I), word.strip()) for word in words]
     for regexp, word in items:

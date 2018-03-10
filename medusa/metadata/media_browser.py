@@ -5,7 +5,7 @@ import logging
 import os
 import re
 
-from six import iteritems, string_types, text_type
+from six import iteritems
 
 from medusa import app, helpers
 from medusa.helper.common import dateFormat, episode_num, replace_extension
@@ -227,7 +227,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
 
         if getattr(my_show, u'id', None):
             indexerid = etree.SubElement(tv_node, u'id')
-            indexerid.text = text_type(my_show[u'id'])
+            indexerid.text = my_show[u'id']
 
         if getattr(my_show, u'seriesname', None):
             series_name = etree.SubElement(tv_node, u'SeriesName')
@@ -276,11 +276,11 @@ class MediaBrowserMetadata(generic.GenericMetadata):
 
         if getattr(my_show, u'rating', None):
             rating = etree.SubElement(tv_node, u'Rating')
-            rating.text = text_type(my_show[u'rating'])
+            rating.text = my_show[u'rating']
 
         if getattr(my_show, u'firstaired', None):
             try:
-                year_text = text_type(datetime.datetime.strptime(my_show[u'firstaired'], dateFormat).year)
+                year_text = datetime.datetime.strptime(my_show[u'firstaired'], dateFormat).year
                 if year_text:
                     production_year = etree.SubElement(tv_node, u'ProductionYear')
                     production_year.text = year_text
@@ -308,7 +308,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
             zap2it_id = etree.SubElement(tv_node, u'Zap2ItId')
             zap2it_id.text = my_show[u'zap2it_id']
 
-        if getattr(my_show, u'genre', None) and isinstance(my_show[u'genre'], string_types):
+        if getattr(my_show, u'genre', None) and isinstance(my_show[u'genre'], str):
             genres = etree.SubElement(tv_node, u'Genres')
             for genre in my_show[u'genre'].split(u'|'):
                 if genre.strip():
@@ -386,7 +386,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
 
                 # default to today's date for specials if firstaired is not set
                 if ep_to_write.season == 0 and not getattr(my_ep, u'firstaired', None):
-                    my_ep[u'firstaired'] = text_type(datetime.date.fromordinal(1))
+                    my_ep[u'firstaired'] = datetime.date.fromordinal(1)
 
                 if not (getattr(my_ep, u'episodename', None) and getattr(my_ep, u'firstaired', None)):
                     return None
@@ -398,22 +398,22 @@ class MediaBrowserMetadata(generic.GenericMetadata):
                     episode_name.text = ep_to_write.name
 
                 episode_number = etree.SubElement(episode, u'EpisodeNumber')
-                episode_number.text = text_type(ep_obj.episode)
+                episode_number.text = ep_obj.episode
 
                 if ep_obj.related_episodes:
                     episode_number_end = etree.SubElement(episode, u'EpisodeNumberEnd')
-                    episode_number_end.text = text_type(ep_to_write.episode)
+                    episode_number_end.text = ep_to_write.episode
 
                 season_number = etree.SubElement(episode, u'SeasonNumber')
-                season_number.text = text_type(ep_to_write.season)
+                season_number.text = ep_to_write.season
 
                 if not ep_obj.related_episodes and getattr(my_ep, u'absolute_number', None):
                     absolute_number = etree.SubElement(episode, u'absolute_number')
-                    absolute_number.text = text_type(my_ep[u'absolute_number'])
+                    absolute_number.text = my_ep[u'absolute_number']
 
                 if ep_to_write.airdate != datetime.date.fromordinal(1):
                     first_aired = etree.SubElement(episode, u'FirstAired')
-                    first_aired.text = text_type(ep_to_write.airdate)
+                    first_aired.text = ep_to_write.airdate
 
                 metadata_type = etree.SubElement(episode, u'Type')
                 metadata_type.text = u'Episode'
@@ -425,7 +425,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
                 if not ep_obj.related_episodes:
                     if getattr(my_ep, u'rating', None):
                         rating = etree.SubElement(episode, u'Rating')
-                        rating.text = text_type(my_ep[u'rating'])
+                        rating.text = my_ep[u'rating']
 
                     if getattr(my_show, u'imdb_id', None):
                         IMDB_ID = etree.SubElement(episode, u'IMDB_ID')
@@ -438,7 +438,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
                         IMDbId.text = my_show[u'imdb_id']
 
                 indexer_id = etree.SubElement(episode, u'id')
-                indexer_id.text = text_type(ep_to_write.indexerid)
+                indexer_id.text = ep_to_write.indexerid
 
                 persons = etree.SubElement(episode, u'Persons')
 
@@ -475,7 +475,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
 
             else:
                 # append data from (if any) related episodes
-                episode_number_end.text = text_type(ep_to_write.episode)
+                episode_number_end.text = ep_to_write.episode
 
                 if ep_to_write.name:
                     if not episode_name.text:

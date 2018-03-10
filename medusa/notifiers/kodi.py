@@ -7,7 +7,6 @@ import logging
 from requests.auth import HTTPBasicAuth
 from requests.compat import unquote_plus
 from requests.exceptions import HTTPError, RequestException
-from six import string_types
 
 from medusa import app, common
 from medusa.logger.adapters.style import BraceAdapter

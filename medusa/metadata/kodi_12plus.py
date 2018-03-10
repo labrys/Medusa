@@ -5,7 +5,6 @@ import logging
 import re
 
 from babelfish import Country
-from six import string_types
 
 from medusa import helpers
 from medusa.app import TVDB_API_KEY
@@ -147,7 +146,7 @@ class KODI_12PlusMetadata(generic.GenericMetadata):
             indexer_id = etree.SubElement(tv_node, 'id')
             indexer_id.text = str(my_show['id'])
 
-        if getattr(my_show, 'genre', None) and isinstance(my_show['genre'], string_types):
+        if getattr(my_show, 'genre', None) and isinstance(my_show['genre'], str):
             for genre in self._split_info(my_show['genre']):
                 cur_genre = etree.SubElement(tv_node, 'genre')
                 cur_genre.text = genre
@@ -170,12 +169,12 @@ class KODI_12PlusMetadata(generic.GenericMetadata):
             studio = etree.SubElement(tv_node, 'studio')
             studio.text = my_show['network'].strip()
 
-        if getattr(my_show, 'writer', None) and isinstance(my_show['writer'], string_types):
+        if getattr(my_show, 'writer', None) and isinstance(my_show['writer'], str):
             for writer in self._split_info(my_show['writer']):
                 cur_writer = etree.SubElement(tv_node, 'credits')
                 cur_writer.text = writer
 
-        if getattr(my_show, 'director', None) and isinstance(my_show['director'], string_types):
+        if getattr(my_show, 'director', None) and isinstance(my_show['director'], str):
             for director in self._split_info(my_show['director']):
                 cur_director = etree.SubElement(tv_node, 'director')
                 cur_director.text = director
@@ -301,17 +300,17 @@ class KODI_12PlusMetadata(generic.GenericMetadata):
                 rating = etree.SubElement(episode, 'rating')
                 rating.text = my_ep['rating']
 
-            if getattr(my_ep, 'writer', None) and isinstance(my_ep['writer'], string_types):
+            if getattr(my_ep, 'writer', None) and isinstance(my_ep['writer'], str):
                 for writer in self._split_info(my_ep['writer']):
                     cur_writer = etree.SubElement(episode, 'credits')
                     cur_writer.text = writer
 
-            if getattr(my_ep, 'director', None) and isinstance(my_ep['director'], string_types):
+            if getattr(my_ep, 'director', None) and isinstance(my_ep['director'], str):
                 for director in self._split_info(my_ep['director']):
                     cur_director = etree.SubElement(episode, 'director')
                     cur_director.text = director
 
-            if getattr(my_ep, 'gueststars', None) and isinstance(my_ep['gueststars'], string_types):
+            if getattr(my_ep, 'gueststars', None) and isinstance(my_ep['gueststars'], str):
                 for actor in self._split_info(my_ep['gueststars']):
                     cur_actor = etree.SubElement(episode, 'actor')
                     cur_actor_name = etree.SubElement(cur_actor, 'name')
