@@ -31,10 +31,10 @@ class Notifier:
     def __init__(self):
         pass
 
-    def test_notify(self, userKey=None, apiKey=None):
-        return self._notifyPushover('This is a test notification from Medusa', 'Test', userKey=userKey, apiKey=apiKey, force=True)
+    def test_notify(self, user_key=None, api_key=None):
+        return self._notify_pushover('This is a test notification from Medusa', 'Test', user_key=user_key, api_key=api_key, force=True)
 
-    def _sendPushover(self, msg, title, sound=None, user_key=None, api_key=None):
+    def _send_pushover(self, msg, title, sound=None, user_key=None, api_key=None):
         """
         Sends a pushover notification to the address provided.
 
@@ -108,7 +108,7 @@ class Notifier:
             elif e.code == 401:
 
                 # HTTP status 401 if the user doesn't have the service added
-                subscribe_note = self._sendPushover(msg, title, sound=sound, user_key=user_key, api_key=api_key)
+                subscribe_note = self._send_pushover(msg, title, sound=sound, user_key=user_key, api_key=api_key)
                 if subscribe_note:
                     log.debug(u'Subscription sent')
                     return True
@@ -132,37 +132,37 @@ class Notifier:
     def notify_snatch(self, ep_name, is_proper):
         title = notifyStrings[(NOTIFY_SNATCH, NOTIFY_SNATCH_PROPER)[is_proper]]
         if app.PUSHOVER_NOTIFY_ONSNATCH:
-            self._notifyPushover(title, ep_name)
+            self._notify_pushover(title, ep_name)
 
     def notify_download(self, ep_name, title=notifyStrings[NOTIFY_DOWNLOAD]):
         if app.PUSHOVER_NOTIFY_ONDOWNLOAD:
-            self._notifyPushover(title, ep_name)
+            self._notify_pushover(title, ep_name)
 
     def notify_subtitle_download(self, ep_name, lang, title=notifyStrings[NOTIFY_SUBTITLE_DOWNLOAD]):
         if app.PUSHOVER_NOTIFY_ONSUBTITLEDOWNLOAD:
-            self._notifyPushover(title, ep_name + ': ' + lang)
+            self._notify_pushover(title, ep_name + ': ' + lang)
 
     def notify_git_update(self, new_version='??'):
         if app.USE_PUSHOVER:
             update_text = notifyStrings[NOTIFY_GIT_UPDATE_TEXT]
             title = notifyStrings[NOTIFY_GIT_UPDATE]
-            self._notifyPushover(title, update_text + new_version)
+            self._notify_pushover(title, update_text + new_version)
 
     def notify_login(self, ipaddress=''):
         if app.USE_PUSHOVER:
             update_text = notifyStrings[NOTIFY_LOGIN_TEXT]
             title = notifyStrings[NOTIFY_LOGIN]
-            self._notifyPushover(title, update_text.format(ipaddress))
+            self._notify_pushover(title, update_text.format(ipaddress))
 
-    def _notifyPushover(self, title, message, sound=None, userKey=None, apiKey=None, force=False):
+    def _notify_pushover(self, title, message, sound=None, user_key=None, api_key=None, force=False):
         """
         Sends a pushover notification based on the provided info or Medusa config.
 
         title: The title of the notification to send
         message: The message string to send
         sound: The notification sound to use
-        userKey: The userKey to send the notification to
-        apiKey: The apiKey to use to send the notification
+        user_key: The user_key to send the notification to
+        api_key: The api_key to use to send the notification
         force: Enforce sending, for instance for testing
         """
         if not app.USE_PUSHOVER and not force:
@@ -171,4 +171,4 @@ class Notifier:
 
         log.debug(u'Sending notification for {0}', message)
 
-        return self._sendPushover(message, title, sound=sound, user_key=userKey, api_key=apiKey)
+        return self._send_pushover(message, title, sound=sound, user_key=user_key, api_key=api_key)

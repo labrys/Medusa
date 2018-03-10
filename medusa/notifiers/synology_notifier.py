@@ -14,29 +14,29 @@ log.logger.addHandler(logging.NullHandler())
 class Notifier:
     def notify_snatch(self, ep_name, is_proper):
         if app.SYNOLOGYNOTIFIER_NOTIFY_ONSNATCH:
-            self._send_synologyNotifier(ep_name, common.notifyStrings[(common.NOTIFY_SNATCH, common.NOTIFY_SNATCH_PROPER)[is_proper]])
+            self._send_synology_notifier(ep_name, common.notifyStrings[(common.NOTIFY_SNATCH, common.NOTIFY_SNATCH_PROPER)[is_proper]])
 
     def notify_download(self, ep_name):
         if app.SYNOLOGYNOTIFIER_NOTIFY_ONDOWNLOAD:
-            self._send_synologyNotifier(ep_name, common.notifyStrings[common.NOTIFY_DOWNLOAD])
+            self._send_synology_notifier(ep_name, common.notifyStrings[common.NOTIFY_DOWNLOAD])
 
     def notify_subtitle_download(self, ep_name, lang):
         if app.SYNOLOGYNOTIFIER_NOTIFY_ONSUBTITLEDOWNLOAD:
-            self._send_synologyNotifier(ep_name + ': ' + lang, common.notifyStrings[common.NOTIFY_SUBTITLE_DOWNLOAD])
+            self._send_synology_notifier(ep_name + ': ' + lang, common.notifyStrings[common.NOTIFY_SUBTITLE_DOWNLOAD])
 
     def notify_git_update(self, new_version='??'):
         if app.USE_SYNOLOGYNOTIFIER:
             update_text = common.notifyStrings[common.NOTIFY_GIT_UPDATE_TEXT]
             title = common.notifyStrings[common.NOTIFY_GIT_UPDATE]
-            self._send_synologyNotifier(update_text + new_version, title)
+            self._send_synology_notifier(update_text + new_version, title)
 
     def notify_login(self, ipaddress=''):
         if app.USE_SYNOLOGYNOTIFIER:
             update_text = common.notifyStrings[common.NOTIFY_LOGIN_TEXT]
             title = common.notifyStrings[common.NOTIFY_LOGIN]
-            self._send_synologyNotifier(update_text.format(ipaddress), title)
+            self._send_synology_notifier(update_text.format(ipaddress), title)
 
-    def _send_synologyNotifier(self, message, title):
+    def _send_synology_notifier(self, message, title):
         synodsmnotify_cmd = ['/usr/syno/bin/synodsmnotify', '@administrators', title, message]
         log.info(u'Executing command {0}', synodsmnotify_cmd)
         log.debug(u'Absolute path to command: {0}', os.path.abspath(synodsmnotify_cmd[0]))

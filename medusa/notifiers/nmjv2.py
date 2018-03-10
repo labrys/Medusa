@@ -24,10 +24,10 @@ class Notifier:
         # Not implemented: Start the scanner when snatched does not make any sense
 
     def notify_download(self, ep_name):  # pylint: disable=unused-argument
-        self._notifyNMJ()
+        self._notify_nmj()
 
     def notify_subtitle_download(self, ep_name, lang):  # pylint: disable=unused-argument
-        self._notifyNMJ()
+        self._notify_nmj()
 
     def notify_git_update(self, new_version):  # pylint: disable=unused-argument
         return False
@@ -37,7 +37,7 @@ class Notifier:
         return False
 
     def test_notify(self, host):
-        return self._sendNMJ(host)
+        return self._send_nmj(host)
 
     def notify_settings(self, host, dbloc, instance):
         """
@@ -83,7 +83,7 @@ class Notifier:
             return False
         return False
 
-    def _sendNMJ(self, host):
+    def _send_nmj(self, host):
         """
         Send a NMJ update command to the specified machine
 
@@ -144,7 +144,7 @@ class Notifier:
                 log.info(u'NMJv2 started background scan')
                 return True
 
-    def _notifyNMJ(self, host=None, force=False):
+    def _notify_nmj(self, host=None, force=False):
         """
         Sends a NMJ update command based on the SB config settings
 
@@ -163,4 +163,4 @@ class Notifier:
 
         log.debug(u'Sending scan command for NMJ')
 
-        return self._sendNMJ(host)
+        return self._send_nmj(host)

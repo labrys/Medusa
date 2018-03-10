@@ -24,10 +24,10 @@ log.logger.addHandler(logging.NullHandler())
 
 
 class Notifier:
-    def test_notify(self, cust_id=None, apiKey=None):
-        return self._notifyFreeMobile('Test', 'This is a test notification from Medusa', cust_id, apiKey, force=True)
+    def test_notify(self, cust_id=None, api_key=None):
+        return self._notify_free_mobile('Test', 'This is a test notification from Medusa', cust_id, api_key, force=True)
 
-    def _sendFreeMobileSMS(self, title, msg, cust_id=None, api_key=None):
+    def _send_free_mobile_sms(self, title, msg, cust_id=None, api_key=None):
         """
         Send a SMS notification
 
@@ -77,29 +77,29 @@ class Notifier:
     def notify_snatch(self, ep_name, is_proper):
         title = notifyStrings[(NOTIFY_SNATCH, NOTIFY_SNATCH_PROPER)[is_proper]]
         if app.FREEMOBILE_NOTIFY_ONSNATCH:
-            self._notifyFreeMobile(title, ep_name)
+            self._notify_free_mobile(title, ep_name)
 
     def notify_download(self, ep_name, title=notifyStrings[NOTIFY_DOWNLOAD]):
         if app.FREEMOBILE_NOTIFY_ONDOWNLOAD:
-            self._notifyFreeMobile(title, ep_name)
+            self._notify_free_mobile(title, ep_name)
 
     def notify_subtitle_download(self, ep_name, lang, title=notifyStrings[NOTIFY_SUBTITLE_DOWNLOAD]):
         if app.FREEMOBILE_NOTIFY_ONSUBTITLEDOWNLOAD:
-            self._notifyFreeMobile(title, ep_name + ': ' + lang)
+            self._notify_free_mobile(title, ep_name + ': ' + lang)
 
     def notify_git_update(self, new_version='??'):
         if app.USE_FREEMOBILE:
             update_text = notifyStrings[NOTIFY_GIT_UPDATE_TEXT]
             title = notifyStrings[NOTIFY_GIT_UPDATE]
-            self._notifyFreeMobile(title, update_text + new_version)
+            self._notify_free_mobile(title, update_text + new_version)
 
     def notify_login(self, ipaddress=''):
         if app.USE_FREEMOBILE:
             update_text = notifyStrings[NOTIFY_LOGIN_TEXT]
             title = notifyStrings[NOTIFY_LOGIN]
-            self._notifyFreeMobile(title, update_text.format(ipaddress))
+            self._notify_free_mobile(title, update_text.format(ipaddress))
 
-    def _notifyFreeMobile(self, title, message, cust_id=None, apiKey=None, force=False):  # pylint: disable=too-many-arguments
+    def _notify_free_mobile(self, title, message, cust_id=None, api_key=None, force=False):  # pylint: disable=too-many-arguments
         """
         Sends an SMS notification.
 
@@ -115,4 +115,4 @@ class Notifier:
 
         log.debug(u'Sending a SMS for {0}', message)
 
-        return self._sendFreeMobileSMS(title, message, cust_id, apiKey)
+        return self._send_free_mobile_sms(title, message, cust_id, api_key)

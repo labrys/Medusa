@@ -75,11 +75,11 @@ class Notifier:
 
     def notify_download(self, ep_name):
         if app.USE_NMJ:
-            self._notifyNMJ()
+            self._notify_nmj()
 
     def notify_subtitle_download(self, ep_name, lang):
         if app.USE_NMJ:
-            self._notifyNMJ()
+            self._notify_nmj()
 
     def notify_git_update(self, new_version):
         return False
@@ -89,9 +89,9 @@ class Notifier:
         return False
 
     def test_notify(self, host, database, mount):
-        return self._sendNMJ(host, database, mount)
+        return self._send_nmj(host, database, mount)
 
-    def _sendNMJ(self, host, database, mount=None):
+    def _send_nmj(self, host, database, mount=None):
         """
         Send a NMJ update command to the specified machine.
 
@@ -160,7 +160,7 @@ class Notifier:
             log.info(u'NMJ started background scan')
             return True
 
-    def _notifyNMJ(self, host=None, database=None, mount=None, force=False):
+    def _notify_nmj(self, host=None, database=None, mount=None, force=False):
         """
         Sends a NMJ update command based on the SB config settings
 
@@ -183,4 +183,4 @@ class Notifier:
 
         log.debug(u'Sending scan command for NMJ ')
 
-        return self._sendNMJ(host, database, mount)
+        return self._send_nmj(host, database, mount)

@@ -100,7 +100,7 @@ class NotifierTests(test.AppTestDBCase):
         for show in shows:
             for episode in show.episodes:
                 ep_name = episode._format_pattern('%SN - %Sx%0E - %EN - ') + episode.quality  # pylint: disable=protected-access
-                show_name = email_notifier._parseEp(ep_name)  # pylint: disable=protected-access
+                show_name = email_notifier._parse_ep(ep_name)  # pylint: disable=protected-access
                 recipients = email_notifier._generate_recipients(show_name)  # pylint: disable=protected-access
                 self._debug_spew("- Email Notifications for " + show.name + " (episode: " + episode.name + ") will be sent to:")
                 for email in recipients:

@@ -40,7 +40,7 @@ class Notifier:
         title: The title of the notification (optional)
         """
         if app.USE_EMAIL and app.EMAIL_NOTIFY_ONSNATCH:
-            show = self._parseEp(ep_name)
+            show = self._parse_ep(ep_name)
             to = self._generate_recipients(show)
             if not to:
                 log.debug('Skipping email notify because there are no configured recipients')
@@ -85,7 +85,7 @@ class Notifier:
         title: The title of the notification (optional)
         """
         if app.USE_EMAIL and app.EMAIL_NOTIFY_ONDOWNLOAD:
-            show = self._parseEp(ep_name)
+            show = self._parse_ep(ep_name)
             to = self._generate_recipients(show)
             if not to:
                 log.debug('Skipping email notify because there are no configured recipients')
@@ -130,7 +130,7 @@ class Notifier:
         lang: Subtitle language wanted
         """
         if app.USE_EMAIL and app.EMAIL_NOTIFY_ONSUBTITLEDOWNLOAD:
-            show = self._parseEp(ep_name)
+            show = self._parse_ep(ep_name)
             to = self._generate_recipients(show)
             if not to:
                 log.debug('Skipping email notify because there are no configured recipients')
@@ -275,7 +275,7 @@ class Notifier:
         log.debug('Notification recipients: {0}', addrs)
         return addrs
 
-    def _sendmail(self, host, port, smtp_from, use_tls, user, pwd, to, msg, smtpDebug=False):  # pylint: disable=too-many-arguments
+    def _sendmail(self, host, port, smtp_from, use_tls, user, pwd, to, msg, smtp_debug=False):  # pylint: disable=too-many-arguments
         log.debug(
             'HOST: {host}; PORT: {port}; FROM: {sender}, TLS: {tls},'
             ' USER: {user}, PWD: {password}, TO: {recipient}', {
@@ -295,7 +295,7 @@ class Notifier:
             self.last_err = '{0}'.format(error)
             return False
 
-        if smtpDebug:
+        if smtp_debug:
             srv.set_debuglevel(1)
         try:
             if use_tls in ('1', True) or (user and pwd):
@@ -317,7 +317,7 @@ class Notifier:
             return False
 
     @staticmethod
-    def _parseEp(ep_name):
+    def _parse_ep(ep_name):
         sep = ' - '
         titles = ep_name.split(sep)
         titles.sort(key=len, reverse=True)

@@ -257,7 +257,7 @@ class MainSanityCheck(db.DBSanityCheck):
         self.connection.action("UPDATE tv_shows SET lang = '' WHERE lang = 0 or lang = '0'")
 
 
-def backupDatabase(version):
+def backup_database(version):
     log.info(u'Backing up database before upgrade')
     if not helpers.backup_versioned_file(db.db_filename(), version):
         log.error(u'Database backup failed, abort upgrading database')
@@ -330,7 +330,7 @@ class AddVersionToTvEpisodes(InitialSchema):
         return self.major_version >= 40
 
     def execute(self):
-        backupDatabase(self.check_db_version())
+        backup_database(self.check_db_version())
 
         log.info(u'Adding column version to tv_episodes and history')
         self.add_column("tv_episodes", "version", "NUMERIC", "-1")
@@ -345,7 +345,7 @@ class AddDefaultEpStatusToTvShows(AddVersionToTvEpisodes):
         return self.major_version >= 41
 
     def execute(self):
-        backupDatabase(self.check_db_version())
+        backup_database(self.check_db_version())
 
         log.info(u'Adding column default_ep_status to tv_shows')
         self.add_column("tv_shows", "default_ep_status", "NUMERIC", "-1")
@@ -358,7 +358,7 @@ class AlterTVShowsFieldTypes(AddDefaultEpStatusToTvShows):
         return self.major_version >= 42
 
     def execute(self):
-        backupDatabase(self.check_db_version())
+        backup_database(self.check_db_version())
 
         log.info(u'Converting column indexer and default_ep_status field types to numeric')
         self.connection.action("DROP TABLE IF EXISTS tmp_tv_shows")
@@ -391,7 +391,7 @@ class AddMinorVersion(AlterTVShowsFieldTypes):
         return self.connection.version
 
     def execute(self):
-        backupDatabase(self.check_db_version())
+        backup_database(self.check_db_version())
 
         log.info(u'Add minor version numbers to database')
         self.add_column('db_version', 'db_minor_version')
@@ -419,7 +419,7 @@ class TestIncreaseMajorVersion(AddMinorVersion):
         """
         Updates the version until 44.1
         """
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         log.info(u'Test major and minor version updates database')
         self.inc_major_version()
@@ -441,7 +441,7 @@ class AddProperTags(TestIncreaseMajorVersion):
         """
         Updates the version until 44.2 and adds proper_tags column
         """
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         if not self.has_column('history', 'proper_tags'):
             log.info(u'Adding column proper_tags to history')
@@ -467,7 +467,7 @@ class AddManualSearched(AddProperTags):
         """
         Updates the version until 44.3 and adds manually_searched columns
         """
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         if not self.has_column('history', 'manually_searched'):
             log.info(u'Adding column manually_searched to history')
@@ -493,7 +493,7 @@ class AddInfoHash(AddManualSearched):
         return self.connection.version >= (44, 4)
 
     def execute(self):
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         log.info(u'Adding column info_hash in history')
         if not self.has_column("history", "info_hash"):
@@ -511,7 +511,7 @@ class AddPlot(AddInfoHash):
         return self.connection.version >= (44, 5)
 
     def execute(self):
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         log.info(u'Adding column plot in imdb_info')
         if not self.has_column('imdb_info', 'plot'):
@@ -533,7 +533,7 @@ class AddResourceSize(AddPlot):
         return self.connection.version >= (44, 6)
 
     def execute(self):
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         log.info(u"Adding column size in history")
         if not self.has_column("history", "size"):
@@ -550,7 +550,7 @@ class AddPKIndexerMapping(AddResourceSize):
         return self.connection.version >= (44, 7)
 
     def execute(self):
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         log.info(u'Adding PK to mindexer column in indexer_mapping table')
         self.connection.action("DROP TABLE IF EXISTS new_indexer_mapping;")
@@ -572,7 +572,7 @@ class AddIndexerInteger(AddPKIndexerMapping):
         return self.connection.version >= (44, 8)
 
     def execute(self):
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         log.info(u'Make indexer and indexer_id as INTEGER in tv_episodes table')
         self.connection.action("DROP TABLE IF EXISTS new_tv_episodes;")
@@ -606,7 +606,7 @@ class AddIndexerIds(AddIndexerInteger):
         return self.connection.version >= (44, 9)
 
     def execute(self):
-        backupDatabase(self.connection.version)
+        backup_database(self.connection.version)
 
         log.info(u'Adding column indexer_id in history')
         if not self.has_column('history', 'indexer_id'):
