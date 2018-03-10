@@ -23,7 +23,7 @@ class Notifier:
 
     def test_notify(self, pushbullet_api):
         log.debug('Sending a test Pushbullet notification.')
-        return self._sendPushbullet(
+        return self._send_pushbullet(
             pushbullet_api,
             event='Test',
             message='Testing Pushbullet settings from Medusa',
@@ -42,7 +42,7 @@ class Notifier:
 
     def notify_snatch(self, ep_name, is_proper):
         if app.PUSHBULLET_NOTIFY_ONSNATCH:
-            self._sendPushbullet(
+            self._send_pushbullet(
                 pushbullet_api=None,
                 event=common.notifyStrings[(common.NOTIFY_SNATCH, common.NOTIFY_SNATCH_PROPER)[is_proper]] + ' : ' + ep_name,
                 message=ep_name
@@ -50,7 +50,7 @@ class Notifier:
 
     def notify_download(self, ep_name):
         if app.PUSHBULLET_NOTIFY_ONDOWNLOAD:
-            self._sendPushbullet(
+            self._send_pushbullet(
                 pushbullet_api=None,
                 event=common.notifyStrings[common.NOTIFY_DOWNLOAD] + ' : ' + ep_name,
                 message=ep_name
@@ -58,7 +58,7 @@ class Notifier:
 
     def notify_subtitle_download(self, ep_name, lang):
         if app.PUSHBULLET_NOTIFY_ONSUBTITLEDOWNLOAD:
-            self._sendPushbullet(
+            self._send_pushbullet(
                 pushbullet_api=None,
                 event=common.notifyStrings[common.NOTIFY_SUBTITLE_DOWNLOAD] + ' : ' + ep_name + ' : ' + lang,
                 message=ep_name + ': ' + lang
@@ -69,7 +69,7 @@ class Notifier:
         if link:
             link = link.group(1)
 
-        self._sendPushbullet(
+        self._send_pushbullet(
             pushbullet_api=None,
             event=common.notifyStrings[common.NOTIFY_GIT_UPDATE],
             message=common.notifyStrings[common.NOTIFY_GIT_UPDATE_TEXT] + new_version,
@@ -77,13 +77,13 @@ class Notifier:
         )
 
     def notify_login(self, ipaddress=''):
-        self._sendPushbullet(
+        self._send_pushbullet(
             pushbullet_api=None,
             event=common.notifyStrings[common.NOTIFY_LOGIN],
             message=common.notifyStrings[common.NOTIFY_LOGIN_TEXT].format(ipaddress)
         )
 
-    def _sendPushbullet(  # pylint: disable=too-many-arguments
+    def _send_pushbullet(  # pylint: disable=too-many-arguments
             self, pushbullet_api=None, pushbullet_device=None, event=None, message=None, link=None, force=False):
         push_result = {'success': False, 'error': ''}
 

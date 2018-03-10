@@ -17,22 +17,22 @@ class Scheduler(threading.Thread):
 
     """
 
-    def __init__(self, action, cycleTime=datetime.timedelta(minutes=10), run_delay=datetime.timedelta(minutes=0),
-                 start_time=None, threadName="ScheduledThread", silent=True):
+    def __init__(self, action, cycle_time=datetime.timedelta(minutes=10), run_delay=datetime.timedelta(minutes=0),
+                 start_time=None, thread_name="ScheduledThread", silent=True):
         super(Scheduler, self).__init__()
 
         self.run_delay = run_delay
         if start_time is None:
-            self.lastRun = datetime.datetime.now() + self.run_delay - cycleTime
+            self.lastRun = datetime.datetime.now() + self.run_delay - cycle_time
         else:
             # Set last run to the last full hour
-            temp_now = datetime.datetime.now() + cycleTime
-            self.lastRun = datetime.datetime(temp_now.year, temp_now.month, temp_now.day, temp_now.hour, 0, 0, 0) + self.run_delay - cycleTime
+            temp_now = datetime.datetime.now() + cycle_time
+            self.lastRun = datetime.datetime(temp_now.year, temp_now.month, temp_now.day, temp_now.hour, 0, 0, 0) + self.run_delay - cycle_time
         self.action = action
-        self.cycleTime = cycleTime
+        self.cycleTime = cycle_time
         self.start_time = start_time
 
-        self.name = threadName
+        self.name = thread_name
         self.silent = silent
         self.stop = threading.Event()
         self.force = False

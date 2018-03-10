@@ -31,30 +31,30 @@ def _log_history_item(action, ep_obj, quality, resource,
          resource, provider, version, proper_tags, manually_searched, info_hash, size])
 
 
-def log_snatch(searchResult):
+def log_snatch(search_result):
     """
     Log history of snatch.
 
-    :param searchResult: search result object
+    :param search_result: search result object
     """
-    for ep_obj in searchResult.episodes:
+    for ep_obj in search_result.episodes:
 
-        quality = searchResult.quality
-        version = searchResult.version
-        proper_tags = '|'.join(searchResult.proper_tags)
-        manually_searched = searchResult.manually_searched
-        info_hash = searchResult.hash.lower() if searchResult.hash else None
-        size = searchResult.size
+        quality = search_result.quality
+        version = search_result.version
+        proper_tags = '|'.join(search_result.proper_tags)
+        manually_searched = search_result.manually_searched
+        info_hash = search_result.hash.lower() if search_result.hash else None
+        size = search_result.size
 
-        provider_class = searchResult.provider
+        provider_class = search_result.provider
         if provider_class is not None:
             provider = provider_class.name
         else:
             provider = "unknown"
 
-        action = Quality.composite_status(SNATCHED, searchResult.quality)
+        action = Quality.composite_status(SNATCHED, search_result.quality)
 
-        resource = searchResult.name
+        resource = search_result.name
 
         _log_history_item(action, ep_obj, quality, resource,
                           provider, version, proper_tags, manually_searched, info_hash, size)

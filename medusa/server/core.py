@@ -275,6 +275,6 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
             # Ignore errors like 'ValueError: I/O operation on closed kqueue fd'. These might be thrown during a reload.
             pass
 
-    def shutDown(self):
+    def shut_down(self):
         self.alive = False
         self.io_loop.stop()

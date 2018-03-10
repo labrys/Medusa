@@ -165,7 +165,7 @@ def make_dir(path):
 
             # do the library update for synoindex
             from medusa import notifiers
-            notifiers.synoindex_notifier.addFolder(path)
+            notifiers.synoindex_notifier.add_folder(path)
         except OSError:
             return False
     return True
@@ -453,7 +453,7 @@ def make_dirs(path):
 
                     # do the library update for synoindex
                     from medusa import notifiers
-                    notifiers.synoindex_notifier.addFolder(sofar)
+                    notifiers.synoindex_notifier.add_folder(sofar)
                 except (OSError, IOError) as msg:
                     log.error(u'Failed creating {path} : {error!r}',
                               {'path': sofar, 'error': msg})
@@ -544,7 +544,7 @@ def delete_empty_folders(top_dir, keep_dir=None):
 
                 # Do the library update for synoindex
                 from medusa import notifiers
-                notifiers.synoindex_notifier.deleteFolder(dirpath)
+                notifiers.synoindex_notifier.delete_folder(dirpath)
             except OSError as msg:
                 log.warning(u'Unable to delete {folder}. Error: {error!r}',
                             {'folder': dirpath, 'error': msg})

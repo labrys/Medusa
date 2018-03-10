@@ -19,14 +19,14 @@ log.logger.addHandler(logging.NullHandler())
 class FailedProcessor:
     """Take appropriate action when a download fails to complete."""
 
-    def __init__(self, dirName, nzbName):
+    def __init__(self, dir_name, nzb_name):
         """Initialize the class.
 
-        :param dirName: Full path to the folder of the failed download
-        :param nzbName: Full name of the nzb file that failed
+        :param dir_name: Full path to the folder of the failed download
+        :param nzb_name: Full name of the nzb file that failed
         """
-        self.dir_name = dirName
-        self.nzb_name = nzbName
+        self.dir_name = dir_name
+        self.nzb_name = nzb_name
 
         self._output = []
 

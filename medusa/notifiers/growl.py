@@ -16,7 +16,7 @@ log.logger.addHandler(logging.NullHandler())
 
 class Notifier:
     def test_notify(self, host, password):
-        self._sendRegistration(host, password)
+        self._send_registration(host, password)
         return self._sendGrowl('Test Growl', 'Testing Growl settings from Medusa', 'Test', host, password,
                                force=True)
 
@@ -132,7 +132,7 @@ class Notifier:
                 if self._send_growl(opts, message):
                     return True
                 else:
-                    if self._sendRegistration(host, password):
+                    if self._send_registration(host, password):
                         return self._send_growl(opts, message)
                     else:
                         return False
@@ -143,7 +143,7 @@ class Notifier:
                 )
                 return False
 
-    def _sendRegistration(self, host=None, password=None):
+    def _send_registration(self, host=None, password=None):
         opts = {}
 
         if host is None:

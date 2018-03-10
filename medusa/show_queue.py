@@ -311,7 +311,7 @@ class ShowQueue(generic_queue.GenericQueue):
 
         return queue_item_obj
 
-    def add_show(self, indexer, indexer_id, showDir, default_status=None, quality=None, flatten_folders=None,
+    def add_show(self, indexer, indexer_id, show_dir, default_status=None, quality=None, flatten_folders=None,
                  lang=None, subtitles=None, anime=None, scene=None, paused=None, blacklist=None, whitelist=None,
                  default_status_after=None, root_dir=None):
 
@@ -319,7 +319,7 @@ class ShowQueue(generic_queue.GenericQueue):
 
         :param indexer:
         :param indexer_id:
-        :param showDir:
+        :param show_dir:
         :param default_status:
         :param quality:
         :param flatten_folders:
@@ -337,7 +337,7 @@ class ShowQueue(generic_queue.GenericQueue):
         if lang is None:
             lang = app.INDEXER_DEFAULT_LANGUAGE
 
-        queue_item_obj = QueueItemAdd(indexer, indexer_id, showDir, default_status, quality, flatten_folders, lang,
+        queue_item_obj = QueueItemAdd(indexer, indexer_id, show_dir, default_status, quality, flatten_folders, lang,
                                       subtitles, anime, scene, paused, blacklist, whitelist, default_status_after,
                                       root_dir)
 
@@ -418,9 +418,9 @@ class QueueItemAdd(ShowQueueItem):
 
     """
 
-    def __init__(self, indexer, indexer_id, showDir, default_status, quality, flatten_folders, lang, subtitles, anime,
+    def __init__(self, indexer, indexer_id, show_dir, default_status, quality, flatten_folders, lang, subtitles, anime,
                  scene, paused, blacklist, whitelist, default_status_after, root_dir):
-        self.showDir = showDir
+        self.showDir = show_dir
         self.indexer = indexer
         self.indexer_id = indexer_id
         self.default_status = default_status

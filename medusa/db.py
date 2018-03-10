@@ -170,12 +170,12 @@ class DBConnection:
         """
         return self.check_db_major_version(), self.check_db_minor_version()
 
-    def mass_action(self, querylist=None, logTransaction=False, fetchall=False):
+    def mass_action(self, querylist=None, log_transaction=False, fetchall=False):
         """
         Execute multiple queries.
 
         :param querylist: list of queries
-        :param logTransaction: Boolean to wrap all in one transaction
+        :param log_transaction: Boolean to wrap all in one transaction
         :param fetchall: Boolean, when using a select query force returning all results
         :return: list of results
         """
@@ -192,11 +192,11 @@ class DBConnection:
                 try:
                     for qu in querylist:
                         if len(qu) == 1:
-                            if logTransaction:
+                            if log_transaction:
                                 log.debug(qu[0])
                             sql_results.append(self._execute(qu[0], fetchall=fetchall))
                         elif len(qu) > 1:
-                            if logTransaction:
+                            if log_transaction:
                                 log.debug(qu[0] + " with args " + str(qu[1]))
                             sql_results.append(self._execute(qu[0], qu[1], fetchall=fetchall))
                     self.connection.commit()
@@ -305,13 +305,13 @@ class DBConnection:
 
         return sql_results
 
-    def upsert(self, tableName, valueDict, keyDict):
+    def upsert(self, table_name, value_dict, key_dict):
         """
         Update values, or if no updates done, insert values.
 
-        :param tableName: table to update/insert
-        :param valueDict: values in table to update/insert
-        :param keyDict:  columns in table to update/insert
+        :param table_name: table to update/insert
+        :param value_dict: values in table to update/insert
+        :param key_dict:  columns in table to update/insert
         """
         # TODO: Make this return true/false on success/error
         changes_before = self.connection.total_changes
@@ -319,26 +319,26 @@ class DBConnection:
         def gen_params(my_dict):
             return [x + " = ?" for x in my_dict.keys()]
 
-        query = "UPDATE [" + tableName + "] SET " + ", ".join(gen_params(valueDict)) + " WHERE " + " AND ".join(
-            gen_params(keyDict))
+        query = "UPDATE [" + table_name + "] SET " + ", ".join(gen_params(value_dict)) + " WHERE " + " AND ".join(
+            gen_params(key_dict))
 
-        values = list(valueDict.values()) + list(keyDict.values())
-        keys = list(valueDict.keys()) + list(keyDict.keys())
+        values = list(value_dict.values()) + list(key_dict.values())
+        keys = list(value_dict.keys()) + list(key_dict.keys())
         self.action(query, values)
 
         if self.connection.total_changes == changes_before:
-            query = "INSERT INTO [" + tableName + "] (" + ", ".join(keys) + ")" + \
+            query = "INSERT INTO [" + table_name + "] (" + ", ".join(keys) + ")" + \
                     " VALUES (" + ", ".join(["?"] * len(keys)) + ")"
             self.action(query, values)
 
-    def table_info(self, tableName):
+    def table_info(self, table_name):
         """
         Return information on a database table.
 
-        :param tableName: name of table
+        :param table_name: name of table
         :return: array of name/type info
         """
-        sql_results = self.select("PRAGMA table_info(`%s`)" % tableName)
+        sql_results = self.select("PRAGMA table_info(`%s`)" % table_name)
         columns = {}
         for column in sql_results:
             columns[column['name']] = {'type': column['type']}
@@ -351,24 +351,24 @@ class DBConnection:
             d[col[0]] = row[idx]
         return d
 
-    def has_table(self, tableName):
+    def has_table(self, table_name):
         """
         Check if a table exists in database.
 
-        :param tableName: table name to check
+        :param table_name: table name to check
         :return: True if table exists, False if it does not
         """
-        return len(self.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (tableName,))) > 0
+        return len(self.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (table_name,))) > 0
 
-    def has_column(self, tableName, column):
+    def has_column(self, table_name, column):
         """
         Check if a table has a column.
 
-        :param tableName: Table to check
+        :param table_name: Table to check
         :param column: Column to check for
         :return: True if column exists, False if it does not
         """
-        return column in self.table_info(tableName)
+        return column in self.table_info(table_name)
 
     def add_column(self, table, column, column_type="NUMERIC", default=0):
         """
@@ -450,22 +450,22 @@ def restore_database(version):
         return True
 
 
-def _process_upgrade(connection, upgradeClass):
-    instance = upgradeClass(connection)
-    log.debug(u"Checking " + pretty_name(upgradeClass.__name__) + " database upgrade")
+def _process_upgrade(connection, upgrade_class):
+    instance = upgrade_class(connection)
+    log.debug(u"Checking " + pretty_name(upgrade_class.__name__) + " database upgrade")
     if not instance.test():
-        log.debug(u"Database upgrade required: " + pretty_name(upgradeClass.__name__))
+        log.debug(u"Database upgrade required: " + pretty_name(upgrade_class.__name__))
         try:
             instance.execute()
         except Exception as e:
-            log.debug("Error in " + str(upgradeClass.__name__) + ": " + str(e))
+            log.debug("Error in " + str(upgrade_class.__name__) + ": " + str(e))
             raise
 
-        log.debug(upgradeClass.__name__ + " upgrade completed")
+        log.debug(upgrade_class.__name__ + " upgrade completed")
     else:
-        log.debug(upgradeClass.__name__ + " upgrade not required")
+        log.debug(upgrade_class.__name__ + " upgrade not required")
 
-    for upgradeSubClass in upgradeClass.__subclasses__():
+    for upgradeSubClass in upgrade_class.__subclasses__():
         _process_upgrade(connection, upgradeSubClass)
 
 
@@ -478,22 +478,22 @@ class SchemaUpgrade:
     def __init__(self, connection):
         self.connection = connection
 
-    def has_table(self, tableName):
+    def has_table(self, table_name):
         """
 
-        :param tableName:
+        :param table_name:
         :return:
         """
-        return len(self.connection.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (tableName,))) > 0
+        return len(self.connection.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (table_name,))) > 0
 
-    def has_column(self, tableName, column):
+    def has_column(self, table_name, column):
         """
 
-        :param tableName:
+        :param table_name:
         :param column:
         :return:
         """
-        return column in self.connection.table_info(tableName)
+        return column in self.connection.table_info(table_name)
 
     def add_column(self, table, column, column_type="NUMERIC", default=0):
         """

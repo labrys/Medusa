@@ -332,7 +332,7 @@ def change_git_path():
     """
     app.version_check_scheduler = None
     app.version_check_scheduler = scheduler.Scheduler(
-        CheckVersion(), cycleTime=datetime.timedelta(hours=app.UPDATE_FREQUENCY), threadName="CHECKVERSION", silent=False)
+        CheckVersion(), cycle_time=datetime.timedelta(hours=app.UPDATE_FREQUENCY), thread_name="CHECKVERSION", silent=False)
     app.version_check_scheduler.enable = True
     app.version_check_scheduler.start()
     app.version_check_scheduler.force_run()
@@ -442,12 +442,12 @@ def change_process_automatically(process_automatically):
         app.auto_post_processor_scheduler.silent = True
 
 
-def check_section(CFG, sec):
+def check_section(cfg, sec):
     """Check if INI section exists, if not create it."""
-    if sec in CFG:
+    if sec in cfg:
         return True
 
-    CFG[sec] = {}
+    cfg[sec] = {}
     return False
 
 

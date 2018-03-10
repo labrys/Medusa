@@ -1086,37 +1086,37 @@ class Application:
             # initialize schedulers
             # updaters
             app.version_check_scheduler = scheduler.Scheduler(version_checker.CheckVersion(),
-                                                              cycleTime=datetime.timedelta(hours=app.UPDATE_FREQUENCY),
-                                                              threadName='CHECKVERSION', silent=False)
+                                                              cycle_time=datetime.timedelta(hours=app.UPDATE_FREQUENCY),
+                                                              thread_name='CHECKVERSION', silent=False)
 
             app.show_queue_scheduler = scheduler.Scheduler(show_queue.ShowQueue(),
-                                                           cycleTime=datetime.timedelta(seconds=3),
-                                                           threadName='SHOWQUEUE')
+                                                           cycle_time=datetime.timedelta(seconds=3),
+                                                           thread_name='SHOWQUEUE')
 
             app.show_update_scheduler = scheduler.Scheduler(show_updater.ShowUpdater(),
-                                                            cycleTime=datetime.timedelta(hours=1),
-                                                            threadName='SHOWUPDATER',
+                                                            cycle_time=datetime.timedelta(hours=1),
+                                                            thread_name='SHOWUPDATER',
                                                             start_time=datetime.time(hour=app.SHOWUPDATE_HOUR,
                                                                                      minute=random.randint(0, 59)))
 
             # snatcher used for manual search, manual picked results
             app.manual_snatch_scheduler = scheduler.Scheduler(SnatchQueue(),
-                                                              cycleTime=datetime.timedelta(seconds=3),
-                                                              threadName='MANUALSNATCHQUEUE')
+                                                              cycle_time=datetime.timedelta(seconds=3),
+                                                              thread_name='MANUALSNATCHQUEUE')
             # searchers
             app.search_queue_scheduler = scheduler.Scheduler(SearchQueue(),
-                                                             cycleTime=datetime.timedelta(seconds=3),
-                                                             threadName='SEARCHQUEUE')
+                                                             cycle_time=datetime.timedelta(seconds=3),
+                                                             thread_name='SEARCHQUEUE')
 
             app.forced_search_queue_scheduler = scheduler.Scheduler(ForcedSearchQueue(),
-                                                                    cycleTime=datetime.timedelta(seconds=3),
-                                                                    threadName='FORCEDSEARCHQUEUE')
+                                                                    cycle_time=datetime.timedelta(seconds=3),
+                                                                    thread_name='FORCEDSEARCHQUEUE')
 
             # TODO: update_interval should take last daily/backlog times into account!
             update_interval = datetime.timedelta(minutes=app.DAILYSEARCH_FREQUENCY)
             app.daily_search_scheduler = scheduler.Scheduler(DailySearcher(),
-                                                             cycleTime=update_interval,
-                                                             threadName='DAILYSEARCHER',
+                                                             cycle_time=update_interval,
+                                                             thread_name='DAILYSEARCHER',
                                                              run_delay=update_interval)
 
             update_interval = datetime.timedelta(minutes=app.BACKLOG_FREQUENCY)
@@ -1133,8 +1133,8 @@ class Application:
                 run_at = datetime.time(hour=1)  # 1 AM
 
             app.proper_finder_scheduler = scheduler.Scheduler(ProperFinder(),
-                                                              cycleTime=update_interval,
-                                                              threadName='FINDPROPERS',
+                                                              cycle_time=update_interval,
+                                                              thread_name='FINDPROPERS',
                                                               start_time=run_at,
                                                               run_delay=update_interval)
 
@@ -1142,28 +1142,28 @@ class Application:
             update_interval = datetime.timedelta(minutes=app.AUTOPOSTPROCESSOR_FREQUENCY)
             app.auto_post_processor_scheduler = scheduler.Scheduler(
                 auto.PostProcessor(),
-                cycleTime=update_interval,
-                threadName='POSTPROCESSOR',
+                cycle_time=update_interval,
+                thread_name='POSTPROCESSOR',
                 silent=not app.PROCESS_AUTOMATICALLY,
                 run_delay=update_interval)
             update_interval = datetime.timedelta(minutes=5)
             app.trakt_checker_scheduler = scheduler.Scheduler(trakt_checker.TraktChecker(),
-                                                              cycleTime=datetime.timedelta(hours=1),
-                                                              threadName='TRAKTCHECKER',
+                                                              cycle_time=datetime.timedelta(hours=1),
+                                                              thread_name='TRAKTCHECKER',
                                                               run_delay=update_interval,
                                                               silent=not app.USE_TRAKT)
 
             update_interval = datetime.timedelta(hours=app.SUBTITLES_FINDER_FREQUENCY)
             app.subtitles_finder_scheduler = scheduler.Scheduler(subtitles.SubtitlesFinder(),
-                                                                 cycleTime=update_interval,
-                                                                 threadName='FINDSUBTITLES',
+                                                                 cycle_time=update_interval,
+                                                                 thread_name='FINDSUBTITLES',
                                                                  run_delay=update_interval,
                                                                  silent=not app.USE_SUBTITLES)
 
             update_interval = datetime.timedelta(minutes=app.TORRENT_CHECKER_FREQUENCY)
             app.torrent_checker_scheduler = scheduler.Scheduler(torrent_checker.TorrentChecker(),
-                                                                cycleTime=update_interval,
-                                                                threadName='TORRENTCHECKER',
+                                                                cycle_time=update_interval,
+                                                                thread_name='TORRENTCHECKER',
                                                                 run_delay=update_interval)
 
             app.__INITIALIZED__ = True
@@ -2018,7 +2018,7 @@ class Application:
 
         try:
             log.info('Shutting down Tornado')
-            self.web_server.shutDown()
+            self.web_server.shut_down()
             self.web_server.join(10)
         except Exception as error:
             exception_handler.handle(error)

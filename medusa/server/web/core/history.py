@@ -34,15 +34,15 @@ class History(WebRoot):
 
         t = PageTemplate(rh=self, filename='history.mako')
         submenu = [
-            {'title': 'Clear History', 'path': 'history/clearHistory', 'icon': 'ui-icon ui-icon-trash', 'class': 'clearhistory', 'confirm': True},
-            {'title': 'Trim History', 'path': 'history/trimHistory', 'icon': 'menu-icon-cut', 'class': 'trimhistory', 'confirm': True},
+            {'title': 'Clear History', 'path': 'history/clear_history', 'icon': 'ui-icon ui-icon-trash', 'class': 'clearhistory', 'confirm': True},
+            {'title': 'Trim History', 'path': 'history/trim_history', 'icon': 'menu-icon-cut', 'class': 'trimhistory', 'confirm': True},
         ]
 
         return t.render(historyResults=history.detailed, compactResults=history.compact, limit=limit,
                         submenu=submenu[::-1], title='History', header='History',
                         topmenu='history', controller='history', action='index')
 
-    def clearHistory(self):
+    def clear_history(self):
         # @TODO: Replace this with DELETE /api/v2/history
         self.history.clear()
 
@@ -50,7 +50,7 @@ class History(WebRoot):
 
         return self.redirect('/history/')
 
-    def trimHistory(self):
+    def trim_history(self):
         # @TODO: Replace this with DELETE /api/v2/history?gt={days}
         # gt and lt would be greater than and less than x days old
         self.history.trim()

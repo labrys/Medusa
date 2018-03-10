@@ -362,7 +362,7 @@ class PostProcessor:
                 os.remove(filename)
 
                 # do the library update for synoindex
-                notifiers.synoindex_notifier.deleteFile(filename)
+                notifiers.synoindex_notifier.delete_file(filename)
 
     @staticmethod
     def rename_associated_file(new_path, new_basename, filepath):
@@ -1112,7 +1112,7 @@ class PostProcessor:
                 helpers.chmod_as_parent(ep_obj.series._location)
 
                 # do the library update for synoindex
-                notifiers.synoindex_notifier.addFolder(ep_obj.series._location)
+                notifiers.synoindex_notifier.add_folder(ep_obj.series._location)
             except (OSError, IOError) as error:
                 raise EpisodePostProcessingFailedException(u'Unable to create the show directory: {location}. '
                                                            u'Error: {msg}'.format(location=ep_obj.series._location,
@@ -1258,7 +1258,7 @@ class PostProcessor:
         # do the library update for NMJ
         # nmj_notifier kicks off its library update when the notify_download is issued (inside notifiers)
         # do the library update for Synology Indexer
-        notifiers.synoindex_notifier.addFile(ep_obj.location)
+        notifiers.synoindex_notifier.add_file(ep_obj.location)
         # do the library update for pyTivo
         notifiers.pytivo_notifier.update_library(ep_obj)
         # do the library update for Trakt
