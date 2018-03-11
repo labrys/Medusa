@@ -2,8 +2,6 @@
 
 """Contains included user interface for TVmaze show selection."""
 
-from __future__ import print_function
-
 import logging
 import warnings
 
