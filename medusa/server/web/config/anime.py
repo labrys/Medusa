@@ -34,8 +34,8 @@ class ConfigAnime(Config):
                         header='Anime', topmenu='config',
                         controller='config', action='anime')
 
-    def saveAnime(self, use_anidb=None, anidb_username=None, anidb_password=None, anidb_use_mylist=None,
-                  split_home=None, split_home_in_tabs=None):
+    def save_anime(self, use_anidb=None, anidb_username=None, anidb_password=None, anidb_use_mylist=None,
+                   split_home=None, split_home_in_tabs=None):
         """Save anime related settings."""
         results = []
 

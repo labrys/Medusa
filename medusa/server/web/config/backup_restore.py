@@ -28,15 +28,15 @@ class ConfigBackupRestore(Config):
                         controller='config', action='backupRestore')
 
     @staticmethod
-    def backup(backupDir=None):
+    def backup(backup_dir=None):
 
         final_result = ''
 
-        if backupDir:
+        if backup_dir:
             source = [os.path.join(app.DATA_DIR, app.APPLICATION_DB), app.CONFIG_FILE,
                       os.path.join(app.DATA_DIR, app.FAILED_DB),
                       os.path.join(app.DATA_DIR, app.CACHE_DB)]
-            target = os.path.join(backupDir, 'medusa-{date}.zip'.format(date=time.strftime('%Y%m%d%H%M%S')))
+            target = os.path.join(backup_dir, 'medusa-{date}.zip'.format(date=time.strftime('%Y%m%d%H%M%S')))
 
             for (path, dirs, files) in os.walk(app.CACHE_DIR, topdown=True):
                 for dirname in dirs:
@@ -57,12 +57,12 @@ class ConfigBackupRestore(Config):
         return final_result
 
     @staticmethod
-    def restore(backupFile=None):
+    def restore(backup_file=None):
 
         final_result = ''
 
-        if backupFile:
-            source = backupFile
+        if backup_file:
+            source = backup_file
             target_dir = os.path.join(app.DATA_DIR, 'restore')
 
             if helpers.restore_config_zip(source, target_dir):

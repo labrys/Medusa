@@ -345,7 +345,7 @@ class WebRoot(WebHandler):
                         commands=function_mapper)
 
     @staticmethod
-    def setPosterSortBy(sort):
+    def set_poster_sort_by(sort):
         # @TODO: Replace this with poster.sort.field={name, date, network, progress} PATCH /api/v2/config/layout
         if sort not in ('name', 'date', 'network', 'progress', 'indexer'):
             sort = 'name'
@@ -354,17 +354,17 @@ class WebRoot(WebHandler):
         app.instance.save_config()
 
     @staticmethod
-    def setPosterSortDir(direction):
+    def set_poster_sort_dir(direction):
         # @TODO: Replace this with poster.sort.dir={asc, desc} PATCH /api/v2/config/layout
         app.POSTER_SORTDIR = int(direction)
         app.instance.save_config()
 
-    def toggleScheduleDisplayPaused(self):
+    def toggle_schedule_display_paused(self):
         app.COMING_EPS_DISPLAY_PAUSED = not app.COMING_EPS_DISPLAY_PAUSED
 
         return self.redirect('/schedule/')
 
-    def setScheduleSort(self, sort):
+    def set_schedule_sort(self, sort):
         if sort not in ('date', 'network', 'show') or app.COMING_EPS_LAYOUT == 'calendar':
             sort = 'date'
 
@@ -382,9 +382,9 @@ class WebRoot(WebHandler):
             {
                 'title': 'Sort by:',
                 'path': {
-                    'Date': 'setScheduleSort/?sort=date',
-                    'Show': 'setScheduleSort/?sort=show',
-                    'Network': 'setScheduleSort/?sort=network',
+                    'Date': 'set_schedule_sort/?sort=date',
+                    'Show': 'set_schedule_sort/?sort=show',
+                    'Network': 'set_schedule_sort/?sort=network',
                 }
             },
             {
@@ -399,9 +399,9 @@ class WebRoot(WebHandler):
             {
                 'title': 'View Paused:',
                 'path': {
-                    'Hide': 'toggleScheduleDisplayPaused'
+                    'Hide': 'toggle_schedule_display_paused'
                 } if app.COMING_EPS_DISPLAY_PAUSED else {
-                    'Show': 'toggleScheduleDisplayPaused'
+                    'Show': 'toggle_schedule_display_paused'
                 }
             },
         ]
