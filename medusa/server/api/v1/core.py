@@ -229,7 +229,7 @@ class ApiHandler(RequestHandler):
             if multi_commands:  # if we had multiple commands we have to wrap it in a response dict
                 out_dict = _responds(RESULT_SUCCESS, out_dict)
         else:  # index / no cmd given
-            out_dict = CMD_(args, kwargs).run()
+            out_dict = Cmd(args, kwargs).run()
 
         return out_dict
 
@@ -466,11 +466,11 @@ class TVDBShorthandWrapper(ApiCall):
         """Internal function wrapper."""
         args = (self.sid,) + self.origArgs
         if self.e:
-            return CMD_Episode(args, self.kwargs).run()
+            return CmdEpisode(args, self.kwargs).run()
         elif self.s:
-            return CMD_ShowSeasons(args, self.kwargs).run()
+            return CmdSeriesSeasons(args, self.kwargs).run()
         else:
-            return CMD_Show(args, self.kwargs).run()
+            return CmdSeries(args, self.kwargs).run()
 
 
 # ###############################
@@ -611,7 +611,7 @@ class IntParseError(Exception):
 # -------------------------------------------------------------------------------------#
 
 
-class CMD_Help(ApiCall):
+class CmdHelp(ApiCall):
     _help = {
         'desc': 'Get help about a given command',
         'optionalParameters': {
@@ -634,7 +634,7 @@ class CMD_Help(ApiCall):
         return out
 
 
-class CMD_ComingEpisodes(ApiCall):
+class CmdComingEpisodes(ApiCall):
     _help = {
         'desc': 'Get the coming episodes',
         'optionalParameters': {
@@ -684,7 +684,7 @@ class CMD_ComingEpisodes(ApiCall):
         return _responds(RESULT_SUCCESS, data)
 
 
-class CMD_Episode(ApiCall):
+class CmdEpisode(ApiCall):
     _help = {
         'desc': 'Get detailed information about an episode',
         'requiredParameters': {
@@ -755,7 +755,7 @@ class CMD_Episode(ApiCall):
         return _responds(RESULT_SUCCESS, episode)
 
 
-class CMD_EpisodeSearch(ApiCall):
+class CmdEpisodeSearch(ApiCall):
     _help = {
         'desc': 'Search for an episode. The response might take some time.',
         'requiredParameters': {
@@ -806,7 +806,7 @@ class CMD_EpisodeSearch(ApiCall):
         return _responds(RESULT_FAILURE, msg='Unable to find episode')
 
 
-class CMD_EpisodeSetStatus(ApiCall):
+class CmdEpisodeSetStatus(ApiCall):
     _help = {
         'desc': 'Set the status of an episode or a season (when no episode is provided)',
         'requiredParameters': {
@@ -925,7 +925,7 @@ class CMD_EpisodeSetStatus(ApiCall):
             return _responds(RESULT_SUCCESS, msg='All status set successfully. {0}'.format(extra_msg))
 
 
-class CMD_SubtitleSearch(ApiCall):
+class CmdSubtitleSearch(ApiCall):
     _help = {
         'desc': 'Search for an episode subtitles. The response might take some time.',
         'requiredParameters': {
@@ -976,7 +976,7 @@ class CMD_SubtitleSearch(ApiCall):
         return response
 
 
-class CMD_Exceptions(ApiCall):
+class CmdExceptions(ApiCall):
     _help = {
         'desc': 'Get the scene exceptions for all or a given show',
         'optionalParameters': {
@@ -1021,7 +1021,7 @@ class CMD_Exceptions(ApiCall):
         return _responds(RESULT_SUCCESS, scene_exceptions)
 
 
-class CMD_History(ApiCall):
+class CmdHistory(ApiCall):
     _help = {
         'desc': 'Get the downloaded and/or snatched history',
         'optionalParameters': {
@@ -1086,7 +1086,7 @@ class CMD_History(ApiCall):
         return _responds(RESULT_SUCCESS, results)
 
 
-class CMD_HistoryClear(ApiCall):
+class CmdHistoryClear(ApiCall):
     _help = {'desc': 'Clear the entire history'}
 
     def __init__(self, args, kwargs):
@@ -1102,7 +1102,7 @@ class CMD_HistoryClear(ApiCall):
         return _responds(RESULT_SUCCESS, msg='History cleared')
 
 
-class CMD_HistoryTrim(ApiCall):
+class CmdHistoryTrim(ApiCall):
     _help = {'desc': 'Trim history entries older than 30 days'}
 
     def __init__(self, args, kwargs):
@@ -1118,7 +1118,7 @@ class CMD_HistoryTrim(ApiCall):
         return _responds(RESULT_SUCCESS, msg='Removed history entries older than 30 days')
 
 
-class CMD_Failed(ApiCall):
+class CmdFailed(ApiCall):
     _help = {
         'desc': 'Get the failed downloads',
         'optionalParameters': {
@@ -1146,7 +1146,7 @@ class CMD_Failed(ApiCall):
         return _responds(RESULT_SUCCESS, sql_results)
 
 
-class CMD_Backlog(ApiCall):
+class CmdBacklog(ApiCall):
     _help = {'desc': 'Get the backlogged episodes'}
 
     def __init__(self, args, kwargs):
@@ -1189,7 +1189,7 @@ class CMD_Backlog(ApiCall):
         return _responds(RESULT_SUCCESS, shows)
 
 
-class CMD_PostProcess(ApiCall):
+class CmdPostProcess(ApiCall):
     _help = {
         'desc': 'Manually post-process the files in the download folder',
         'optionalParameters': {
@@ -1241,7 +1241,7 @@ class CMD_PostProcess(ApiCall):
         return _responds(RESULT_SUCCESS, data=data, msg='Started post-process for {0}'.format(self.path))
 
 
-class CMD_(ApiCall):
+class Cmd(ApiCall):
     _help = {'desc': 'Get miscellaneous information about Medusa'}
 
     def __init__(self, args, kwargs):
@@ -1257,7 +1257,7 @@ class CMD_(ApiCall):
         return _responds(RESULT_SUCCESS, data)
 
 
-class CMD_AddRootDir(ApiCall):
+class CmdAddRootDir(ApiCall):
     _help = {
         'desc': 'Add a new root (parent) directory to Medusa',
         'requiredParameters': {
@@ -1321,7 +1321,7 @@ class CMD_AddRootDir(ApiCall):
         return _responds(RESULT_SUCCESS, _get_root_dirs(), msg='Root directories updated')
 
 
-class CMD_CheckVersion(ApiCall):
+class CmdCheckVersion(ApiCall):
     _help = {'desc': 'Check if a new version of Medusa is available'}
 
     def __init__(self, args, kwargs):
@@ -1352,7 +1352,7 @@ class CMD_CheckVersion(ApiCall):
         return _responds(RESULT_SUCCESS, data)
 
 
-class CMD_CheckScheduler(ApiCall):
+class CmdCheckScheduler(ApiCall):
     _help = {'desc': 'Get information about the scheduler'}
 
     def __init__(self, args, kwargs):
@@ -1376,7 +1376,7 @@ class CMD_CheckScheduler(ApiCall):
         return _responds(RESULT_SUCCESS, data)
 
 
-class CMD_DeleteRootDir(ApiCall):
+class CmdDeleteRootDir(ApiCall):
     _help = {
         'desc': 'Delete a root (parent) directory from Medusa',
         'requiredParameters': {
@@ -1430,7 +1430,7 @@ class CMD_DeleteRootDir(ApiCall):
         return _responds(result, _get_root_dirs(), msg=msg)
 
 
-class CMD_GetDefaults(ApiCall):
+class CmdGetDefaults(ApiCall):
     _help = {'desc': "Get Medusa's user default configuration value"}
 
     def __init__(self, args, kwargs):
@@ -1449,7 +1449,7 @@ class CMD_GetDefaults(ApiCall):
         return _responds(RESULT_SUCCESS, data)
 
 
-class CMD_GetMessages(ApiCall):
+class CmdGetMessages(ApiCall):
     _help = {'desc': 'Get all messages'}
 
     def __init__(self, args, kwargs):
@@ -1467,7 +1467,7 @@ class CMD_GetMessages(ApiCall):
         return _responds(RESULT_SUCCESS, messages)
 
 
-class CMD_GetRootDirs(ApiCall):
+class CmdGetRootDirs(ApiCall):
     _help = {'desc': 'Get all root (parent) directories'}
 
     def __init__(self, args, kwargs):
@@ -1481,7 +1481,7 @@ class CMD_GetRootDirs(ApiCall):
         return _responds(RESULT_SUCCESS, _get_root_dirs())
 
 
-class CMD_PauseBacklog(ApiCall):
+class CmdPauseBacklog(ApiCall):
     _help = {
         'desc': 'Pause or un-pause the backlog search',
         'optionalParameters': {
@@ -1506,7 +1506,7 @@ class CMD_PauseBacklog(ApiCall):
             return _responds(RESULT_SUCCESS, msg='Backlog un-paused')
 
 
-class CMD_Ping(ApiCall):
+class CmdPing(ApiCall):
     _help = {'desc': 'Ping Medusa to check if it is running'}
 
     def __init__(self, args, kwargs):
@@ -1523,7 +1523,7 @@ class CMD_Ping(ApiCall):
             return _responds(RESULT_SUCCESS, msg='Pong')
 
 
-class CMD_Restart(ApiCall):
+class CmdRestart(ApiCall):
     _help = {'desc': 'Restart Medusa'}
 
     def __init__(self, args, kwargs):
@@ -1540,7 +1540,7 @@ class CMD_Restart(ApiCall):
             return _responds(RESULT_FAILURE, msg='Medusa can not be restarted')
 
 
-class CMD_SearchIndexers(ApiCall):
+class CmdSearchIndexers(ApiCall):
     _help = {
         'desc': 'Search for a show with a given name on all the indexers, in a specific language',
         'optionalParameters': {
@@ -1629,7 +1629,7 @@ class CMD_SearchIndexers(ApiCall):
             return _responds(RESULT_FAILURE, msg='Either a unique id or name is required!')
 
 
-class CMD_SearchTVDB(CMD_SearchIndexers):
+class CmdSearchTVDB(CmdSearchIndexers):
     _help = {
         'desc': 'Search for a show with a given name on The TVDB, in a specific language',
         'optionalParameters': {
@@ -1640,11 +1640,11 @@ class CMD_SearchTVDB(CMD_SearchIndexers):
     }
 
     def __init__(self, args, kwargs):
-        CMD_SearchIndexers.__init__(self, args, kwargs)
+        CmdSearchIndexers.__init__(self, args, kwargs)
         self.indexerid, args = self.check_params(args, kwargs, 'tvdbid', None, False, 'int', [])
 
 
-class CMD_SearchTVRAGE(CMD_SearchIndexers):
+class CmdSearchTVRAGE(CmdSearchIndexers):
     """
     Deprecated, TVRage is no more.
     """
@@ -1668,7 +1668,7 @@ class CMD_SearchTVRAGE(CMD_SearchIndexers):
         return _responds(RESULT_FAILURE, msg='TVRage is no more, invalid result')
 
 
-class CMD_SetDefaults(ApiCall):
+class CmdSetDefaults(ApiCall):
     _help = {
         'desc': "Set Medusa's user default configuration value",
         'optionalParameters': {
@@ -1731,7 +1731,7 @@ class CMD_SetDefaults(ApiCall):
         return _responds(RESULT_SUCCESS, msg='Saved defaults')
 
 
-class CMD_Shutdown(ApiCall):
+class CmdShutdown(ApiCall):
     _help = {'desc': 'Shutdown Medusa'}
 
     def __init__(self, args, kwargs):
@@ -1748,7 +1748,7 @@ class CMD_Shutdown(ApiCall):
         return _responds(RESULT_SUCCESS, msg='Medusa is shutting down...')
 
 
-class CMD_Update(ApiCall):
+class CmdUpdate(ApiCall):
     _help = {'desc': 'Update Medusa to the latest version available'}
 
     def __init__(self, args, kwargs):
@@ -1771,7 +1771,7 @@ class CMD_Update(ApiCall):
         return _responds(RESULT_FAILURE, msg='Medusa is already up to date')
 
 
-class CMD_Show(ApiCall):
+class CmdSeries(ApiCall):
     _help = {
         'desc': 'Get detailed information about a show',
         'requiredParameters': {
@@ -1796,8 +1796,8 @@ class CMD_Show(ApiCall):
             return _responds(RESULT_FAILURE, msg='Show not found')
 
         show_dict = {
-            'season_list': CMD_ShowSeasonList((), {'indexerid': self.indexerid}).run()['data'],
-            'cache': CMD_ShowCache((), {'indexerid': self.indexerid}).run()['data']
+            'season_list': CmdSeriesSeasonList((), {'indexerid': self.indexerid}).run()['data'],
+            'cache': CmdSeriesCache((), {'indexerid': self.indexerid}).run()['data']
         }
 
         genre_list = []
@@ -1866,7 +1866,7 @@ class CMD_Show(ApiCall):
         return _responds(RESULT_SUCCESS, show_dict)
 
 
-class CMD_ShowAddExisting(ApiCall):
+class CmdSeriesAddExisting(ApiCall):
     _help = {
         'desc': 'Add an existing show in Medusa',
         'requiredParameters': {
@@ -1907,7 +1907,7 @@ class CMD_ShowAddExisting(ApiCall):
             return _responds(RESULT_FAILURE, msg='Not a valid location')
 
         indexer_name = None
-        indexer_result = CMD_SearchIndexers([], {INDEXER_IDS[self.indexer]: self.indexerid}).run()
+        indexer_result = CmdSearchIndexers([], {INDEXER_IDS[self.indexer]: self.indexerid}).run()
 
         if indexer_result['result'] == result_type_map[RESULT_SUCCESS]:
             if not indexer_result['data']['results']:
@@ -1946,7 +1946,7 @@ class CMD_ShowAddExisting(ApiCall):
         return _responds(RESULT_SUCCESS, {'name': indexer_name}, '{0} has been queued to be added'.format(indexer_name))
 
 
-class CMD_ShowAddNew(ApiCall):
+class CmdSeriesAddNew(ApiCall):
     _help = {
         'desc': 'Add a new show to Medusa',
         'requiredParameters': {
@@ -2063,7 +2063,7 @@ class CMD_ShowAddNew(ApiCall):
             default_ep_status_after = self.future_status
 
         indexer_name = None
-        indexer_result = CMD_SearchIndexers([], {INDEXER_IDS[self.indexer]: self.indexerid, 'lang': self.lang}).run()
+        indexer_result = CmdSearchIndexers([], {INDEXER_IDS[self.indexer]: self.indexerid, 'lang': self.lang}).run()
 
         if indexer_result['result'] == result_type_map[RESULT_SUCCESS]:
             if not indexer_result['data']['results']:
@@ -2102,7 +2102,7 @@ class CMD_ShowAddNew(ApiCall):
         return _responds(RESULT_SUCCESS, {'name': indexer_name}, indexer_name + ' has been queued to be added')
 
 
-class CMD_ShowCache(ApiCall):
+class CmdSeriesCache(ApiCall):
     _help = {
         'desc': "Check Medusa's cache to see if the images (poster, banner, fanart) for a show are valid",
         'requiredParameters': {
@@ -2140,7 +2140,7 @@ class CMD_ShowCache(ApiCall):
         return _responds(RESULT_SUCCESS, results)
 
 
-class CMD_ShowDelete(ApiCall):
+class CmdSeriesDelete(ApiCall):
     _help = {
         'desc': 'Delete a show in Medusa',
         'requiredParameters': {
@@ -2172,7 +2172,7 @@ class CMD_ShowDelete(ApiCall):
         return _responds(RESULT_SUCCESS, msg='{0} has been queued to be deleted'.format(show.name))
 
 
-class CMD_ShowGetQuality(ApiCall):
+class CmdSeriesGetQuality(ApiCall):
     _help = {
         'desc': 'Get the quality setting of a show',
         'requiredParameters': {
@@ -2201,7 +2201,7 @@ class CMD_ShowGetQuality(ApiCall):
         return _responds(RESULT_SUCCESS, {'initial': any_qualities, 'archive': best_qualities})
 
 
-class CMD_ShowGetPoster(ApiCall):
+class CmdSeriesGetPoster(ApiCall):
     _help = {
         'desc': 'Get the poster of a show',
         'requiredParameters': {
@@ -2227,7 +2227,7 @@ class CMD_ShowGetPoster(ApiCall):
         }
 
 
-class CMD_ShowGetBanner(ApiCall):
+class CmdSeriesGetBanner(ApiCall):
     _help = {
         'desc': 'Get the banner of a show',
         'requiredParameters': {
@@ -2253,7 +2253,7 @@ class CMD_ShowGetBanner(ApiCall):
         }
 
 
-class CMD_ShowGetNetworkLogo(ApiCall):
+class CmdSeriesGetNetworkLogo(ApiCall):
     _help = {
         'desc': 'Get the network logo of a show',
         'requiredParameters': {
@@ -2281,7 +2281,7 @@ class CMD_ShowGetNetworkLogo(ApiCall):
         }
 
 
-class CMD_ShowGetFanArt(ApiCall):
+class CmdSeriesGetFanart(ApiCall):
     _help = {
         'desc': 'Get the fan art of a show',
         'requiredParameters': {
@@ -2307,7 +2307,7 @@ class CMD_ShowGetFanArt(ApiCall):
         }
 
 
-class CMD_ShowPause(ApiCall):
+class CmdSeriesPause(ApiCall):
     _help = {
         'desc': 'Pause or un-pause a show',
         'requiredParameters': {
@@ -2337,7 +2337,7 @@ class CMD_ShowPause(ApiCall):
         return _responds(RESULT_SUCCESS, msg='{0} has been {1}'.format(show.name, ('resumed', 'paused')[show.paused]))
 
 
-class CMD_ShowRefresh(ApiCall):
+class CmdSeriesRefresh(ApiCall):
     _help = {
         'desc': 'Refresh a show in Medusa',
         'requiredParameters': {
@@ -2365,7 +2365,7 @@ class CMD_ShowRefresh(ApiCall):
         return _responds(RESULT_SUCCESS, msg='{0} has queued to be refreshed'.format(show.name))
 
 
-class CMD_ShowSeasonList(ApiCall):
+class CmdSeriesSeasonList(ApiCall):
     _help = {
         'desc': 'Get the list of seasons of a show',
         'requiredParameters': {
@@ -2407,7 +2407,7 @@ class CMD_ShowSeasonList(ApiCall):
         return _responds(RESULT_SUCCESS, season_list)
 
 
-class CMD_ShowSeasons(ApiCall):
+class CmdSeriesSeasons(ApiCall):
     _help = {
         'desc': 'Get the list of episodes for one or all seasons of a show',
         'requiredParameters': {
@@ -2486,7 +2486,7 @@ class CMD_ShowSeasons(ApiCall):
         return _responds(RESULT_SUCCESS, seasons)
 
 
-class CMD_ShowSetQuality(ApiCall):
+class CmdSeriesSetQuality(ApiCall):
     _help = {
         'desc': 'Set the quality setting of a show. If no quality is provided, the default user setting is used.',
         'requiredParameters': {
@@ -2535,7 +2535,7 @@ class CMD_ShowSetQuality(ApiCall):
                          msg='{0} quality has been changed to {1}'.format(show_obj.name, get_quality_string(show_obj.quality)))
 
 
-class CMD_ShowStats(ApiCall):
+class CmdSeriesStats(ApiCall):
     _help = {
         'desc': 'Get episode statistics for a given show',
         'requiredParameters': {
@@ -2640,7 +2640,7 @@ class CMD_ShowStats(ApiCall):
         return _responds(RESULT_SUCCESS, episodes_stats)
 
 
-class CMD_ShowUpdate(ApiCall):
+class CmdSeriesUpdate(ApiCall):
     _help = {
         'desc': 'Update a show in Medusa',
         'requiredParameters': {
@@ -2672,7 +2672,7 @@ class CMD_ShowUpdate(ApiCall):
             return _responds(RESULT_FAILURE, msg='Unable to update {0}'.format(show_obj.name))
 
 
-class CMD_Shows(ApiCall):
+class CmdAllSeries(ApiCall):
     _help = {
         'desc': 'Get all shows in Medusa',
         'optionalParameters': {
@@ -2720,7 +2720,7 @@ class CMD_Shows(ApiCall):
             else:
                 show_dict['next_ep_airdate'] = ''
 
-            show_dict['cache'] = CMD_ShowCache((), {'indexerid': cur_show.indexerid}).run()['data']
+            show_dict['cache'] = CmdSeriesCache((), {'indexerid': cur_show.indexerid}).run()['data']
             if not show_dict['network']:
                 show_dict['network'] = ''
             if self.sort == 'name':
@@ -2731,7 +2731,7 @@ class CMD_Shows(ApiCall):
         return _responds(RESULT_SUCCESS, shows)
 
 
-class CMD_ShowsStats(ApiCall):
+class CmdAllSeriesStats(ApiCall):
     _help = {'desc': 'Get the global shows and episodes statistics'}
 
     def __init__(self, args, kwargs):
@@ -2759,53 +2759,53 @@ class CMD_ShowsStats(ApiCall):
 # WARNING: never define a param name that contains a "." (dot)
 # this is reserved for cmd namespaces used while cmd chaining
 function_mapper = {
-    'help': CMD_Help,
-    'future': CMD_ComingEpisodes,
-    'episode': CMD_Episode,
-    'episode.search': CMD_EpisodeSearch,
-    'episode.setstatus': CMD_EpisodeSetStatus,
-    'episode.subtitlesearch': CMD_SubtitleSearch,
-    'exceptions': CMD_Exceptions,
-    'history': CMD_History,
-    'history.clear': CMD_HistoryClear,
-    'history.trim': CMD_HistoryTrim,
-    'failed': CMD_Failed,
-    'backlog': CMD_Backlog,
-    'sb': CMD_,
-    'postprocess': CMD_PostProcess,
-    'sb.addrootdir': CMD_AddRootDir,
-    'sb.checkversion': CMD_CheckVersion,
-    'sb.checkscheduler': CMD_CheckScheduler,
-    'sb.deleterootdir': CMD_DeleteRootDir,
-    'sb.getdefaults': CMD_GetDefaults,
-    'sb.getmessages': CMD_GetMessages,
-    'sb.getrootdirs': CMD_GetRootDirs,
-    'sb.pausebacklog': CMD_PauseBacklog,
-    'sb.ping': CMD_Ping,
-    'sb.restart': CMD_Restart,
-    'sb.searchindexers': CMD_SearchIndexers,
-    'sb.searchtvdb': CMD_SearchTVDB,
-    'sb.searchtvrage': CMD_SearchTVRAGE,
-    'sb.setdefaults': CMD_SetDefaults,
-    'sb.update': CMD_Update,
-    'sb.shutdown': CMD_Shutdown,
-    'show': CMD_Show,
-    'show.addexisting': CMD_ShowAddExisting,
-    'show.addnew': CMD_ShowAddNew,
-    'show.cache': CMD_ShowCache,
-    'show.delete': CMD_ShowDelete,
-    'show.getquality': CMD_ShowGetQuality,
-    'show.getposter': CMD_ShowGetPoster,
-    'show.getbanner': CMD_ShowGetBanner,
-    'show.getnetworklogo': CMD_ShowGetNetworkLogo,
-    'show.getfanart': CMD_ShowGetFanArt,
-    'show.pause': CMD_ShowPause,
-    'show.refresh': CMD_ShowRefresh,
-    'show.seasonlist': CMD_ShowSeasonList,
-    'show.seasons': CMD_ShowSeasons,
-    'show.setquality': CMD_ShowSetQuality,
-    'show.stats': CMD_ShowStats,
-    'show.update': CMD_ShowUpdate,
-    'shows': CMD_Shows,
-    'shows.stats': CMD_ShowsStats
+    'help': CmdHelp,
+    'future': CmdComingEpisodes,
+    'episode': CmdEpisode,
+    'episode.search': CmdEpisodeSearch,
+    'episode.setstatus': CmdEpisodeSetStatus,
+    'episode.subtitlesearch': CmdSubtitleSearch,
+    'exceptions': CmdExceptions,
+    'history': CmdHistory,
+    'history.clear': CmdHistoryClear,
+    'history.trim': CmdHistoryTrim,
+    'failed': CmdFailed,
+    'backlog': CmdBacklog,
+    'sb': Cmd,
+    'postprocess': CmdPostProcess,
+    'sb.addrootdir': CmdAddRootDir,
+    'sb.checkversion': CmdCheckVersion,
+    'sb.checkscheduler': CmdCheckScheduler,
+    'sb.deleterootdir': CmdDeleteRootDir,
+    'sb.getdefaults': CmdGetDefaults,
+    'sb.getmessages': CmdGetMessages,
+    'sb.getrootdirs': CmdGetRootDirs,
+    'sb.pausebacklog': CmdPauseBacklog,
+    'sb.ping': CmdPing,
+    'sb.restart': CmdRestart,
+    'sb.searchindexers': CmdSearchIndexers,
+    'sb.searchtvdb': CmdSearchTVDB,
+    'sb.searchtvrage': CmdSearchTVRAGE,
+    'sb.setdefaults': CmdSetDefaults,
+    'sb.update': CmdUpdate,
+    'sb.shutdown': CmdShutdown,
+    'show': CmdSeries,
+    'show.addexisting': CmdSeriesAddExisting,
+    'show.addnew': CmdSeriesAddNew,
+    'show.cache': CmdSeriesCache,
+    'show.delete': CmdSeriesDelete,
+    'show.getquality': CmdSeriesGetQuality,
+    'show.getposter': CmdSeriesGetPoster,
+    'show.getbanner': CmdSeriesGetBanner,
+    'show.getnetworklogo': CmdSeriesGetNetworkLogo,
+    'show.getfanart': CmdSeriesGetFanart,
+    'show.pause': CmdSeriesPause,
+    'show.refresh': CmdSeriesRefresh,
+    'show.seasonlist': CmdSeriesSeasonList,
+    'show.seasons': CmdSeriesSeasons,
+    'show.setquality': CmdSeriesSetQuality,
+    'show.stats': CmdSeriesStats,
+    'show.update': CmdSeriesUpdate,
+    'shows': CmdAllSeries,
+    'shows.stats': CmdAllSeriesStats,
 }

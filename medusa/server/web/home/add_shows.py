@@ -496,7 +496,7 @@ class HomeAddShows(Home):
         elif not isinstance(other_shows, list):
             other_shows = [other_shows]
 
-        def finishAddShow():
+        def finish_add_series():
             # if there are no extra shows then go home
             if not other_shows:
                 return self.redirect('/home/')
@@ -510,7 +510,7 @@ class HomeAddShows(Home):
 
         # if we're skipping then behave accordingly
         if skip_show:
-            return finishAddShow()
+            return finish_add_series()
 
         # sanity check on our inputs
         if (not root_dir and not full_show_path) or not which_series:
@@ -589,7 +589,7 @@ class HomeAddShows(Home):
                                                  scene, None, blacklist, whitelist, int(default_status_after))
         ui.notifications.message('Show added', 'Adding the specified show into {path}'.format(path=show_dir))
 
-        return finishAddShow()
+        return finish_add_series()
 
     @staticmethod
     def split_extra_series(extra_show):
