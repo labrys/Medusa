@@ -2,8 +2,6 @@
 
 """Style Adapters for Python logging."""
 
-
-
 import collections
 import functools
 import logging

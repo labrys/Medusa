@@ -2,8 +2,6 @@
 
 """Process TV module."""
 
-
-
 import logging
 import os
 import shutil
@@ -37,7 +35,6 @@ log.addHandler(logging.NullHandler())
 
 
 class ProcessResult:
-
     IGNORED_FOLDERS = ('@eaDir', '#recycle',)
 
     def __init__(self, path, process_method=None):
@@ -266,7 +263,7 @@ class ProcessResult:
         """Return the path to a folder and its contents as a tuple."""
         # If resource_name is a file and not an NZB, process it directly
         if self.resource_name and (not self.resource_name.endswith('.nzb') and
-                                   os.path.isfile(os.path.join(path, self.resource_name))):
+                                       os.path.isfile(os.path.join(path, self.resource_name))):
             yield path, [self.resource_name]
         else:
             topdown = True if self.directory == path else False
@@ -453,13 +450,13 @@ class ProcessResult:
                                             if not each.isdir]:
                         if not force and self.already_postprocessed(file_in_archive):
                             self.log(logging.DEBUG, 'Archive file already post-processed, extraction skipped: {0}'.format
-                                     (file_in_archive))
+                            (file_in_archive))
                             skip_extraction = True
                             break
 
                         if app.POSTPONE_IF_NO_SUBS and os.path.isfile(os.path.join(path, file_in_archive)):
                             self.log(logging.DEBUG, 'Archive file already extracted, extraction skipped: {0}'.format
-                                     (file_in_archive))
+                            (file_in_archive))
                             skip_extraction = True
                             break
 
@@ -513,7 +510,7 @@ class ProcessResult:
 
         if history_result:
             self.log(logging.DEBUG, "You're trying to post-process a file that has already "
-                     "been processed, skipping: {0}".format(video_file))
+                                    "been processed, skipping: {0}".format(video_file))
             return True
 
     def process_media(self, path, video_files, force=False, is_priority=None, ignore_subs=False):
@@ -568,26 +565,26 @@ class ProcessResult:
                 # We want to ignore embedded subtitles and video has at least one
                 if accept_unknown(embedded_subs):
                     self.log(logging.INFO, "Found embedded unknown subtitles and we don't want to ignore them. "
-                             "Continuing the post-processing of this file: {0}".format(video))
+                                           "Continuing the post-processing of this file: {0}".format(video))
                 elif accept_any(embedded_subs):
                     self.log(logging.INFO, 'Found wanted embedded subtitles. '
-                             'Continuing the post-processing of this file: {0}'.format(video))
+                                           'Continuing the post-processing of this file: {0}'.format(video))
                 else:
                     associated_subs = processor.list_associated_files(path, subtitles_only=True)
                     if not associated_subs:
                         self.log(logging.DEBUG, 'No subtitles associated. Postponing the post-processing of this file: '
-                                 '{0}'.format(video))
+                                                '{0}'.format(video))
                         self.postpone_processing = True
                         return False
                     else:
                         self.log(logging.INFO, 'Found associated subtitles. '
-                                 'Continuing the post-processing of this file: {0}'.format(video))
+                                               'Continuing the post-processing of this file: {0}'.format(video))
             else:
                 self.log(logging.INFO, 'Subtitles disabled for this show. '
-                         'Continuing the post-processing of this file: {0}'.format(video))
+                                       'Continuing the post-processing of this file: {0}'.format(video))
         else:
             self.log(logging.INFO, 'Subtitles check was disabled for this episode in manual post-processing. '
-                     'Continuing the post-processing of this file: {0}'.format(video))
+                                   'Continuing the post-processing of this file: {0}'.format(video))
         return True
 
     def process_failed(self, path):
@@ -611,10 +608,10 @@ class ProcessResult:
 
             if self.result:
                 self.log(logging.INFO, 'Failed Download Processing succeeded: {0}, {1}'.format
-                         (self.resource_name, path))
+                (self.resource_name, path))
             else:
                 self.log(logging.WARNING, 'Failed Download Processing failed: {0}, {1}: {2}'.format
-                         (self.resource_name, path, process_fail_message))
+                (self.resource_name, path, process_fail_message))
 
     @staticmethod
     def subtitles_enabled(*args):

@@ -1,8 +1,6 @@
 # coding=utf-8
 """Base module for all torrent downloaders."""
 
-
-
 import logging
 import re
 import time

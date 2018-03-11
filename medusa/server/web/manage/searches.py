@@ -32,7 +32,7 @@ class ManageSearches(Manage):
                         title='Manage Searches', header='Manage Searches', topmenu='manage',
                         controller='manage', action='manageSearches')
 
-    def forceBacklog(self):
+    def force_backlog(self):
         # force it to run the next time it looks
         result = app.backlog_search_scheduler.force_run()
         if result:
@@ -41,7 +41,7 @@ class ManageSearches(Manage):
 
         return self.redirect('/manage/manageSearches/')
 
-    def forceSearch(self):
+    def force_search(self):
 
         # force it to run the next time it looks
         result = app.daily_search_scheduler.force_run()
@@ -51,7 +51,7 @@ class ManageSearches(Manage):
 
         return self.redirect('/manage/manageSearches/')
 
-    def forceFindPropers(self):
+    def force_find_propers(self):
         # force it to run the next time it looks
         result = app.proper_finder_scheduler.force_run()
         if result:
@@ -60,7 +60,7 @@ class ManageSearches(Manage):
 
         return self.redirect('/manage/manageSearches/')
 
-    def forceSubtitlesFinder(self):
+    def force_subtitles_finder(self):
         # force it to run the next time it looks
         result = app.subtitles_finder_scheduler.force_run()
         if result:
@@ -69,7 +69,7 @@ class ManageSearches(Manage):
 
         return self.redirect('/manage/manageSearches/')
 
-    def pauseBacklog(self, paused=None):
+    def pause_backlog(self, paused=None):
         if paused == '1':
             app.search_queue_scheduler.action.pause_backlog()
         else:

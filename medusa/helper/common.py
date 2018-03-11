@@ -1,8 +1,6 @@
 # coding=utf-8
 """Module with common helper utils."""
 
-
-
 import datetime
 import logging
 import re

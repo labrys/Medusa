@@ -2,8 +2,6 @@
 
 """Provider code for HDSpace."""
 
-
-
 import logging
 import re
 import traceback

@@ -2,8 +2,6 @@
 
 """Provider code for TokyoToshokan."""
 
-
-
 import logging
 import re
 

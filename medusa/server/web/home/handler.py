@@ -282,7 +282,7 @@ class Home(WebRoot):
     def haveTORRENT():
         return bool(app.USE_TORRENTS and app.TORRENT_METHOD != 'blackhole' and
                     (app.ENABLE_HTTPS and app.TORRENT_HOST[:5] == 'https' or not
-                     app.ENABLE_HTTPS and app.TORRENT_HOST[:5] == 'http:'))
+                    app.ENABLE_HTTPS and app.TORRENT_HOST[:5] == 'http:'))
 
     @staticmethod
     def testSABnzbd(host=None, username=None, password=None, apikey=None):
@@ -1752,7 +1752,7 @@ class Home(WebRoot):
 
         if errors:
             ui.notifications.error('Errors', '{num} error{s} while saving changes. Please check logs'.format
-                                   (num=errors, s='s' if errors > 1 else ''))
+            (num=errors, s='s' if errors > 1 else ''))
 
         log.debug(u"Finished editing show: {show}".format(show=series_obj.name))
         return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))

@@ -2,8 +2,6 @@
 
 """Configure Subtitle searching."""
 
-
-
 import logging
 import os
 

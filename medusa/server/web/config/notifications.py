@@ -2,8 +2,6 @@
 
 """Configure notifications."""
 
-
-
 import logging
 import os
 

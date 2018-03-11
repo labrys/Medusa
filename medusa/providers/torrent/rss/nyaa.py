@@ -2,8 +2,6 @@
 
 """Provider code for Nyaa."""
 
-
-
 import logging
 
 from medusa import tv

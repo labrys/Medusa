@@ -2,8 +2,6 @@
 
 """Provider code for TorrentDay."""
 
-
-
 import logging
 
 from requests.compat import urljoin

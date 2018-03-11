@@ -22,7 +22,7 @@ MEDUSA.manage.episodeStatuses = function() {
                 $(this).prop('value', 'Collapse');
             }
         } else {
-            $.getJSON('manage/showEpisodeStatuses', {
+            $.getJSON('manage/show_episode_statuses', {
                 indexername: indexerName,
                 seriesid: seriesId, // eslint-disable-line camelcase
                 whichStatus: $('#oldStatus').val()

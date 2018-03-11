@@ -2,8 +2,6 @@
 
 """Provider code for Newznab provider."""
 
-
-
 import logging
 import os
 import re

@@ -2,8 +2,6 @@
 
 """Provider code for HDTorrents."""
 
-
-
 import logging
 import re
 import traceback

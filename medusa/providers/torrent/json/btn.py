@@ -2,8 +2,6 @@
 
 """Provider code for BTN."""
 
-
-
 import logging
 import socket
 import time

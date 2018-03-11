@@ -2,8 +2,6 @@
 
 """Provider code for Bitcannon."""
 
-
-
 import logging
 import traceback
 
@@ -159,7 +157,6 @@ class BitCannonProvider(TorrentProvider):
         if not all([isinstance(data, dict),
                     data.pop('status', 200) != 401,
                     data.pop('message', '') != 'Invalid API key']):
-
             log.warning('Invalid api key. Check your settings')
             return False
 

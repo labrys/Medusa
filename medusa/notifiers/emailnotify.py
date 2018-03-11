@@ -266,7 +266,7 @@ class Notifier:
                             for addr in entries['emails'].split(','):
                                 if addr.strip():
                                     addrs.append(addr)
-                        else:                                           # Legacy
+                        else:  # Legacy
                             for addr in subs['notify_list'].split(','):
                                 if addr.strip():
                                     addrs.append(addr)

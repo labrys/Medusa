@@ -17,9 +17,6 @@
 # along with Medusa. If not, see <http://www.gnu.org/licenses/>.
 """Clients module."""
 
-
-
-
 _clients = [
     'deluge',
     'deluged',

@@ -2,8 +2,6 @@
 
 """Boxcar2 module."""
 
-
-
 import logging
 
 from medusa import app, common

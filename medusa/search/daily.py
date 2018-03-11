@@ -2,8 +2,6 @@
 
 """Daily searcher module."""
 
-
-
 import logging
 import threading
 from datetime import date, datetime, timedelta

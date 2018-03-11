@@ -2,8 +2,6 @@
 
 """Provider code for Abnormal."""
 
-
-
 import logging
 import re
 import traceback

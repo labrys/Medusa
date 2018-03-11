@@ -2,8 +2,6 @@
 
 """Provider code for Pretome."""
 
-
-
 import logging
 import re
 import traceback

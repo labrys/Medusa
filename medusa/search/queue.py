@@ -2,8 +2,6 @@
 
 """Module with different types of Queue Items for searching and snatching."""
 
-
-
 import logging
 import threading
 import time

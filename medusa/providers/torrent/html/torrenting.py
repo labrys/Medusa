@@ -2,8 +2,6 @@
 
 """Provider code for Torrenting."""
 
-
-
 import logging
 
 from requests.compat import urljoin

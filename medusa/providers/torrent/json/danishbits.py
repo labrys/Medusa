@@ -2,8 +2,6 @@
 
 """Provider code for Danishbits."""
 
-
-
 import logging
 import traceback
 

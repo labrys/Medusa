@@ -2,8 +2,6 @@
 
 """Provider code for SDBits."""
 
-
-
 import datetime
 import logging
 import re

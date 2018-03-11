@@ -2,8 +2,6 @@
 
 """Provider code for Yggtorrent."""
 
-
-
 import logging
 import re
 

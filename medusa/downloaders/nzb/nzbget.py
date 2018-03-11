@@ -8,8 +8,6 @@ https://nzbget.net/api/
 https://github.com/nzbget/nzbget
 """
 
-
-
 import datetime
 import logging
 from base64 import standard_b64encode

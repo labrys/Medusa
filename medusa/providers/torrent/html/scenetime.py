@@ -2,8 +2,6 @@
 
 """Provider code for SceneTime."""
 
-
-
 import logging
 import re
 import traceback

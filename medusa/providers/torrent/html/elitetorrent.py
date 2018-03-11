@@ -2,8 +2,6 @@
 
 """Provider code for EliteTorrent."""
 
-
-
 import logging
 import re
 

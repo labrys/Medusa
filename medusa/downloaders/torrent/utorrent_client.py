@@ -2,8 +2,6 @@
 
 """uTorrent Client."""
 
-
-
 import logging
 import re
 from collections import OrderedDict

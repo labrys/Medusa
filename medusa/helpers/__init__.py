@@ -27,6 +27,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 from contextlib import suppress
 from itertools import cycle
+from shutil import Error
 from urllib.parse import splittype
 
 import adba
@@ -51,10 +52,14 @@ from medusa.logger.adapters.style import BraceAdapter, BraceMessage
 from medusa.session.core import MedusaSafeSession
 from medusa.show.show import Show
 
+try:
+    from shutil import SpecialFileError
+except ImportError:
+    class SpecialFileError(Error):
+        """SpecialFileError replacement for shutil."""
+
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
-
-
 
 
 def indent_xml(elem, level=0):
@@ -262,11 +267,6 @@ def copy_file(src_file, dest_file):
     :param dest_file: Path of destination file
     :type dest_file: str
     """
-    try:
-        from shutil import SpecialFileError, Error
-    except ImportError:
-        from shutil import Error
-        SpecialFileError = Error
 
     try:
         shutil.copyfile(src_file, dest_file)
@@ -936,6 +936,7 @@ def anon_url(*url):
     """Return a URL string consisting of the Anonymous redirect URL and an arbitrary number of values appended."""
     return '' if None in url else '{0}{1}'.format(app.ANON_REDIRECT, ''.join(map(str, url)))
 
+
 # Encryption
 # ==========
 # By Pedro Jose Pereira Vieito <pvieito@gmail.com> (@pvieito)
@@ -951,6 +952,7 @@ def anon_url(*url):
 
 # Key Generators
 unique_key1 = hex(uuid.getnode() ** 2)  # Used in encryption v1
+
 
 # Encryption Functions
 
@@ -1046,6 +1048,7 @@ def is_hidden_folder(folder):
     On Linux based systems hidden folders start with . (dot)
     :param folder: Full path of folder to check
     """
+
     def is_hidden(filepath):
         name = os.path.basename(os.path.abspath(filepath))
         return name.startswith('.') or has_hidden_attribute(filepath)
@@ -1164,6 +1167,7 @@ def restore_config_zip(archive, target_dir):
             def path_leaf(path):
                 head, tail = os.path.split(path)
                 return tail or os.path.basename(head)
+
             bak_filename = '{0}-{1}'.format(path_leaf(target_dir), datetime.datetime.now().strftime('%Y%m%d_%H%M%S'))
             shutil.move(target_dir, os.path.join(os.path.dirname(target_dir), bak_filename))
 
@@ -1553,7 +1557,6 @@ def get_disk_space_usage(disk_path=None, pretty=True):
 
 
 def get_tvdb_from_id(indexer_id, indexer):
-
     session = MedusaSafeSession()
     tvdb_id = ''
 
@@ -1741,7 +1744,7 @@ def get_broken_providers():
     """Get broken providers."""
     # Check if last broken providers update happened less than 60 minutes ago
     if app.BROKEN_PROVIDERS_UPDATE and isinstance(app.BROKEN_PROVIDERS_UPDATE, datetime.datetime) and \
-            (datetime.datetime.now() - app.BROKEN_PROVIDERS_UPDATE).seconds < 3600:
+                    (datetime.datetime.now() - app.BROKEN_PROVIDERS_UPDATE).seconds < 3600:
         log.debug('Broken providers already updated in the last hour')
         return
 

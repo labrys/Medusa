@@ -2,8 +2,6 @@
 
 """Provider code for ShanaProject."""
 
-
-
 import logging
 import re
 

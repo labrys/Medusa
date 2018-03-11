@@ -2,8 +2,6 @@
 
 """Provider code for Nebulance."""
 
-
-
 import logging
 import re
 import traceback

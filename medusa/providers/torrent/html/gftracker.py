@@ -2,8 +2,6 @@
 
 """Provider code for GFTracker."""
 
-
-
 import logging
 import re
 import traceback
@@ -148,7 +146,7 @@ class GFTrackerProvider(TorrentProvider):
                 try:
 
                     title_anchor = cells[labels.index('Name')].find('a').find_next('a') or \
-                        cells[labels.index('Name')].find('a')
+                                   cells[labels.index('Name')].find('a')
                     title = title_anchor.get('title') if title_anchor else None
                     download_url = urljoin(self.url, cells[labels.index('DL')].find('a')['href'])
                     if not all([title, download_url]):

@@ -2,8 +2,6 @@
 
 """Provider code for Anizb provider."""
 
-
-
 import logging
 import traceback
 

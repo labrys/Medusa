@@ -2,8 +2,6 @@
 
 """Provider code for TorrentLeech."""
 
-
-
 import logging
 
 from requests.compat import urljoin
@@ -105,6 +103,7 @@ class TorrentLeechProvider(TorrentProvider):
 
         :return: A list of items found
         """
+
         def process_column_header(td):
             result = ''
             if td.a:

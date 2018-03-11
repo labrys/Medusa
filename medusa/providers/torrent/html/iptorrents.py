@@ -2,8 +2,6 @@
 
 """Provider code for IPTorrents."""
 
-
-
 import logging
 import re
 import traceback

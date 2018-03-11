@@ -22,7 +22,6 @@ from medusa.show.recommendations.recommended import RecommendedShow
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
-
 imdb_show_details_cache = ExpiringKeyValue(cache_timeout=3600 * 24 * 7)  # Cache 7 days
 tvdb_mapping_cache = ExpiringKeyValue(cache_timeout=3600 * 24 * 7)  # Cache 7 days
 

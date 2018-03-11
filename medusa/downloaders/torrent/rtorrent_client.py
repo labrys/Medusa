@@ -2,8 +2,6 @@
 
 """rTorrent Client."""
 
-
-
 import logging
 
 from rtorrent import RTorrent

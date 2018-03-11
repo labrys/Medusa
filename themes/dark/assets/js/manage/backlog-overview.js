@@ -86,7 +86,7 @@ MEDUSA.manage.backlogOverview = function() {
         });
     });
 
-    $('.forceBacklog').on('click', function() {
+    $('.force_backlog').on('click', function() {
         $.get($(this).attr('href'));
         $(this).text('Searching...');
         return false;

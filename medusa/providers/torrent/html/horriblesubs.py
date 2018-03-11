@@ -2,8 +2,6 @@
 
 """Provider code for HorribleSubs."""
 
-
-
 import logging
 import traceback
 

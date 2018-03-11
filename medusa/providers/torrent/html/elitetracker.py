@@ -2,8 +2,6 @@
 
 """Provider code for EliteTracker."""
 
-
-
 import logging
 import re
 import traceback

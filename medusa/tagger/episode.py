@@ -2,8 +2,6 @@
 
 """Episode tagger to extract information from episodes."""
 
-
-
 import re
 
 from medusa.helper.common import try_int

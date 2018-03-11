@@ -2,8 +2,6 @@
 
 """Configure Providers."""
 
-
-
 import json
 import logging
 import os

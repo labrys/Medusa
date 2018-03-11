@@ -5,8 +5,6 @@ Authentication Handlers:
 Login, Logout and API key
 """
 
-
-
 import logging
 import traceback
 

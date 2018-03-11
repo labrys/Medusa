@@ -82,7 +82,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
         self.eg_season_all_banner = u'<i>not supported</i>'
 
     # Override with empty methods for unsupported features
-    def retrieveShowMetadata(self, folder):
+    def retrieve_show_metadata(self, folder):
         # while show metadata is generated, it is not supported for our lookup
         return None, None, None
 
@@ -426,14 +426,9 @@ class MediaBrowserMetadata(generic.GenericMetadata):
                         rating.text = my_ep[u'rating']
 
                     if getattr(my_show, u'imdb_id', None):
-                        IMDB_ID = etree.SubElement(episode, u'IMDB_ID')
-                        IMDB_ID.text = my_show[u'imdb_id']
-
-                        IMDB = etree.SubElement(episode, u'IMDB')
-                        IMDB.text = my_show[u'imdb_id']
-
-                        IMDbId = etree.SubElement(episode, u'IMDbId')
-                        IMDbId.text = my_show[u'imdb_id']
+                        for element in 'IMDB_ID', 'IMDB', 'IMDbId':
+                            imdb_id = etree.SubElement(episode, element)
+                            imdb_id.text = my_show['imdb_id']
 
                 indexer_id = etree.SubElement(episode, u'id')
                 indexer_id.text = ep_to_write.indexerid

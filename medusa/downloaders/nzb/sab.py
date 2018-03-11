@@ -8,8 +8,6 @@ https://sabnzbd.org/wiki/advanced/api
 https://github.com/sabnzbd/sabnzbd
 """
 
-
-
 import datetime
 import logging
 

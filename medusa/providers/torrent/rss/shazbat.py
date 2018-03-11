@@ -2,8 +2,6 @@
 
 """Provider code for Shazbat."""
 
-
-
 import logging
 
 from requests.compat import urljoin

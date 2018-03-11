@@ -2,8 +2,6 @@
 
 """Provider code for HD4Free."""
 
-
-
 import logging
 import traceback
 

@@ -2,8 +2,6 @@
 
 """Provider code for AniDex."""
 
-
-
 import logging
 import traceback
 

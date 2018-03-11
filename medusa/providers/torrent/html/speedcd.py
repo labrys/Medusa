@@ -2,8 +2,6 @@
 
 """Provider code for Speed.cd."""
 
-
-
 import logging
 import traceback
 
@@ -193,9 +191,6 @@ class SpeedCDProvider(TorrentProvider):
             log.warning('Invalid username or password. Check your settings')
             return False
         return True
-
-        log.warning('Unable to connect to provider')
-        return
 
     def login_url(self):
         """Get the login url (post) as speed.cd keeps changing it."""

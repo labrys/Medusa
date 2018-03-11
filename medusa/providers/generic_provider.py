@@ -2,8 +2,6 @@
 
 """Provider code for Generic Provider."""
 
-
-
 import logging
 import re
 from base64 import b16encode, b32decode
@@ -355,9 +353,9 @@ class GenericProvider:
                         # Compare the episodes and season from the result with what was searched.
                         if not [searched_episode for searched_episode in episodes
                                 if searched_episode.season == search_result.parsed_result.season_number and
-                                (searched_episode.episode, searched_episode.scene_episode)
-                                [searched_episode.series.is_scene] in
-                                search_result.parsed_result.episode_numbers]:
+                                                (searched_episode.episode, searched_episode.scene_episode)
+                                                [searched_episode.series.is_scene] in
+                                                search_result.parsed_result.episode_numbers]:
                             log.debug(
                                 "The result {0} doesn't seem to match an episode that we are currently trying to "
                                 "snatch, skipping it", search_result.name
@@ -645,7 +643,7 @@ class GenericProvider:
             elif episode.series.anime:
                 # If the showname is a season scene exception, we want to use the indexer episode number.
                 if (episode.scene_season > 1 and
-                        show_name in get_season_scene_exceptions(episode.series, episode.scene_season)):
+                            show_name in get_season_scene_exceptions(episode.series, episode.scene_season)):
                     # This is apparently a season exception, let's use the scene_episode instead of absolute
                     ep = episode.scene_episode
                 else:
@@ -833,7 +831,7 @@ class GenericProvider:
                 'result': False,
                 'message': "You haven't configured the requied cookies. Please login at {provider_url}, "
                            "and make sure you have copied the following cookies: {required_cookies!r}"
-                           .format(provider_url=self.name, required_cookies=self.required_cookies)
+                    .format(provider_url=self.name, required_cookies=self.required_cookies)
             }
 
         # cookie_validator got at least one cookie key/value pair, let's return success

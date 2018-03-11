@@ -2,8 +2,6 @@
 
 """Provider code for TPB."""
 
-
-
 import logging
 import re
 

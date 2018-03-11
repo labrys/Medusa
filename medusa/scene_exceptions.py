@@ -2,8 +2,6 @@
 
 """Scene exceptions module."""
 
-
-
 import logging
 import threading
 import time

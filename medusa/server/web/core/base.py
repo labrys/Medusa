@@ -103,7 +103,7 @@ class PageTemplate(MakoTemplate):
             'toolsBadge': '',
             'toolsBadgeClass': '',
             'base_url': rh.request.headers.get('X-Forwarded-Proto', rh.request.protocol) + '://' +
-            rh.request.headers.get('X-Forwarded-Host', rh.request.host) + app.WEB_ROOT + '/',
+                        rh.request.headers.get('X-Forwarded-Host', rh.request.host) + app.WEB_ROOT + '/',
             'realpage': '',
         }
 

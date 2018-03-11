@@ -2,8 +2,6 @@
 
 """qBittorrent Client."""
 
-
-
 from requests.auth import HTTPDigestAuth
 
 from medusa import app

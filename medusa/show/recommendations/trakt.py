@@ -21,7 +21,6 @@ from medusa.show.recommendations.recommended import RecommendedShow
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
-
 missing_posters = ExpiringList(cache_timeout=3600 * 24 * 3)  # Cache 3 days
 
 
@@ -59,8 +58,8 @@ class TraktPopular:
         try:
             if not missing_posters.has(show_obj['show']['ids']['tvdb']):
                 image = self.check_cache_for_poster(show_obj['show']['ids']['tvdb']) or \
-                    self.tvdb_api_v2.config['session'].series_api.series_id_images_query_get(show_obj['show']['ids']['tvdb'],
-                                                                                             key_type='poster').data[0].file_name
+                        self.tvdb_api_v2.config['session'].series_api.series_id_images_query_get(show_obj['show']['ids']['tvdb'],
+                                                                                                 key_type='poster').data[0].file_name
             else:
                 log.info('CACHE: Missing poster on TVDB for show {0}', show_obj['show']['title'])
                 use_default = self.default_img_src
@@ -124,7 +123,7 @@ class TraktPopular:
             not_liked_show = ''
             if app.TRAKT_ACCESS_TOKEN != '':
                 library_shows = self.fetch_and_refresh_token(trakt_api, 'sync/watched/shows?extended=noseasons') + \
-                    self.fetch_and_refresh_token(trakt_api, 'sync/collection/shows?extended=full')
+                                self.fetch_and_refresh_token(trakt_api, 'sync/collection/shows?extended=full')
 
                 medusa_shows = [show.indexerid for show in app.showList if show.indexerid]
                 removed_from_medusa = [lshow['show']['ids']['tvdb'] for lshow in library_shows if lshow['show']['ids']['tvdb'] not in medusa_shows]

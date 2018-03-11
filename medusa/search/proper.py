@@ -2,8 +2,6 @@
 
 """Proper finder module."""
 
-
-
 import datetime
 import logging
 import operator
@@ -72,7 +70,7 @@ class ProperFinder:  # pylint: disable=too-few-public-methods
         run_at = ''
         if None is app.proper_finder_scheduler.start_time:
             run_in = app.proper_finder_scheduler.lastRun + \
-                app.proper_finder_scheduler.cycle_time - datetime.datetime.now()
+                     app.proper_finder_scheduler.cycle_time - datetime.datetime.now()
             hours, remainder = divmod(run_in.seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
             run_at = ', next check in approx. {0}'.format(
@@ -309,7 +307,7 @@ class ProperFinder:  # pylint: disable=too-few-public-methods
             # if the show is in our list and there hasn't been a proper already added for that particular episode
             # then add it to our list of propers
             if best_result.indexerid != -1 and (
-                best_result.indexerid, best_result.actual_season, best_result.actual_episodes[0]
+                    best_result.indexerid, best_result.actual_season, best_result.actual_episodes[0]
             ) not in map(operator.attrgetter('indexerid', 'actual_season', 'actual_episode'), final_propers):
                 log.info('Found a desired proper: {name}', {'name': best_result.name})
                 final_propers.append(best_result)

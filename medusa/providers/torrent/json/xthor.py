@@ -2,8 +2,6 @@
 
 """Provider code for Xthor."""
 
-
-
 import logging
 import traceback
 

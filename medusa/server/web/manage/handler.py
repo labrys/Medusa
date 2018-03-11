@@ -51,8 +51,8 @@ class Manage(Home, WebRoot):
         return t.render(title='Mass Update', header='Mass Update', topmenu='manage', controller='manage', action='index')
 
     @staticmethod
-    def showEpisodeStatuses(indexername, seriesid, whichStatus):
-        status_list = [int(whichStatus)]
+    def show_episode_statuses(indexername, seriesid, which_status):
+        status_list = [int(which_status)]
         if status_list[0] == SNATCHED:
             status_list = Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_BEST
 
@@ -78,9 +78,9 @@ class Manage(Home, WebRoot):
 
         return json.dumps(result)
 
-    def episodeStatuses(self, whichStatus=None):
-        if whichStatus:
-            status_list = [int(whichStatus)]
+    def episode_statuses(self, which_status=None):
+        if which_status:
+            status_list = [int(which_status)]
             if status_list[0] == SNATCHED:
                 status_list = Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_BEST
         else:
@@ -92,9 +92,9 @@ class Manage(Home, WebRoot):
         if not status_list:
             return t.render(
                 title='Episode Overview', header='Episode Overview',
-                topmenu='manage', show_names=None, whichStatus=whichStatus,
+                topmenu='manage', show_names=None, whichStatus=which_status,
                 ep_counts=None, sorted_show_ids=None,
-                controller='manage', action='episodeStatuses')
+                controller='manage', action='episode_statuses')
 
         main_db_con = db.DBConnection()
         status_results = main_db_con.select(
@@ -126,12 +126,12 @@ class Manage(Home, WebRoot):
 
         return t.render(
             title='Episode Overview', header='Episode Overview',
-            topmenu='manage', whichStatus=whichStatus,
+            topmenu='manage', whichStatus=which_status,
             show_names=show_names, ep_counts=ep_counts, sorted_show_ids=sorted_show_ids,
-            controller='manage', action='episodeStatuses')
+            controller='manage', action='episode_statuses')
 
-    def changeEpisodeStatuses(self, oldStatus, newStatus, *args, **kwargs):
-        status_list = [int(oldStatus)]
+    def change_episode_statuses(self, old_status, new_status, *args, **kwargs):
+        status_list = [int(old_status)]
         if status_list[0] == SNATCHED:
             status_list = Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_BEST
 
@@ -168,9 +168,9 @@ class Manage(Home, WebRoot):
                 all_eps = ['{season}x{episode}'.format(season=x['season'], episode=x['episode']) for x in all_eps_results]
                 to_change[cur_indexer_id, cur_series_id] = all_eps
 
-            self.setStatus(indexer_id_to_name(int(cur_indexer_id)), cur_series_id, '|'.join(to_change[(cur_indexer_id, cur_series_id)]), newStatus, direct=True)
+            self.setStatus(indexer_id_to_name(int(cur_indexer_id)), cur_series_id, '|'.join(to_change[(cur_indexer_id, cur_series_id)]), new_status, direct=True)
 
-        return self.redirect('/manage/episodeStatuses/')
+        return self.redirect('/manage/episode_statuses/')
 
     @staticmethod
     def showSubtitleMissed(indexer, seriesid, whichSubs):
@@ -688,7 +688,7 @@ class Manage(Home, WebRoot):
 
         if errors:
             ui.notifications.error('Errors', '{num} error{s} while saving changes. Please check logs'.format
-                                   (num=errors, s='s' if errors > 1 else ''))
+            (num=errors, s='s' if errors > 1 else ''))
 
         return self.redirect('/manage/')
 

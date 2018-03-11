@@ -2,8 +2,6 @@
 
 """Provider code for RARBG."""
 
-
-
 import datetime
 import logging
 import time

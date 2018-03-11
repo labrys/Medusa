@@ -2,8 +2,6 @@
 
 """Series classes."""
 
-
-
 import copy
 import datetime
 import glob
@@ -107,7 +105,6 @@ try:
     from send2trash import send2trash
 except ImportError:
     app.TRASH_REMOVE_SHOW = 0
-
 
 MILLIS_YEAR_1900 = datetime.datetime(year=1900, month=1, day=1).toordinal()
 
@@ -798,7 +795,7 @@ class Series(TV):
 
         # in the first year after ended (last airdate), update every 30 days
         if (update_date - last_airdate) < datetime.timedelta(days=450) and (
-                (update_date - last_update_indexer) > datetime.timedelta(days=30)):
+                    (update_date - last_update_indexer) > datetime.timedelta(days=30)):
             return True
 
         return False
@@ -1233,7 +1230,7 @@ class Series(TV):
             else:
                 return True, 'New file has different name from the database and an UNKNOWN quality.'
 
-        #  Reach here to check for status/quality changes as long as it's a new/different file
+        # Reach here to check for status/quality changes as long as it's a new/different file
         if cur_status in Quality.DOWNLOADED + Quality.ARCHIVED + [IGNORED]:
             return False, 'Existing status is {0} and its not allowed'.format(statusStrings[cur_status])
 

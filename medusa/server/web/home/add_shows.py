@@ -184,7 +184,7 @@ class HomeAddShows(Home):
                 # is reset. This will prevent errors, when using multiple indexers and caching.
                 for cur_provider in app.metadata_provider_dict.values():
                     if not (indexer_id and show_name):
-                        (indexer_id, show_name, indexer) = cur_provider.retrieveShowMetadata(cur_path)
+                        (indexer_id, show_name, indexer) = cur_provider.retrieve_show_metadata(cur_path)
 
                 cur_dir['existing_info'] = (indexer_id, show_name, indexer)
 

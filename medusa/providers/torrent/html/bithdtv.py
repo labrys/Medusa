@@ -2,8 +2,6 @@
 
 """Provider code for Bithdtv."""
 
-
-
 import logging
 import traceback
 

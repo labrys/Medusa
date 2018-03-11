@@ -16,7 +16,6 @@ log.logger.addHandler(logging.NullHandler())
 
 
 class Notifier:
-
     def __init__(self):
         self.session = MedusaSession()
         self.url = 'https://api.pushbullet.com/v2/'

@@ -2,8 +2,6 @@
 
 """Configure Searches."""
 
-
-
 import logging
 import os
 

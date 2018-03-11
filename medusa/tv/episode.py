@@ -2,8 +2,6 @@
 
 """Episode classes."""
 
-
-
 import logging
 import os.path
 import re
@@ -868,7 +866,7 @@ class Episode(TV):
 
         if not os.path.isfile(self.location):
             if (self.airdate >= date.today() or self.airdate == date.fromordinal(1)) and \
-                    self.status in (UNAIRED, UNKNOWN, WANTED):
+                            self.status in (UNAIRED, UNKNOWN, WANTED):
                 # Need to check if is UNAIRED otherwise code will step into second 'IF'
                 # and make episode as default_ep_status
                 # If is a leaked episode and user manually snatched, it will respect status
@@ -904,7 +902,7 @@ class Episode(TV):
                         'status': statusStrings[self.status].upper(),
                     }
                 )
-        #  We only change the episode's status if a file exists and the status is not SNATCHED|DOWNLOADED|ARCHIVED
+        # We only change the episode's status if a file exists and the status is not SNATCHED|DOWNLOADED|ARCHIVED
         elif helpers.is_media_file(self.location):
             if self.status not in Quality.SNATCHED_PROPER + Quality.DOWNLOADED + Quality.SNATCHED + \
                     Quality.ARCHIVED + Quality.SNATCHED_BEST:
@@ -985,8 +983,8 @@ class Episode(TV):
 
                 for ep_details in list(series_xml.iter('episodedetails')):
                     if (ep_details.findtext('season') is None or int(ep_details.findtext('season')) != self.season or
-                            ep_details.findtext('episode') is None or
-                            int(ep_details.findtext('episode')) != self.episode):
+                                ep_details.findtext('episode') is None or
+                                int(ep_details.findtext('episode')) != self.episode):
                         log.debug(
                             '{id}: NFO has an <episodedetails> block for a different episode -'
                             ' wanted {ep_wanted} but got {ep_found}', {
@@ -1656,7 +1654,7 @@ class Episode(TV):
 
                 # for limited extend we only append the last ep
                 if multi in (NAMING_LIMITED_EXTEND, NAMING_LIMITED_EXTEND_E_PREFIXED) and \
-                        other_ep != self.related_episodes[-1]:
+                                other_ep != self.related_episodes[-1]:
                     continue
 
                 elif multi == NAMING_DUPLICATE:

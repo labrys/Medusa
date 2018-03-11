@@ -2,8 +2,6 @@
 
 """Provider code for TVsinpagar."""
 
-
-
 import logging
 import re
 from collections import OrderedDict

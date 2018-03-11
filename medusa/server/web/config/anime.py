@@ -2,8 +2,6 @@
 
 """Configure Anime Look & Feel and AniDB authentication."""
 
-
-
 import logging
 import os
 

@@ -2,8 +2,6 @@
 
 """Provider code for TVChaosUK."""
 
-
-
 import logging
 import re
 import traceback

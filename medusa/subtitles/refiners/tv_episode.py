@@ -2,8 +2,6 @@
 
 """Episode refiner."""
 
-
-
 import logging
 import re
 

@@ -2,8 +2,6 @@
 
 """Provider code for Norbits."""
 
-
-
 import logging
 import traceback
 

@@ -2,8 +2,6 @@
 
 """MLDonkey Client."""
 
-
-
 from medusa.downloaders.torrent.generic import GenericClient
 
 

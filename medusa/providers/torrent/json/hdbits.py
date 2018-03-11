@@ -2,8 +2,6 @@
 
 """Provider code for HDBits."""
 
-
-
 import logging
 
 from requests.compat import urlencode, urljoin

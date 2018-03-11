@@ -2,8 +2,6 @@
 
 """Provider code for Generic Torrent Provider."""
 
-
-
 import logging
 import os
 

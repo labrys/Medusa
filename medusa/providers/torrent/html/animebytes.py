@@ -2,8 +2,6 @@
 
 """Provider code for AnimeBytes."""
 
-
-
 import logging
 import re
 import traceback

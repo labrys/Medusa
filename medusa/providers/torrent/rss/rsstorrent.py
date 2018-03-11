@@ -2,8 +2,6 @@
 
 """Provider code for RSS Torrents."""
 
-
-
 import io
 import logging
 import os

@@ -2,8 +2,6 @@
 
 """Series naming helpers for selecting results."""
 
-
-
 import fnmatch
 import logging
 import os
@@ -18,7 +16,6 @@ from medusa.name_parser.parser import (
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
-
 
 resultFilters = [
     '(sub|nfo)fix',

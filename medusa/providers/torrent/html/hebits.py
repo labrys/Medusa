@@ -2,8 +2,6 @@
 
 """Provider code for HeBits."""
 
-
-
 import logging
 import re
 import traceback

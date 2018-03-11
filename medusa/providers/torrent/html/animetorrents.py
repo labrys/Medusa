@@ -2,8 +2,6 @@
 
 """Provider code for Animetorrents."""
 
-
-
 import logging
 import re
 import traceback

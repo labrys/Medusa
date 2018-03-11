@@ -122,7 +122,7 @@ class TVmaze(BaseIndexer):
                             return_dict['tvdb_id'] = value.get('thetvdb')
                             return_dict['imdb_id'] = value.get('imdb')
                         if key == 'rating':
-                            return_dict['contentrating'] = value.get('average')\
+                            return_dict['contentrating'] = value.get('average') \
                                 if isinstance(value, dict) else value
                     else:
                         # Do some value sanitizing
@@ -392,9 +392,9 @@ class TVmaze(BaseIndexer):
             get_show_in_language = language
         else:
             log.debug('Configured language {0}. override show language of {1}'.format(
-                    self.config['language'],
-                    language
-                )
+                self.config['language'],
+                language
+            )
             )
             get_show_in_language = self.config['language']
 

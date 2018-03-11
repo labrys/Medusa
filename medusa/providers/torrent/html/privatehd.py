@@ -2,8 +2,6 @@
 
 """Provider code for PrivateHD."""
 
-
-
 import logging
 
 from requests.compat import urljoin

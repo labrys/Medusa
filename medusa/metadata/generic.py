@@ -79,10 +79,10 @@ class GenericMetadata:
         return u'|'.join([str(int(x)) for x in config_list])
 
     def get_id(self):
-        return GenericMetadata.makeID(self.name)
+        return GenericMetadata.make_id(self.name)
 
     @staticmethod
-    def makeID(name):
+    def make_id(name):
         name_id = re.sub(r'[+]', 'plus', name)
         name_id = re.sub(r'[^\w\d_]', '_', name_id).lower()
         return name_id
@@ -873,7 +873,7 @@ class GenericMetadata:
 
         return my_show
 
-    def retrieveShowMetadata(self, folder):
+    def retrieve_show_metadata(self, folder):
         """
         Used only when mass adding Existing Shows, using previously generated
         Show metadata to reduce the need to query TVDB.

@@ -2,8 +2,6 @@
 
 """Provider code for Torrentz2."""
 
-
-
 import logging
 import re
 import traceback

@@ -2,8 +2,6 @@
 
 """Provider code for AlphaRatio."""
 
-
-
 import logging
 import re
 import traceback

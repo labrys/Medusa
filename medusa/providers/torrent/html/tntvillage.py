@@ -2,8 +2,6 @@
 
 """Provider code for TNTVillage."""
 
-
-
 import logging
 import re
 import traceback

@@ -2,8 +2,6 @@
 
 """Provider code for Zooqle."""
 
-
-
 import logging
 
 from requests.compat import urljoin

@@ -23,8 +23,6 @@ Options:
                          is installed
 """
 
-
-
 import datetime
 import getopt
 import io
@@ -75,7 +73,6 @@ try:
     from importlib import reload
 except ImportError:
     pass
-
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())

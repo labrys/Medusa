@@ -2,8 +2,6 @@
 
 """Configure Post Processing."""
 
-
-
 import logging
 import os
 

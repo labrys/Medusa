@@ -2,8 +2,6 @@
 
 """Provider code for MoreThanTV."""
 
-
-
 import logging
 import re
 import time
@@ -117,6 +115,7 @@ class MoreThanTVProvider(TorrentProvider):
 
         :return: A list of items found
         """
+
         def process_column_header(td):
             result = ''
             if td.a and td.a.img:

@@ -2,8 +2,6 @@
 
 """Base handler for Config pages."""
 
-
-
 import os
 
 from tornroutes import route
