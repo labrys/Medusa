@@ -596,7 +596,7 @@ class GenericProvider:
                         matched_time = int(round(float(matched_time.strip())))
 
                     seconds = parse('{0} {1}'.format(matched_time, matched_granularity))
-                return datetime.now(tz.tzlocal()) - timedelta(seconds=seconds)
+                return datetime.now(tz.tzlocal()) - timedelta(seconds=seconds or 0)
 
             if fromtimestamp:
                 dt = datetime.fromtimestamp(int(pubdate), tz=tz.gettz('UTC'))

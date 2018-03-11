@@ -10,6 +10,7 @@ import re
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
+from collections import Iterable
 
 from mako.exceptions import RichTraceback
 from mako.lookup import TemplateLookup
@@ -17,7 +18,6 @@ from mako.runtime import UNDEFINED
 from mako.template import Template as MakoTemplate
 from requests.compat import urljoin
 from six import (
-    binary_type,
     iteritems,
 )
 from tornado.concurrent import run_on_executor
@@ -271,10 +271,23 @@ class WebHandler(BaseHandler):
             kwargs = self.request.arguments
             for arg, value in iteritems(kwargs):
                 if len(value) == 1:
-                    kwargs[arg] = value[0]
-                if isinstance(kwargs[arg], binary_type):
-                    kwargs[arg] = kwargs[arg].decode()
+                    value = value[0]
+                else:
+                    if isinstance(value, Iterable) and not isinstance(value, str):
+                        it = value
+                        value = []
+                        for item in it:
+                            if isinstance(item, bytes):
+                                value.append(item.decode())
+                            else:
+                                value.append(item)
 
+                if isinstance(value, bytes):
+                    log.debug('Decoding: {!r}'.format(value))
+                    value = value.decode()
+                log.debug('Value: {!r}'.format(value))
+                kwargs[arg] = value
+            log.debug('Async call with kwargs: {kwargs!r}'.format(kwargs=kwargs))
             result = function(**kwargs)
             return result
         except Exception as e:

@@ -95,7 +95,7 @@ class HomeAddShows(Home):
                     # add search results
                     results.setdefault(indexer, []).extend(indexer_results)
                 except IndexerException as e:
-                    log.info(u'Error searching for show: {error}'.format(error=e.message))
+                    log.info(u'Error searching for show: {error}'.format(error=e))
 
         for i, shows in iteritems(results):
             indexer_api = indexerApi(i)
@@ -616,7 +616,7 @@ class HomeAddShows(Home):
 
         # grab a list of other shows to add, if provided
         shows_to_add = [
-            unquote_plus(show.decode())
+            unquote_plus(show)
             for show in generate(shows_to_add)
         ]
 
