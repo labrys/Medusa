@@ -173,7 +173,7 @@ class Manage(Home, WebRoot):
         return self.redirect('/manage/episode_statuses/')
 
     @staticmethod
-    def showSubtitleMissed(indexer, seriesid, whichSubs):
+    def show_subtitle_missed(indexer, seriesid, which_subs):
         main_db_con = db.DBConnection()
         cur_show_results = main_db_con.select(
             'SELECT season, episode, name, subtitles '
@@ -188,10 +188,10 @@ class Manage(Home, WebRoot):
 
         result = {}
         for cur_result in cur_show_results:
-            if whichSubs == 'all':
+            if which_subs == 'all':
                 if not frozenset(subtitles.wanted_languages()).difference(cur_result['subtitles'].split(',')):
                     continue
-            elif whichSubs in cur_result['subtitles']:
+            elif which_subs in cur_result['subtitles']:
                 continue
 
             cur_season = int(cur_result['season'])
@@ -208,14 +208,14 @@ class Manage(Home, WebRoot):
 
         return json.dumps(result)
 
-    def subtitleMissed(self, whichSubs=None):
+    def subtitle_missed(self, which_subs=None):
         t = PageTemplate(rh=self, filename='manage_subtitleMissed.mako')
 
-        if not whichSubs:
-            return t.render(whichSubs=whichSubs, title='Missing Subtitles',
+        if not which_subs:
+            return t.render(whichSubs=which_subs, title='Missing Subtitles',
                             header='Missing Subtitles', topmenu='manage',
                             show_names=None, ep_counts=None, sorted_show_ids=None,
-                            controller='manage', action='subtitleMissed')
+                            controller='manage', action='subtitle_missed')
 
         main_db_con = db.DBConnection()
         status_results = main_db_con.select(
@@ -235,10 +235,10 @@ class Manage(Home, WebRoot):
         show_names = {}
         sorted_show_ids = []
         for cur_status_result in status_results:
-            if whichSubs == 'all':
+            if which_subs == 'all':
                 if not frozenset(subtitles.wanted_languages()).difference(cur_status_result['subtitles'].split(',')):
                     continue
-            elif whichSubs in cur_status_result['subtitles']:
+            elif which_subs in cur_status_result['subtitles']:
                 continue
 
             # FIXME: This will cause multi-indexer results where series_id overlaps for different indexers.
@@ -255,11 +255,11 @@ class Manage(Home, WebRoot):
             if (cur_indexer_id, cur_series_id) not in sorted_show_ids:
                 sorted_show_ids.append((cur_indexer_id, cur_series_id))
 
-        return t.render(whichSubs=whichSubs, show_names=show_names, ep_counts=ep_counts, sorted_show_ids=sorted_show_ids,
+        return t.render(whichSubs=which_subs, show_names=show_names, ep_counts=ep_counts, sorted_show_ids=sorted_show_ids,
                         title='Missing Subtitles', header='Missing Subtitles', topmenu='manage',
-                        controller='manage', action='subtitleMissed')
+                        controller='manage', action='subtitle_missed')
 
-    def downloadSubtitleMissed(self, *args, **kwargs):
+    def download_subtitle_missed(self, *args, **kwargs):
         to_download = {}
 
         # make a list of all shows and their associated args
@@ -297,7 +297,7 @@ class Manage(Home, WebRoot):
                 series_obj = Show.find_by_id(app.showList, cur_indexer_id, cur_series_id)
                 series_obj.get_episode(season, episode).download_subtitles()
 
-        return self.redirect('/manage/subtitleMissed/')
+        return self.redirect('/manage/subtitle_missed/')
 
     def subtitleMissedPP(self):
         t = PageTemplate(rh=self, filename='manage_subtitleMissedPP.mako')

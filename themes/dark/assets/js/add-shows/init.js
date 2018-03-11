@@ -158,7 +158,7 @@ MEDUSA.addShows.init = function() {
                 bestQualArray.push($(d).val());
             });
 
-            $.get('config/general/saveAddShowDefaults', {
+            $.get('config/general/save_add_show_defaults', {
                 defaultStatus: $('#statusSelect').val(),
                 allowed_qualities: anyQualArray.join(','), // eslint-disable-line camelcase
                 preferred_qualities: bestQualArray.join(','),  // eslint-disable-line camelcase

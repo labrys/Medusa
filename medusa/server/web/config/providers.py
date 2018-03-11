@@ -34,7 +34,7 @@ class ConfigProviders(Config):
         """
         t = PageTemplate(rh=self, filename='config_providers.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Providers',
+        return t.render(submenu=self.config_menu(), title='Config - Providers',
                         header='Search Providers', topmenu='config',
                         controller='config', action='providers')
 

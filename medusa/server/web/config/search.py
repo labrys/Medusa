@@ -33,7 +33,7 @@ class ConfigSearch(Config):
         """
         t = PageTemplate(rh=self, filename='config_search.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Episode Search',
+        return t.render(submenu=self.config_menu(), title='Config - Episode Search',
                         header='Search Settings', topmenu='config',
                         controller='config', action='search')
 

@@ -22,7 +22,7 @@ class Config(WebRoot):
         super(Config, self).__init__(*args, **kwargs)
 
     @staticmethod
-    def ConfigMenu():
+    def config_menu():
         """
         Config menu
         """
@@ -77,7 +77,7 @@ class Config(WebRoot):
         cur_branch_major_db_version, cur_branch_minor_db_version = main_db_con.check_db_version()
 
         return t.render(
-            submenu=self.ConfigMenu(), title='Medusa Configuration',
+            submenu=self.config_menu(), title='Medusa Configuration',
             header='Medusa Configuration', topmenu='config',
             app_user=app_user, app_locale=app_locale, ssl_version=ssl_version,
             app_version=app_version, cur_branch_major_db_version=cur_branch_major_db_version,

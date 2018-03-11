@@ -29,7 +29,7 @@ class ConfigNotifications(Config):
         """
         t = PageTemplate(rh=self, filename='config_notifications.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Notifications',
+        return t.render(submenu=self.config_menu(), title='Config - Notifications',
                         header='Notifications', topmenu='config',
                         controller='config', action='notifications')
 

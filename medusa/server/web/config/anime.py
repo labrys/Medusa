@@ -30,7 +30,7 @@ class ConfigAnime(Config):
         """Render the Anime configuration page."""
         t = PageTemplate(rh=self, filename='config_anime.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Anime',
+        return t.render(submenu=self.config_menu(), title='Config - Anime',
                         header='Anime', topmenu='config',
                         controller='config', action='anime')
 

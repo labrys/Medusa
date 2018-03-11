@@ -36,7 +36,7 @@ class ConfigGeneral(Config):
         t = PageTemplate(rh=self, filename='config_general.mako')
 
         return t.render(title='Config - General', header='General Configuration',
-                        topmenu='config', submenu=self.ConfigMenu(),
+                        topmenu='config', submenu=self.config_menu(),
                         controller='config', action='index')
 
     @staticmethod
@@ -44,12 +44,12 @@ class ConfigGeneral(Config):
         return helpers.generate_api_key()
 
     @staticmethod
-    def saveRootDirs(rootDirString=None):
+    def save_root_dirs(rootDirString=None):
         app.ROOT_DIRS = rootDirString.split('|')
 
     @staticmethod
-    def saveAddShowDefaults(defaultStatus, allowed_qualities, preferred_qualities, defaultFlattenFolders, subtitles=False,
-                            anime=False, scene=False, defaultStatusAfter=WANTED):
+    def save_add_show_defaults(defaultStatus, allowed_qualities, preferred_qualities, defaultFlattenFolders, subtitles=False,
+                               anime=False, scene=False, defaultStatusAfter=WANTED):
 
         allowed_qualities = [_.strip() for _ in allowed_qualities.split(',')] if allowed_qualities else []
         preferred_qualities = [_.strip() for _ in preferred_qualities.split(',')] if preferred_qualities else []
