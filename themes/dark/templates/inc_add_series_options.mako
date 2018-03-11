@@ -1,4 +1,12 @@
 <%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
+<%
     from medusa import app
     from medusa.common import SKIPPED, WANTED, UNAIRED, ARCHIVED, IGNORED, SNATCHED, SNATCHED_PROPER, SNATCHED_BEST, FAILED
     from medusa.common import Quality, qualityPresets, qualityPresetStrings, statusStrings
@@ -9,7 +17,7 @@
                 <span class="component-title">Preferred Quality</span>
                 <span class="component-desc">
                     <% allowed_qualities, preferred_qualities = Quality.split_quality(app.QUALITY_DEFAULT) %>
-                    <%include file="/inc_qualityChooser.mako"/>
+                    <%include file="/themes/dark/templates/inc_quality_chooser.mako"/>
                 </span>
             </label>
         </div>

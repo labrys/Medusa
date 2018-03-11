@@ -86,7 +86,7 @@ class Manage(Home, WebRoot):
         else:
             status_list = []
 
-        t = PageTemplate(rh=self, filename='manage_episodeStatuses.mako')
+        t = PageTemplate(rh=self, filename='manage_episode_statuses.mako')
 
         # if we have no status then this is as far as we need to go
         if not status_list:
@@ -367,7 +367,7 @@ class Manage(Home, WebRoot):
         return self.redirect('/manage/backlog_overview/')
 
     def backlog_overview(self):
-        t = PageTemplate(rh=self, filename='manage_backlogOverview.mako')
+        t = PageTemplate(rh=self, filename='manage_backlog_overview.mako')
 
         show_counts = {}
         show_cats = {}
@@ -816,7 +816,7 @@ class Manage(Home, WebRoot):
         if to_remove:
             return self.redirect('/manage/failed_downloads/')
 
-        t = PageTemplate(rh=self, filename='manage_failedDownloads.mako')
+        t = PageTemplate(rh=self, filename='manage_failed_downloads.mako')
 
         return t.render(limit=limit, failedResults=sql_results,
                         title='Failed Downloads', header='Failed Downloads',

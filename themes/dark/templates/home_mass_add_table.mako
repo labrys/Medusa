@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%!
     from medusa import app
     from medusa.helpers import anon_url
@@ -29,13 +37,13 @@
             data-show-dir="${show_dir}" data-show-name="${curDir['existing_info'][1]}" class="dirCheck" checked=checked></td>
         <td><label for="${series_id}">${curDir['display_dir']}</label></td>
         % if curDir['existing_info'][1] and indexer_id > 0:
-            <td><a href="${anon_url(indexerApi(indexer_id).config['show_url'], curDir['existing_info'][0])}">${curDir['existing_info'][1]}</a></td>
+            <td><a href="${anon_url(IndexerAPI(indexer_id).config['show_url'], curDir['existing_info'][0])}">${curDir['existing_info'][1]}</a></td>
         % else:
             <td>?</td>
         % endif
         <td align="center">
             <select name="indexer">
-                % for curIndexer in indexerApi().indexers.items():
+                % for curIndexer in IndexerAPI().indexers.items():
                     <option value="${curIndexer[0]}" ${'selected="selected"' if curIndexer[0] == indexer_id or curIndexer[0] == app.INDEXER_DEFAULT else ''} >${curIndexer[1]}</option>
                 % endfor
             </select>

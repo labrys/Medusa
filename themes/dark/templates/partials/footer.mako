@@ -1,8 +1,11 @@
 <%!
+    from contextlib import suppress
     from datetime import datetime
-    from time import time
+    import logging
     import os
     import re
+    from time import time
+
     from medusa.app import (
         daily_search_scheduler as daily_search_scheduler,
         backlog_search_scheduler as backlog_search_scheduler,
@@ -10,11 +13,6 @@
     )
     from medusa.helper.common import pretty_file_size
     from medusa.show.show import Show
-
-    try:
-        from contextlib2 import suppress
-    except ImportError:
-        from contextlib import suppress
 
     mem_usage = None
     with suppress(ImportError):
@@ -26,6 +24,11 @@
         if not mem_usage:
             import resource # resource module is unix only
             mem_usage = 'resource'
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading footer')
 %>
 <!-- BEGIN FOOTER -->
 % if loggedIn:
@@ -41,7 +44,7 @@
             <span class="footerhighlight">${stats['shows']['total']}</span> Shows (<span class="footerhighlight">${stats['shows']['active']}</span> Active)
             | <span class="footerhighlight">${ep_downloaded}</span>
             % if ep_snatched:
-            <span class="footerhighlight"><a href="manage/episodeStatuses?whichStatus=2" title="View overview of snatched episodes">+${ep_snatched}</a></span> Snatched
+            <span class="footerhighlight"><a href="manage/episode_statuses?whichStatus=2" title="View overview of snatched episodes">+${ep_snatched}</a></span> Snatched
             % endif
             &nbsp;/&nbsp;<span class="footerhighlight">${ep_total}</span> Episodes Downloaded ${ep_percentage}
             | Daily Search: <span class="footerhighlight">${str(daily_search_scheduler.time_left()).split('.')[0]}</span>

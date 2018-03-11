@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
@@ -79,7 +87,7 @@
                     <td class="row-seasonheader" colspan="5" style="vertical-align: bottom; width: auto;">
                         <div class="col-md-12">
                             <div class="col-md-6 left-30">
-                                <h3 style="display: inline;"><a href="home/displayShow?indexername=${cur_show.indexer_name}&seriesid=${cur_show.series_id}">${cur_show.name}</a></h3>
+                                <h3 style="display: inline;"><a href="home/display_series?indexername=${cur_show.indexer_name}&seriesid=${cur_show.series_id}">${cur_show.name}</a></h3>
                                  % if cur_show.quality in qualityPresets:
                                     &nbsp;&nbsp;&nbsp;&nbsp;<i>Quality:</i>&nbsp;&nbsp;${renderQualityPill(cur_show.quality)}
                                  % endif

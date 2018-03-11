@@ -1,13 +1,20 @@
 <%!
     import datetime
-    import urllib
+    import logging
     import ntpath
+    import urllib
+
     from medusa import app, helpers, subtitles, date_time, network_timezones
     from medusa.common import SKIPPED, WANTED, UNAIRED, ARCHIVED, IGNORED, FAILED, DOWNLOADED
     from medusa.common import Quality, qualityPresets, statusStrings, Overview
     from medusa.helpers import anon_url
     from medusa.helper.common import pretty_file_size
     from medusa.indexers.api import IndexerAPI
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading series_header')
 %>
 
 <%namespace file="/inc_defs.mako" import="renderQualityPill"/>
@@ -16,7 +23,7 @@
     <div id="showtitle" class="col-lg-12" data-showname="${show.name}">
         <div>
             <h1 class="title" data-indexer-name="${show.indexer_name}" data-series-id="${show.indexerid}" id="scene_exception_${show.indexerid}">
-            <a href="home/displayShow?indexername=${show.indexer_name}&seriesid=${show.indexerid}" class="snatchTitle">${show.name}</a></h1>
+            <a href="home/display_series?indexername=${show.indexer_name}&seriesid=${show.indexerid}" class="snatchTitle">${show.name}</a></h1>
         </div>
 
     % if action == 'snatch_selection':
@@ -129,8 +136,8 @@
                         <img alt="[trakt]" height="16" width="16" src="images/trakt.png" />
                     </a>
                 % endif
-                 <a href="${anon_url(indexerApi(show.indexer).config['show_url'], show.indexerid)}" onclick="window.open(this.href, '_blank'); return false;" title="${indexerApi(show.indexer).config["show_url"] + str(show.indexerid)}">
-                     <img alt="${indexerApi(show.indexer).name}" height="16" width="16" src="images/${indexerApi(show.indexer).config["icon"]}" style="margin-top: -1px; vertical-align:middle;"/>
+                 <a href="${anon_url(IndexerAPI(show.indexer).config['show_url'], show.indexerid)}" onclick="window.open(this.href, '_blank'); return false;" title="${IndexerAPI(show.indexer).config["show_url"] + str(show.indexerid)}">
+                     <img alt="${IndexerAPI(show.indexer).name}" height="16" width="16" src="images/${IndexerAPI(show.indexer).config["icon"]}" style="margin-top: -1px; vertical-align:middle;"/>
                  </a>
                  % if xem_numbering or xem_absolute_numbering:
                      <a href="${anon_url('http://thexem.de/search?q=', show.name)}" rel="noreferrer" onclick="window.open(this.href, '_blank'); return false;" title="http://thexem.de/search?q-${show.name}">

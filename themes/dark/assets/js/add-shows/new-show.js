@@ -1,4 +1,4 @@
-MEDUSA.addShows.newShow = function() {
+MEDUSA.add_series.newShow = function() {
     function updateSampleText() {
         // If something's selected then we have some behavior to figure out
 
@@ -42,7 +42,7 @@ MEDUSA.addShows.newShow = function() {
 
         // If we have a show name then sanitize and use it for the dir name
         if (showName.length > 0) {
-            $.get('addShows/sanitize_file_name', {
+            $.get('add_series/sanitize_file_name', {
                 name: showName
             }, data => {
                 $('#displayText').html(sampleText.replace('||', data));
@@ -79,7 +79,7 @@ MEDUSA.addShows.newShow = function() {
         $('#searchResults').empty().html('<img id="searchingAnim" src="images/loading32' + MEDUSA.config.themeSpinner + '.gif" height="32" width="32" /> searching ' + searchingFor + '...');
 
         searchRequestXhr = $.ajax({
-            url: 'addShows/search_indexers_for_series_name',
+            url: 'add_series/search_indexers_for_series_name',
             data: {
                 search_term: $('#nameToSearch').val().trim(), // eslint-disable-line camelcase
                 lang: $('#indexerLangSelect').val(),

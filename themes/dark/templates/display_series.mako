@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     import datetime
@@ -23,11 +31,11 @@
 <input type="hidden" id="indexer-name" value="${show.indexer_name}" />
 <input type="hidden" id="series-slug" value="${show.slug}" />
 
-<%include file="/partials/showheader.mako"/>
+<%include file="/partials/series_header.mako"/>
 
 <div class="row">
     <div class="col-md-12 horizontal-scroll">
-        <table id="${'animeTable' if show.is_anime else 'showTable'}" class="${'displayShowTableFanArt tablesorterFanArt' if app.FANART_BACKGROUND else 'displayShowTable'} display_show" cellspacing="0" border="0" cellpadding="0">
+        <table id="${'animeTable' if show.is_anime else 'showTable'}" class="${'display_seriesTableFanArt tablesorterFanArt' if app.FANART_BACKGROUND else 'display_seriesTable'} display_series" cellspacing="0" border="0" cellpadding="0">
             <% cur_season = -1 %>
             <% odd = 0 %>
             <% epCount = 0 %>
@@ -91,7 +99,7 @@
             </thead>
             <tbody class="tablesorter-no-sort">
                 <tr>
-                    <th class="row-seasonheader ${'displayShowTable' if app.FANART_BACKGROUND else 'displayShowTableFanArt'}" colspan="15" style="vertical-align: bottom; width: auto;">
+                    <th class="row-seasonheader ${'display_seriesTable' if app.FANART_BACKGROUND else 'display_seriesTableFanArt'}" colspan="15" style="vertical-align: bottom; width: auto;">
                         <h3 style="display: inline;"><a name="season-${epResult["season"]}"></a>${"Season " + str(epResult["season"]) if int(epResult["season"]) > 0 else "Specials"}
                         % if not any([i for i in sql_results if epResult['season'] == i['season'] and int(i['status']) == 1]):
                         <a class="epManualSearch" href="home/snatchSelection?indexername=${show.indexer_name}&seriesid=${show.series_id}&amp;season=${epResult["season"]}&amp;episode=1&amp;manual_search_type=season"><img data-ep-manual-search src="images/manualsearch${'-white' if app.THEME_NAME == 'dark' else ''}.png" width="16" height="16" alt="search" title="Manual Search" /></a>
@@ -135,7 +143,7 @@
             </tbody>
             <tbody class="tablesorter-no-sort">
                 <tr>
-                    <th class="row-seasonheader ${'displayShowTableFanArt' if app.FANART_BACKGROUND else 'displayShowTable'}" colspan="15" style="vertical-align: bottom; width: auto;">
+                    <th class="row-seasonheader ${'display_seriesTableFanArt' if app.FANART_BACKGROUND else 'display_seriesTable'}" colspan="15" style="vertical-align: bottom; width: auto;">
                         <h3 style="display: inline;"><a name="season-${epResult["season"]}"></a>${"Season " + str(epResult["season"]) if int(epResult["season"]) else "Specials"}
                         % if not any([i for i in sql_results if epResult['season'] == i['season'] and int(i['status']) == 1]):
                         <a class="epManualSearch" href="home/snatchSelection?indexername=${show.indexer_name}&seriesid=${show.series_id}&amp;season=${epResult["season"]}&amp;episode=1&amp;manual_search_type=season"><img data-ep-manual-search src="images/manualsearch${'-white' if app.THEME_NAME == 'dark' else ''}.png" width="16" height="16" alt="search" title="Manual Search" /></a>

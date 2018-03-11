@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import common
@@ -15,7 +23,7 @@
 <h2>None of your episodes have status ${common.statusStrings[whichStatus]}</h2>
 <br>
 % endif
-<form action="manage/episodeStatuses" method="get">
+<form action="manage/episode_statuses" method="get">
 Manage episodes with status <select name="whichStatus" class="form-control form-control-inline input-sm">
 % for cur_status in [common.SKIPPED, common.SNATCHED, common.WANTED, common.IGNORED] + common.Quality.DOWNLOADED + common.Quality.ARCHIVED:
     %if cur_status not in [common.ARCHIVED, common.DOWNLOADED]:
@@ -26,7 +34,7 @@ Manage episodes with status <select name="whichStatus" class="form-control form-
 <input class="btn btn-inline" type="submit" value="Manage" />
 </form>
 % else:
-<form action="manage/changeEpisodeStatuses" method="post">
+<form action="manage/changeepisode_statuses" method="post">
 <input type="hidden" id="oldStatus" name="oldStatus" value="${whichStatus}" />
 <h2>Shows containing ${common.statusStrings[whichStatus]} episodes</h2>
 <br>
@@ -63,7 +71,7 @@ Set checked shows/episodes to <select name="newStatus" class="form-control form-
     <% series_id = str(cur_series[0]) + '-' + str(cur_series[1]) %>
     <tr id="${series_id}">
         <th><input type="checkbox" class="allCheck" data-indexer-id="${cur_series[0]}" data-series-id="${cur_series[1]}" id="allCheck-${series_id}" name="${series_id}-all" checked="checked" /></th>
-        <th colspan="2" style="width: 100%; text-align: left;"><a data-indexer-to-name="${cur_series[0]}" class="whitelink" href="home/displayShow?indexername=indexer-to-name&seriesid=${cur_series[1]}">${show_names[(cur_series[0], cur_series[1])]}</a> (${ep_counts[(cur_series[0], cur_series[1])]})
+        <th colspan="2" style="width: 100%; text-align: left;"><a data-indexer-to-name="${cur_series[0]}" class="whitelink" href="home/display_series?indexername=indexer-to-name&seriesid=${cur_series[1]}">${show_names[(cur_series[0], cur_series[1])]}</a> (${ep_counts[(cur_series[0], cur_series[1])]})
         <input type="button" data-indexer-id="${cur_series[0]}" data-series-id="${cur_series[1]}" class="pull-right get_more_eps btn" id="${series_id}" value="Expand" /></th>
     </tr>
     % endfor

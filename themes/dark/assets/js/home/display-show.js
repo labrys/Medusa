@@ -1,4 +1,4 @@
-MEDUSA.home.displayShow = function() { // eslint-disable-line max-lines
+MEDUSA.home.display_series = function() { // eslint-disable-line max-lines
     $('.imdbPlot').on('click', function() {
         $(this).prev('span').toggle();
         if ($(this).html() === '..show less') {

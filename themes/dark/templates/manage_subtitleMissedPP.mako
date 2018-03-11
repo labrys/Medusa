@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
@@ -38,7 +46,7 @@
            % endif
             <tr class="snatched" role="row" release_id=${index}>
                 <td class="tvShow" align="left">
-                    <a href="home/displayShow?indexername=${epResult['indexername']}&seriesid=${epResult['seriesid']}#season-${epResult['season']}">${epResult['show_name']}</a>
+                    <a href="home/display_series?indexername=${epResult['indexername']}&seriesid=${epResult['seriesid']}#season-${epResult['season']}">${epResult['show_name']}</a>
                 </td>
                 <td class="tvShow" align="center">
                         ${episode_num(epResult['season'], epResult['episode'])}
@@ -98,7 +106,7 @@
            % endif
             <tr class="downloaded" role="row" release_id=${index}>
                 <td class="tvShow" align="left">
-                    <a href="home/displayShow?indexername=${epResult['indexername']}&seriesid=${epResult['seriesid']}#season-${epResult['season']}">${epResult['show_name']}</a>
+                    <a href="home/display_series?indexername=${epResult['indexername']}&seriesid=${epResult['seriesid']}#season-${epResult['season']}">${epResult['show_name']}</a>
                 </td>
                 <td class="tvShow" align="center">
                         ${episode_num(epResult['season'], epResult['episode'])}

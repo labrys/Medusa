@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from datetime import datetime
@@ -15,7 +23,7 @@
 <input type="hidden" id="series-slug" value="${show.slug}" />
 <div class="clearfix"></div><!-- div.clearfix //-->
 
-<%include file="/partials/showheader.mako"/>
+<%include file="/partials/series_header.mako"/>
 
 <div class="row">
     <div class="col-md-12 horizontal-scroll">
@@ -24,7 +32,7 @@
             <div id="container">
 
             % if episode_history:
-                <table id="snatchhistory" class="${"displayShowTableFanArt tablesorterFanArt" if app.FANART_BACKGROUND else "displayShowTable"} display_show tablesorter tablesorter-default" cellspacing="1" border="0" cellpadding="0">
+                <table id="snatchhistory" class="${"display_seriesTableFanArt tablesorterFanArt" if app.FANART_BACKGROUND else "display_seriesTable"} display_series tablesorter tablesorter-default" cellspacing="1" border="0" cellpadding="0">
                     <tbody class="tablesorter-no-sort" aria-live="polite" aria-relevant="all">
                         <tr role="row">
                             <th colspan="5" class="row-seasonheader">
@@ -94,7 +102,7 @@
                         </div>
                     </div><!-- #filterControls //-->
                 </div>
-                <table id="srchresults" class="${"displayShowTableFanArt tablesorterFanArt" if app.FANART_BACKGROUND else "displayShowTable"} display_show tablesorter tablesorter-default hasSaveSort hasStickyHeaders" cellspacing="1" border="0" cellpadding="0">
+                <table id="srchresults" class="${"display_seriesTableFanArt tablesorterFanArt" if app.FANART_BACKGROUND else "display_seriesTable"} display_series tablesorter tablesorter-default hasSaveSort hasStickyHeaders" cellspacing="1" border="0" cellpadding="0">
                     <thead>
                         <tr>
                             <th data-priority="critical" class="col-name">Release</th>

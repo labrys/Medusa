@@ -1,4 +1,12 @@
-<div id="showSelector" class="hidden-print">
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading series_selector')
+%>
+<div id="series_selector" class="hidden-print">
     <div class="form-inline">
             <div>
                 <div class="select-show-group pull-left top-5 bottom-5">

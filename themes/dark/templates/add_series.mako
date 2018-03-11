@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     import os.path
@@ -11,7 +19,7 @@
     <h1 class="title">${title}</h1>
 % endif
 <div id="addShowPortal">
-    <a href="addShows/newShow/" id="btnNewShow" class="btn btn-large">
+    <a href="add_series/newShow/" id="btnNewShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addnewshow"></div></div>
         <div class="buttontext">
             <h3>Add New Show</h3>
@@ -19,7 +27,7 @@
         </div>
     </a>
 
-    <a href="addShows/existingShows/" id="btnExistingShow" class="btn btn-large">
+    <a href="add_series/existingShows/" id="btnExistingShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addexistingshow"></div></div>
         <div class="buttontext">
             <h3>Add Existing Shows</h3>

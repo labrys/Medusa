@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa.helpers import anon_url
@@ -37,15 +45,15 @@
                     <div class="field-pair">
                         <label class="clearfix" for="configure_show_options">
                             <ul>
-                                <li><a href="${base_url + 'addShows/' + realpage + '/'}#tabs-1">Manage Directories</a></li>
-                                <li><a href="${base_url + 'addShows/' + realpage + '/'}#tabs-2">Customize Options</a></li>
+                                <li><a href="${base_url + 'add_series/' + realpage + '/'}#tabs-1">Manage Directories</a></li>
+                                <li><a href="${base_url + 'add_series/' + realpage + '/'}#tabs-2">Customize Options</a></li>
                             </ul>
                             <div id="tabs-1" class="existingtabs">
-                                <%include file="/inc_rootDirs.mako"/>
+                                <%include file="/themes/dark/templates/inc_root_dirs.mako"/>
                                 <br/>
                             </div>
                             <div id="tabs-2" class="existingtabs">
-                                <%include file="/inc_addShowOptions.mako"/>
+                                <%include file="/themes/dark/templates/inc_add_series_options.mako"/>
                             </div>
                         </label>
                     </div>
@@ -136,14 +144,14 @@
 
                             <div class="recommendedShowTitleIcons">
                                 % if cur_show.show_in_list:
-                                    <button class="btn btn-xs"><a href="home/displayShow?indexername=${cur_show.mapped_indexer_name}&seriesid=${cur_show.mapped_series_id}">In List</a></button>
+                                    <button class="btn btn-xs"><a href="home/display_series?indexername=${cur_show.mapped_indexer_name}&seriesid=${cur_show.mapped_series_id}">In List</a></button>
                                 % else:
                                     <button class="btn btn-xs" data-isanime="1" data-indexer="${cur_show.mapped_indexer_name}"
                                     data-indexer-id="${cur_show.mapped_series_id}" data-show-name="${cur_show.title | u}"
                                     data-add-show>Add</button>
                                 % endif
                                 % if cur_show.mapped_series_id in removed_from_medusa:
-                                    <button class="btn btn-xs"><a href="home/displayShow?indexername=${cur_show.mapped_indexer_name}&seriesid=${cur_show.mapped_series_id}">Watched</a></button>
+                                    <button class="btn btn-xs"><a href="home/display_series?indexername=${cur_show.mapped_indexer_name}&seriesid=${cur_show.mapped_series_id}">Watched</a></button>
                                 % endif
                                 % if trakt_b and not (cur_show.show_in_list or cur_show.mapped_series_id in removed_from_medusa):
                                     <button data-indexer-id="${cur_show.mapped_series_id}" class="btn btn-xs" data-blacklist-show>Blacklist</button>

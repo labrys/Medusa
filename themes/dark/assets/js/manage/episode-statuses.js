@@ -1,4 +1,4 @@
-MEDUSA.manage.episodeStatuses = function() {
+MEDUSA.manage.episode_statuses = function() {
     $('.allCheck').on('click', function() {
         const seriesId = $(this).attr('data-indexer-id') + '-' + $(this).attr('data-series-id');
         $('.' + seriesId + '-epcheck').prop('checked', $(this).prop('checked'));

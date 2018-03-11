@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
@@ -53,7 +61,7 @@
     </table>
     </div>
     <div class="col-md-10">
-        <input type="submit" value="Rename Selected" class="btn btn-success"> <a href="home/displayShow?indexername=${show.indexer_name}&seriesid=${show.series_id}" class="btn btn-danger">Cancel Rename</a>
+        <input type="submit" value="Rename Selected" class="btn btn-success"> <a href="home/display_series?indexername=${show.indexer_name}&seriesid=${show.series_id}" class="btn btn-danger">Cancel Rename</a>
     </div>
 </div>
 <table id="testRenameTable" class="defaultTable ${"summaryFanArt" if app.FANART_BACKGROUND else ""}" cellspacing="1" border="0" cellpadding="0">
@@ -101,5 +109,5 @@ if len(epList) > 1:
     </tbody>
 % endfor
 </table><br>
-<input type="submit" value="Rename Selected" class="btn btn-success"> <a href="home/displayShow?indexername=${show.indexer_name}&seriesid=${show.series_id}" class="btn btn-danger">Cancel Rename</a>
+<input type="submit" value="Rename Selected" class="btn btn-success"> <a href="home/display_series?indexername=${show.indexer_name}&seriesid=${show.series_id}" class="btn btn-danger">Cancel Rename</a>
 </%block>

@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
@@ -22,13 +30,13 @@
         <div id="core-component-group1" class="tab-pane active component-group">
             <div id="displayText"></div>
             <br>
-            <form id="addShowForm" method="post" action="addShows/addNewShow" accept-charset="utf-8">
+            <form id="addShowForm" method="post" action="add_series/addNewShow" accept-charset="utf-8">
                 <fieldset class="sectionwrap">
                     <legend class="legendStep">Find a show on selected indexer(s)</legend>
                     <div class="stepDiv">
                         <input type="hidden" id="indexer_timeout" value="${app.INDEXER_TIMEOUT}" />
                         % if use_provided_info:
-                            Show retrieved from existing metadata: <a href="${anon_url(indexerApi(provided_indexer).config['show_url'], provided_indexer_id)}">${provided_indexer_name}</a>
+                            Show retrieved from existing metadata: <a href="${anon_url(IndexerAPI(provided_indexer).config['show_url'], provided_indexer_id)}">${provided_indexer_name}</a>
                             <input type="hidden" id="indexer_lang" name="indexer_lang" value="en" />
                             <input type="hidden" id="whichSeries" name="whichSeries" value="${provided_indexer_id}" />
                             <input type="hidden" id="providedIndexer" name="providedIndexer" value="${provided_indexer}" />
@@ -36,7 +44,7 @@
                         % else:
                             <input type="text" id="nameToSearch" value="${default_show_name}" class="form-control form-control-inline input-sm input350"/>
                             &nbsp;&nbsp;
-                            <select name="indexer_lang" id="indexerLangSelect" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language="${app.INDEXER_DEFAULT_LANGUAGE}" data-available="${','.join(indexerApi().config['valid_languages'])}">
+                            <select name="indexer_lang" id="indexerLangSelect" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language="${app.INDEXER_DEFAULT_LANGUAGE}" data-available="${','.join(IndexerAPI().config['valid_languages'])}">
                             </select><b>*</b>
                             &nbsp;
                             <select name="providedIndexer" id="providedIndexer" class="form-control form-control-inline input-sm">
@@ -63,14 +71,14 @@
                             Pre-chosen Destination Folder: <b>${provided_show_dir}</b> <br>
                             <input type="hidden" id="fullShowPath" name="fullShowPath" value="${provided_show_dir}" /><br>
                         % else:
-                            <%include file="/inc_rootDirs.mako"/>
+                            <%include file="/themes/dark/templates/inc_root_dirs.mako"/>
                         % endif
                     </div>
                 </fieldset>
                 <fieldset class="sectionwrap">
                     <legend class="legendStep">Customize options</legend>
                     <div class="stepDiv">
-                        <%include file="/inc_addShowOptions.mako"/>
+                        <%include file="/themes/dark/templates/inc_add_series_options.mako"/>
                     </div>
                 </fieldset>
                 % for curNextDir in other_shows:

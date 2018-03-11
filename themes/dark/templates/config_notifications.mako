@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     import re
@@ -1566,7 +1574,7 @@
                                         <span class="component-title">Default indexer</span>
                                         <span class="component-desc">
                                             <select id="trakt_default_indexer" name="trakt_default_indexer" class="form-control input-sm">
-                                                <% indexers = indexerApi().indexers %>
+                                                <% indexers = IndexerAPI().indexers %>
                                                 % for indexer in indexers:
                                                     <%
                                                         if not get_trakt_indexer(indexer):

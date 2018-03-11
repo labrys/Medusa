@@ -1,6 +1,12 @@
 <%!
+    import logging
     from medusa import app
     from medusa.server.core import clean_url_path
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
 %>
 <!DOCTYPE html>
 <html>
@@ -52,7 +58,7 @@
     <body ${('data-controller="' + controller + '" data-action="' + action + '" api-key="' + app.API_KEY +'"  api-root="' + clean_url_path(app.WEB_ROOT + '/api/v2/', end_with_slash=True) + '"', '')[title == 'Login']}>
         <div v-cloak id="vue-wrap" class="container-fluid">
 
-            <!-- These are placeholders used by the displayShow template. As they transform to full width divs, they need to be located outside the template. -->
+            <!-- These are placeholders used by the display_series template. As they transform to full width divs, they need to be located outside the template. -->
             <div id="summaryBackground" class="shadow" style="display: none"></div>
             <div id="checkboxControlsBackground" class="shadow" style="display: none"></div>
 

@@ -13,7 +13,7 @@ const MEDUSA = {
     history: {},
     errorlogs: {},
     schedule: {},
-    addShows: {}
+    add_series: {}
 };
 
 const UTIL = {

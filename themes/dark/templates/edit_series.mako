@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     import adba
@@ -57,7 +65,7 @@
                                 <span class="component-title">Preferred Quality</span>
                                 <span class="component-desc">
                                     <% allowed_qualities, preferred_qualities = common.Quality.split_quality(int(show.quality)) %>
-                                    <%include file="/inc_qualityChooser.mako"/>
+                                    <%include file="/themes/dark/templates/inc_quality_chooser.mako"/>
                                 </span>
                             </label>
                         </div>
@@ -78,7 +86,7 @@
                             <label for="indexerLangSelect">
                                 <span class="component-title">Info Language</span>
                                 <span class="component-desc">
-                                    <select name="indexer_lang" id="indexerLangSelect" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language="${show.lang}" data-available="${','.join(indexerApi().config['valid_languages'])}"></select>
+                                    <select name="indexer_lang" id="indexerLangSelect" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language="${show.lang}" data-available="${','.join(IndexerAPI().config['valid_languages'])}"></select>
                                     <div class="clear-left"><p>This only applies to episode filenames and the contents of metadata files.</p></div>
                                 </span>
                             </label>

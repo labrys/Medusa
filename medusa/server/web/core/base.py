@@ -340,7 +340,7 @@ class WebRoot(WebHandler):
         else:
             apikey = 'API Key not generated'
 
-        t = PageTemplate(rh=self, filename='apiBuilder.mako')
+        t = PageTemplate(rh=self, filename='api_builder.mako')
         return t.render(title='API Builder', header='API Builder', shows=shows, episodes=episodes, apikey=apikey,
                         commands=function_mapper)
 

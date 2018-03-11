@@ -908,7 +908,7 @@ class Application:
             app.HOME_LAYOUT = check_setting_str(app.CFG, 'GUI', 'home_layout', 'poster')
             app.HISTORY_LAYOUT = check_setting_str(app.CFG, 'GUI', 'history_layout', 'detailed')
             app.HISTORY_LIMIT = check_setting_str(app.CFG, 'GUI', 'history_limit', '100')
-            app.DISPLAY_SHOW_SPECIALS = bool(check_setting_int(app.CFG, 'GUI', 'display_show_specials', 1))
+            app.DISPLAY_SHOW_SPECIALS = bool(check_setting_int(app.CFG, 'GUI', 'display_series_specials', 1))
             app.COMING_EPS_LAYOUT = check_setting_str(app.CFG, 'GUI', 'coming_eps_layout', 'banner')
             app.COMING_EPS_DISPLAY_PAUSED = bool(check_setting_int(app.CFG, 'GUI', 'coming_eps_display_paused', 0))
             app.COMING_EPS_SORT = check_setting_str(app.CFG, 'GUI', 'coming_eps_sort', 'date')
@@ -1828,7 +1828,7 @@ class Application:
         new_config['GUI']['home_layout'] = app.HOME_LAYOUT
         new_config['GUI']['history_layout'] = app.HISTORY_LAYOUT
         new_config['GUI']['history_limit'] = app.HISTORY_LIMIT
-        new_config['GUI']['display_show_specials'] = int(app.DISPLAY_SHOW_SPECIALS)
+        new_config['GUI']['display_series_specials'] = int(app.DISPLAY_SHOW_SPECIALS)
         new_config['GUI']['coming_eps_layout'] = app.COMING_EPS_LAYOUT
         new_config['GUI']['coming_eps_display_paused'] = int(app.COMING_EPS_DISPLAY_PAUSED)
         new_config['GUI']['coming_eps_sort'] = app.COMING_EPS_SORT

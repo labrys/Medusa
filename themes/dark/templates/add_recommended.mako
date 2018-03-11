@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     import os.path
@@ -13,7 +21,7 @@
 
 <div id="addShowPortal">
     <br><br>
-    <a href="addShows/trendingShows/?traktList=anticipated" id="btnNewShow" class="btn btn-large">
+    <a href="add_series/trendingShows/?traktList=anticipated" id="btnNewShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addtrakt"></div></div>
         <div class="buttontext">
             <h3>Add From Trakt Lists</h3>
@@ -21,7 +29,7 @@
         </div>
     </a>
 
-    <a href="addShows/popularShows/" id="btnNewShow" class="btn btn-large">
+    <a href="add_series/popularShows/" id="btnNewShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addimdb"></div></div>
         <div class="buttontext">
             <h3>Add From IMDB's Popular Shows</h3>
@@ -29,7 +37,7 @@
         </div>
     </a>
 
-    <a href="addShows/popularAnime/" id="btnNewShow" class="btn btn-large">
+    <a href="add_series/popularAnime/" id="btnNewShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addanime"></div></div>
         <div class="buttontext">
             <h3>Add From Anidb's Hot Anime list</h3>

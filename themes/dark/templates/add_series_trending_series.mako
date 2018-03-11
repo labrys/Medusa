@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
@@ -37,15 +45,15 @@
                 <div class="field-pair">
                     <label class="clearfix" for="configure_show_options">
                         <ul>
-                            <li><a id="trakt-tab-1" href="${base_url + 'addShows/' + realpage + '/'}?traktList=${traktList}#tabs-1">Manage Directories</a></li>
-                            <li><a id="trakt-tab-2" href="${base_url + 'addShows/' + realpage + '/'}?traktList=${traktList}#tabs-2">Customize Options</a></li>
+                            <li><a id="trakt-tab-1" href="${base_url + 'add_series/' + realpage + '/'}?traktList=${traktList}#tabs-1">Manage Directories</a></li>
+                            <li><a id="trakt-tab-2" href="${base_url + 'add_series/' + realpage + '/'}?traktList=${traktList}#tabs-2">Customize Options</a></li>
                         </ul>
                         <div id="tabs-1" class="existingtabs">
-                            <%include file="/inc_rootDirs.mako"/>
+                            <%include file="/themes/dark/templates/inc_root_dirs.mako"/>
                             <br/>
                         </div>
                         <div id="tabs-2" class="existingtabs">
-                            <%include file="/inc_addShowOptions.mako"/>
+                            <%include file="/themes/dark/templates/inc_add_series_options.mako"/>
                         </div>
                     </label>
                 </div>

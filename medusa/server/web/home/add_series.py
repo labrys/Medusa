@@ -36,12 +36,12 @@ log.addHandler(logging.NullHandler())
 
 
 @route('/addShows(/?.*)')
-class HomeAddShows(Home):
+class HomeAddSeries(Home):
     def __init__(self, *args, **kwargs):
-        super(HomeAddShows, self).__init__(*args, **kwargs)
+        super(HomeAddSeries, self).__init__(*args, **kwargs)
 
     def index(self):
-        t = PageTemplate(rh=self, filename='addShows.mako')
+        t = PageTemplate(rh=self, filename='add_series.mako')
         return t.render(title='Add Shows', header='Add Shows', topmenu='home', controller='addShows', action='index')
 
     @staticmethod
@@ -119,7 +119,7 @@ class HomeAddShows(Home):
         return json.dumps({'results': final_results, 'langid': lang_id})
 
     def mass_add_table(self, root_dir=None):
-        t = PageTemplate(rh=self, filename='home_massAddTable.mako')
+        t = PageTemplate(rh=self, filename='home_mass_add_table.mako')
 
         if not root_dir:
             return 'No folders selected.'
@@ -196,7 +196,7 @@ class HomeAddShows(Home):
         """
         Display new show page which collects a tvdb id, folder, and extra options and posts them to add_new_series.
         """
-        t = PageTemplate(rh=self, filename='addShows_newShow.mako')
+        t = PageTemplate(rh=self, filename='add_series_new_series.mako')
         log.debug('Attempting to add show: {}'.format(show_to_add))
         indexer, show_dir, indexer_id, show_name = self.split_extra_series(show_to_add)
         use_provided_info = bool(indexer_id and indexer and show_name)
@@ -264,7 +264,7 @@ class HomeAddShows(Home):
         else:
             page_title = 'Trakt Most Anticipated Shows'
 
-        t = PageTemplate(rh=self, filename="addShows_trendingShows.mako")
+        t = PageTemplate(rh=self, filename="add_series_trending_series.mako")
         return t.render(title=page_title, header=page_title,
                         enable_anime_options=True, blacklist=[], whitelist=[], groups=[],
                         traktList=trakt_list, controller="addShows", action="trending_series",
@@ -273,7 +273,7 @@ class HomeAddShows(Home):
     def get_trending_series(self, trakt_list=None):
         """Display the new show page which collects a tvdb id, folder, and extra options and posts them to add_new_series."""
         e = None
-        t = PageTemplate(rh=self, filename="addShows_recommended.mako")
+        t = PageTemplate(rh=self, filename="add_series_recommended.mako")
         trakt_list = trakt_list
         if trakt_list is None:
             trakt_list = ""
@@ -316,7 +316,7 @@ class HomeAddShows(Home):
         """
         Fetches data from IMDB to show a list of popular shows.
         """
-        t = PageTemplate(rh=self, filename="addShows_recommended.mako")
+        t = PageTemplate(rh=self, filename="add_series_recommended.mako")
         e = None
 
         try:
@@ -327,13 +327,13 @@ class HomeAddShows(Home):
         return t.render(title="Popular Shows", header="Popular Shows",
                         recommended_shows=recommended_shows, exception=e, groups=[],
                         topmenu="home", enable_anime_options=True, blacklist=[], whitelist=[],
-                        controller="addShows", action="recommendedShows", realpage="popular_series")
+                        controller="addShows", action="recommended_series", realpage="popular_series")
 
     def popular_anime(self, list_type=REQUEST_HOT):
         """
         Fetches list recommeded shows from anidb.info.
         """
-        t = PageTemplate(rh=self, filename="addShows_recommended.mako")
+        t = PageTemplate(rh=self, filename="add_series_recommended.mako")
         e = None
 
         try:
@@ -345,7 +345,7 @@ class HomeAddShows(Home):
         return t.render(title="Popular Anime Shows", header="Popular Anime Shows",
                         recommended_shows=recommended_shows, exception=e, groups=[],
                         topmenu="home", enable_anime_options=True, blacklist=[], whitelist=[],
-                        controller="addShows", action="recommendedShows", realpage="popular_anime")
+                        controller="addShows", action="recommended_series", realpage="popular_anime")
 
     def add_series_to_blacklist(self, seriesid):
         # URL parameters
@@ -372,7 +372,7 @@ class HomeAddShows(Home):
         """
         Prints out the page to add existing shows from a root dir.
         """
-        t = PageTemplate(rh=self, filename='addShows_addExistingShow.mako')
+        t = PageTemplate(rh=self, filename='add_series_add_existing_series.mako')
         return t.render(enable_anime_options=True, blacklist=[], whitelist=[], groups=[],
                         title='Existing Show', header='Existing Show', topmenu='home',
                         controller='addShows', action='addExistingShow')

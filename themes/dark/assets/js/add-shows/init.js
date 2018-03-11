@@ -1,4 +1,4 @@
-MEDUSA.addShows.init = function() {
+MEDUSA.add_series.init = function() {
     $('#tabs').tabs({
         collapsible: true,
         selected: (MEDUSA.config.sortArticle ? -1 : 0)
@@ -98,7 +98,7 @@ MEDUSA.addShows.init = function() {
             $(this).html('Blacklisted').prop('disabled', true);
             $(this).parent().find('button[data-add-show]').prop('disabled', true);
 
-            $.get('addShows/add_series_to_blacklist?seriesid=' + $(this).attr('data-indexer-id'));
+            $.get('add_series/add_series_to_blacklist?seriesid=' + $(this).attr('data-indexer-id'));
             return false;
         });
     };
@@ -131,7 +131,7 @@ MEDUSA.addShows.init = function() {
             const anime = $('#anime').prop('checked');
             const configureShowOptions = $('#configure_show_options').prop('checked');
 
-            $.get('addShows/add_series_by_id?indexername=' + $(this).attr('data-indexer') + '&seriesid=' + $(this).attr('data-indexer-id'), {
+            $.get('add_series/add_series_by_id?indexername=' + $(this).attr('data-indexer') + '&seriesid=' + $(this).attr('data-indexer-id'), {
                 root_dir: $('#rootDirs option:selected').val(), // eslint-disable-line camelcase
                 configure_show_options: configureShowOptions, // eslint-disable-line camelcase
                 show_name: $(this).attr('data-show-name'), // eslint-disable-line camelcase

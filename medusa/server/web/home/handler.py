@@ -125,7 +125,7 @@ class Home(WebRoot):
         super(Home, self).__init__(*args, **kwargs)
 
     def _generic_message(self, subject, message):
-        t = PageTemplate(rh=self, filename='genericMessage.mako')
+        t = PageTemplate(rh=self, filename='generic_message.mako')
         return t.render(message=message, subject=subject, topmenu='home', title='')
 
     def index(self):
@@ -1339,7 +1339,7 @@ class Home(WebRoot):
         except Exception as msg:
             log.info("Couldn't read latest episode status. Error: {error}".format(error=msg))
 
-        # There is some logic for this in the partials/showheader.mako page.
+        # There is some logic for this in the partials/series_header.mako page.
         main_db_con = db.DBConnection()
         season_results = main_db_con.select(
             'SELECT DISTINCT season '

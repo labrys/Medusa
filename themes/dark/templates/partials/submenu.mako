@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading submenu')
+%>
 % if not (controller == "schedule") and not (action == "previewRename"):
 <!-- BEGIN SUBMENU -->
     <div id="sub-menu-container" class="row shadow">
@@ -23,7 +31,7 @@
                 % endif
             % endfor
             % if (action == "display_series"):
-                <%include file="/partials/showSelector.mako"/>
+                <%include file="/partials/series_selector.mako"/>
             % endif
         </div>
     </div> <!-- end of container -->

@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
@@ -17,17 +25,17 @@
         ## @TODO: Fix this stupid hack
         <script>document.write('<ul><li><a href="' + document.location.href + '#core-component-group1">Add Existing Show</a></li></ul>')</script>
         <div id="core-component-group1" class="tab-pane active component-group">
-            <form id="addShowForm" method="post" action="addShows/addExistingShows" accept-charset="utf-8">
+            <form id="addShowForm" method="post" action="add_series/addExistingShows" accept-charset="utf-8">
                 <div id="tabs">
                     <ul>
-                        <li><a href="${base_url}addShows/existingShows/#tabs-1">Manage Directories</a></li>
-                        <li><a href="${base_url}addShows/existingShows/#tabs-2">Customize Options</a></li>
+                        <li><a href="${base_url}add_series/existingShows/#tabs-1">Manage Directories</a></li>
+                        <li><a href="${base_url}add_series/existingShows/#tabs-2">Customize Options</a></li>
                     </ul>
                     <div id="tabs-1" class="existingtabs">
-                        <%include file="/inc_rootDirs.mako"/>
+                        <%include file="/themes/dark/templates/inc_root_dirs.mako"/>
                     </div>
                     <div id="tabs-2" class="existingtabs">
-                        <%include file="/inc_addShowOptions.mako"/>
+                        <%include file="/themes/dark/templates/inc_add_series_options.mako"/>
                     </div>
                 </div>
                 <br>

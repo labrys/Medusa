@@ -1,4 +1,12 @@
 <%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
+<%
     from medusa import app
     if app.ROOT_DIRS:
         backend_pieces = app.ROOT_DIRS

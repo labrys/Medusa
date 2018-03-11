@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import subtitles
@@ -69,7 +77,7 @@
                 <% series_id = str(cur_series[0]) + '-' + str(cur_series[1]) %>
                 <tr id="${series_id}">
                     <th style="width: 1%;"><input type="checkbox" class="allCheck" data-indexer-id="${cur_series[0]}" data-series-id="${cur_series[1]}" id="allCheck-${series_id}" name="${series_id}-all"checked="checked" /></th>
-                    <th colspan="3" style="text-align: left;"><a data-indexer-to-name="${cur_series[0]}" class="whitelink" href="home/displayShow?indexername=indexer-to-name&seriesid=${cur_series[1]}">
+                    <th colspan="3" style="text-align: left;"><a data-indexer-to-name="${cur_series[0]}" class="whitelink" href="home/display_series?indexername=indexer-to-name&seriesid=${cur_series[1]}">
                     ${show_names[(cur_series[0], cur_series[1])]}</a> (${ep_counts[(cur_series[0], cur_series[1])]}) <input type="button" class="pull-right get_more_eps btn" data-indexer-id="${cur_series[0]}" data-series-id="${cur_series[1]}" id="${series_id}" value="Expand" /></th>
                 </tr>
             % endfor
