@@ -3,7 +3,7 @@
 """TMDB module."""
 
 
-from __future__ import unicode_literals
+
 
 import logging
 from collections import OrderedDict
@@ -12,7 +12,6 @@ from datetime import datetime, timedelta
 import tmdbsimple as tmdb
 from dateutil import parser
 from requests.exceptions import RequestException
-from six import iteritems
 
 from medusa.app import TMDB_API_KEY
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
@@ -312,7 +311,7 @@ class Tmdb(BaseIndexer):
 
         images = self.tmdb.TV(sid).images(params=params)
         bid = images['id']
-        for image_type, images in iteritems({'poster': images['posters'], 'fanart': images['backdrops']}):
+        for image_type, images in {'poster': images['posters'], 'fanart': images['backdrops']}.items():
             try:
                 if image_type not in _images:
                     _images[image_type] = {}

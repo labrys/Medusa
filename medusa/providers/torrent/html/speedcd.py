@@ -2,7 +2,7 @@
 
 """Provider code for Speed.cd."""
 
-from __future__ import unicode_literals
+
 
 import logging
 import traceback

@@ -2,7 +2,7 @@
 
 """Provider code for RSS Torrents."""
 
-from __future__ import unicode_literals
+
 
 import io
 import logging

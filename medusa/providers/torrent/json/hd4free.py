@@ -2,7 +2,7 @@
 
 """Provider code for HD4Free."""
 
-from __future__ import unicode_literals
+
 
 import logging
 import traceback

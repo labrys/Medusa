@@ -2,7 +2,7 @@
 
 """Scene exceptions module."""
 
-from __future__ import unicode_literals
+
 
 import logging
 import threading
@@ -10,7 +10,6 @@ import time
 from collections import defaultdict
 
 import adba
-from six import iteritems
 
 from medusa import app, db, helpers
 from medusa.indexers.api import indexerApi
@@ -255,7 +254,7 @@ def retrieve_exceptions(force=False, exception_type=None):
             existing_exceptions = [x['show_name'] for x in sql_ex]
 
             for exception_dict in combined_exceptions[indexer][indexer_id]:
-                for scene_exception, season in iteritems(exception_dict):
+                for scene_exception, season in exception_dict.items():
                     if scene_exception not in existing_exceptions:
                         queries.append([
                             'INSERT OR IGNORE INTO scene_exceptions'
@@ -375,7 +374,7 @@ def _get_xem_exceptions(force):
                 )
                 continue
 
-            for indexer_id, exceptions in iteritems(jdata['data']):
+            for indexer_id, exceptions in jdata['data'].items():
                 try:
                     xem_exceptions[indexer][indexer_id] = exceptions
                 except Exception as error:

@@ -2,7 +2,7 @@
 
 """Base handler for Config pages."""
 
-from __future__ import unicode_literals
+
 
 import os
 

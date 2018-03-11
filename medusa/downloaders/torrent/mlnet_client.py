@@ -2,7 +2,7 @@
 
 """MLDonkey Client."""
 
-from __future__ import unicode_literals
+
 
 from medusa.downloaders.torrent.generic import GenericClient
 

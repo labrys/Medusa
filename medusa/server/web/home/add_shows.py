@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import datetime
 import json
@@ -20,6 +20,7 @@ from medusa.black_and_white_list import short_group_names
 from medusa.common import Quality
 from medusa.helper.common import sanitize_filename, try_int
 from medusa.helpers import get_showname_from_indexer
+from medusa.helpers.utils import generate
 from medusa.indexers.api import indexerApi
 from medusa.indexers.config import INDEXER_TVDB
 from medusa.indexers.exceptions import IndexerException, IndexerUnavailable
@@ -29,7 +30,6 @@ from medusa.show.recommendations.anidb import AnidbPopular
 from medusa.show.recommendations.imdb import ImdbPopular
 from medusa.show.recommendations.trakt import TraktPopular
 from medusa.show.show import Show
-from medusa.helpers.utils import generate
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())

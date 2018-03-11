@@ -6,8 +6,6 @@ import os.path
 import sys
 import warnings
 
-from six import iteritems
-
 from medusa import common, db, helpers, subtitles
 from medusa.helper.common import dateTimeFormat, episode_num
 from medusa.indexers.config import STATUS_MAP
@@ -195,7 +193,7 @@ class MainSanityCheck(db.DBSanityCheck):
                                    [common.UNAIRED, cur_unaired["episode_id"]])
 
     def fix_indexer_show_statues(self):
-        for old_status, new_status in iteritems(STATUS_MAP):
+        for old_status, new_status in STATUS_MAP.items():
             self.connection.action("UPDATE tv_shows SET status = ? WHERE LOWER(status) = ?", [new_status, old_status])
 
     def fix_episode_statuses(self):

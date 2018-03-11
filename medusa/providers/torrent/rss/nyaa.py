@@ -2,7 +2,7 @@
 
 """Provider code for Nyaa."""
 
-from __future__ import unicode_literals
+
 
 import logging
 

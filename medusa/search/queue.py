@@ -2,7 +2,7 @@
 
 """Module with different types of Queue Items for searching and snatching."""
 
-from __future__ import unicode_literals
+
 
 import logging
 import threading

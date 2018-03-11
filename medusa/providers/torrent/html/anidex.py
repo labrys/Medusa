@@ -2,7 +2,7 @@
 
 """Provider code for AniDex."""
 
-from __future__ import unicode_literals
+
 
 import logging
 import traceback

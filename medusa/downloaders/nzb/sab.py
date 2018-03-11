@@ -8,7 +8,7 @@ https://sabnzbd.org/wiki/advanced/api
 https://github.com/sabnzbd/sabnzbd
 """
 
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

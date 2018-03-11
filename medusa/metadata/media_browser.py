@@ -5,8 +5,6 @@ import logging
 import os
 import re
 
-from six import iteritems
-
 from medusa import app, helpers
 from medusa.helper.common import dateFormat, episode_num, replace_extension
 from medusa.indexers.api import indexerApi
@@ -498,7 +496,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
                 persons_dict[u'Writer'] += [x.strip() for x in my_ep[u'writer'].split(u'|') if x.strip()]
 
         # fill in Persons section with collected directors, guest starts and writers
-        for person_type, names in iteritems(persons_dict):
+        for person_type, names in persons_dict.items():
             # remove doubles
             names = list(set(names))
             for cur_name in names:

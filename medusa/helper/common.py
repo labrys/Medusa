@@ -1,7 +1,7 @@
 # coding=utf-8
 """Module with common helper utils."""
 
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

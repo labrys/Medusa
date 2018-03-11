@@ -1,7 +1,7 @@
 # coding=utf-8
 
 """Browser module."""
-from __future__ import unicode_literals
+
 
 import logging
 import os

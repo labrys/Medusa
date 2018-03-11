@@ -5,7 +5,7 @@ iCalendar (iCal) - Standard RFC 5545 <http://tools.ietf.org/html/rfc5546>
 Works with iCloud, Google Calendar and Outlook.
 """
 
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

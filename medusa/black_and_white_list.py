@@ -1,8 +1,6 @@
 # coding=utf-8
 """Black and White List module."""
 
-from __future__ import unicode_literals
-
 import logging
 
 from adba.aniDBerrors import AniDBCommandTimeoutError

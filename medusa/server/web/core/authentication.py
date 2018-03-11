@@ -5,7 +5,7 @@ Authentication Handlers:
 Login, Logout and API key
 """
 
-from __future__ import unicode_literals
+
 
 import logging
 import traceback

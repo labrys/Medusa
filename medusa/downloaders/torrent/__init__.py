@@ -17,7 +17,7 @@
 # along with Medusa. If not, see <http://www.gnu.org/licenses/>.
 """Clients module."""
 
-from __future__ import unicode_literals
+
 
 
 _clients = [

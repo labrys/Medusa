@@ -8,7 +8,7 @@ https://nzbget.net/api/
 https://github.com/nzbget/nzbget
 """
 
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

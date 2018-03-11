@@ -2,7 +2,7 @@
 
 """Provider code for SDBits."""
 
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

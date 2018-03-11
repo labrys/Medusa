@@ -2,7 +2,7 @@
 
 """Style Adapters for Python logging."""
 
-from __future__ import unicode_literals
+
 
 import collections
 import functools

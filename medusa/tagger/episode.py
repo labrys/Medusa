@@ -2,7 +2,7 @@
 
 """Episode tagger to extract information from episodes."""
 
-from __future__ import unicode_literals
+
 
 import re
 

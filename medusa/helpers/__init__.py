@@ -2,8 +2,6 @@
 
 """Various helper methods."""
 
-from urllib.parse import splittype
-from contextlib import suppress
 import base64
 import ctypes
 import datetime
@@ -27,7 +25,9 @@ import uuid
 import warnings
 import xml.etree.ElementTree as ET
 import zipfile
+from contextlib import suppress
 from itertools import cycle
+from urllib.parse import splittype
 
 import adba
 import certifi

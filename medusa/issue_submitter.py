@@ -1,6 +1,6 @@
 # coding=utf-8
 """GitHub issue submitter."""
-from __future__ import unicode_literals
+
 
 import difflib
 import locale

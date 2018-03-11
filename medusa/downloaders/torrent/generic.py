@@ -1,7 +1,7 @@
 # coding=utf-8
 """Base module for all torrent downloaders."""
 
-from __future__ import unicode_literals
+
 
 import logging
 import re

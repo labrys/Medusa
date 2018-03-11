@@ -2,7 +2,7 @@
 
 """Series naming helpers for selecting results."""
 
-from __future__ import unicode_literals
+
 
 import fnmatch
 import logging

@@ -7,19 +7,15 @@ import platform
 import re
 import uuid
 from collections import namedtuple
+from functools import reduce
 from os import path
 
 import knowit
 from fake_useragent import UserAgent, settings as ua_settings
-from six import PY3
-from six.moves import reduce
 
 from medusa.numdict import NumDict
 from medusa.recompiled import tags
 from medusa.search import PROPER_SEARCH
-
-if PY3:
-    long = int
 
 # If some provider has an issue with functionality of Medusa, other than user
 # agents, it's best to come talk to us rather than block.  It is no different
@@ -478,7 +474,7 @@ class Quality:
         :param status: to split
         :returns: a namedtuple containing (status, quality)
         """
-        status = long(status)
+        status = int(status)
         if status == UNKNOWN:
             return Quality.composite_status_quality(UNKNOWN, Quality.UNKNOWN)
 

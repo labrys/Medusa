@@ -4,10 +4,9 @@ import logging
 import re
 
 from dateutil import tz
-from six import iteritems
 
 from medusa import db
-from medusa.app import BASE_PYMEDUSA_URL, GITHUB_IO_URL
+from medusa.app import GITHUB_IO_URL
 from medusa.helper.common import try_int
 from medusa.session.core import MedusaSafeSession
 
@@ -61,7 +60,7 @@ def update_network_dict():
     network_list = dict(cache_db_con.select('SELECT * FROM network_timezones;'))
 
     queries = []
-    for network, timezone in iteritems(remote_networks):
+    for network, timezone in remote_networks.items():
         existing = network in network_list
         if not existing:
             queries.append(['INSERT OR IGNORE INTO network_timezones VALUES (?,?);', [network, timezone]])

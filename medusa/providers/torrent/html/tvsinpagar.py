@@ -2,7 +2,7 @@
 
 """Provider code for TVsinpagar."""
 
-from __future__ import unicode_literals
+
 
 import logging
 import re

@@ -1,6 +1,6 @@
 # coding=utf-8
 """Handle the requests fro /token."""
-from __future__ import unicode_literals
+
 
 from tornado.web import authenticated
 

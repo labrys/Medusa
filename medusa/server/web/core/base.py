@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import datetime
 import json
@@ -9,8 +9,8 @@ import os
 import re
 import time
 import traceback
-from concurrent.futures import ThreadPoolExecutor
 from collections import Iterable
+from concurrent.futures import ThreadPoolExecutor
 
 from mako.exceptions import RichTraceback
 from mako.lookup import TemplateLookup

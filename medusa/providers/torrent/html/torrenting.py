@@ -2,7 +2,7 @@
 
 """Provider code for Torrenting."""
 
-from __future__ import unicode_literals
+
 
 import logging
 

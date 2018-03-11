@@ -2,44 +2,11 @@
 
 """Initialize all torrent providers."""
 
-from medusa.providers.torrent.html import (
-    abnormal,
-    alpharatio,
-    anidex,
-    animebytes,
-    animetorrents,
-    archetorrent,
-    bithdtv,
-    elitetorrent,
-    elitetracker,
-    gftracker,
-    hdspace,
-    hdtorrents,
-    hebits,
-    horriblesubs,
-    iptorrents,
-    limetorrents,
-    morethantv,
-    nebulance,
-    tvsinpagar,
-    pretome,
-    privatehd,
-    scenetime,
-    sdbits,
-    shanaproject,
-    speedcd,
-    thepiratebay,
-    tntvillage,
-    tokyotoshokan,
-    torrent9,
-    torrentbytes,
-    torrentday,
-    torrenting,
-    torrentleech,
-    tvchaosuk,
-    yggtorrent,
-    zooqle,
-)
+from medusa.providers.torrent.html import abnormal, alpharatio, anidex, animebytes, animetorrents, archetorrent, \
+    bithdtv, elitetorrent, elitetracker, gftracker, hdspace, hdtorrents, hebits, horriblesubs, iptorrents, limetorrents, \
+    morethantv, nebulance, pretome, privatehd, scenetime, sdbits, shanaproject, speedcd, thepiratebay, tntvillage, \
+    tokyotoshokan, torrent9, torrentbytes, torrentday, torrenting, torrentleech, tvchaosuk, tvsinpagar, yggtorrent, \
+    zooqle
 from medusa.providers.torrent.json import (
     bitcannon,
     btn,

@@ -7,7 +7,6 @@ import re
 
 import tmdbsimple as tmdb
 from requests.exceptions import RequestException
-from six import iterkeys
 
 from medusa import app, exception_handler, helpers
 from medusa.helper.common import replace_extension
@@ -329,7 +328,7 @@ class GenericMetadata:
     def create_season_posters(self, show_obj):
         if self.season_posters and show_obj:
             result = []
-            for season in iterkeys(show_obj.episodes):
+            for season in show_obj.episodes.keys():
                 if not self._has_season_poster(show_obj, season):
                     log.debug(
                         u'Metadata provider {name} creating season posters for {series}',
@@ -346,7 +345,7 @@ class GenericMetadata:
                 u'Metadata provider {name} creating season banners for {series}',
                 {u'name': self.name, u'series': show_obj.name}
             )
-            for season in iterkeys(show_obj.episodes):  # @UnusedVariable
+            for season in show_obj.episodes.keys():  # @UnusedVariable
                 if not self._has_season_banner(show_obj, season):
                     result += [self.save_season_banners(show_obj, season)]
             return all(result)

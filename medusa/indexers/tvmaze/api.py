@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 from collections import OrderedDict
@@ -11,7 +11,6 @@ from pytvmaze.exceptions import (
     BaseError, CastNotFound, IDNotFound,
     ShowIndexError, ShowNotFound, UpdateNotFound,
 )
-from six import iteritems
 
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
 from medusa.indexers.exceptions import (
@@ -100,7 +99,7 @@ class TVmaze(BaseIndexer):
         for item in tvmaze_response:
             return_dict = {}
             try:
-                for key, value in iteritems(item.__dict__):
+                for key, value in item.__dict__.items():
                     if value is None or value == []:
                         continue
 

@@ -2,14 +2,11 @@
 
 """Parser module which contains NameParser class."""
 
-from __future__ import unicode_literals
-
 import logging
 import time
 from collections import OrderedDict
 
 import guessit
-from six import iteritems
 
 from medusa import (
     common,
@@ -509,7 +506,7 @@ class NameParserCache:
         """Remove cache item given indexer and indexer_id."""
         if not indexer or not indexer_id:
             return
-        to_remove = (cached_name for cached_name, cached_parsed_result in iteritems(self.cache) if
+        to_remove = (cached_name for cached_name, cached_parsed_result in self.cache.items() if
                      cached_parsed_result.series.indexer == indexer and cached_parsed_result.series.indexerid == indexer_id)
         for item in to_remove:
             self.cache.popitem(item)

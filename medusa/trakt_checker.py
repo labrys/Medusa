@@ -1,7 +1,7 @@
 # coding=utf-8
 
 """Trakt checker module."""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
