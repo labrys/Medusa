@@ -1,20 +1,20 @@
 MEDUSA.addShows.trendingShows = function() {
     // Cleanest way of not showing the black/whitelist, when there isn't a show to show it for
     $.updateBlackWhiteList(undefined);
-    $('#trendingShows').loadRemoteShows(
-        'addShows/getTrendingShows/?traktList=' + $('#traktList').val(),
+    $('#trending_series').loadRemoteShows(
+        'addShows/get_trending_series/?traktList=' + $('#traktList').val(),
         'Loading trending shows...',
         'Trakt timed out, refresh page to try again'
     );
 
     $('#traktlistselection').on('change', e => {
         const traktList = e.target.value;
-        window.history.replaceState({}, document.title, 'addShows/trendingShows/?traktList=' + traktList);
+        window.history.replaceState({}, document.title, 'addShows/trending_series/?traktList=' + traktList);
         // Update the jquery tab hrefs, when switching trakt list.
         $('#trakt-tab-1').attr('href', document.location.href.split('=')[0] + '=' + e.target.value);
         $('#trakt-tab-2').attr('href', document.location.href.split('=')[0] + '=' + e.target.value);
-        $('#trendingShows').loadRemoteShows(
-            'addShows/getTrendingShows/?traktList=' + traktList,
+        $('#trending_series').loadRemoteShows(
+            'addShows/get_trending_series/?traktList=' + traktList,
             'Loading trending shows...',
             'Trakt timed out, refresh page to try again'
         );

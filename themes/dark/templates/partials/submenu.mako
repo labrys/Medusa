@@ -22,7 +22,7 @@
                       % endif
                 % endif
             % endfor
-            % if (action == "displayShow"):
+            % if (action == "display_series"):
                 <%include file="/partials/showSelector.mako"/>
             % endif
         </div>

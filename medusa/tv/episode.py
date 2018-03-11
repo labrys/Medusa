@@ -50,7 +50,7 @@ from medusa.helper.exceptions import (
     NoNFOException,
 )
 from medusa.helper.mappings import NonEmptyDict
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.config import indexerConfig
 from medusa.indexers.exceptions import (
     IndexerEpisodeNotFound,
@@ -684,7 +684,7 @@ class Episode(TV):
             log.warning(
                 '{id}: {indexer} threw up an error: {error_msg}', {
                     'id': self.series.series_id,
-                    'indexer': indexerApi(self.indexer).name,
+                    'indexer': IndexerAPI(self.indexer).name,
                     'error_msg': error,
                 }
             )
@@ -720,7 +720,7 @@ class Episode(TV):
             log.warning(
                 '{id}: {indexer} threw up an error: {error_msg}', {
                     'id': self.series.series_id,
-                    'indexer': indexerApi(self.indexer).name,
+                    'indexer': IndexerAPI(self.indexer).name,
                     'error_msg': error,
                 }
             )
@@ -730,7 +730,7 @@ class Episode(TV):
                 log.debug(
                     '{id}: {indexer} timed out but we have enough info from other sources, allowing the error', {
                         'id': self.series.series_id,
-                        'indexer': indexerApi(self.indexer).name,
+                        'indexer': IndexerAPI(self.indexer).name,
                     }
                 )
                 return
@@ -738,7 +738,7 @@ class Episode(TV):
                 log.warning(
                     '{id}: {indexer} timed out, unable to create the episode', {
                         'id': self.series.series_id,
-                        'indexer': indexerApi(self.indexer).name,
+                        'indexer': IndexerAPI(self.indexer).name,
                     }
                 )
                 return False
@@ -746,7 +746,7 @@ class Episode(TV):
             log.debug(
                 '{id}: Unable to find the episode on {indexer}. Deleting it from db', {
                     'id': self.series.series_id,
-                    'indexer': indexerApi(self.indexer).name,
+                    'indexer': IndexerAPI(self.indexer).name,
                 }
             )
             # if I'm no longer on the Indexers but I once was then delete myself from the DB
@@ -760,7 +760,7 @@ class Episode(TV):
                     'id': self.series.series_id,
                     'series': self.series.name,
                     'ep': episode_num(season, episode),
-                    'indexer': indexerApi(self.indexer).name,
+                    'indexer': IndexerAPI(self.indexer).name,
                 }
             )
             setattr(my_ep, 'episodename', '')
@@ -771,7 +771,7 @@ class Episode(TV):
                     'id': self.series.series_id,
                     'series': self.series.name,
                     'ep': episode_num(season, episode),
-                    'indexer': indexerApi(self.indexer).name,
+                    'indexer': IndexerAPI(self.indexer).name,
                 }
             )
         else:
@@ -815,7 +815,7 @@ class Episode(TV):
                 '{id}: Malformed air date of {aired} retrieved from {indexer} for {series} {ep}', {
                     'id': self.series.series_id,
                     'aired': firstaired,
-                    'indexer': indexerApi(self.indexer).name,
+                    'indexer': IndexerAPI(self.indexer).name,
                     'series': self.series.name,
                     'ep': episode_num(season, episode),
                 }
@@ -833,7 +833,7 @@ class Episode(TV):
                 '{id}: Failed to retrieve ID from {indexer}', {
                     'id': self.series.series_id,
                     'aired': firstaired,
-                    'indexer': indexerApi(self.indexer).name,
+                    'indexer': IndexerAPI(self.indexer).name,
                 }
             )
             if self.indexerid != -1:

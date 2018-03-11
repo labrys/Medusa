@@ -7,7 +7,7 @@ from medusa.helper.common import replace_extension
 from medusa.metadata import kodi_12plus
 
 
-class KODIMetadata(kodi_12plus.KODI_12PlusMetadata):
+class KODIMetadata(kodi_12plus.KODI12PlusMetadata):
     """
     Metadata generation class for KODI (legacy).
 

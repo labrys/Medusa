@@ -299,7 +299,7 @@ class Manage(Home, WebRoot):
 
         return self.redirect('/manage/subtitle_missed/')
 
-    def subtitleMissedPP(self):
+    def subtitle_missed_pp(self):
         t = PageTemplate(rh=self, filename='manage_subtitleMissedPP.mako')
         app.RELEASES_IN_PP = []
         for root, _, files in os.walk(app.TV_DOWNLOAD_DIR, topdown=False):
@@ -355,18 +355,18 @@ class Manage(Home, WebRoot):
 
         return t.render(releases_in_pp=app.RELEASES_IN_PP, title='Missing Subtitles in Post-Process folder',
                         header='Missing Subtitles in Post Process folder', topmenu='manage',
-                        controller='manage', action='subtitleMissedPP')
+                        controller='manage', action='subtitle_missed_pp')
 
-    def backlogShow(self, indexername, seriesid):
+    def backlog_show(self, indexername, seriesid):
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
 
         if series_obj:
             app.backlog_search_scheduler.action.search_backlog([series_obj])
 
-        return self.redirect('/manage/backlogOverview/')
+        return self.redirect('/manage/backlog_overview/')
 
-    def backlogOverview(self):
+    def backlog_overview(self):
         t = PageTemplate(rh=self, filename='manage_backlogOverview.mako')
 
         show_counts = {}
@@ -446,16 +446,16 @@ class Manage(Home, WebRoot):
         return t.render(
             showCounts=show_counts, showCats=show_cats,
             showSQLResults=show_sql_results, controller='manage',
-            action='backlogOverview', title='Backlog Overview',
+            action='backlog_overview', title='Backlog Overview',
             header='Backlog Overview', topmenu='manage')
 
-    def massEdit(self, toEdit=None):
+    def mass_edit(self, to_edit=None):
         t = PageTemplate(rh=self, filename='manage_massEdit.mako')
 
-        if not toEdit:
+        if not to_edit:
             return self.redirect('/manage/')
 
-        series_slugs = toEdit.split('|')
+        series_slugs = to_edit.split('|')
         show_list = []
         show_names = []
         for slug in series_slugs:
@@ -579,15 +579,15 @@ class Manage(Home, WebRoot):
         dvd_order_value = last_dvd_order if dvd_order_all_same else None
         root_dir_list = root_dir_list
 
-        return t.render(showList=toEdit, showNames=show_names, default_ep_status_value=default_ep_status_value, dvd_order_value=dvd_order_value,
+        return t.render(showList=to_edit, showNames=show_names, default_ep_status_value=default_ep_status_value, dvd_order_value=dvd_order_value,
                         paused_value=paused_value, anime_value=anime_value, flatten_folders_value=flatten_folders_value,
                         quality_value=quality_value, subtitles_value=subtitles_value, scene_value=scene_value, sports_value=sports_value,
                         air_by_date_value=air_by_date_value, root_dir_list=root_dir_list, title='Mass Edit', header='Mass Edit', topmenu='manage')
 
-    def massEditSubmit(self, paused=None, default_ep_status=None, dvd_order=None,
-                       anime=None, sports=None, scene=None, flatten_folders=None, quality_preset=None,
-                       subtitles=None, air_by_date=None, allowed_qualities=None, preferred_qualities=None, toEdit=None, *args,
-                       **kwargs):
+    def mass_edit_submit(self, paused=None, default_ep_status=None, dvd_order=None,
+                         anime=None, sports=None, scene=None, flatten_folders=None, quality_preset=None,
+                         subtitles=None, air_by_date=None, allowed_qualities=None, preferred_qualities=None, to_edit=None, *args,
+                         **kwargs):
         allowed_qualities = allowed_qualities or []
         preferred_qualities = preferred_qualities or []
 
@@ -599,7 +599,7 @@ class Manage(Home, WebRoot):
             end_dir = kwargs['new_root_dir_{index}'.format(index=which_index)]
             dir_map[kwargs[cur_arg]] = end_dir
 
-        series_slugs = toEdit.split('|') if toEdit else []
+        series_slugs = to_edit.split('|') if to_edit else []
         errors = 0
         for series_slug in series_slugs:
             identifier = SeriesIdentifier.from_slug(series_slug)
@@ -677,14 +677,14 @@ class Manage(Home, WebRoot):
 
             exceptions_list = []
 
-            errors += self.editShow(identifier.indexer.slug, identifier.id, new_show_dir, allowed_qualities,
-                                    preferred_qualities, exceptions_list,
-                                    defaultEpStatus=new_default_ep_status,
-                                    flatten_folders=new_flatten_folders,
-                                    paused=new_paused, sports=new_sports, dvd_order=new_dvd_order,
-                                    subtitles=new_subtitles, anime=new_anime,
-                                    scene=new_scene, air_by_date=new_air_by_date,
-                                    directCall=True)
+            errors += self.edit_series(identifier.indexer.slug, identifier.id, new_show_dir, allowed_qualities,
+                                       preferred_qualities, exceptions_list,
+                                       default_ep_status=new_default_ep_status,
+                                       flatten_folders=new_flatten_folders,
+                                       paused=new_paused, sports=new_sports, dvd_order=new_dvd_order,
+                                       subtitles=new_subtitles, anime=new_anime,
+                                       scene=new_scene, air_by_date=new_air_by_date,
+                                       direct_call=True)
 
         if errors:
             ui.notifications.error('Errors', '{num} error{s} while saving changes. Please check logs'.format
@@ -692,16 +692,16 @@ class Manage(Home, WebRoot):
 
         return self.redirect('/manage/')
 
-    def massUpdate(self, toUpdate=None, toRefresh=None, toRename=None, toDelete=None, toRemove=None, toMetadata=None,
-                   toSubtitle=None, toImageUpdate=None):
-        to_update = toUpdate.split('|') if toUpdate else []
-        to_refresh = toRefresh.split('|') if toRefresh else []
-        to_rename = toRename.split('|') if toRename else []
-        to_subtitle = toSubtitle.split('|') if toSubtitle else []
-        to_delete = toDelete.split('|') if toDelete else []
-        to_remove = toRemove.split('|') if toRemove else []
-        to_metadata = toMetadata.split('|') if toMetadata else []
-        to_image_update = toImageUpdate.split('|') if toImageUpdate else []
+    def mass_update(self, to_update=None, to_refresh=None, to_rename=None, to_delete=None, to_remove=None, to_metadata=None,
+                    to_subtitle=None, to_image_update=None):
+        to_update = to_update.split('|') if to_update else []
+        to_refresh = to_refresh.split('|') if to_refresh else []
+        to_rename = to_rename.split('|') if to_rename else []
+        to_subtitle = to_subtitle.split('|') if to_subtitle else []
+        to_delete = to_delete.split('|') if to_delete else []
+        to_remove = to_remove.split('|') if to_remove else []
+        to_metadata = to_metadata.split('|') if to_metadata else []
+        to_image_update = to_image_update.split('|') if to_image_update else []
 
         errors = []
         refreshes = []
@@ -768,7 +768,7 @@ class Manage(Home, WebRoot):
 
         return self.redirect('/manage/')
 
-    def manageTorrents(self):
+    def manage_torrents(self):
         if re.search('localhost', app.TORRENT_HOST):
 
             if app.LOCALHOST_IP == '':
@@ -788,7 +788,7 @@ class Manage(Home, WebRoot):
 
         return self.redirect(webui_url)
 
-    def failedDownloads(self, limit=100, toRemove=None):
+    def failed_downloads(self, limit=100, to_remove=None):
         failed_db_con = db.DBConnection('failed.db')
 
         if int(limit):
@@ -805,7 +805,7 @@ class Manage(Home, WebRoot):
             )
         sql_results = sql_results[::-1]
 
-        to_remove = toRemove.split('|') if toRemove is not None else []
+        to_remove = to_remove.split('|') if to_remove is not None else []
         for release in to_remove:
             failed_db_con.action(
                 'DELETE FROM failed '
@@ -814,11 +814,11 @@ class Manage(Home, WebRoot):
             )
 
         if to_remove:
-            return self.redirect('/manage/failedDownloads/')
+            return self.redirect('/manage/failed_downloads/')
 
         t = PageTemplate(rh=self, filename='manage_failedDownloads.mako')
 
         return t.render(limit=limit, failedResults=sql_results,
                         title='Failed Downloads', header='Failed Downloads',
                         topmenu='manage', controller='manage',
-                        action='failedDownloads')
+                        action='failed_downloads')

@@ -44,23 +44,23 @@ class ConfigGeneral(Config):
         return helpers.generate_api_key()
 
     @staticmethod
-    def save_root_dirs(rootDirString=None):
-        app.ROOT_DIRS = rootDirString.split('|')
+    def save_root_dirs(root_dir_string=None):
+        app.ROOT_DIRS = root_dir_string.split('|')
 
     @staticmethod
-    def save_add_show_defaults(defaultStatus, allowed_qualities, preferred_qualities, defaultFlattenFolders, subtitles=False,
-                               anime=False, scene=False, defaultStatusAfter=WANTED):
+    def save_add_show_defaults(default_status, allowed_qualities, preferred_qualities, default_flatten_folders, subtitles=False,
+                               anime=False, scene=False, default_status_after=WANTED):
 
         allowed_qualities = [_.strip() for _ in allowed_qualities.split(',')] if allowed_qualities else []
         preferred_qualities = [_.strip() for _ in preferred_qualities.split(',')] if preferred_qualities else []
 
         new_quality = Quality.combine_qualities([int(quality) for quality in allowed_qualities], [int(quality) for quality in preferred_qualities])
 
-        app.STATUS_DEFAULT = int(defaultStatus)
-        app.STATUS_DEFAULT_AFTER = int(defaultStatusAfter)
+        app.STATUS_DEFAULT = int(default_status)
+        app.STATUS_DEFAULT_AFTER = int(default_status_after)
         app.QUALITY_DEFAULT = int(new_quality)
 
-        app.FLATTEN_FOLDERS_DEFAULT = config.checkbox_to_value(defaultFlattenFolders)
+        app.FLATTEN_FOLDERS_DEFAULT = config.checkbox_to_value(default_flatten_folders)
         app.SUBTITLES_DEFAULT = config.checkbox_to_value(subtitles)
 
         app.ANIME_DEFAULT = config.checkbox_to_value(anime)
@@ -70,14 +70,14 @@ class ConfigGeneral(Config):
 
     def save_general(self, log_dir=None, log_nr=5, log_size=1, web_port=None, notify_on_login=None, web_log=None, encryption_version=None, web_ipv6=None,
                      trash_remove_show=None, trash_rotate_logs=None, update_frequency=None, skip_removed_files=None,
-                     indexerDefaultLang='en', ep_default_deleted_status=None, launch_browser=None, showupdate_hour=3, web_username=None,
+                     indexer_default_lang='en', ep_default_deleted_status=None, launch_browser=None, showupdate_hour=3, web_username=None,
                      api_key=None, indexer_default=None, timezone_display=None, cpu_preset='NORMAL', layout_wide=None,
                      web_password=None, version_notify=None, enable_https=None, https_cert=None, https_key=None,
                      handle_reverse_proxy=None, sort_article=None, auto_update=None, notify_on_update=None,
                      proxy_setting=None, proxy_indexers=None, anon_redirect=None, git_path=None, git_remote=None,
                      calendar_unprotected=None, calendar_icons=None, debug=None, ssl_verify=None, no_restart=None, coming_eps_missed_range=None,
                      fuzzy_dating=None, trim_zero=None, date_preset=None, date_preset_na=None, time_preset=None,
-                     indexer_timeout=None, download_url=None, rootDir=None, theme_name=None, default_page=None,
+                     indexer_timeout=None, download_url=None, root_dir=None, theme_name=None, default_page=None,
                      git_reset=None, git_reset_branches=None, git_auth_type=0, git_username=None, git_password=None, git_token=None,
                      display_all_seasons=None, subliminal_log=None, privacy_level='normal', fanart_background=None, fanart_background_opacity=None,
                      dbdebug=None, fallback_plex_enable=1, fallback_plex_notifications=1, fallback_plex_timeout=3, web_root=None):
@@ -86,7 +86,7 @@ class ConfigGeneral(Config):
 
         # Misc
         app.DOWNLOAD_URL = download_url
-        app.INDEXER_DEFAULT_LANGUAGE = indexerDefaultLang
+        app.INDEXER_DEFAULT_LANGUAGE = indexer_default_lang
         app.EP_DEFAULT_DELETED_STATUS = int(ep_default_deleted_status)
         app.SKIP_REMOVED_FILES = config.checkbox_to_value(skip_removed_files)
         app.LAUNCH_BROWSER = config.checkbox_to_value(launch_browser)

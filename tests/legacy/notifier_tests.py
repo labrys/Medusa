@@ -93,7 +93,7 @@ class NotifierTests(test.AppTestDBCase):
 
         for show in self.shows:
             showid = self._get_showid_by_showname(show.name)
-            Home.saveShowNotifyList(indexername='tvdb', seriesid=showid, emails=test_emails)
+            Home.save_show_notify_list(indexername='tvdb', seriesid=showid, emails=test_emails)
 
         # Now, iterate through all shows using the email list generation routines that are used in the notifier proper
         shows = self.legacy_shows + self.shows
@@ -119,7 +119,7 @@ class NotifierTests(test.AppTestDBCase):
 
         for show in self.shows:
             showid = self._get_showid_by_showname(show.name)
-            Home.saveShowNotifyList(indexername='tvdb', seriesid=showid, prowlAPIs=test_prowl_apis)
+            Home.save_show_notify_list(indexername='tvdb', seriesid=showid, prowl_apis=test_prowl_apis)
 
         # Now, iterate through all shows using the Prowl API generation routines that are used in the notifier proper
         for show in self.shows:

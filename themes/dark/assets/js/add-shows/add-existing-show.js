@@ -30,7 +30,7 @@ MEDUSA.addShows.addExistingShow = function() {
             return false;
         }
 
-        window.location.href = $('base').attr('href') + 'addShows/addExistingShows?promptForSettings=' + ($('#promptForSettings').prop('checked') ? 'on' : 'off') + '&shows_to_add=' + dirArr.join('&shows_to_add=');
+        window.location.href = $('base').attr('href') + 'addShows/add_existing_series?promptForSettings=' + ($('#promptForSettings').prop('checked') ? 'on' : 'off') + '&shows_to_add=' + dirArr.join('&shows_to_add=');
     });
 
     function loadContent() {
@@ -45,7 +45,7 @@ MEDUSA.addShows.addExistingShow = function() {
         });
 
         $('#tableDiv').html('<img id="searchingAnim" src="images/loading32.gif" height="32" width="32" /> loading folders...');
-        $.get('addShows/massAddTable/', url, data => {
+        $.get('addShows/mass_add_table/', url, data => {
             $('#tableDiv').html(data);
             $('#addRootDirTable').tablesorter({
                 // SortList: [[1,0]],

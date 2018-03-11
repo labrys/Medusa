@@ -1,4 +1,4 @@
-const searchStatusUrl = 'home/getManualSearchStatus';
+const searchStatusUrl = 'home/get_manual_search_status';
 let failedDownload = false;
 let qualityDownload = false;
 let selectedEpisode = '';
@@ -163,11 +163,11 @@ $.ajaxEpSearch = function(options) {
         let url = selectedEpisode.prop('href');
 
         if (!failedDownload) {
-            url = url.replace('retryEpisode', 'searchEpisode');
+            url = url.replace('retry_episode', 'search_episode');
         }
 
-        // Only pass the down_cur_quality flag when retryEpisode() is called
-        if (qualityDownload && url.indexOf('retryEpisode') >= 0) {
+        // Only pass the down_cur_quality flag when retry_episode() is called
+        if (qualityDownload && url.indexOf('retry_episode') >= 0) {
             url += '&down_cur_quality=1';
         }
 

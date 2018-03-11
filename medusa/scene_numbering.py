@@ -5,7 +5,7 @@ import time
 import traceback
 
 from medusa import db
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.scene_exceptions import safe_session
 
 log = logging.getLogger(__name__)
@@ -452,18 +452,18 @@ def xem_refresh(series_obj, force=False):
         )
 
         try:
-            if not indexerApi(indexer_id).config.get('xem_origin'):
-                log.debug(u'{0} is an unsupported indexer in XEM'.format(indexerApi(indexer_id).name))
+            if not IndexerAPI(indexer_id).config.get('xem_origin'):
+                log.debug(u'{0} is an unsupported indexer in XEM'.format(IndexerAPI(indexer_id).name))
                 return
             # XEM MAP URL
-            url = "http://thexem.de/map/havemap?origin={0}".format(indexerApi(indexer_id).config['xem_origin'])
+            url = "http://thexem.de/map/havemap?origin={0}".format(IndexerAPI(indexer_id).config['xem_origin'])
             parsed_json = safe_session.get_json(url)
             if not parsed_json or 'result' not in parsed_json or 'success' not in parsed_json['result'] or 'data' not in parsed_json or str(indexer_id) not in parsed_json['data']:
                 log.debug(u'No XEM data for show ID {0} on {1}'.format(series_id, series_obj.indexer_name))
                 return
 
             # XEM API URL
-            url = "http://thexem.de/map/all?id={0}&origin={1}&destination=scene".format(indexer_id, indexerApi(indexer_id).config['xem_origin'])
+            url = "http://thexem.de/map/all?id={0}&origin={1}&destination=scene".format(indexer_id, IndexerAPI(indexer_id).config['xem_origin'])
             parsed_json = safe_session.get_json(url)
             if not parsed_json or 'result' not in parsed_json or 'success' not in parsed_json['result']:
                 log.debug(u'No XEM data for show ID {0} on {1}'.format(indexer_id, series_obj.indexer_name))
@@ -476,22 +476,22 @@ def xem_refresh(series_obj, force=False):
                         "UPDATE tv_episodes SET scene_season = ?, scene_episode = ?, scene_absolute_number = ? WHERE indexer = ? AND showid = ? AND season = ? AND episode = ?",
                         [entry['scene']['season'], entry['scene']['episode'],
                          entry['scene']['absolute'], indexer_id, series_id,
-                         entry[indexerApi(indexer_id).config['xem_origin']]['season'],
-                         entry[indexerApi(indexer_id).config['xem_origin']]['episode']]
+                         entry[IndexerAPI(indexer_id).config['xem_origin']]['season'],
+                         entry[IndexerAPI(indexer_id).config['xem_origin']]['episode']]
                     ])
                     cl.append([
                         "UPDATE tv_episodes SET absolute_number = ? WHERE indexer = ? AND showid = ? AND season = ? AND episode = ? AND absolute_number = 0",
-                        [entry[indexerApi(indexer_id).config['xem_origin']]['absolute'], indexer_id, series_id,
-                         entry[indexerApi(indexer_id).config['xem_origin']]['season'],
-                         entry[indexerApi(indexer_id).config['xem_origin']]['episode']]
+                        [entry[IndexerAPI(indexer_id).config['xem_origin']]['absolute'], indexer_id, series_id,
+                         entry[IndexerAPI(indexer_id).config['xem_origin']]['season'],
+                         entry[IndexerAPI(indexer_id).config['xem_origin']]['episode']]
                     ])
                 if 'scene_2' in entry:  # for doubles
                     cl.append([
                         "UPDATE tv_episodes SET scene_season = ?, scene_episode = ?, scene_absolute_number = ? WHERE indexer = ? AND showid = ? AND season = ? AND episode = ?",
                         [entry['scene_2']['season'], entry['scene_2']['episode'],
                          entry['scene_2']['absolute'], indexer_id, series_id,
-                         entry[indexerApi(indexer_id).config['xem_origin']]['season'],
-                         entry[indexerApi(indexer_id).config['xem_origin']]['episode']]
+                         entry[IndexerAPI(indexer_id).config['xem_origin']]['season'],
+                         entry[IndexerAPI(indexer_id).config['xem_origin']]['episode']]
                     ])
 
             if cl:

@@ -29,12 +29,12 @@ from subliminal.subtitle import (
 from subliminal.video import Episode
 
 try:
-    from lxml import etree
+    from lxml import ETree
 except ImportError:  # pragma: no cover
     try:
-        import xml.etree.cElementTree as etree
+        import xml.etree.cElementTree as ETree
     except ImportError:
-        import xml.etree.ElementTree as etree
+        import xml.etree.ElementTree as ETree
 
 logger = logging.getLogger(__name__)
 
@@ -117,7 +117,7 @@ class ItaSAProvider(Provider):
             }
 
             r = self.session.get(self.server_url + 'users/login', params=params, allow_redirects=False, timeout=10)
-            root = etree.fromstring(r.content)
+            root = ETree.fromstring(r.content)
 
             if root.find('status').text == 'fail':
                 raise AuthenticationError(root.find('error/message').text)
@@ -154,7 +154,7 @@ class ItaSAProvider(Provider):
         params = {'apikey': self.apikey}
         r = self.session.get(self.server_url + 'shows', timeout=10, params=params)
         r.raise_for_status()
-        root = etree.fromstring(r.content)
+        root = ETree.fromstring(r.content)
 
         # populate the show ids
         show_ids = {}
@@ -183,7 +183,7 @@ class ItaSAProvider(Provider):
         logger.info('Searching show ids with %r', params)
         r = self.session.get(self.server_url + 'shows/search', params=params, timeout=10)
         r.raise_for_status()
-        root = etree.fromstring(r.content)
+        root = ETree.fromstring(r.content)
 
         if int(root.find('data/count').text) == 0:
             logger.warning('Show id not found: no suggestion')
@@ -203,7 +203,7 @@ class ItaSAProvider(Provider):
 
             r = self.session.get(next_page.text, timeout=10)
             r.raise_for_status()
-            root = etree.fromstring(r.content)
+            root = ETree.fromstring(r.content)
 
             logger.info('Loading suggestion page %r', root.find('data/page').text)
 
@@ -279,7 +279,7 @@ class ItaSAProvider(Provider):
         }
         r = self.session.get(self.server_url + 'subtitles/search', params=params, timeout=30)
         r.raise_for_status()
-        root = etree.fromstring(r.content)
+        root = ETree.fromstring(r.content)
 
         if int(root.find('data/count').text) == 0:
             logger.warning('Subtitles for season not found, try with rip suffix')
@@ -287,7 +287,7 @@ class ItaSAProvider(Provider):
             params['version'] = sub_format + 'rip'
             r = self.session.get(self.server_url + 'subtitles/search', params=params, timeout=30)
             r.raise_for_status()
-            root = etree.fromstring(r.content)
+            root = ETree.fromstring(r.content)
             if int(root.find('data/count').text) == 0:
                 logger.warning('Subtitles for season not found')
                 return []
@@ -363,7 +363,7 @@ class ItaSAProvider(Provider):
         }
         r = self.session.get(self.server_url + 'shows/' + str(show_id), params=params, timeout=30)
         r.raise_for_status()
-        root = etree.fromstring(r.content)
+        root = ETree.fromstring(r.content)
 
         year = root.find('data/show/started').text
         if year:
@@ -380,7 +380,7 @@ class ItaSAProvider(Provider):
             }
         r = self.session.get(self.server_url + 'subtitles/search', params=params, timeout=30)
         r.raise_for_status()
-        root = etree.fromstring(r.content)
+        root = ETree.fromstring(r.content)
 
         if int(root.find('data/count').text) == 0:
             logger.warning('Subtitles not found,  try with rip suffix')
@@ -388,7 +388,7 @@ class ItaSAProvider(Provider):
             params['version'] = sub_format + 'rip'
             r = self.session.get(self.server_url + 'subtitles/search', params=params, timeout=30)
             r.raise_for_status()
-            root = etree.fromstring(r.content)
+            root = ETree.fromstring(r.content)
             if int(root.find('data/count').text) == 0:
                 logger.warning('Subtitles not found, go season mode')
 
@@ -431,7 +431,7 @@ class ItaSAProvider(Provider):
 
             r = self.session.get(next_page.text, timeout=30)
             r.raise_for_status()
-            root = etree.fromstring(r.content)
+            root = ETree.fromstring(r.content)
 
             logger.info('Loading subtitles page %r', root.data.page.text)
 

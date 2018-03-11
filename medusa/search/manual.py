@@ -114,7 +114,7 @@ def get_episodes(search_thread, searchstatus):
 def update_finished_search_queue_item(snatch_queue_item):
     """Update the previous manual searched queue item with the correct status.
 
-    @param snatch_queue_item: A successful snatch queue item, send from pickManualSearch().
+    @param snatch_queue_item: A successful snatch queue item, send from pick_manual_search().
     @return: True if status update was successful, False if not.
     """
     # Finished Searches

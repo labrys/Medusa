@@ -62,7 +62,7 @@ from medusa.helper.exceptions import (
 from medusa.helper.mappings import NonEmptyDict
 from medusa.helpers.externals import get_externals, load_externals_from_db
 from medusa.helpers.utils import safe_get
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.config import (
     INDEXER_TVRAGE,
     STATUS_MAP,
@@ -148,7 +148,7 @@ class SeriesIdentifier(Identifier):
     @property
     def api(self):
         """Api."""
-        indexer_api = indexerApi(self.indexer.id)
+        indexer_api = IndexerAPI(self.indexer.id)
         return indexer_api.indexer(**indexer_api.api_params)
 
     def __bool__(self):
@@ -293,7 +293,7 @@ class Series(TV):
 
     def create_indexer(self, banners=False, actors=False, dvd_order=False, episodes=True):
         """Force the creation of a new Indexer API."""
-        api = indexerApi(self.indexer)
+        api = IndexerAPI(self.indexer)
         params = api.api_params.copy()
 
         if self.lang:
@@ -379,7 +379,7 @@ class Series(TV):
     def location(self, value):
         log.debug(
             u'{indexer} {id}: Setting location: {location}', {
-                'indexer': indexerApi(self.indexer).name,
+                'indexer': IndexerAPI(self.indexer).name,
                 'id': self.series_id,
                 'location': value,
             }
@@ -1043,7 +1043,7 @@ class Series(TV):
                         u' Removing existing records from database', {
                             'id': cur_show_id,
                             'error_msg': error.message,
-                            'indexer': indexerApi(self.indexer).name,
+                            'indexer': IndexerAPI(self.indexer).name,
                             'show': cur_show_name,
                         }
                     )
@@ -1108,7 +1108,7 @@ class Series(TV):
                 u'{id}: {indexer} error, unable to update episodes.'
                 u' Message: {ex}', {
                     'id': self.series_id,
-                    'indexer': indexerApi(self.indexer).name,
+                    'indexer': IndexerAPI(self.indexer).name,
                     'ex': error,
                 }
             )
@@ -1117,7 +1117,7 @@ class Series(TV):
         log.debug(
             u'{id}: Loading all episodes from {indexer}{season_update}', {
                 'id': self.series_id,
-                'indexer': indexerApi(self.indexer).name,
+                'indexer': IndexerAPI(self.indexer).name,
                 'season_update': u' on seasons {seasons}'.format(seasons=seasons) if seasons else u''
             }
         )
@@ -1143,7 +1143,7 @@ class Series(TV):
                     log.info(
                         u'{id}: {indexer} object for {ep} is incomplete, skipping this episode', {
                             'id': self.series_id,
-                            'indexer': indexerApi(self.indexer).name,
+                            'indexer': IndexerAPI(self.indexer).name,
                             'ep': episode_num(season, episode),
                         }
                     )
@@ -1497,7 +1497,7 @@ class Series(TV):
         log.debug(
             u'{id}: Loading show info from {indexer_name}', {
                 'id': self.series_id,
-                'indexer_name': indexerApi(self.indexer).name,
+                'indexer_name': IndexerAPI(self.indexer).name,
             }
         )
 
@@ -2208,7 +2208,7 @@ class Series(TV):
 
         :param ep_status: an Episode status
         :type ep_status: int
-        :param backlog_mode: if we should return overview for backlogOverview
+        :param backlog_mode: if we should return overview for backlog_overview
         :type backlog_mode: boolean
         :param manually_searched: if episode was manually searched
         :type manually_searched: boolean

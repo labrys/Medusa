@@ -11,9 +11,9 @@ from medusa import app
 from medusa.logger.adapters.style import BraceAdapter
 
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -146,7 +146,7 @@ class Notifier:
 
         # try to parse the resulting XML
         try:
-            et = etree.fromstring(response)
+            et = ETree.fromstring(response)
             result = et.findtext('returnValue')
         except SyntaxError as error:
             log.error(u'Unable to parse XML returned from the Popcorn Hour: {0}', error)

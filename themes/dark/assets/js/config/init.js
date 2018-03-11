@@ -76,8 +76,8 @@ MEDUSA.config.init = function() {
         });
     });
 
-    $('#branchCheckout').on('click', () => {
-        const url = 'home/branchCheckout?branch=' + $('#branchVersion').val();
+    $('#branch_checkout').on('click', () => {
+        const url = 'home/branch_checkout?branch=' + $('#branchVersion').val();
         $.getJSON('home/get_db_compare', data => {
             if (data.status === 'success') {
                 if (data.message === 'equal') {
@@ -97,10 +97,10 @@ MEDUSA.config.init = function() {
         });
     });
 
-    $('#branchForceUpdate').on('click', () => {
+    $('#branch_force_update').on('click', () => {
         $('#branchForceUpdate').prop('disabled', true);
         $('#git_reset_branches').prop('disabled', true);
-        $.getJSON('home/branchForceUpdate', data => {
+        $.getJSON('home/branch_force_update', data => {
             $('#git_reset_branches').empty();
             data.resetBranches.forEach(branch => {
                 $('#git_reset_branches').append('<option value="' + branch + '" selected="selected" >' + branch + '</option>');
@@ -109,7 +109,7 @@ MEDUSA.config.init = function() {
                 $('#git_reset_branches').append('<option value="' + branch + '" >' + branch + '</option>');
             });
             $('#git_reset_branches').prop('disabled', false);
-            $('#branchForceUpdate').prop('disabled', false);
+            $('#branch_force_update').prop('disabled', false);
         });
     });
 

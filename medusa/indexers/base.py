@@ -180,7 +180,7 @@ class BaseIndexer:
         Since the nice-to-use tvdb[1][24]['name] interface
         makes it impossible to do tvdb[1][24]['name] = "name"
         and still be capable of checking if an episode exists
-        so we can raise tvdb_shownotfound, we have a slightly
+        so we can raise TVDBShowNotFound, we have a slightly
         less pretty method of setting items.. but since the API
         is supposed to be read-only, this is the best way to
         do it!

@@ -16,7 +16,7 @@ from medusa import (
     scene_numbering,
 )
 from medusa.helper.common import episode_num
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.exceptions import (
     IndexerEpisodeNotFound,
     IndexerError,
@@ -105,12 +105,12 @@ class NameParser:
                 log.debug('Series {name} has no season or episodes, using indexer',
                           {'name': result.series.name})
                 try:
-                    indexer_api_params = indexerApi(result.series.indexer).api_params.copy()
+                    indexer_api_params = IndexerAPI(result.series.indexer).api_params.copy()
 
                     if result.series.lang:
                         indexer_api_params['language'] = result.series.lang
 
-                    indexer_api = indexerApi(result.series.indexer).indexer(**indexer_api_params)
+                    indexer_api = IndexerAPI(result.series.indexer).indexer(**indexer_api_params)
                     tv_episode = indexer_api[result.series.indexerid].aired_on(result.air_date)[0]
 
                     season_number = int(tv_episode['seasonnumber'])

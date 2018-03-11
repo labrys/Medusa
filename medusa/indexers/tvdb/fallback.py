@@ -34,7 +34,7 @@ class PlexFallBackConfig:
         return functools.partial(self.__call__, obj)
 
     def __call__(self, *args, **kwargs):
-        """Update the config every time we're accessing the indexerApi."""
+        """Update the config every time we're accessing the IndexerAPI."""
         if args[0].indexer_id == 1:
             session = args[0].api_params.get('session')
             if not hasattr(session, 'fallback_config'):

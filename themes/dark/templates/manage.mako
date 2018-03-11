@@ -83,7 +83,7 @@
                 <%
                     cur_ep = cur_show.next_aired
                     disabled = app.show_queue_scheduler.action.is_being_updated(cur_show) or app.show_queue_scheduler.action.is_in_update_queue(cur_show)
-                    curUpdate = "<input type=\"checkbox\" class=\"updateCheck\" data-indexer-name=" + cur_show.indexer_name + " data-series-id=\"" + str(cur_show.series_id) + "\" id=\"update-" + str(cur_show.indexerid) + "\" " + ("", "disabled=\"disabled\" ")[disabled] + "/>"
+                    curUpdate = "<input type=\"checkbox\" class=\"update_check\" data-indexer-name=" + cur_show.indexer_name + " data-series-id=\"" + str(cur_show.series_id) + "\" id=\"update-" + str(cur_show.indexerid) + "\" " + ("", "disabled=\"disabled\" ")[disabled] + "/>"
                     disabled = app.show_queue_scheduler.action.is_being_refreshed(cur_show) or app.show_queue_scheduler.action.is_in_refresh_queue(cur_show)
                     curRefresh = "<input type=\"checkbox\" class=\"refreshCheck\" data-indexer-name=" + cur_show.indexer_name + " data-series-id=\"" + str(cur_show.series_id) + "\"id=\"refresh-" + str(cur_show.indexerid) + "\" " + ("", "disabled=\"disabled\" ")[disabled] + "/>"
                     disabled = app.show_queue_scheduler.action.is_being_renamed(cur_show) or app.show_queue_scheduler.action.is_in_rename_queue(cur_show)

@@ -10,7 +10,7 @@ from medusa.helper.exceptions import (
     CantRefreshShowException,
     CantUpdateShowException,
 )
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.exceptions import IndexerException, IndexerUnavailable
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.scene_exceptions import refresh_exceptions_cache
@@ -61,7 +61,7 @@ class ShowUpdater:
                 log.info(u'The show {show} is paused, not updating it.',
                          {'show': show.name})
                 continue
-            show_indexer = indexerApi(show.indexer)
+            show_indexer = IndexerAPI(show.indexer)
             indexer_api_params = show_indexer.api_params.copy()
             indexer_name = show_indexer.name
             try:
@@ -298,7 +298,7 @@ class ShowUpdater:
 
         if refresh_shows or season_updates:
             for indexer in set([show.indexer for show in refresh_shows] + [s[1].indexer for s in season_updates]):
-                indexer_api = indexerApi(indexer)
+                indexer_api = IndexerAPI(indexer)
                 self.update_cache.set_last_indexer_update(indexer_api.name)
                 log.info(u'Updated lastUpdate timestamp for {indexer_name}',
                          {'indexer_name': indexer_api.name})

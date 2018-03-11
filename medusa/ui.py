@@ -113,7 +113,7 @@ class ProgressIndicator:
 
 
 class ProgressIndicators:
-    _pi = {'massUpdate': [],
+    _pi = {'mass_update': [],
            'massAdd': [],
            'dailyUpdate': []
            }

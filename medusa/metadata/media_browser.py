@@ -7,7 +7,7 @@ import re
 
 from medusa import app, helpers
 from medusa.helper.common import dateFormat, episode_num, replace_extension
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.exceptions import (
     IndexerEpisodeNotFound,
     IndexerSeasonNotFound,
@@ -16,9 +16,9 @@ from medusa.logger.adapters.style import BraceAdapter
 from medusa.metadata import generic
 
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -221,127 +221,127 @@ class MediaBrowserMetadata(generic.GenericMetadata):
         if not my_show:
             return False
 
-        tv_node = etree.Element(u'Series')
+        tv_node = ETree.Element(u'Series')
 
         if getattr(my_show, u'id', None):
-            indexerid = etree.SubElement(tv_node, u'id')
+            indexerid = ETree.SubElement(tv_node, u'id')
             indexerid.text = my_show[u'id']
 
         if getattr(my_show, u'seriesname', None):
-            series_name = etree.SubElement(tv_node, u'SeriesName')
+            series_name = ETree.SubElement(tv_node, u'SeriesName')
             series_name.text = my_show[u'seriesname']
 
         if getattr(my_show, u'status', None):
-            status = etree.SubElement(tv_node, u'Status')
+            status = ETree.SubElement(tv_node, u'Status')
             status.text = my_show[u'status']
 
         if getattr(my_show, u'network', None):
-            network = etree.SubElement(tv_node, u'Network')
+            network = ETree.SubElement(tv_node, u'Network')
             network.text = my_show[u'network']
 
         if getattr(my_show, u'airs_time', None):
-            airs_time = etree.SubElement(tv_node, u'Airs_Time')
+            airs_time = ETree.SubElement(tv_node, u'Airs_Time')
             airs_time.text = my_show[u'airs_time']
 
         if getattr(my_show, u'airs_dayofweek', None):
-            airs_day_of_week = etree.SubElement(tv_node, u'Airs_DayOfWeek')
+            airs_day_of_week = ETree.SubElement(tv_node, u'Airs_DayOfWeek')
             airs_day_of_week.text = my_show[u'airs_dayofweek']
 
-        first_aired = etree.SubElement(tv_node, u'FirstAired')
+        first_aired = ETree.SubElement(tv_node, u'FirstAired')
         if getattr(my_show, u'firstaired', None):
             first_aired.text = my_show[u'firstaired']
 
         if getattr(my_show, u'contentrating', None):
-            content_rating = etree.SubElement(tv_node, u'ContentRating')
+            content_rating = ETree.SubElement(tv_node, u'ContentRating')
             content_rating.text = my_show[u'contentrating']
 
-            mpaa = etree.SubElement(tv_node, u'MPAARating')
+            mpaa = ETree.SubElement(tv_node, u'MPAARating')
             mpaa.text = my_show[u'contentrating']
 
-            certification = etree.SubElement(tv_node, u'certification')
+            certification = ETree.SubElement(tv_node, u'certification')
             certification.text = my_show[u'contentrating']
 
-        metadata_type = etree.SubElement(tv_node, u'Type')
+        metadata_type = ETree.SubElement(tv_node, u'Type')
         metadata_type.text = u'Series'
 
         if getattr(my_show, u'overview', None):
-            overview = etree.SubElement(tv_node, u'Overview')
+            overview = ETree.SubElement(tv_node, u'Overview')
             overview.text = my_show[u'overview']
 
         if getattr(my_show, u'firstaired', None):
-            premiere_date = etree.SubElement(tv_node, u'PremiereDate')
+            premiere_date = ETree.SubElement(tv_node, u'PremiereDate')
             premiere_date.text = my_show[u'firstaired']
 
         if getattr(my_show, u'rating', None):
-            rating = etree.SubElement(tv_node, u'Rating')
+            rating = ETree.SubElement(tv_node, u'Rating')
             rating.text = my_show[u'rating']
 
         if getattr(my_show, u'firstaired', None):
             try:
                 year_text = datetime.datetime.strptime(my_show[u'firstaired'], dateFormat).year
                 if year_text:
-                    production_year = etree.SubElement(tv_node, u'ProductionYear')
+                    production_year = ETree.SubElement(tv_node, u'ProductionYear')
                     production_year.text = year_text
             except Exception:
                 pass
 
         if getattr(my_show, u'runtime', None):
-            running_time = etree.SubElement(tv_node, u'RunningTime')
+            running_time = ETree.SubElement(tv_node, u'RunningTime')
             running_time.text = my_show[u'runtime']
 
-            runtime = etree.SubElement(tv_node, u'Runtime')
+            runtime = ETree.SubElement(tv_node, u'Runtime')
             runtime.text = my_show[u'runtime']
 
         if getattr(my_show, u'imdb_id', None):
-            imdb_id = etree.SubElement(tv_node, u'IMDB_ID')
+            imdb_id = ETree.SubElement(tv_node, u'IMDB_ID')
             imdb_id.text = my_show[u'imdb_id']
 
-            imdb_id = etree.SubElement(tv_node, u'IMDB')
+            imdb_id = ETree.SubElement(tv_node, u'IMDB')
             imdb_id.text = my_show[u'imdb_id']
 
-            imdb_id = etree.SubElement(tv_node, u'IMDbId')
+            imdb_id = ETree.SubElement(tv_node, u'IMDbId')
             imdb_id.text = my_show[u'imdb_id']
 
         if getattr(my_show, u'zap2it_id', None):
-            zap2it_id = etree.SubElement(tv_node, u'Zap2ItId')
+            zap2it_id = ETree.SubElement(tv_node, u'Zap2ItId')
             zap2it_id.text = my_show[u'zap2it_id']
 
         if getattr(my_show, u'genre', None) and isinstance(my_show[u'genre'], str):
-            genres = etree.SubElement(tv_node, u'Genres')
+            genres = ETree.SubElement(tv_node, u'Genres')
             for genre in my_show[u'genre'].split(u'|'):
                 if genre.strip():
-                    cur_genre = etree.SubElement(genres, u'Genre')
+                    cur_genre = ETree.SubElement(genres, u'Genre')
                     cur_genre.text = genre.strip()
 
-            genre = etree.SubElement(tv_node, u'Genre')
+            genre = ETree.SubElement(tv_node, u'Genre')
             genre.text = u'|'.join([x.strip() for x in my_show[u'genre'].split(u'|') if x.strip()])
 
         if getattr(my_show, u'network', None):
-            studios = etree.SubElement(tv_node, u'Studios')
-            studio = etree.SubElement(studios, u'Studio')
+            studios = ETree.SubElement(tv_node, u'Studios')
+            studio = ETree.SubElement(studios, u'Studio')
             studio.text = my_show[u'network']
 
         if getattr(my_show, u'_actors', None):
-            persons = etree.SubElement(tv_node, u'Persons')
+            persons = ETree.SubElement(tv_node, u'Persons')
             for actor in my_show[u'_actors']:
                 if not (u'name' in actor and actor[u'name'].strip()):
                     continue
 
-                cur_actor = etree.SubElement(persons, u'Person')
+                cur_actor = ETree.SubElement(persons, u'Person')
 
-                cur_actor_name = etree.SubElement(cur_actor, u'Name')
+                cur_actor_name = ETree.SubElement(cur_actor, u'Name')
                 cur_actor_name.text = actor[u'name'].strip()
 
-                cur_actor_type = etree.SubElement(cur_actor, u'Type')
+                cur_actor_type = ETree.SubElement(cur_actor, u'Type')
                 cur_actor_type.text = u'Actor'
 
                 if u'role' in actor and actor[u'role'].strip():
-                    cur_actor_role = etree.SubElement(cur_actor, u'Role')
+                    cur_actor_role = ETree.SubElement(cur_actor, u'Role')
                     cur_actor_role.text = actor[u'role'].strip()
 
         helpers.indent_xml(tv_node)
 
-        data = etree.ElementTree(tv_node)
+        data = ETree.ElementTree(tv_node)
 
         return data
 
@@ -363,7 +363,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
         if not my_show:
             return None
 
-        root_node = etree.Element(u'Item')
+        root_node = ETree.Element(u'Item')
 
         # write an MediaBrowser XML containing info for all matching episodes
         for ep_to_write in eps_to_write:
@@ -374,7 +374,7 @@ class MediaBrowserMetadata(generic.GenericMetadata):
                 log.info(
                     u'Unable to find episode {number} on {indexer}... has it been removed? Should I delete from db?', {
                         u'number': episode_num(ep_to_write.season, ep_to_write.episode),
-                        u'indexer': indexerApi(ep_obj.series.indexer).name
+                        u'indexer': IndexerAPI(ep_obj.series.indexer).name
                     }
                 )
                 return None
@@ -392,73 +392,73 @@ class MediaBrowserMetadata(generic.GenericMetadata):
                 episode = root_node
 
                 if ep_to_write.name:
-                    episode_name = etree.SubElement(episode, u'EpisodeName')
+                    episode_name = ETree.SubElement(episode, u'EpisodeName')
                     episode_name.text = ep_to_write.name
 
-                episode_number = etree.SubElement(episode, u'EpisodeNumber')
+                episode_number = ETree.SubElement(episode, u'EpisodeNumber')
                 episode_number.text = ep_obj.episode
 
                 if ep_obj.related_episodes:
-                    episode_number_end = etree.SubElement(episode, u'EpisodeNumberEnd')
+                    episode_number_end = ETree.SubElement(episode, u'EpisodeNumberEnd')
                     episode_number_end.text = ep_to_write.episode
 
-                season_number = etree.SubElement(episode, u'SeasonNumber')
+                season_number = ETree.SubElement(episode, u'SeasonNumber')
                 season_number.text = ep_to_write.season
 
                 if not ep_obj.related_episodes and getattr(my_ep, u'absolute_number', None):
-                    absolute_number = etree.SubElement(episode, u'absolute_number')
+                    absolute_number = ETree.SubElement(episode, u'absolute_number')
                     absolute_number.text = my_ep[u'absolute_number']
 
                 if ep_to_write.airdate != datetime.date.fromordinal(1):
-                    first_aired = etree.SubElement(episode, u'FirstAired')
+                    first_aired = ETree.SubElement(episode, u'FirstAired')
                     first_aired.text = ep_to_write.airdate
 
-                metadata_type = etree.SubElement(episode, u'Type')
+                metadata_type = ETree.SubElement(episode, u'Type')
                 metadata_type.text = u'Episode'
 
                 if ep_to_write.description:
-                    overview = etree.SubElement(episode, u'Overview')
+                    overview = ETree.SubElement(episode, u'Overview')
                     overview.text = ep_to_write.description
 
                 if not ep_obj.related_episodes:
                     if getattr(my_ep, u'rating', None):
-                        rating = etree.SubElement(episode, u'Rating')
+                        rating = ETree.SubElement(episode, u'Rating')
                         rating.text = my_ep[u'rating']
 
                     if getattr(my_show, u'imdb_id', None):
                         for element in 'IMDB_ID', 'IMDB', 'IMDbId':
-                            imdb_id = etree.SubElement(episode, element)
+                            imdb_id = ETree.SubElement(episode, element)
                             imdb_id.text = my_show['imdb_id']
 
-                indexer_id = etree.SubElement(episode, u'id')
+                indexer_id = ETree.SubElement(episode, u'id')
                 indexer_id.text = ep_to_write.indexerid
 
-                persons = etree.SubElement(episode, u'Persons')
+                persons = ETree.SubElement(episode, u'Persons')
 
                 if getattr(my_show, u'_actors', None):
                     for actor in my_show[u'_actors']:
                         if not (u'name' in actor and actor[u'name'].strip()):
                             continue
 
-                        cur_actor = etree.SubElement(persons, u'Person')
+                        cur_actor = ETree.SubElement(persons, u'Person')
 
-                        cur_actor_name = etree.SubElement(cur_actor, u'Name')
+                        cur_actor_name = ETree.SubElement(cur_actor, u'Name')
                         cur_actor_name.text = actor[u'name'].strip()
 
-                        cur_actor_type = etree.SubElement(cur_actor, u'Type')
+                        cur_actor_type = ETree.SubElement(cur_actor, u'Type')
                         cur_actor_type.text = u'Actor'
 
                         if u'role' in actor and actor[u'role'].strip():
-                            cur_actor_role = etree.SubElement(cur_actor, u'Role')
+                            cur_actor_role = ETree.SubElement(cur_actor, u'Role')
                             cur_actor_role.text = actor[u'role'].strip()
 
-                language = etree.SubElement(episode, u'Language')
+                language = ETree.SubElement(episode, u'Language')
                 try:
                     language.text = my_ep[u'language']
                 except Exception:
                     language.text = app.INDEXER_DEFAULT_LANGUAGE  # tvrage api doesn't provide language so we must assume a value here
 
-                thumb = etree.SubElement(episode, u'filename')
+                thumb = ETree.SubElement(episode, u'filename')
                 # TODO: See what this is needed for.. if its still needed
                 # just write this to the NFO regardless of whether it actually exists or not
                 # note: renaming files after nfo generation will break this, tough luck
@@ -495,15 +495,15 @@ class MediaBrowserMetadata(generic.GenericMetadata):
             # remove doubles
             names = list(set(names))
             for cur_name in names:
-                person = etree.SubElement(persons, u'Person')
-                cur_person_name = etree.SubElement(person, u'Name')
+                person = ETree.SubElement(persons, u'Person')
+                cur_person_name = ETree.SubElement(person, u'Name')
                 cur_person_name.text = cur_name
-                cur_person_type = etree.SubElement(person, u'Type')
+                cur_person_type = ETree.SubElement(person, u'Type')
                 cur_person_type.text = person_type
 
         # Make it purdy
         helpers.indent_xml(root_node)
-        data = etree.ElementTree(root_node)
+        data = ETree.ElementTree(root_node)
 
         return data
 

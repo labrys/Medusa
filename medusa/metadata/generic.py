@@ -19,9 +19,9 @@ from medusa.indexers.exceptions import (
 from medusa.logger.adapters.style import BraceAdapter
 
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 # todo: Implement Fanart.tv v3 API
 
@@ -259,7 +259,7 @@ class GenericMetadata:
 
             try:
                 with io.open(nfo_file_path, u'rb') as xmlFileObj:
-                    show_xml = etree.ElementTree(file=xmlFileObj)
+                    show_xml = ETree.ElementTree(file=xmlFileObj)
 
                 indexerid = show_xml.find(u'id')
 
@@ -267,7 +267,7 @@ class GenericMetadata:
                 if indexerid is not None:
                     indexerid.text = str(show_obj.indexerid)
                 else:
-                    etree.SubElement(root, u'id').text = str(show_obj.indexerid)
+                    ETree.SubElement(root, u'id').text = str(show_obj.indexerid)
 
                 # Make it purdy
                 helpers.indent_xml(root)
@@ -276,7 +276,7 @@ class GenericMetadata:
                 helpers.chmod_as_parent(nfo_file_path)
 
                 return True
-            except etree.ParseError as error:
+            except ETree.ParseError as error:
                 log.warning(
                     u'Received an invalid XML for {series}, try again later. Error: {error}',
                     {u'series': show_obj.name, u'error': error}
@@ -894,7 +894,7 @@ class GenericMetadata:
 
         try:
             with io.open(metadata_path, u'rb') as xmlFileObj:
-                show_xml = etree.ElementTree(file=xmlFileObj)
+                show_xml = ETree.ElementTree(file=xmlFileObj)
 
             if (show_xml.findtext(u'title') is None or
                     (show_xml.findtext(u'tvdbid') is None and show_xml.findtext(u'id') is None)):

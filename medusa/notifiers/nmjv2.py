@@ -10,9 +10,9 @@ from medusa import app
 from medusa.logger.adapters.style import BraceAdapter
 
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -110,13 +110,13 @@ class Notifier:
             log.warning(u'Warning: Unable to contact popcorn hour on host {0}: {1}', host, error)
             return False
         try:
-            et = etree.fromstring(response1)
+            et = ETree.fromstring(response1)
             result1 = et.findtext('returnValue')
         except SyntaxError as error:
             log.error(u'Unable to parse XML returned from the Popcorn Hour: update_scandir, {0}', error)
             return False
         try:
-            et = etree.fromstring(response2)
+            et = ETree.fromstring(response2)
             result2 = et.findtext('returnValue')
         except SyntaxError as error:
             log.error(u'Unable to parse XML returned from the Popcorn Hour: scanner_start, {0}', error)

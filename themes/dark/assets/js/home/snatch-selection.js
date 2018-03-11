@@ -134,7 +134,7 @@ MEDUSA.home.snatchSelection = function() {
 
         self.refreshResults = function() {
             $('#manualSearchTbody').loadContainer(
-                    'home/snatchSelection' + urlParams,
+                    'home/snatch_selection' + urlParams,
                     'Loading new search results...',
                     'Time out, refresh page to try again',
                     toggleHistoryTable // This is a callback function
@@ -142,7 +142,7 @@ MEDUSA.home.snatchSelection = function() {
         };
 
         $.ajax({
-            url: 'home/manualSearchCheckCache' + urlParams,
+            url: 'home/manual_search_check_cache' + urlParams,
             type: 'GET',
             data,
             contentType: 'application/json',
@@ -223,7 +223,7 @@ MEDUSA.home.snatchSelection = function() {
 
         if ($.isNumeric(seriesId) && $.isNumeric(season) && $.isNumeric(episode)) {
             updateSpinner('Started a forced manual search...', true);
-            $.getJSON('home/snatchSelection', {
+            $.getJSON('home/snatch_selection', {
                 indexername: indexerName,
                 seriesid: seriesId,
                 season,
@@ -238,7 +238,7 @@ MEDUSA.home.snatchSelection = function() {
         }
     });
 
-    // Moved and rewritten this from displayShow. This changes the button when clicked for collapsing/expanding the
+    // Moved and rewritten this from display_series. This changes the button when clicked for collapsing/expanding the
     // "Show History" button to show or hide the snatch/download/failed history for a manual searched episode or pack.
 
     $('#popover').popover({

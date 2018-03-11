@@ -624,7 +624,7 @@ div.xem {
     border: 1px solid rgb(136, 136, 136);
 }
 
-/* Used by the displayShow and snatchSelection show header posters */
+/* Used by the displayShow and snatch_selection show header posters */
 #col-show-summary img.show-image {
     max-width: 180px;
 }
@@ -4056,7 +4056,7 @@ input.tablesorter-filter.disabled {
 }
 
 /* =======================================================================
-snatchSelection.mako
+snatch_selection.mako
 ========================================================================== */
 
 div#searchNotification {

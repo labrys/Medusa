@@ -50,4 +50,4 @@ class HomePostProcess(Home):
                 return result
 
             result = result.replace('\n', '<br>\n')
-            return self._genericMessage('Postprocessing results', result)
+            return self._generic_message('Postprocessing results', result)

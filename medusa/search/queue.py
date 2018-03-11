@@ -418,7 +418,7 @@ class ManualSnatchQueueItem(generic_queue.QueueItem):
     """
     A queue item that can be used to queue the snatch of a search result.
 
-    Currently used for the snatchSelection feature.
+    Currently used for the snatch_selection feature.
 
     @param show: A show object
     @param segment: A list of episode objects

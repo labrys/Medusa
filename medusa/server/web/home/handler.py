@@ -71,7 +71,7 @@ from medusa.helper.exceptions import (
     CantUpdateShowException,
     ShowDirectoryNotFoundException,
 )
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.exceptions import (
     IndexerException,
     IndexerShowNotFoundInLanguage,
@@ -124,7 +124,7 @@ class Home(WebRoot):
     def __init__(self, *args, **kwargs):
         super(Home, self).__init__(*args, **kwargs)
 
-    def _genericMessage(self, subject, message):
+    def _generic_message(self, subject, message):
         t = PageTemplate(rh=self, filename='genericMessage.mako')
         return t.render(message=message, subject=subject, topmenu='home', title='')
 
@@ -264,28 +264,28 @@ class Home(WebRoot):
 
     @staticmethod
     # @TODO: Replace with /api/v2/config/kodi, check if enabled === true
-    def haveKODI():
+    def have_kodi():
         return app.USE_KODI and app.KODI_UPDATE_LIBRARY
 
     @staticmethod
     # @TODO: Replace with /api/v2/config/plex, check if enabled === true
-    def havePLEX():
+    def have_plex():
         return app.USE_PLEX_SERVER and app.PLEX_UPDATE_LIBRARY
 
     @staticmethod
     # @TODO: Replace with /api/v2/config/emby, check if enabled === true
-    def haveEMBY():
+    def have_emby():
         return app.USE_EMBY
 
     @staticmethod
     # @TODO: Replace with /api/v2/config/torrents, check if enabled === true
-    def haveTORRENT():
+    def have_torrent():
         return bool(app.USE_TORRENTS and app.TORRENT_METHOD != 'blackhole' and
                     (app.ENABLE_HTTPS and app.TORRENT_HOST[:5] == 'https' or not
                     app.ENABLE_HTTPS and app.TORRENT_HOST[:5] == 'http:'))
 
     @staticmethod
-    def testSABnzbd(host=None, username=None, password=None, apikey=None):
+    def test_sabnzbd(host=None, username=None, password=None, apikey=None):
         host = config.clean_url(host)
 
         connection, acces_msg = sab.get_sab_access_method(host)
@@ -300,7 +300,7 @@ class Home(WebRoot):
             return 'Unable to connect to host'
 
     @staticmethod
-    def testNZBget(host=None, username=None, password=None, use_https=False):
+    def test_nzbget(host=None, username=None, password=None, use_https=False):
         connected_status = nzbget.test_nzb(host, username, password, config.checkbox_to_value(use_https))
         if connected_status:
             return 'Success. Connected and authenticated'
@@ -308,7 +308,7 @@ class Home(WebRoot):
             return 'Unable to connect to host'
 
     @staticmethod
-    def testTorrent(torrent_method=None, host=None, username=None, password=None):
+    def test_torrent(torrent_method=None, host=None, username=None, password=None):
         # @TODO: Move this to the validation section of each PATCH/PUT method for torrents
         host = config.clean_url(host)
 
@@ -319,7 +319,7 @@ class Home(WebRoot):
         return acces_msg
 
     @staticmethod
-    def testFreeMobile(freemobile_id=None, freemobile_apikey=None):
+    def test_free_mobile(freemobile_id=None, freemobile_apikey=None):
         result, message = notifiers.freemobile_notifier.test_notify(freemobile_id, freemobile_apikey)
         if result:
             return 'SMS sent successfully'
@@ -327,7 +327,7 @@ class Home(WebRoot):
             return 'Problem sending SMS: {msg}'.format(msg=message)
 
     @staticmethod
-    def testTelegram(telegram_id=None, telegram_apikey=None):
+    def test_telegram(telegram_id=None, telegram_apikey=None):
         result, message = notifiers.telegram_notifier.test_notify(telegram_id, telegram_apikey)
         if result:
             return 'Telegram notification succeeded. Check your Telegram clients to make sure it worked'
@@ -335,7 +335,7 @@ class Home(WebRoot):
             return 'Error sending Telegram notification: {msg}'.format(msg=message)
 
     @staticmethod
-    def testslack(slack_webhook=None):
+    def test_slack(slack_webhook=None):
         result = notifiers.slack_notifier.test_notify(slack_webhook)
         if result:
             return 'Slack notification succeeded. Check your Slack channel to make sure it worked'
@@ -343,7 +343,7 @@ class Home(WebRoot):
             return 'Error sending Slack notification'
 
     @staticmethod
-    def testGrowl(host=None, password=None):
+    def test_growl(host=None, password=None):
         success = 'Registered and Tested growl successfully'
         failure = 'Registration and Testing of growl failed'
 
@@ -357,7 +357,7 @@ class Home(WebRoot):
         )
 
     @staticmethod
-    def testProwl(prowl_api=None, prowl_priority=0):
+    def test_prowl(prowl_api=None, prowl_priority=0):
         result = notifiers.prowl_notifier.test_notify(prowl_api, prowl_priority)
         if result:
             return 'Test prowl notice sent successfully'
@@ -365,39 +365,39 @@ class Home(WebRoot):
             return 'Test prowl notice failed'
 
     @staticmethod
-    def testBoxcar2(accesstoken=None):
-        result = notifiers.boxcar2_notifier.test_notify(accesstoken)
+    def test_boxcar2(access_token=None):
+        result = notifiers.boxcar2_notifier.test_notify(access_token)
         if result:
             return 'Boxcar2 notification succeeded. Check your Boxcar2 clients to make sure it worked'
         else:
             return 'Error sending Boxcar2 notification'
 
     @staticmethod
-    def testPushover(userKey=None, apiKey=None):
-        result = notifiers.pushover_notifier.test_notify(userKey, apiKey)
+    def test_pushover(user_key=None, api_key=None):
+        result = notifiers.pushover_notifier.test_notify(user_key, api_key)
         if result:
             return 'Pushover notification succeeded. Check your Pushover clients to make sure it worked'
         else:
             return 'Error sending Pushover notification'
 
     @staticmethod
-    def twitterStep1():
+    def twitter_step1():
         return notifiers.twitter_notifier._get_authorization()  # pylint: disable=protected-access
 
     @staticmethod
-    def twitterStep2(key):
+    def twitter_step2(key):
         result = notifiers.twitter_notifier._get_credentials(key)  # pylint: disable=protected-access
         log.info(u'result: {result}'.format(result=result))
 
         return 'Key verification successful' if result else 'Unable to verify key'
 
     @staticmethod
-    def testTwitter():
+    def test_twitter():
         result = notifiers.twitter_notifier.test_notify()
         return 'Tweet successful, check your twitter to make sure it worked' if result else 'Error sending tweet'
 
     @staticmethod
-    def testKODI(host=None, username=None, password=None):
+    def test_kodi(host=None, username=None, password=None):
         host = config.clean_hosts(host)
         final_result = ''
         for curHost in [x.strip() for x in host if x.strip()]:
@@ -409,7 +409,7 @@ class Home(WebRoot):
 
         return final_result
 
-    def testPHT(self, host=None, username=None, password=None):
+    def test_pht(self, host=None, username=None, password=None):
         self.set_header('Cache-Control', 'max-age=0,no-cache,no-store')
 
         if None is not password and set('*') == set(password):
@@ -427,7 +427,7 @@ class Home(WebRoot):
 
         return final_result
 
-    def testPMS(self, host=None, username=None, password=None, plex_server_token=None):
+    def test_pms(self, host=None, username=None, password=None, plex_server_token=None):
         self.set_header('Cache-Control', 'max-age=0,no-cache,no-store')
 
         if password is not None and set('*') == set(password):
@@ -448,14 +448,14 @@ class Home(WebRoot):
         return final_result
 
     @staticmethod
-    def testLibnotify():
+    def test_libnotify():
         if notifiers.libnotify_notifier.test_notify():
             return 'Tried sending desktop notification via libnotify'
         else:
             return notifiers.libnotify.diagnose()
 
     @staticmethod
-    def testEMBY(host=None, emby_apikey=None):
+    def test_emby(host=None, emby_apikey=None):
         host = config.clean_host(host)
         result = notifiers.emby_notifier.test_notify(unquote_plus(host), emby_apikey)
         if result:
@@ -464,7 +464,7 @@ class Home(WebRoot):
             return 'Test notice failed to {host}'.format(host=unquote_plus(host))
 
     @staticmethod
-    def testNMJ(host=None, database=None, mount=None):
+    def test_nmj(host=None, database=None, mount=None):
         host = config.clean_host(host)
         result = notifiers.nmj_notifier.test_notify(unquote_plus(host), database, mount)
         if result:
@@ -473,7 +473,7 @@ class Home(WebRoot):
             return 'Test failed to start the scan update'
 
     @staticmethod
-    def settingsNMJ(host=None):
+    def settings_nmj(host=None):
         host = config.clean_host(host)
         result = notifiers.nmj_notifier.notify_settings(unquote_plus(host))
         if result:
@@ -491,7 +491,7 @@ class Home(WebRoot):
             })
 
     @staticmethod
-    def testNMJv2(host=None):
+    def test_nmj_v2(host=None):
         host = config.clean_host(host)
         result = notifiers.nmjv2_notifier.test_notify(unquote_plus(host))
         if result:
@@ -500,7 +500,7 @@ class Home(WebRoot):
             return 'Test notice failed to {host}'.format(host=unquote_plus(host))
 
     @staticmethod
-    def settingsNMJv2(host=None, dbloc=None, instance=None):
+    def settings_nmj_v2(host=None, dbloc=None, instance=None):
         host = config.clean_host(host)
         result = notifiers.nmjv2_notifier.notify_settings(unquote_plus(host), dbloc, instance)
         if result:
@@ -516,7 +516,7 @@ class Home(WebRoot):
             })
 
     @staticmethod
-    def getTraktToken(trakt_pin=None):
+    def get_trakt_token(trakt_pin=None):
         trakt_settings = {"trakt_api_key": app.TRAKT_API_KEY,
                           "trakt_api_secret": app.TRAKT_API_SECRET}
         trakt_api = TraktApi(app.SSL_VERIFY, app.TRAKT_TIMEOUT, **trakt_settings)
@@ -546,16 +546,16 @@ class Home(WebRoot):
         return "Trakt Not Authorized!"
 
     @staticmethod
-    def testTrakt(username=None, blacklist_name=None):
+    def test_trakt(username=None, blacklist_name=None):
         return notifiers.trakt_notifier.test_notify(username, blacklist_name)
 
     @staticmethod
-    def forceTraktSync():
+    def force_trakt_sync():
         """Force a trakt sync, depending on the notification settings, library is synced with watchlist and/or collection."""
         return json.dumps({'result': ('Could not start sync', 'Sync Started')[app.trakt_checker_scheduler.force_run()]})
 
     @staticmethod
-    def loadShowNotifyLists():
+    def load_show_notify_lists():
         main_db_con = db.DBConnection()
         rows = main_db_con.select(
             'SELECT show_id, show_name, notify_list '
@@ -588,8 +588,8 @@ class Home(WebRoot):
         return json.dumps(data)
 
     @staticmethod
-    def saveShowNotifyList(indexername=None, seriesid=None, emails=None, prowlAPIs=None):
-        entries = {'emails': '', 'prowlAPIs': ''}
+    def save_show_notify_list(indexername=None, seriesid=None, emails=None, prowl_apis=None):
+        entries = {'emails': '', 'prowl_apis': ''}
         main_db_con = db.DBConnection()
 
         indexer_id = indexer_name_to_id(indexername)
@@ -619,8 +619,8 @@ class Home(WebRoot):
             ):
                 return 'ERROR'
 
-        if prowlAPIs is not None:
-            entries['prowlAPIs'] = prowlAPIs
+        if prowl_apis is not None:
+            entries['prowl_apis'] = prowl_apis
             if not main_db_con.action(
                     'UPDATE tv_shows '
                     'SET notify_list = ? '
@@ -632,7 +632,7 @@ class Home(WebRoot):
         return 'OK'
 
     @staticmethod
-    def testEmail(host=None, port=None, smtp_from=None, use_tls=None, user=None, pwd=None, to=None):
+    def test_email(host=None, port=None, smtp_from=None, use_tls=None, user=None, pwd=None, to=None):
         host = config.clean_host(host)
         if notifiers.email_notifier.test_notify(host, port, smtp_from, use_tls, user, pwd, to):
             return 'Test email sent successfully! Check inbox.'
@@ -640,7 +640,7 @@ class Home(WebRoot):
             return 'ERROR: {error}'.format(error=notifiers.email_notifier.last_err)
 
     @staticmethod
-    def testNMA(nma_api=None, nma_priority=0):
+    def test_nma(nma_api=None, nma_priority=0):
         result = notifiers.nma_notifier.test_notify(nma_api, nma_priority)
         if result:
             return 'Test NMA notice sent successfully'
@@ -648,15 +648,15 @@ class Home(WebRoot):
             return 'Test NMA notice failed'
 
     @staticmethod
-    def testPushalot(authorizationToken=None):
-        result = notifiers.pushalot_notifier.test_notify(authorizationToken)
+    def test_pushalot(authorization_token=None):
+        result = notifiers.pushalot_notifier.test_notify(authorization_token)
         if result:
             return 'Pushalot notification succeeded. Check your Pushalot clients to make sure it worked'
         else:
             return 'Error sending Pushalot notification'
 
     @staticmethod
-    def testPushbullet(api=None):
+    def test_pushbullet(api=None):
         result = notifiers.pushbullet_notifier.test_notify(api)
         if result.get('success'):
             return 'Pushbullet notification succeeded. Check your device to make sure it worked'
@@ -664,7 +664,7 @@ class Home(WebRoot):
             return 'Error sending Pushbullet notification: {0}'.format(result.get('error'))
 
     @staticmethod
-    def getPushbulletDevices(api=None):
+    def get_pushbullet_devices(api=None):
         result = notifiers.pushbullet_notifier.get_devices(api)
         if result:
             return result
@@ -696,7 +696,7 @@ class Home(WebRoot):
         title = 'Shutting down'
         message = 'Medusa is shutting down...'
 
-        return self._genericMessage(title, message)
+        return self._generic_message(title, message)
 
     def restart(self, pid=None):
         if not system.restart(app, app.events, pid):
@@ -707,7 +707,7 @@ class Home(WebRoot):
         return t.render(title='Home', header='Restarting Medusa', topmenu='system',
                         controller='home', action='restart')
 
-    def updateCheck(self, pid=None):
+    def update_check(self, pid=None):
         if str(pid) != str(app.PID):
             return self.redirect('/home/')
 
@@ -735,12 +735,12 @@ class Home(WebRoot):
                 return t.render(title='Home', header='Restarting Medusa', topmenu='home',
                                 controller='home', action='restart')
             else:
-                return self._genericMessage('Update Failed',
+                return self._generic_message('Update Failed',
                                             'Update wasn\'t successful, not restarting. Check your log for more information.')
         else:
             return self.redirect('/{page}/'.format(page=app.DEFAULT_PAGE))
 
-    def branchCheckout(self, branch):
+    def branch_checkout(self, branch):
         if app.BRANCH != branch:
             app.BRANCH = branch
             ui.notifications.message('Checking out branch: ', branch)
@@ -749,7 +749,7 @@ class Home(WebRoot):
             ui.notifications.message('Already on branch: ', branch)
             return self.redirect('/{page}/'.format(page=app.DEFAULT_PAGE))
 
-    def branchForceUpdate(self):
+    def branch_force_update(self):
         return {
             'currentBranch': app.BRANCH,
             'resetBranches': app.GIT_RESET_BRANCHES,
@@ -758,7 +758,7 @@ class Home(WebRoot):
         }
 
     @staticmethod
-    def getDBcompare():
+    def get_db_compare():
         checkversion = CheckVersion()  # @TODO: replace with settings var
         db_status = checkversion.get_db_compare()
 
@@ -787,7 +787,7 @@ class Home(WebRoot):
                 'message': 'General exception',
             })
 
-    def getSeasonSceneExceptions(self, indexername, seriesid):
+    def get_season_scene_exceptions(self, indexername, seriesid):
         """
         Get series name scene exceptions per season.
 
@@ -805,16 +805,16 @@ class Home(WebRoot):
                              in iteritems(get_xem_numbering_for_show(series_obj, refresh_data=False))}
         })
 
-    def displayShow(self, indexername=None, seriesid=None, ):
+    def display_series(self, indexername=None, seriesid=None, ):
         # @TODO: add more comprehensive show validation
         try:
             indexer_id = indexer_name_to_id(indexername)
             series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
         except (ValueError, TypeError):
-            return self._genericMessage('Error', 'Invalid series ID: {seriesid}'.format(seriesid=seriesid))
+            return self._generic_message('Error', 'Invalid series ID: {seriesid}'.format(seriesid=seriesid))
 
         if series_obj is None:
-            return self._genericMessage('Error', 'Show not in show list')
+            return self._generic_message('Error', 'Show not in show list')
 
         main_db_con = db.DBConnection()
         season_results = main_db_con.select(
@@ -835,10 +835,10 @@ class Home(WebRoot):
             [series_obj.indexer, series_obj.series_id, min_season]
         )
 
-        t = PageTemplate(rh=self, filename='displayShow.mako')
+        t = PageTemplate(rh=self, filename='display_series.mako')
         submenu = [{
             'title': 'Edit',
-            'path': 'home/editShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+            'path': 'home/edit_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
             'icon': 'ui-icon ui-icon-pencil',
         }]
 
@@ -874,12 +874,12 @@ class Home(WebRoot):
             if not app.show_queue_scheduler.action.is_being_updated(series_obj):
                 submenu.append({
                     'title': 'Resume' if series_obj.paused else 'Pause',
-                    'path': 'home/togglePause?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'path': 'home/toggle_pause?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                     'icon': 'ui-icon ui-icon-{state}'.format(state='play' if series_obj.paused else 'pause'),
                 })
                 submenu.append({
                     'title': 'Remove',
-                    'path': 'home/deleteShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'path': 'home/delete_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                     'class': 'removeshow',
                     'confirm': True,
                     'icon': 'ui-icon ui-icon-trash',
@@ -896,19 +896,19 @@ class Home(WebRoot):
                 })
                 submenu.append({
                     'title': 'Update show in KODI',
-                    'path': 'home/updateKODI?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
-                    'requires': self.haveKODI(),
+                    'path': 'home/update_kodi?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'requires': self.have_kodi(),
                     'icon': 'menu-icon-kodi',
                 })
                 submenu.append({
                     'title': 'Update show in Emby',
-                    'path': 'home/updateEMBY?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
-                    'requires': self.haveEMBY(),
+                    'path': 'home/update_emby?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'requires': self.have_emby(),
                     'icon': 'menu-icon-emby',
                 })
                 submenu.append({
                     'title': 'Preview Rename',
-                    'path': 'home/testRename?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'path': 'home/test_rename?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                     'icon': 'ui-icon ui-icon-tag',
                 })
 
@@ -916,7 +916,7 @@ class Home(WebRoot):
                         series_obj) and series_obj.subtitles:
                     submenu.append({
                         'title': 'Download Subtitles',
-                        'path': 'home/subtitleShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                        'path': 'home/subtitle_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                         'icon': 'menu-icon-backlog',
                     })
 
@@ -991,10 +991,10 @@ class Home(WebRoot):
             xem_numbering=get_xem_numbering_for_show(series_obj, refresh_data=False),
             scene_absolute_numbering=get_scene_absolute_numbering_for_show(series_obj),
             xem_absolute_numbering=get_xem_absolute_numbering_for_show(series_obj),
-            title=series_obj.name, controller='home', action='displayShow',
+            title=series_obj.name, controller='home', action='display_series',
         )
 
-    def pickManualSearch(self, provider=None, rowid=None, manual_search_type='episode'):
+    def pick_manual_search(self, provider=None, rowid=None, manual_search_type='episode'):
         """
         Tries to Perform the snatch for a manualSelected episode, episodes or season pack.
 
@@ -1019,7 +1019,7 @@ class Home(WebRoot):
         except Exception as msg:
             error_message = 'Couldn\'t read cached results. Error: {error}'.format(error=msg)
             log.info(error_message)
-            return self._genericMessage('Error', error_message)
+            return self._generic_message('Error', error_message)
 
         if not cached_result or not all([cached_result['url'],
                                          cached_result['quality'],
@@ -1028,15 +1028,15 @@ class Home(WebRoot):
                                          cached_result['indexerid'],
                                          cached_result['season'] is not None,
                                          provider]):
-            return self._genericMessage('Error', "Cached result doesn't have all needed info to snatch episode")
+            return self._generic_message('Error', "Cached result doesn't have all needed info to snatch episode")
 
         try:
             series_obj = Show.find_by_id(app.showList, cached_result['indexer'], cached_result['indexerid'])
         except (ValueError, TypeError):
-            return self._genericMessage('Error', 'Invalid show ID: {0}'.format(cached_result['indexerid']))
+            return self._generic_message('Error', 'Invalid show ID: {0}'.format(cached_result['indexerid']))
 
         if not series_obj:
-            return self._genericMessage('Error', 'Could not find a show with id {0} in the list of shows, '
+            return self._generic_message('Error', 'Could not find a show with id {0} in the list of shows, '
                                                  'did you remove the show?'.format(cached_result['indexerid']))
 
         # Create a list of episode object(s)
@@ -1070,7 +1070,7 @@ class Home(WebRoot):
             'result': 'failure',
         })
 
-    def manualSearchCheckCache(self, indexername, seriesid, season=None, episode=None, manual_search_type='episode', **last_prov_updates):
+    def manual_search_check_cache(self, indexername, seriesid, season=None, episode=None, manual_search_type='episode', **last_prov_updates):
         """
         Check search thread status for an episode and get cache results.
 
@@ -1151,18 +1151,18 @@ class Home(WebRoot):
 
         return {'result': searched_item[0]['searchstatus']}
 
-    def snatchSelection(self, indexername, seriesid, season=None, episode=None, manual_search_type='episode',
-                        perform_search=0, down_cur_quality=0, show_all_results=0):
+    def snatch_selection(self, indexername, seriesid, season=None, episode=None, manual_search_type='episode',
+                         perform_search=0, down_cur_quality=0, show_all_results=0):
         """The view with results for the manual selected show/episode."""
         # @TODO: add more comprehensive show validation
         try:
             indexer_id = indexer_name_to_id(indexername)
             series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
         except (ValueError, TypeError):
-            return self._genericMessage('Error', 'Invalid show ID: {series}'.format(series=seriesid))
+            return self._generic_message('Error', 'Invalid show ID: {series}'.format(series=seriesid))
 
         if series_obj is None:
-            return self._genericMessage('Error', 'Show not in show list')
+            return self._generic_message('Error', 'Show not in show list')
 
         # Retrieve cache results from providers
         search_show = {'series': series_obj, 'season': season, 'episode': episode, 'manual_search_type': manual_search_type}
@@ -1170,10 +1170,10 @@ class Home(WebRoot):
         provider_results = get_provider_cache_results(series_obj, perform_search=perform_search,
                                                       show_all_results=show_all_results, **search_show)
 
-        t = PageTemplate(rh=self, filename='snatchSelection.mako')
+        t = PageTemplate(rh=self, filename='snatch_selection.mako')
         submenu = [{
             'title': 'Edit',
-            'path': 'home/editShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+            'path': 'home/edit_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
             'icon': 'ui-icon ui-icon-pencil'
         }]
 
@@ -1188,12 +1188,12 @@ class Home(WebRoot):
             if not app.show_queue_scheduler.action.is_being_updated(series_obj):
                 submenu.append({
                     'title': 'Resume' if series_obj.paused else 'Pause',
-                    'path': 'home/togglePause?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'path': 'home/toggle_pause?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                     'icon': 'ui-icon ui-icon-{state}'.format(state='play' if series_obj.paused else 'pause'),
                 })
                 submenu.append({
                     'title': 'Remove',
-                    'path': 'home/deleteShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'path': 'home/delete_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                     'class': 'removeshow',
                     'confirm': True,
                     'icon': 'ui-icon ui-icon-trash',
@@ -1210,19 +1210,19 @@ class Home(WebRoot):
                 })
                 submenu.append({
                     'title': 'Update show in KODI',
-                    'path': 'home/updateKODI?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
-                    'requires': self.haveKODI(),
+                    'path': 'home/update_kodi?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'requires': self.have_kodi(),
                     'icon': 'submenu-icon-kodi',
                 })
                 submenu.append({
                     'title': 'Update show in Emby',
-                    'path': 'home/updateEMBY?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
-                    'requires': self.haveEMBY(),
+                    'path': 'home/update_emby?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'requires': self.have_emby(),
                     'icon': 'ui-icon ui-icon-refresh',
                 })
                 submenu.append({
                     'title': 'Preview Rename',
-                    'path': 'home/testRename?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'path': 'home/test_rename?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                     'icon': 'ui-icon ui-icon-tag',
                 })
 
@@ -1230,7 +1230,7 @@ class Home(WebRoot):
                         series_obj) and series_obj.subtitles:
                     submenu.append({
                         'title': 'Download Subtitles',
-                        'path': 'home/subtitleShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                        'path': 'home/subtitle_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                         'icon': 'ui-icon ui-icon-comment',
                     })
 
@@ -1389,13 +1389,13 @@ class Home(WebRoot):
             xem_numbering=get_xem_numbering_for_show(series_obj, refresh_data=False),
             scene_absolute_numbering=get_scene_absolute_numbering_for_show(series_obj),
             xem_absolute_numbering=get_xem_absolute_numbering_for_show(series_obj),
-            title=series_obj.name, controller='home', action='snatchSelection',
+            title=series_obj.name, controller='home', action='snatch_selection',
             episode_history=episode_history, season_results=season_results, sql_results=sql_results,
             ep_counts=ep_counts, ep_cats=ep_cats
         )
 
     @staticmethod
-    def sceneExceptions(indexername, seriesid):
+    def scene_exceptions(indexername, seriesid):
         # @TODO: Replace with plot from GET /api/v2/show/{id}
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
@@ -1411,7 +1411,7 @@ class Home(WebRoot):
         return '<br>'.join(out)
 
     @staticmethod
-    def check_show_for_language(series_obj, language):
+    def check_series_for_language(series_obj, language):
         """
         Request the show in a specific language from the indexer.
 
@@ -1420,7 +1420,7 @@ class Home(WebRoot):
         :returns: True if show is found in language else False
         """
         # Get the Indexer used by the show
-        show_indexer = indexerApi(series_obj.indexer)
+        show_indexer = IndexerAPI(series_obj.indexer)
 
         # Add the language to the show indexer's parameters
         params = show_indexer.api_params.copy()
@@ -1436,12 +1436,12 @@ class Home(WebRoot):
             indexer[series_obj.indexerid]
             return True
 
-    def editShow(self, indexername=None, seriesid=None, location=None, allowed_qualities=None, preferred_qualities=None,
-                 exceptions_list=None, flatten_folders=None, paused=None, directCall=False,
-                 air_by_date=None, sports=None, dvd_order=None, indexer_lang=None,
-                 subtitles=None, rls_ignore_words=None, rls_require_words=None,
-                 anime=None, blacklist=None, whitelist=None, scene=None,
-                 defaultEpStatus=None, quality_preset=None):
+    def edit_series(self, indexername=None, seriesid=None, location=None, allowed_qualities=None, preferred_qualities=None,
+                    exceptions_list=None, flatten_folders=None, paused=None, direct_call=False,
+                    air_by_date=None, sports=None, dvd_order=None, indexer_lang=None,
+                    subtitles=None, rls_ignore_words=None, rls_require_words=None,
+                    anime=None, blacklist=None, whitelist=None, scene=None,
+                    default_ep_status=None, quality_preset=None):
         # @TODO: Replace with PATCH /api/v2/show/{id}
 
         allowed_qualities = allowed_qualities or []
@@ -1453,21 +1453,21 @@ class Home(WebRoot):
 
         if not indexername or not seriesid:
             error_string = 'No show was selected'
-            if directCall:
+            if direct_call:
                 errors += 1
                 return errors
             else:
-                return self._genericMessage('Error', error_string)
+                return self._generic_message('Error', error_string)
 
         series_obj = Show.find_by_id(app.showList, indexer_name_to_id(indexername), seriesid)
 
         if not series_obj:
             error_string = 'Unable to find the specified show ID: {show}'.format(show=series_obj)
-            if directCall:
+            if direct_call:
                 errors += 1
                 return errors
             else:
-                return self._genericMessage('Error', error_string)
+                return self._generic_message('Error', error_string)
 
         series_obj.exceptions = get_scene_exceptions(series_obj)
 
@@ -1476,7 +1476,7 @@ class Home(WebRoot):
             preferred_qualities = []
 
         if not location and not allowed_qualities and not preferred_qualities and not flatten_folders:
-            t = PageTemplate(rh=self, filename='editShow.mako')
+            t = PageTemplate(rh=self, filename='edit_series.mako')
 
             if series_obj.is_anime:
                 if not series_obj.release_groups:
@@ -1502,10 +1502,10 @@ class Home(WebRoot):
 
             if series_obj.is_anime:
                 return t.render(show=show, scene_exceptions=scene_exceptions, groups=groups, whitelist=whitelist,
-                                blacklist=blacklist, title='Edit Show', header='Edit Show', controller='home', action='editShow')
+                                blacklist=blacklist, title='Edit Show', header='Edit Show', controller='home', action='edit_series')
             else:
                 return t.render(show=show, scene_exceptions=scene_exceptions, title='Edit Show', header='Edit Show',
-                                controller='home', action='editShow')
+                                controller='home', action='edit_series')
 
         flatten_folders = not config.checkbox_to_value(flatten_folders)  # UI inverts this value
         dvd_order = config.checkbox_to_value(dvd_order)
@@ -1524,14 +1524,14 @@ class Home(WebRoot):
                 ' for {indexer_name} show {show_id}'.format(
                     language=indexer_lang,
                     show_id=series_obj.indexerid,
-                    indexer_name=indexerApi(series_obj.indexer).name,
+                    indexer_name=IndexerAPI(series_obj.indexer).name,
                 )
             )
             status = 'Unexpected result when changing language to'
             log_level = logging.WARNING
             language = series_obj.lang
             try:
-                do_update = self.check_show_for_language(
+                do_update = self.check_series_for_language(
                     series_obj,
                     indexer_lang,
                 )
@@ -1570,9 +1570,9 @@ class Home(WebRoot):
         if not isinstance(exceptions, set):
             exceptions = {exceptions}
 
-        # If directCall from mass_edit_update no scene exceptions handling or
+        # If direct_call from mass_edit_update no scene exceptions handling or
         # blackandwhite list handling
-        if directCall:
+        if direct_call:
             do_update_exceptions = False
         else:
             if exceptions == series_obj.exceptions:
@@ -1629,10 +1629,10 @@ class Home(WebRoot):
             series_obj.sports = sports
             series_obj.subtitles = subtitles
             series_obj.air_by_date = air_by_date
-            series_obj.default_ep_status = int(defaultEpStatus)
+            series_obj.default_ep_status = int(default_ep_status)
             series_obj.dvd_order = dvd_order
 
-            if not directCall:
+            if not direct_call:
                 series_obj.lang = indexer_lang
                 series_obj.rls_ignore_words = rls_ignore_words.strip()
                 series_obj.rls_require_words = rls_require_words.strip()
@@ -1747,7 +1747,7 @@ class Home(WebRoot):
                     )
                 )
 
-        if directCall:
+        if direct_call:
             return errors
 
         if errors:
@@ -1755,7 +1755,7 @@ class Home(WebRoot):
             (num=errors, s='s' if errors > 1 else ''))
 
         log.debug(u"Finished editing show: {show}".format(show=series_obj.name))
-        return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+        return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
 
     @staticmethod
     def erase_cache(series_obj):
@@ -1783,26 +1783,26 @@ class Home(WebRoot):
         except Exception:
             log.debug(u'Unable to delete cached results for show: {show}'.format(show=series_obj.name))
 
-    def togglePause(self, indexername=None, seriesid=None):
+    def toggle_pause(self, indexername=None, seriesid=None):
         # @TODO: Replace with PUT to update the state var /api/v2/show/{id}
         indexer_name_to_id(indexername)
         error, series_obj = Show.pause(indexer_name_to_id(indexername), seriesid)
 
         if error is not None:
-            return self._genericMessage('Error', error)
+            return self._generic_message('Error', error)
 
         ui.notifications.message('{show} has been {state}'.format
                                  (show=series_obj.name, state='paused' if series_obj.paused else 'resumed'))
 
-        return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+        return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
 
-    def deleteShow(self, indexername=None, seriesid=None, full=0):
+    def delete_series(self, indexername=None, seriesid=None, full=0):
         # @TODO: Replace with DELETE to delete the show resource /api/v2/show/{id}
         if seriesid and indexername:
             error, series_obj = Show.delete(indexer_name_to_id(indexername), seriesid, full)
 
             if error is not None:
-                return self._genericMessage('Error', error)
+                return self._generic_message('Error', error)
 
             ui.notifications.message('{show} has been {state} {details}'.format(
                 show=series_obj.name,
@@ -1818,13 +1818,13 @@ class Home(WebRoot):
         # Don't redirect to the default page, so the user can confirm that the show was deleted
         return self.redirect('/home/')
 
-    def refreshShow(self, indexername=None, seriesid=None):
+    def refresh_series(self, indexername=None, seriesid=None):
         # @TODO: Replace with status=refresh from PATCH /api/v2/show/{id}
         error, series_obj = Show.refresh(indexer_name_to_id(indexername), seriesid)
 
         # This is a show validation error
         if error is not None and series_obj is None:
-            return self._genericMessage('Error', error)
+            return self._generic_message('Error', error)
 
         # This is a refresh error
         if error is not None:
@@ -1832,18 +1832,18 @@ class Home(WebRoot):
 
         time.sleep(cpu_presets[app.CPU_PRESET])
 
-        return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+        return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
 
-    def updateShow(self, indexername=None, seriesid=None):
+    def update_series(self, indexername=None, seriesid=None):
         # @TODO: Replace with status=update or status=updating from PATCH /api/v2/show/{id}
         if seriesid is None:
-            return self._genericMessage('Error', 'Invalid show ID')
+            return self._generic_message('Error', 'Invalid show ID')
 
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
 
         if series_obj is None:
-            return self._genericMessage('Error', 'Unable to find the specified show')
+            return self._generic_message('Error', 'Unable to find the specified show')
 
         # force the update
         try:
@@ -1854,34 +1854,34 @@ class Home(WebRoot):
         # just give it some time
         time.sleep(cpu_presets[app.CPU_PRESET])
 
-        return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+        return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
 
-    def subtitleShow(self, indexername=None, seriesid=None):
+    def subtitle_series(self, indexername=None, seriesid=None):
         if seriesid is None:
-            return self._genericMessage('Error', 'Invalid show ID')
+            return self._generic_message('Error', 'Invalid show ID')
 
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
 
         if series_obj is None:
-            return self._genericMessage('Error', 'Unable to find the specified show')
+            return self._generic_message('Error', 'Unable to find the specified show')
 
         # search and download subtitles
         app.show_queue_scheduler.action.download_subtitles(series_obj)
 
         time.sleep(cpu_presets[app.CPU_PRESET])
 
-        return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+        return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
 
-    def updateKODI(self, indexername=None, seriesid=None):
+    def update_kodi(self, indexername=None, seriesid=None):
         if seriesid is None:
-            return self._genericMessage('Error', 'Invalid show ID')
+            return self._generic_message('Error', 'Invalid show ID')
 
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
 
         if series_obj is None:
-            return self._genericMessage('Error', 'Unable to find the specified show')
+            return self._generic_message('Error', 'Unable to find the specified show')
         else:
             show_name = quote_plus(series_obj.name)
 
@@ -1896,11 +1896,11 @@ class Home(WebRoot):
             ui.notifications.error('Unable to contact one or more KODI host(s): {host}'.format(host=host))
 
         if series_obj:
-            return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+            return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
         else:
             return self.redirect('/home/')
 
-    def updatePLEX(self):
+    def update_plex(self):
         if None is notifiers.plex_notifier.update_library():
             ui.notifications.message(
                 'Library update command sent to Plex Media Server host: {host}'.format(host=', '.join(app.PLEX_SERVER_HOST)))
@@ -1908,11 +1908,11 @@ class Home(WebRoot):
             ui.notifications.error('Unable to contact Plex Media Server host: {host}'.format(host=', '.join(app.PLEX_SERVER_HOST)))
         return self.redirect('/home/')
 
-    def updateEMBY(self, indexername=None, seriesid=None):
+    def update_emby(self, indexername=None, seriesid=None):
         series_obj = None
 
         if seriesid is None:
-            return self._genericMessage('Error', 'Invalid show ID')
+            return self._generic_message('Error', 'Invalid show ID')
 
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
@@ -1924,7 +1924,7 @@ class Home(WebRoot):
             ui.notifications.error('Unable to contact Emby host: {host}'.format(host=app.EMBY_HOST))
 
         if series_obj:
-            return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+            return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
         else:
             return self.redirect('/home/')
 
@@ -1938,7 +1938,7 @@ class Home(WebRoot):
                     'result': 'error',
                 })
             else:
-                return self._genericMessage('Error', error_message)
+                return self._generic_message('Error', error_message)
 
         # Use .has_key() since it is overridden for statusStrings in common.py
         if status not in statusStrings:
@@ -1949,7 +1949,7 @@ class Home(WebRoot):
                     'result': 'error',
                 })
             else:
-                return self._genericMessage('Error', error_message)
+                return self._generic_message('Error', error_message)
 
         series_obj = Show.find_by_id(app.showList, indexer_name_to_id(indexername), seriesid)
 
@@ -1961,7 +1961,7 @@ class Home(WebRoot):
                     'result': 'error',
                 })
             else:
-                return self._genericMessage('Error', error_message)
+                return self._generic_message('Error', error_message)
 
         segments = {}
         trakt_data = []
@@ -1984,7 +1984,7 @@ class Home(WebRoot):
                 ep_obj = series_obj.get_episode(ep_info[0], ep_info[1])
 
                 if not ep_obj:
-                    return self._genericMessage('Error', 'Episode couldn\'t be retrieved')
+                    return self._generic_message('Error', 'Episode couldn\'t be retrieved')
 
                 status = int(status)
                 if status in [WANTED, FAILED]:
@@ -2113,21 +2113,21 @@ class Home(WebRoot):
                 'result': 'success',
             })
         else:
-            return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+            return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
 
-    def testRename(self, indexername=None, seriesid=None):
+    def test_rename(self, indexername=None, seriesid=None):
         if not indexername or not seriesid:
-            return self._genericMessage('Error', 'You must specify a show')
+            return self._generic_message('Error', 'You must specify a show')
 
         series_obj = Show.find_by_id(app.showList, indexer_name_to_id(indexername), seriesid)
 
         if series_obj is None:
-            return self._genericMessage('Error', 'Show not in show list')
+            return self._generic_message('Error', 'Show not in show list')
 
         try:
             series_obj.location  # @UnusedVariable
         except ShowDirectoryNotFoundException:
-            return self._genericMessage('Error', 'Can\'t rename episodes when the show dir is missing.')
+            return self._generic_message('Error', 'Can\'t rename episodes when the show dir is missing.')
 
         ep_obj_list = series_obj.get_all_episodes(has_location=True)
         ep_obj_list = [x for x in ep_obj_list if x.location]
@@ -2144,10 +2144,10 @@ class Home(WebRoot):
         if ep_obj_rename_list:
             ep_obj_rename_list.reverse()
 
-        t = PageTemplate(rh=self, filename='testRename.mako')
+        t = PageTemplate(rh=self, filename='test_rename.mako')
         submenu = [{
             'title': 'Edit',
-            'path': 'home/editShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+            'path': 'home/edit_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
             'icon': 'ui-icon ui-icon-pencil'
         }]
 
@@ -2156,24 +2156,24 @@ class Home(WebRoot):
                         header='Preview Rename',
                         controller='home', action='previewRename')
 
-    def doRename(self, indexername=None, seriesid=None, eps=None):
+    def do_rename(self, indexername=None, seriesid=None, eps=None):
         if not all([indexername, seriesid, eps]):
             error_message = 'You must specify a show and at least one episode'
-            return self._genericMessage('Error', error_message)
+            return self._generic_message('Error', error_message)
 
         series_obj = Show.find_by_id(app.showList, indexer_name_to_id(indexername), seriesid)
 
         if series_obj is None:
             error_message = 'Error', 'Show not in show list'
-            return self._genericMessage('Error', error_message)
+            return self._generic_message('Error', error_message)
 
         try:
             series_obj.location  # @UnusedVariable
         except ShowDirectoryNotFoundException:
-            return self._genericMessage('Error', 'Can\'t rename episodes when the show dir is missing.')
+            return self._generic_message('Error', 'Can\'t rename episodes when the show dir is missing.')
 
         if eps is None:
-            return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+            return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
 
         main_db_con = db.DBConnection()
         for cur_ep in eps.split('|'):
@@ -2207,9 +2207,9 @@ class Home(WebRoot):
 
             root_ep_obj.rename()
 
-        return self.redirect('/home/displayShow?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
+        return self.redirect('/home/display_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj))
 
-    def searchEpisode(self, indexername=None, seriesid=None, season=None, episode=None, manual_search=None):
+    def search_episode(self, indexername=None, seriesid=None, season=None, episode=None, manual_search=None):
         """Search a ForcedSearch single episode using providers which are backlog enabled."""
         down_cur_quality = 0
 
@@ -2245,7 +2245,7 @@ class Home(WebRoot):
     # ## Returns the current ep_queue_item status for the current viewed show.
     # Possible status: Downloaded, Snatched, etc...
     # Returns {'show': 279530, 'episodes' : ['episode' : 6, 'season' : 1, 'searchstatus' : 'queued', 'status' : 'running', 'quality': '4013']
-    def getManualSearchStatus(self, indexername=None, seriesid=None):
+    def get_manual_search_status(self, indexername=None, seriesid=None):
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
         episodes = collect_episodes_from_search_thread(series_obj)
@@ -2254,7 +2254,7 @@ class Home(WebRoot):
             'episodes': episodes,
         })
 
-    def searchEpisodeSubtitles(self, indexername=None, seriesid=None, season=None, episode=None, lang=None):
+    def search_episode_subtitles(self, indexername=None, seriesid=None, season=None, episode=None, lang=None):
         # retrieve the episode object and fail if we can't get one
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
@@ -2355,8 +2355,8 @@ class Home(WebRoot):
             'subtitles': subtitles_result
         })
 
-    def setSceneNumbering(self, indexername=None, seriesid=None, for_season=None, for_episode=None, for_absolute=None, scene_season=None,
-                          scene_episode=None, scene_absolute=None):
+    def set_scene_numbering(self, indexername=None, seriesid=None, for_season=None, for_episode=None, for_absolute=None, scene_season=None,
+                            scene_episode=None, scene_absolute=None):
 
         # sanitize:
         for_season = None if for_season in ['null', ''] else for_season
@@ -2458,7 +2458,7 @@ class Home(WebRoot):
 
         return json.dumps(result)
 
-    def retryEpisode(self, indexername, seriesid, season, episode, down_cur_quality=0):
+    def retry_episode(self, indexername, seriesid, season, episode, down_cur_quality=0):
         # retrieve the episode object and fail if we can't get one
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
@@ -2487,7 +2487,7 @@ class Home(WebRoot):
             })
 
     @staticmethod
-    def fetch_releasegroups(show_name):
+    def fetch_release_groups(show_name):
         log.info(u'ReleaseGroups: {show}'.format(show=show_name))
         if helpers.set_up_anidb_connection():
             try:

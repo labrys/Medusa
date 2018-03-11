@@ -916,7 +916,7 @@ class Overview:
         UNAIRED: "unaired",
         SNATCHED: "snatched",
         # we can give these a different class later, otherwise
-        # breaks checkboxes in displayShow for showing different statuses
+        # breaks checkboxes in display_series for showing different statuses
         SNATCHED_BEST: "snatched",
         SNATCHED_PROPER: "snatched"
     })

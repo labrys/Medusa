@@ -3,7 +3,7 @@ MEDUSA.manage.backlogOverview = function() {
 
     function checkForcedSearch() {
         let pollInterval = 5000;
-        const searchStatusUrl = 'home/getManualSearchStatus';
+        const searchStatusUrl = 'home/get_manual_search_status';
         const indexerName = $('#indexer-name').val();
         const seriesId = $('#series-id').val();
         const url = seriesId === undefined ? searchStatusUrl : searchStatusUrl + '?indexername=' + indexerName + '&seriesid=' + seriesId;

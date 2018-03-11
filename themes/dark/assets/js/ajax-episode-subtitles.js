@@ -44,7 +44,7 @@ const startAjaxEpisodeSubtitles = function() { // eslint-disable-line no-unused-
 
     $.ajaxEpSubtitlesSearch = function() {
         $('.epSubtitlesSearch').on('click', function(e) {
-            // This is for the page 'displayShow.mako'
+            // This is for the page 'display_series.mako'
             e.preventDefault();
             selectedEpisode = $(this);
             subtitlesTd = selectedEpisode.parent().siblings('.col-subtitles');
@@ -69,7 +69,7 @@ const startAjaxEpisodeSubtitles = function() { // eslint-disable-line no-unused-
             // Remove 'subtitleid-' so we know the actual ID
             subtitleID = subtitleID.replace('subtitleid-', '');
             let url = selectedEpisode.prop('href');
-            url = url.replace('searchEpisodeSubtitles', 'manual_search_subtitles');
+            url = url.replace('search_episode_subtitles', 'manual_search_subtitles');
             // Append the ID param that 'manual_search_subtitles' expect when picking subtitles
             url += '&picked_id=' + encodeURIComponent(subtitleID);
             $.getJSON(url, data => {
@@ -124,7 +124,7 @@ const startAjaxEpisodeSubtitles = function() { // eslint-disable-line no-unused-
             changeImage(selectedEpisode, loadingSpinner, 'loading', 'loading', 16, true);
             let url = selectedEpisode.prop('href');
             // If manual search, replace handler
-            url = url.replace('searchEpisodeSubtitles', 'manual_search_subtitles');
+            url = url.replace('search_episode_subtitles', 'manual_search_subtitles');
             $.getJSON(url, data => {
                 // Delete existing rows in the modal
                 const existingRows = $('#subtitle_results tr').length;

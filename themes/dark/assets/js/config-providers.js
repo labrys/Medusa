@@ -43,7 +43,7 @@ $(document).ready(function() { // eslint-disable-line max-lines
         const params = { url, name, api_key: key }; // eslint-disable-line camelcase
 
         $('.updating_categories').wrapInner('<span><img src="images/loading16' + MEDUSA.config.themeSpinner + '.gif"> Updating Categories ...</span>'); // eslint-disable-line no-undef
-        const jqxhr = $.getJSON('config/providers/getNewznabCategories', params, function(data) {
+        const jqxhr = $.getJSON('config/providers/get_newznab_categories', params, function(data) {
             $(this).updateNewznabCaps(data, selectedProvider);
             console.debug(data.tv_categories);
         });
@@ -456,7 +456,7 @@ $(document).ready(function() { // eslint-disable-line max-lines
         const params = { name };
 
         // Send to the form with ajax, get a return value
-        $.getJSON('config/providers/canAddNewznabProvider', params, function(data) {
+        $.getJSON('config/providers/can_add_newznab_provider', params, function(data) {
             if (data.error !== undefined) {
                 alert(data.error); // eslint-disable-line no-alert
                 return;
@@ -484,7 +484,7 @@ $(document).ready(function() { // eslint-disable-line max-lines
 
         // @TODO: Move to the API
         // send to the form with ajax, get a return value
-        $.getJSON('config/providers/canAddTorrentRssProvider', params, function(data) {
+        $.getJSON('config/providers/can_add_torrent_rss_provider', params, function(data) {
             if (data.error !== undefined) {
                 alert(data.error); // eslint-disable-line no-alert
                 return;

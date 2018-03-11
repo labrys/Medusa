@@ -12,9 +12,9 @@ from medusa.logger.adapters.style import BraceAdapter
 from medusa.session.core import MedusaSession
 
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -154,7 +154,7 @@ class Notifier:
                     failed_hosts.add(cur_host)
                     continue
                 else:
-                    media_container = etree.fromstring(xml_response)
+                    media_container = ETree.fromstring(xml_response)
 
             sections = media_container.findall('.//Directory')
             if not sections:
