@@ -39,7 +39,7 @@
                             Show retrieved from existing metadata: <a href="${anon_url(IndexerAPI(provided_indexer).config['show_url'], provided_indexer_id)}">${provided_indexer_name}</a>
                             <input type="hidden" id="indexer_lang" name="indexer_lang" value="en" />
                             <input type="hidden" id="whichSeries" name="whichSeries" value="${provided_indexer_id}" />
-                            <input type="hidden" id="providedIndexer" name="providedIndexer" value="${provided_indexer}" />
+                            <input type="hidden" id="provided_indexer" name="provided_indexer" value="${provided_indexer}" />
                             <input type="hidden" id="providedName" value="${provided_indexer_name}" />
                         % else:
                             <input type="text" id="nameToSearch" value="${default_show_name}" class="form-control form-control-inline input-sm input350"/>
@@ -47,7 +47,7 @@
                             <select name="indexer_lang" id="indexerLangSelect" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language="${app.INDEXER_DEFAULT_LANGUAGE}" data-available="${','.join(IndexerAPI().config['valid_languages'])}">
                             </select><b>*</b>
                             &nbsp;
-                            <select name="providedIndexer" id="providedIndexer" class="form-control form-control-inline input-sm">
+                            <select name="provided_indexer" id="provided_indexer" class="form-control form-control-inline input-sm">
                                 <option value="0" ${'' if provided_indexer else 'selected="selected"'}>All Indexers</option>
                                 % for indexer in indexers:
                                     <option value="${indexer}" ${'selected="selected"' if provided_indexer == indexer else ''}>

@@ -75,7 +75,7 @@ MEDUSA.add_series.new_series = function() {
             searchRequestXhr.abort();
         }
 
-        const searchingFor = $('#nameToSearch').val().trim() + ' on ' + $('#providedIndexer option:selected').text() + ' in ' + $('#indexerLangSelect').val();
+        const searchingFor = $('#nameToSearch').val().trim() + ' on ' + $('#provided_indexer option:selected').text() + ' in ' + $('#indexerLangSelect').val();
         $('#searchResults').empty().html('<img id="searchingAnim" src="images/loading32' + MEDUSA.config.themeSpinner + '.gif" height="32" width="32" /> searching ' + searchingFor + '...');
 
         searchRequestXhr = $.ajax({
@@ -83,7 +83,7 @@ MEDUSA.add_series.new_series = function() {
             data: {
                 search_term: $('#nameToSearch').val().trim(), // eslint-disable-line camelcase
                 lang: $('#indexerLangSelect').val(),
-                indexer: $('#providedIndexer').val()
+                indexer: $('#provided_indexer').val()
             },
             timeout: parseInt($('#indexer_timeout').val(), 10) * 1000,
             dataType: 'json',
