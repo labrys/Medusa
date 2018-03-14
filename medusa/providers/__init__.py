@@ -10,11 +10,54 @@ from medusa import app
 from medusa.providers.nzb import (
     anizb, binsearch,
 )
-from medusa.providers.torrent import abnormal, alpharatio, anidex, animebytes, animetorrents, archetorrent, bitcannon, \
-    bithdtv, btn, danishbits, elitetorrent, elitetracker, gftracker, hd4free, hdbits, hdspace, hdtorrents, hebits, \
-    horriblesubs, iptorrents, limetorrents, morethantv, nebulance, norbits, nyaa, pretome, privatehd, rarbg, scenetime, \
-    sdbits, shanaproject, shazbat, speedcd, thepiratebay, tntvillage, tokyotoshokan, torrent9, torrentbytes, torrentday, \
-    torrenting, torrentleech, torrentz2, tvchaosuk, tvsinpagar, xthor, yggtorrent, zooqle
+from medusa.providers.torrent import (
+    abnormal,
+    alpharatio,
+    anidex,
+    animebytes,
+    animetorrents,
+    archetorrent,
+    bitcannon,
+    bithdtv,
+    btn,
+    danishbits,
+    elitetorrent,
+    elitetracker,
+    gftracker,
+    hdbits,
+    hdspace,
+    hdtorrents,
+    hebits,
+    horriblesubs,
+    iptorrents,
+    limetorrents,
+    morethantv,
+    nebulance,
+    norbits,
+    nyaa,
+    pretome,
+    privatehd,
+    rarbg,
+    scenetime,
+    sdbits,
+    shanaproject,
+    shazbat,
+    speedcd,
+    thepiratebay,
+    tntvillage,
+    tokyotoshokan,
+    torrent9,
+    torrentbytes,
+    torrentday,
+    torrenting,
+    torrentleech,
+    torrentz2,
+    tvchaosuk,
+    tvsinpagar,
+    xthor,
+    yggtorrent,
+    zooqle
+)
 
 __all__ = [
     'btn',

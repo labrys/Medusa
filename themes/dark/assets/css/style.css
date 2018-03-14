@@ -903,7 +903,7 @@ div.buttontext p {
 }
 
 /* =======================================================================
-home_newShow.mako
+home_new_series.mako
 ========================================================================== */
 
 #addShowForm,
@@ -915,7 +915,7 @@ home_newShow.mako
     font-size: 13px;
 }
 
-#newShowPortal {
+#new_seriesPortal {
     max-width: 960px;
     padding: 10px 0;
     margin-right: auto;

@@ -49,11 +49,11 @@
                             <li><a id="trakt-tab-2" href="${base_url + 'add_series/' + realpage + '/'}?traktList=${traktList}#tabs-2">Customize Options</a></li>
                         </ul>
                         <div id="tabs-1" class="existingtabs">
-                            <%include file="/themes/dark/templates/inc_root_dirs.mako"/>
+                            <%include file="/inc_root_dirs.mako"/>
                             <br/>
                         </div>
                         <div id="tabs-2" class="existingtabs">
-                            <%include file="/themes/dark/templates/inc_add_series_options.mako"/>
+                            <%include file="/inc_add_series_options.mako"/>
                         </div>
                     </label>
                 </div>

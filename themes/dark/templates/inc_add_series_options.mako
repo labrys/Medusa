@@ -4,7 +4,7 @@
     log = logging.getLogger(__name__)
     log.addHandler(logging.NullHandler())
 
-    log.debug('Loading {}'.format(__file__))
+    log.debug('Loading add_series_options')
 %>
 <%
     from medusa import app
@@ -17,7 +17,7 @@
                 <span class="component-title">Preferred Quality</span>
                 <span class="component-desc">
                     <% allowed_qualities, preferred_qualities = Quality.split_quality(app.QUALITY_DEFAULT) %>
-                    <%include file="/themes/dark/templates/inc_quality_chooser.mako"/>
+                    <%include file="/inc_quality_chooser.mako"/>
                 </span>
             </label>
         </div>

@@ -24175,12 +24175,12 @@ $.widget( "ui.button", {
 	},
 
 	_setOptions: function( options ) {
-		var newShowLabel = options.showLabel === undefined ?
+		var new_seriesLabel = options.showLabel === undefined ?
 				this.options.showLabel :
 				options.showLabel,
 			newIcon = options.icon === undefined ? this.options.icon : options.icon;
 
-		if ( !newShowLabel && !newIcon ) {
+		if ( !new_seriesLabel && !newIcon ) {
 			options.showLabel = true;
 		}
 		this._super( options );

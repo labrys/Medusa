@@ -19,7 +19,7 @@
     <h1 class="title">${title}</h1>
 % endif
 <div id="addShowPortal">
-    <a href="add_series/newShow/" id="btnNewShow" class="btn btn-large">
+    <a href="add_series/new_series/" id="btnNewShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addnewshow"></div></div>
         <div class="buttontext">
             <h3>Add New Show</h3>

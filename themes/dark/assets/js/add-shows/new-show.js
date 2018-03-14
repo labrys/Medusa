@@ -1,4 +1,4 @@
-MEDUSA.add_series.newShow = function() {
+MEDUSA.add_series.new_series = function() {
     function updateSampleText() {
         // If something's selected then we have some behavior to figure out
 

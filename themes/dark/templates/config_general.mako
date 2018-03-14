@@ -116,7 +116,7 @@
                                     <span class="component-title">Show root directories</span>
                                     <span class="component-desc">
                                         <p>where the files of shows are located</p>
-                                        <%include file="/themes/dark/templates/inc_root_dirs.mako"/>
+                                        <%include file="/inc_root_dirs.mako"/>
                                     </span>
                                 </label>
                             </div>

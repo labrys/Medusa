@@ -11,7 +11,6 @@ from medusa.providers.torrent.json import (
     bitcannon,
     btn,
     danishbits,
-    hd4free,
     hdbits,
     norbits,
     rarbg,

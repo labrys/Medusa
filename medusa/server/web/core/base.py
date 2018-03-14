@@ -164,6 +164,9 @@ class BaseHandler(RequestHandler):
 
         super(BaseHandler, self).__init__(*args, **kwargs)
 
+    def initialize(self):
+        log.debug(f'Initializing {self!r}')
+
     def write_error(self, status_code, **kwargs):
         """
         Base error Handler for 404's

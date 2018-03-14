@@ -23,14 +23,14 @@
 % else:
     <h1 class="title">${title}</h1>
 % endif
-<div id="newShowPortal">
+<div id="new_seriesPortal">
     <div id="config-components">
         ## @TODO: Fix this stupid hack
         <script>document.write('<ul><li><a href="' + document.location.href + '#core-component-group1">Add New Show</a></li></ul>')</script>
         <div id="core-component-group1" class="tab-pane active component-group">
             <div id="displayText"></div>
             <br>
-            <form id="addShowForm" method="post" action="add_series/addNewShow" accept-charset="utf-8">
+            <form id="addShowForm" method="post" action="add_series/add_new_series" accept-charset="utf-8">
                 <fieldset class="sectionwrap">
                     <legend class="legendStep">Find a show on selected indexer(s)</legend>
                     <div class="stepDiv">
@@ -71,14 +71,14 @@
                             Pre-chosen Destination Folder: <b>${provided_show_dir}</b> <br>
                             <input type="hidden" id="fullShowPath" name="fullShowPath" value="${provided_show_dir}" /><br>
                         % else:
-                            <%include file="/themes/dark/templates/inc_root_dirs.mako"/>
+                            <%include file="/inc_root_dirs.mako"/>
                         % endif
                     </div>
                 </fieldset>
                 <fieldset class="sectionwrap">
                     <legend class="legendStep">Customize options</legend>
                     <div class="stepDiv">
-                        <%include file="/themes/dark/templates/inc_add_series_options.mako"/>
+                        <%include file="/inc_add_series_options.mako"/>
                     </div>
                 </fieldset>
                 % for curNextDir in other_shows:

@@ -20,7 +20,7 @@
 % else:
     <h1 class="title">${title}</h1>
 % endif
-<div id="newShowPortal">
+<div id="new_seriesPortal">
     <div id="config-components">
         ## @TODO: Fix this stupid hack
         <script>document.write('<ul><li><a href="' + document.location.href + '#core-component-group1">Add Existing Show</a></li></ul>')</script>
@@ -32,10 +32,10 @@
                         <li><a href="${base_url}add_series/existingShows/#tabs-2">Customize Options</a></li>
                     </ul>
                     <div id="tabs-1" class="existingtabs">
-                        <%include file="/themes/dark/templates/inc_root_dirs.mako"/>
+                        <%include file="/inc_root_dirs.mako"/>
                     </div>
                     <div id="tabs-2" class="existingtabs">
-                        <%include file="/themes/dark/templates/inc_add_series_options.mako"/>
+                        <%include file="/inc_add_series_options.mako"/>
                     </div>
                 </div>
                 <br>

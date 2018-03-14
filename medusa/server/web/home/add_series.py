@@ -35,14 +35,14 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-@route('/addShows(/?.*)')
+@route('/add_series(/?.*)')
 class HomeAddSeries(Home):
     def __init__(self, *args, **kwargs):
         super(HomeAddSeries, self).__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='add_series.mako')
-        return t.render(title='Add Shows', header='Add Shows', topmenu='home', controller='addShows', action='index')
+        return t.render(title='Add Shows', header='Add Shows', topmenu='home', controller='add_series', action='index')
 
     @staticmethod
     def get_indexer_languages():
@@ -232,7 +232,7 @@ class HomeAddSeries(Home):
             provided_indexer_name=provided_indexer_name, provided_indexer=provided_indexer,
             indexers=IndexerAPI().indexers, whitelist=[], blacklist=[], groups=[],
             title='New Show', header='New Show', topmenu='home',
-            controller='addShows', action='new_series'
+            controller='add_series', action='new_series'
         )
 
     def trending_series(self, trakt_list=None):
@@ -267,7 +267,7 @@ class HomeAddSeries(Home):
         t = PageTemplate(rh=self, filename="add_series_trending_series.mako")
         return t.render(title=page_title, header=page_title,
                         enable_anime_options=True, blacklist=[], whitelist=[], groups=[],
-                        traktList=trakt_list, controller="addShows", action="trending_series",
+                        traktList=trakt_list, controller="add_series", action="trending_series",
                         realpage="trending_series")
 
     def get_trending_series(self, trakt_list=None):
@@ -327,7 +327,7 @@ class HomeAddSeries(Home):
         return t.render(title="Popular Shows", header="Popular Shows",
                         recommended_shows=recommended_shows, exception=e, groups=[],
                         topmenu="home", enable_anime_options=True, blacklist=[], whitelist=[],
-                        controller="addShows", action="recommended_series", realpage="popular_series")
+                        controller="add_series", action="recommended_series", realpage="popular_series")
 
     def popular_anime(self, list_type=REQUEST_HOT):
         """
@@ -345,7 +345,7 @@ class HomeAddSeries(Home):
         return t.render(title="Popular Anime Shows", header="Popular Anime Shows",
                         recommended_shows=recommended_shows, exception=e, groups=[],
                         topmenu="home", enable_anime_options=True, blacklist=[], whitelist=[],
-                        controller="addShows", action="recommended_series", realpage="popular_anime")
+                        controller="add_series", action="recommended_series", realpage="popular_anime")
 
     def add_series_to_blacklist(self, seriesid):
         # URL parameters
@@ -375,7 +375,7 @@ class HomeAddSeries(Home):
         t = PageTemplate(rh=self, filename='add_series_add_existing_series.mako')
         return t.render(enable_anime_options=True, blacklist=[], whitelist=[], groups=[],
                         title='Existing Show', header='Existing Show', topmenu='home',
-                        controller='addShows', action='addExistingShow')
+                        controller='add_series', action='addExistingShow')
 
     def add_series_by_id(self, indexername=None, seriesid=None, show_name=None, which_series=None,
                          indexer_lang=None, root_dir=None, default_status=None,
@@ -523,7 +523,7 @@ class HomeAddSeries(Home):
             if len(series_pieces) < 6:
                 log.error(u'Unable to add show due to show selection. Not enough arguments: %s' % (repr(series_pieces)))
                 ui.notifications.error('Unknown error. Unable to add show due to problem with show selection.')
-                return self.redirect('/addShows/existing_series/')
+                return self.redirect('/add_series/existing_series/')
 
             indexer = int(series_pieces[1])
             indexer_id = int(series_pieces[3])
@@ -546,7 +546,7 @@ class HomeAddSeries(Home):
         # blanket policy - if the dir exists you should have used 'add existing show' numbnuts
         if os.path.isdir(show_dir) and not full_show_path:
             ui.notifications.error('Unable to add show', 'Folder {path} exists already'.format(path=show_dir))
-            return self.redirect('/addShows/existing_series/')
+            return self.redirect('/add_series/existing_series/')
 
         # don't create show dir if config says not to
         if app.ADD_SHOWS_WO_DIR:

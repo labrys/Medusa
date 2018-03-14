@@ -65,7 +65,7 @@
                                 <span class="component-title">Preferred Quality</span>
                                 <span class="component-desc">
                                     <% allowed_qualities, preferred_qualities = common.Quality.split_quality(int(show.quality)) %>
-                                    <%include file="/themes/dark/templates/inc_quality_chooser.mako"/>
+                                    <%include file="/inc_quality_chooser.mako"/>
                                 </span>
                             </label>
                         </div>
