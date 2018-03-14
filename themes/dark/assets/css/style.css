@@ -410,7 +410,7 @@ inc_bottom.mako
 inc_root_dirs.mako
 ========================================================================== */
 .rootdir-selectbox,
-.rootdir-selectbox #rootDirs,
+.rootdir-selectbox #root_dirs,
 .rootdir-controls {
     width: 100%;
     max-width: 430px;
@@ -942,14 +942,14 @@ home_addExistingShow.mako
     padding: 1em 1.4em;
 }
 
-ul#rootDirStaticList {
+ul#root_dirStaticList {
     margin-right: auto;
     margin-left: auto;
     text-align: left;
     padding-left: 0;
 }
 
-ul#rootDirStaticList li {
+ul#root_dirStaticList li {
     padding: 4px 5px;
     margin: 2px;
     list-style: none outside none;
@@ -957,12 +957,12 @@ ul#rootDirStaticList li {
     background: url("../css/lib/images/ui-bg_highlight-soft_75_efefef_1x100.png") repeat-x scroll 50% 50% rgb(239, 239, 239);
 }
 
-ul#rootDirStaticList li label {
+ul#root_dirStaticList li label {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-ul#rootDirStaticList li input[type="checkbox"] {
+ul#root_dirStaticList li input[type="checkbox"] {
     vertical-align: -2px;
 }
 

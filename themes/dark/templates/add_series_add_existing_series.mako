@@ -44,7 +44,7 @@
                 <p><input type="checkbox" name="promptForSettings" id="promptForSettings" /> <label for="promptForSettings">Prompt me to set settings for each show</label></p>
                 <hr>
                 <p><b>Displaying folders within these directories which aren't already added to Medusa:</b></p>
-                <ul id="rootDirStaticList"><li></li></ul>
+                <ul id="root_dirStaticList"><li></li></ul>
                 <br>
                 <div id="tableDiv"></div>
                 <br>

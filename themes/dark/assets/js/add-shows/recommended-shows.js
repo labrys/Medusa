@@ -10,5 +10,5 @@ MEDUSA.add_series.recommended_series = function() {
     $.initAddShowById();
     $.initBlackListShowById();
     $.initRemoteShowGrid();
-    $.rootDirCheck();
+    $.root_dirCheck();
 };

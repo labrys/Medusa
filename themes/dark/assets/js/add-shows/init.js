@@ -44,8 +44,8 @@ MEDUSA.add_series.init = function() {
             });
         });
 
-        $('#rootDirs').on('change', () => {
-            $.rootDirCheck();
+        $('#root_dirs').on('change', () => {
+            $.root_dirCheck();
         });
 
         $('#showsortdirection').on('change', function() {
@@ -132,7 +132,7 @@ MEDUSA.add_series.init = function() {
             const configureShowOptions = $('#configure_show_options').prop('checked');
 
             $.get('add_series/add_series_by_id?indexername=' + $(this).attr('data-indexer') + '&seriesid=' + $(this).attr('data-indexer-id'), {
-                root_dir: $('#rootDirs option:selected').val(), // eslint-disable-line camelcase
+                root_dir: $('#root_dirs option:selected').val(), // eslint-disable-line camelcase
                 configure_show_options: configureShowOptions, // eslint-disable-line camelcase
                 show_name: $(this).attr('data-show-name'), // eslint-disable-line camelcase
                 quality_preset: $('#qualityPreset').val(), // eslint-disable-line camelcase
@@ -159,14 +159,14 @@ MEDUSA.add_series.init = function() {
             });
 
             $.get('config/general/save_add_show_defaults', {
-                defaultStatus: $('#statusSelect').val(),
+                default_status: $('#statusSelect').val(),
                 allowed_qualities: anyQualArray.join(','), // eslint-disable-line camelcase
                 preferred_qualities: bestQualArray.join(','),  // eslint-disable-line camelcase
                 defaultFlattenFolders: $('#flatten_folders').prop('checked'),
                 subtitles: $('#subtitles').prop('checked'),
                 anime: $('#anime').prop('checked'),
                 scene: $('#scene').prop('checked'),
-                defaultStatusAfter: $('#statusSelectAfter').val()
+                default_statusAfter: $('#statusSelectAfter').val()
             });
 
             $(this).prop('disabled', true);

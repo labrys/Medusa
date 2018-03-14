@@ -11,14 +11,14 @@ $(document).ready(() => {
 
         // @TODO: Move this to API
         $.get('config/general/save_add_show_defaults', {
-            defaultStatus: $('#statusSelect').val(),
+            default_status: $('#statusSelect').val(),
             allowed_qualities: anyQualArray.join(','), // eslint-disable-line camelcase
             preferred_qualities: bestQualArray.join(','), // eslint-disable-line camelcase
             defaultFlattenFolders: $('#flatten_folders').prop('checked'),
             subtitles: $('#subtitles').prop('checked'),
             anime: $('#anime').prop('checked'),
             scene: $('#scene').prop('checked'),
-            defaultStatusAfter: $('#statusSelectAfter').val()
+            default_statusAfter: $('#statusSelectAfter').val()
         });
 
         $(this).prop('disabled', true);

@@ -220,11 +220,11 @@
             </tr>
             % endif
             <tr>
-                <td rowspan=${len(rootDir)}>Media Root Directories</td>
-                % for cur_dir in rootDir:
+                <td rowspan=${len(root_dir)}>Media Root Directories</td>
+                % for cur_dir in root_dir:
                     <td>${cur_dir}</td>
-                    % if rootDir[cur_dir] is not False:
-                        <td align="middle">${rootDir[cur_dir]}</td>
+                    % if root_dir[cur_dir] is not False:
+                        <td align="middle">${root_dir[cur_dir]}</td>
                     % else:
                         <td align="middle"><i>Missing</i></td>
                     % endif

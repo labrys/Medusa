@@ -40,7 +40,7 @@ MEDUSA.add_series.addExistingShow = function() {
                 if (url.length !== 0) {
                     url += '&';
                 }
-                url += 'rootDir=' + encodeURIComponent($(w).attr('id'));
+                url += 'root_dir=' + encodeURIComponent($(w).attr('id'));
             }
         });
 
@@ -61,22 +61,22 @@ MEDUSA.add_series.addExistingShow = function() {
     // @TODO this needs a real name, for now this fixes the issue of the page not loading at all,
     //       before I added this I couldn't get the directories to show in the table
     const a = function() {
-        if (lastTxt === $('#rootDirText').val()) {
+        if (lastTxt === $('#root_dirText').val()) {
             return false;
         }
-        lastTxt = $('#rootDirText').val();
-        $('#rootDirStaticList').html('');
-        $('#rootDirs option').each((i, w) => {
-            $('#rootDirStaticList').append('<li class="ui-state-default ui-corner-all"><input type="checkbox" class="cb dir_check" id="' + $(w).val() + '" checked=checked> <label for="' + $(w).val() + '"><b>' + $(w).val() + '</b></label></li>');
+        lastTxt = $('#root_dirText').val();
+        $('#root_dirStaticList').html('');
+        $('#root_dirs option').each((i, w) => {
+            $('#root_dirStaticList').append('<li class="ui-state-default ui-corner-all"><input type="checkbox" class="cb dir_check" id="' + $(w).val() + '" checked=checked> <label for="' + $(w).val() + '"><b>' + $(w).val() + '</b></label></li>');
         });
         loadContent();
     };
 
     a();
 
-    $('#rootDirText').on('change', a);
+    $('#root_dirText').on('change', a);
 
-    $('#rootDirStaticList').on('click', '.dir_check', loadContent);
+    $('#root_dirStaticList').on('click', '.dir_check', loadContent);
 
     $('#tableDiv').on('click', '.showManage', event => {
         event.preventDefault();

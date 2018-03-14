@@ -19,16 +19,16 @@
 <span id="sampleRootDir"></span>
 <input type="hidden" id="whichDefaultRootDir" value="${backend_default}" />
 <div class="rootdir-selectbox">
-    <select name="rootDir" id="rootDirs" size="6">
+    <select name="root_dir" id="root_dirs" size="6">
     % for cur_dir in backend_dirs:
         <option value="${cur_dir}">${cur_dir}</option>
     % endfor
     </select>
 </div>
-<div id="rootDirsControls" class="rootdir-controls">
+<div id="root_dirsControls" class="rootdir-controls">
     <input class="btn" type="button" id="addRootDir" value="New" />
     <input class="btn" type="button" id="editRootDir" value="Edit" />
     <input class="btn" type="button" id="deleteRootDir" value="Delete" />
     <input class="btn" type="button" id="defaultRootDir" value="Set as Default *" />
 </div>
-<input type="text" style="display: none;" id="rootDirText"/>
+<input type="text" style="display: none;" id="root_dirText"/>

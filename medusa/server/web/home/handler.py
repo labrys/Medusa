@@ -686,7 +686,7 @@ class Home(WebRoot):
 
         t = PageTemplate(rh=self, filename='status.mako')
         return t.render(title='Status', header='Status', topmenu='system',
-                        tvdirFree=tv_dir_free, rootDir=root_dir,
+                        tvdirFree=tv_dir_free, root_dir=root_dir,
                         controller='home', action='status')
 
     def shutdown(self, pid=None):

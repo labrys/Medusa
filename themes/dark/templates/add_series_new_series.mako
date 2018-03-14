@@ -38,7 +38,7 @@
                         % if use_provided_info:
                             Show retrieved from existing metadata: <a href="${anon_url(IndexerAPI(provided_indexer).config['show_url'], provided_indexer_id)}">${provided_indexer_name}</a>
                             <input type="hidden" id="indexer_lang" name="indexer_lang" value="en" />
-                            <input type="hidden" id="whichSeries" name="whichSeries" value="${provided_indexer_id}" />
+                            <input type="hidden" id="which_series" name="which_series" value="${provided_indexer_id}" />
                             <input type="hidden" id="provided_indexer" name="provided_indexer" value="${provided_indexer}" />
                             <input type="hidden" id="providedName" value="${provided_indexer_name}" />
                         % else:

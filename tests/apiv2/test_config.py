@@ -31,7 +31,7 @@ def config(monkeypatch, app_config):
     config_data['themeName'] = app.THEME_NAME
     config_data['posterSortby'] = app.POSTER_SORTBY
     config_data['posterSortdir'] = app.POSTER_SORTDIR
-    config_data['rootDirs'] = app.ROOT_DIRS
+    config_data['root_dirs'] = app.ROOT_DIRS
     config_data['sortArticle'] = app.SORT_ARTICLE
     config_data['timePreset'] = app.TIME_PRESET
     config_data['trimZero'] = app.TRIM_ZERO
