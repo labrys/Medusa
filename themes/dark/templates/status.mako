@@ -104,8 +104,8 @@
                % else:
                <td align="right"></td>
                % endif
-               <% cycleTime = (service.cycleTime.microseconds + (service.cycleTime.seconds + service.cycleTime.days * 24 * 3600) * 10**6) / 10**6 %>
-               <td align="right" data-seconds="${cycleTime}">${helpers.pretty_time_delta(cycleTime)}</td>
+               <% cycle_time = (service.cycle_time.microseconds + (service.cycle_time.seconds + service.cycle_time.days * 24 * 3600) * 10**6) / 10**6 %>
+               <td align="right" data-seconds="${cycle_time}">${helpers.pretty_time_delta(cycle_time)}</td>
                % if service.enable:
                    <% timeLeft = (service.time_left().microseconds + (service.time_left().seconds + service.time_left().days * 24 * 3600) * 10**6) / 10**6 %>
                <td align="right" data-seconds="${timeLeft}">${helpers.pretty_time_delta(timeLeft)}</td>

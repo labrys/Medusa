@@ -84,13 +84,13 @@
                 % for curNextDir in other_shows:
                 <input type="hidden" name="other_shows" value="${curNextDir}" />
                 % endfor
-                <input type="hidden" name="skipShow" id="skipShow" value="" />
+                <input type="hidden" name="skip_series" id="skip_series" value="" />
             </form>
             <br>
             <div style="width: 100%; text-align: center;">
                 <input class="btn" type="button" id="addShowButton" value="Add Show" disabled="disabled" />
                 % if provided_show_dir:
-                <input class="btn" type="button" id="skipShowButton" value="Skip Show" />
+                <input class="btn" type="button" id="skip_seriesButton" value="Skip Show" />
                 % endif
             </div>
         </div>

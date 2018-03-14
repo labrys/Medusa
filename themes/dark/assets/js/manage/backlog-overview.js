@@ -1,4 +1,4 @@
-MEDUSA.manage.backlogOverview = function() {
+MEDUSA.manage.backlog_overview = function() {
     checkForcedSearch();
 
     function checkForcedSearch() {
@@ -62,7 +62,7 @@ MEDUSA.manage.backlogOverview = function() {
 
     $('#backlog_period').on('change', function() {
         api.patch('config/main', {
-            backlogOverview: {
+            backlog_overview: {
                 period: $(this).val()
             }
         }).then(response => {
@@ -75,7 +75,7 @@ MEDUSA.manage.backlogOverview = function() {
 
     $('#backlog_status').on('change', function() {
         api.patch('config/main', {
-            backlogOverview: {
+            backlog_overview: {
                 status: $(this).val()
             }
         }).then(response => {

@@ -124,7 +124,7 @@ def get_externals(show=None, indexer=None, indexed_show=None):
     return new_show_externals
 
 
-def check_existing_shows(indexed_show, indexer):
+def check_existing_series(indexed_show, indexer):
     """Check if the searched show already exists in the current library.
 
     :param indexed_show: (Indexer Show object) The indexed show from -for example- tvdb. It might already have some

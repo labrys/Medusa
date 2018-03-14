@@ -106,13 +106,13 @@
                         </td>
                         <td align="center" class="triggerhighlight">
                         % if composite.status in [DOWNLOADED, ARCHIVED]:
-                            % if hItem.provider != "-1":
+                            % if int(hItem.provider) != -1:
                                 <span style="vertical-align:middle;"><i>${hItem.provider}</i></span>
                             % else:
                                 <span style="vertical-align:middle;"><i>Unknown</i></span>
                             % endif
                         % else:
-                            % if hItem.provider > 0:
+                            % if int(hItem.provider) > 0:
                                 % if composite.status in [SNATCHED, FAILED]:
                                     <% provider = providers.get_provider_class(GenericProvider.make_id(hItem.provider)) %>
                                     % if provider is not None:

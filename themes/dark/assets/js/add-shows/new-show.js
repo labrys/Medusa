@@ -158,8 +158,8 @@ MEDUSA.add_series.new_series = function() {
         $('#addShowForm').submit();
     });
 
-    $('#skipShowButton').click(() => {
-        $('#skipShow').val('1');
+    $('#skip_seriesButton').click(() => {
+        $('#skip_series').val('1');
         $('#addShowForm').submit();
     });
 

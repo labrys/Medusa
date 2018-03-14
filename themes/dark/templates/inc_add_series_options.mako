@@ -48,7 +48,7 @@
             <label for="statusSelectAfter">
                 <span class="component-title">Status for all future episodes</span>
                 <span class="component-desc">
-                    <select name="default_statusAfter" id="statusSelectAfter" class="form-control form-control-inline input-sm">
+                    <select name="default_status_after" id="statusSelectAfter" class="form-control form-control-inline input-sm">
                     % for cur_status in [SKIPPED, WANTED, IGNORED]:
                         <option value="${cur_status}" ${'selected="selected"' if app.STATUS_DEFAULT_AFTER == cur_status else ''}>${statusStrings[cur_status]}</option>
                     % endfor

@@ -166,7 +166,7 @@ MEDUSA.add_series.init = function() {
                 subtitles: $('#subtitles').prop('checked'),
                 anime: $('#anime').prop('checked'),
                 scene: $('#scene').prop('checked'),
-                default_statusAfter: $('#statusSelectAfter').val()
+                default_status_after: $('#statusSelectAfter').val()
             });
 
             $(this).prop('disabled', true);

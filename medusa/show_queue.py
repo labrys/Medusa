@@ -31,7 +31,7 @@ from medusa.helpers import (
     get_showname_from_indexer,
     make_dir,
 )
-from medusa.helpers.externals import check_existing_shows
+from medusa.helpers.externals import check_existing_series
 from medusa.image_cache import replace_images
 from medusa.indexers.api import IndexerAPI
 from medusa.indexers.exceptions import (
@@ -531,7 +531,7 @@ class QueueItemAdd(ShowQueueItem):
 
             # Check if we can already find this show in our current showList.
             try:
-                check_existing_shows(s, self.indexer)
+                check_existing_series(s, self.indexer)
             except IndexerShowAllreadyInLibrary as e:
                 log.warning(
                     u"Could not add the show %s, as it already is in your"

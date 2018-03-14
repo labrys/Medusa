@@ -381,7 +381,7 @@ class HomeAddSeries(Home):
                          indexer_lang=None, root_dir=None, default_status=None,
                          quality_preset=None, any_qualities=None, best_qualities=None,
                          flatten_folders=None, subtitles=None, full_show_path=None,
-                         other_shows=None, skip_show=None, provided_indexer=None,
+                         other_shows=None, skip_series=None, provided_indexer=None,
                          anime=None, scene=None, blacklist=None, whitelist=None,
                          default_status_after=None, default_flatten_folders=None,
                          configure_show_options=False):
@@ -480,7 +480,7 @@ class HomeAddSeries(Home):
 
     def add_new_series(self, which_series=None, indexer_lang=None, root_dir=None, default_status=None, quality_preset=None,
                        allowed_qualities=None, preferred_qualities=None, flatten_folders=None, subtitles=None,
-                       full_show_path=None, other_shows=None, skip_show=None, provided_indexer=None, anime=None,
+                       full_show_path=None, other_shows=None, skip_series=None, provided_indexer=None, anime=None,
                        scene=None, blacklist=None, whitelist=None, default_status_after=None):
         """
         Receive tvdb id, dir, and other options and create a show from them. If extra show dirs are
@@ -509,7 +509,7 @@ class HomeAddSeries(Home):
             return self.new_series(next_show_dir, rest_of_show_dirs)
 
         # if we're skipping then behave accordingly
-        if skip_show:
+        if skip_series:
             return finish_add_series()
 
         # sanity check on our inputs

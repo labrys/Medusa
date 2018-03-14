@@ -27,7 +27,7 @@
         </div>
     </a>
 
-    <a href="add_series/existingShows/" id="btnExistingShow" class="btn btn-large">
+    <a href="add_series/existing_series/" id="btnExistingShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addexistingshow"></div></div>
         <div class="buttontext">
             <h3>Add Existing Shows</h3>

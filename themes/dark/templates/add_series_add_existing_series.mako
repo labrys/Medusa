@@ -28,8 +28,8 @@
             <form id="addShowForm" method="post" action="add_series/addExistingShows" accept-charset="utf-8">
                 <div id="tabs">
                     <ul>
-                        <li><a href="${base_url}add_series/existingShows/#tabs-1">Manage Directories</a></li>
-                        <li><a href="${base_url}add_series/existingShows/#tabs-2">Customize Options</a></li>
+                        <li><a href="${base_url}add_series/existing_series/#tabs-1">Manage Directories</a></li>
+                        <li><a href="${base_url}add_series/existing_series/#tabs-2">Customize Options</a></li>
                     </ul>
                     <div id="tabs-1" class="existingtabs">
                         <%include file="/inc_root_dirs.mako"/>

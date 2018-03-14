@@ -10506,7 +10506,7 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
     focus: function (e) {
       if (!this.focused) {
         this.focused = true;
-        if (this.options.showHintOnFocus && this.skipShowHintOnFocus !== true) {
+        if (this.options.showHintOnFocus && this.skip_seriesHintOnFocus !== true) {
           if(this.options.showHintOnFocus === "all") {
             this.lookup(""); 
           } else {
@@ -10514,8 +10514,8 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
           }
         }
       }
-      if (this.skipShowHintOnFocus) {
-        this.skipShowHintOnFocus = false;
+      if (this.skip_seriesHintOnFocus) {
+        this.skip_seriesHintOnFocus = false;
       }
     },
 
@@ -10526,7 +10526,7 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
       } else if (this.mouseddown) {
         // This is for IE that blurs the input when user clicks on scroll.
         // We set the focus back on the input and prevent the lookup to occur again
-        this.skipShowHintOnFocus = true;
+        this.skip_seriesHintOnFocus = true;
         this.$element.focus();
         this.mouseddown = false;
       } 
@@ -10534,7 +10534,7 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
 
     click: function (e) {
       e.preventDefault();
-      this.skipShowHintOnFocus = true;
+      this.skip_seriesHintOnFocus = true;
       this.select();
       this.$element.focus();
       this.hide();
@@ -13890,7 +13890,7 @@ return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e
         var selectedImage = that.images[newIndex];
 
         // Pause the slideshow
-        clearTimeout(that._cycleTimeout);
+        clearTimeout(that._cycle_timeout);
 
         // New image
 
@@ -14054,7 +14054,7 @@ return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e
         // Start/resume the slideshow
         if(this.images.length > 1) {
           // Clear the timeout, just in case
-          clearTimeout(this._cycleTimeout);
+          clearTimeout(this._cycle_timeout);
 
           var duration = (this._currentImage && this._currentImage.duration) || this.options.duration;
           var isVideo = isVideoSource(this._currentImage);
@@ -14100,7 +14100,7 @@ return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e
             
           } else {
             // Cycling according to specified duration
-            this._cycleTimeout = setTimeout($.proxy(callNext, this), duration);
+            this._cycle_timeout = setTimeout($.proxy(callNext, this), duration);
           }
           
         }
@@ -14117,7 +14117,7 @@ return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e
         }
         
         // Clear the timeout
-        clearTimeout(this._cycleTimeout);
+        clearTimeout(this._cycle_timeout);
 
         // Remove Backstretch
         if(!preserveBackground) {

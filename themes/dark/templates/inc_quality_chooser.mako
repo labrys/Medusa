@@ -68,7 +68,7 @@
     <div id="archive" style="display: none;">
         <h5>
             <b>
-                Archive downloaded episodes that are not currently in <a target="_blank" href="manage/backlogOverview/"><font color="blue"><u>backlog</u>.</font></a>
+                Archive downloaded episodes that are not currently in <a target="_blank" href="manage/backlog_overview/"><font color="blue"><u>backlog</u>.</font></a>
             </b>
                 <br />Avoids unnecessarily increasing your backlog
             </br>
