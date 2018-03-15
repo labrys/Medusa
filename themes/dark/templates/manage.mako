@@ -64,7 +64,7 @@
                         <th class="col-legend">Subtitle</th>
                         <th class="col-legend">Default Ep Status</th>
                         <th class="col-legend">Status</th>
-                        <th width="1%">Update<br><input type="checkbox" class="bulkCheck" id="updateCheck" /></th>
+                        <th width="1%">Update<br><input type="checkbox" class="bulkCheck" id="update_check" /></th>
                         <th width="1%">Rescan<br><input type="checkbox" class="bulkCheck" id="refreshCheck" /></th>
                         <th width="1%">Rename<br><input type="checkbox" class="bulkCheck" id="renameCheck" /></th>
                     % if app.USE_SUBTITLES:
