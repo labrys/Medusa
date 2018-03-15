@@ -30,7 +30,7 @@ MEDUSA.add_series.addExistingShow = function() {
             return false;
         }
 
-        window.location.href = $('base').attr('href') + 'add_series/add_existing_series?promptForSettings=' + ($('#promptForSettings').prop('checked') ? 'on' : 'off') + '&shows_to_add=' + dirArr.join('&shows_to_add=');
+        window.location.href = $('base').attr('href') + 'add_series/add_existing_series?prompt_for_settings=' + ($('#prompt_for_settings').prop('checked') ? 'on' : 'off') + '&series_to_add=' + dirArr.join('&series_to_add=');
     });
 
     function loadContent() {

@@ -32,8 +32,8 @@ MEDUSA.add_series.new_series = function() {
             root_directoryText += '<i>||</i>' + sepChar;
 
             sampleText += root_directoryText;
-        } else if ($('#fullShowPath').length !== 0 && $('#fullShowPath').val().length !== 0) {
-            sampleText += $('#fullShowPath').val();
+        } else if ($('#full_series_path').length !== 0 && $('#full_series_path').val().length !== 0) {
+            sampleText += $('#full_series_path').val();
         } else {
             sampleText += 'unknown dir.';
         }
@@ -55,7 +55,7 @@ MEDUSA.add_series.new_series = function() {
         // Also toggle the add show button
         if (
             ($('#root_dirs option:selected').length !== 0 ||
-            ($('#fullShowPath').length !== 0 && $('#fullShowPath').val().length !== 0)) && // eslint-disable-line no-mixed-operators
+            ($('#full_series_path').length !== 0 && $('#full_series_path').val().length !== 0)) && // eslint-disable-line no-mixed-operators
             ($('input:radio[name=which_series]:checked').length !== 0) || // eslint-disable-line no-mixed-operators
             ($('input:hidden[name=which_series]').length !== 0 && $('input:hidden[name=which_series]').val().length !== 0)
         ) {
@@ -187,7 +187,7 @@ MEDUSA.add_series.new_series = function() {
         revealfx: ['slide', 500],
         oninit() {
             updateSampleText();
-            if ($('input:hidden[name=which_series]').length !== 0 && $('#fullShowPath').length !== 0) {
+            if ($('input:hidden[name=which_series]').length !== 0 && $('#full_series_path').length !== 0) {
                 goToStep(3);
             }
         }

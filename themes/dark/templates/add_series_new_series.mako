@@ -69,7 +69,7 @@
                     <div class="stepDiv">
                         % if provided_show_dir:
                             Pre-chosen Destination Folder: <b>${provided_show_dir}</b> <br>
-                            <input type="hidden" id="fullShowPath" name="fullShowPath" value="${provided_show_dir}" /><br>
+                            <input type="hidden" id="full_series_path" name="full_series_path" value="${provided_show_dir}" /><br>
                         % else:
                             <%include file="/inc_root_dirs.mako"/>
                         % endif

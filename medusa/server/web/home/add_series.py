@@ -380,7 +380,7 @@ class HomeAddSeries(Home):
     def add_series_by_id(self, indexername=None, seriesid=None, show_name=None, which_series=None,
                          indexer_lang=None, root_dir=None, default_status=None,
                          quality_preset=None, any_qualities=None, best_qualities=None,
-                         flatten_folders=None, subtitles=None, full_show_path=None,
+                         flatten_folders=None, subtitles=None, full_series_path=None,
                          other_shows=None, skip_series=None, provided_indexer=None,
                          anime=None, scene=None, blacklist=None, whitelist=None,
                          default_status_after=None, default_flatten_folders=None,
@@ -480,7 +480,7 @@ class HomeAddSeries(Home):
 
     def add_new_series(self, which_series=None, indexer_lang=None, root_dir=None, default_status=None, quality_preset=None,
                        allowed_qualities=None, preferred_qualities=None, flatten_folders=None, subtitles=None,
-                       full_show_path=None, other_shows=None, skip_series=None, provided_indexer=None, anime=None,
+                       full_series_path=None, other_shows=None, skip_series=None, provided_indexer=None, anime=None,
                        scene=None, blacklist=None, whitelist=None, default_status_after=None):
         """
         Receive tvdb id, dir, and other options and create a show from them. If extra show dirs are
@@ -513,13 +513,13 @@ class HomeAddSeries(Home):
             return finish_add_series()
 
         # sanity check on our inputs
-        if (not root_dir and not full_show_path) or not which_series:
+        if (not root_dir and not full_series_path) or not which_series:
             return 'Missing params, no Indexer ID or folder:{series!r} and {root!r}/{path!r}'.format(
-                series=which_series, root=root_dir, path=full_show_path)
+                series=which_series, root=root_dir, path=full_series_path)
 
         # figure out what show we're adding and where
         series_pieces = which_series.split('|')
-        if (which_series and root_dir) or (which_series and full_show_path and len(series_pieces) > 1):
+        if (which_series and root_dir) or (which_series and full_series_path and len(series_pieces) > 1):
             if len(series_pieces) < 6:
                 log.error(u'Unable to add show due to show selection. Not enough arguments: %s' % (repr(series_pieces)))
                 ui.notifications.error('Unknown error. Unable to add show due to problem with show selection.')
@@ -535,16 +535,16 @@ class HomeAddSeries(Home):
 
             indexer = int(provided_indexer)
             indexer_id = int(which_series)
-            show_name = os.path.basename(os.path.normpath(full_show_path))
+            show_name = os.path.basename(os.path.normpath(full_series_path))
 
         # use the whole path if it's given, or else append the show name to the root dir to get the full show path
-        if full_show_path:
-            show_dir = os.path.normpath(full_show_path)
+        if full_series_path:
+            show_dir = os.path.normpath(full_series_path)
         else:
             show_dir = os.path.join(root_dir, sanitize_filename(show_name))
 
         # blanket policy - if the dir exists you should have used 'add existing show' numbnuts
-        if os.path.isdir(show_dir) and not full_show_path:
+        if os.path.isdir(show_dir) and not full_series_path:
             ui.notifications.error('Unable to add show', 'Folder {path} exists already'.format(path=show_dir))
             return self.redirect('/add_series/existing_series/')
 
@@ -607,17 +607,17 @@ class HomeAddSeries(Home):
 
         return indexer, show_dir, indexer_id, show_name
 
-    def add_existing_series(self, shows_to_add=None, prompt_for_settings=None):
+    def add_existing_series(self, series_to_add=None, prompt_for_settings=None):
         """
         Receives a dir list and add them. Adds the ones with given TVDB IDs first, then forwards along to the new_series page.
         """
-        log.debug('Attempting to add: {!r}'.format(shows_to_add))
+        log.debug('Attempting to add: {!r}'.format(series_to_add))
         prompt_for_settings = prompt_for_settings
 
         # grab a list of other shows to add, if provided
-        shows_to_add = [
+        series_to_add = [
             unquote_plus(show)
-            for show in generate(shows_to_add)
+            for show in generate(series_to_add)
         ]
 
         prompt_for_settings = config.checkbox_to_value(prompt_for_settings)
@@ -625,8 +625,8 @@ class HomeAddSeries(Home):
         indexer_id_given = []
         dirs_only = []
         # separate all the ones with Indexer IDs
-        for cur_dir in shows_to_add:
-            log.debug('Prcessing: {!r}'.format(cur_dir))
+        for cur_dir in series_to_add:
+            log.debug('Processing: {!r}'.format(cur_dir))
             if '|' in cur_dir:
                 split_vals = cur_dir.split('|')
                 if len(split_vals) < 3:
@@ -644,8 +644,8 @@ class HomeAddSeries(Home):
                 indexer_id_given.append((int(indexer), show_dir, int(indexer_id), show_name))
 
         # if they want me to prompt for settings then I will just carry on to the new_series page
-        if prompt_for_settings and shows_to_add:
-            return self.new_series(shows_to_add[0], shows_to_add[1:])
+        if prompt_for_settings and series_to_add:
+            return self.new_series(series_to_add[0], series_to_add[1:])
 
         # if they don't want me to prompt for settings then I can just add all the nfo shows now
         num_added = 0

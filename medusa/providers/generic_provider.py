@@ -192,10 +192,12 @@ class GenericProvider:
         :param pk: Primary key for removing duplicates
         :return: An iterable of unique mappings
         """
-        return OrderedDict(
+        gen_items = (
             (item[pk], item)
             for item in items
-        ).values()
+        )
+        unique = OrderedDict(gen_items).values()
+        return list(unique)
 
     def find_search_results(self, series, episodes, search_mode, forced_search=False, download_current_quality=False,
                             manual_search=False, manual_search_type='episode'):

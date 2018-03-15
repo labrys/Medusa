@@ -4,7 +4,7 @@
     log = logging.getLogger(__name__)
     log.addHandler(logging.NullHandler())
 
-    log.debug('Loading {}'.format(__file__))
+    log.debug('Loading home_mass_add_table')
 %>
 <%!
     from medusa import app

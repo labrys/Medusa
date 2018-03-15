@@ -41,7 +41,7 @@
                 <br>
                 <p>Medusa can add existing shows, using the current options, by using locally stored NFO/XML metadata to eliminate user interaction.
                 If you would rather have Medusa prompt you to customize each show, then use the checkbox below.</p>
-                <p><input type="checkbox" name="promptForSettings" id="promptForSettings" /> <label for="promptForSettings">Prompt me to set settings for each show</label></p>
+                <p><input type="checkbox" name="prompt_for_settings" id="prompt_for_settings" /> <label for="prompt_for_settings">Prompt me to set settings for each show</label></p>
                 <hr>
                 <p><b>Displaying folders within these directories which aren't already added to Medusa:</b></p>
                 <ul id="root_dirStaticList"><li></li></ul>
