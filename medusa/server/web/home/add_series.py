@@ -318,19 +318,20 @@ class HomeAddSeries(Home):
         """
         t = PageTemplate(rh=self, filename="add_series_recommended.mako")
 
-        e = None
         recommended_shows = None
+        error = None
 
         try:
             recommended_shows = ImdbPopular().fetch_popular_series()
         except Exception as e:
-            pass
+            log.debug(e)
+            error = e
         finally:
             return t.render(
                 title="Popular Shows",
                 header="Popular Shows",
                 recommended_shows=recommended_shows,
-                exception=e,
+                exception=error,
                 groups=[],
                 topmenu="home",
                 enable_anime_options=True,
