@@ -35,7 +35,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="home/"><i class="menu-icon-home"></i>&nbsp;Show List</a></li>
                         <li><a href="add_series/"><i class="menu-icon-addshow"></i>&nbsp;Add Shows</a></li>
-                        <li><a href="addRecommended/"><i class="menu-icon-addshow"></i>&nbsp;Add Recommended Shows</a></li>
+                        <li><a href="add_recommended/"><i class="menu-icon-addshow"></i>&nbsp;Add Recommended Shows</a></li>
                         <li><a href="home/postprocess/"><i class="menu-icon-postprocess"></i>&nbsp;Manual Post-Processing</a></li>
                         % if app.SHOWS_RECENT:
                             <li role="separator" class="divider"></li>

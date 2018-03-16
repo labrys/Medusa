@@ -75,16 +75,16 @@ class ImdbPopular:
 
         return rec_show
 
-    def fetch_popular_shows(self):
+    def fetch_popular_series(self):
         """Get popular show information from IMDB."""
-        popular_shows = []
+        popular_series = []
 
         # Clean expired cache items.
         imdb_show_details_cache.clean()
         tvdb_mapping_cache.clean()
 
         imdb_api = imdbpie.Imdb()
-        imdb_result = imdb_api.get_popular_shows()
+        imdb_result = imdb_api.get_popular_series()
 
         for imdb_show in imdb_result['ranks']:
             show = dict()
@@ -114,10 +114,10 @@ class ImdbPopular:
                     continue
 
             if all([show['year'], show['name'], show['imdb_tt']]):
-                popular_shows.append(show)
+                popular_series.append(show)
 
         result = []
-        for show in popular_shows:
+        for show in popular_series:
             try:
                 recommended_show = self._create_recommended_show(show)
                 if recommended_show:

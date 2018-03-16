@@ -100,7 +100,7 @@ class TraktPopular:
 
         return library_shows
 
-    def fetch_popular_shows(self, page_url=None, trakt_list=None):  # pylint: disable=too-many-nested-blocks,too-many-branches
+    def fetch_popular_series(self, page_url=None, trakt_list=None):  # pylint: disable=too-many-nested-blocks,too-many-branches
         """Get a list of popular shows from different Trakt lists based on a provided trakt_list.
 
         :param page_url: the page url opened to the base api url, for retreiving a specific list
@@ -108,7 +108,7 @@ class TraktPopular:
         :return: A list of RecommendedShow objects, an empty list of none returned
         :throw: ``Exception`` if an Exception is thrown not handled by the libtrats exceptions
         """
-        trending_shows = []
+        trending_series = []
         removed_from_medusa = []
 
         # Create a trakt settings dict
@@ -152,9 +152,9 @@ class TraktPopular:
                     if not_liked_show:
                         if show['show']['ids']['tvdb'] not in (show['show']['ids']['tvdb']
                                                                for show in not_liked_show if show['type'] == 'show'):
-                            trending_shows.append(self._create_recommended_show(show))
+                            trending_series.append(self._create_recommended_show(show))
                     else:
-                        trending_shows.append(self._create_recommended_show(show))
+                        trending_series.append(self._create_recommended_show(show))
 
                 except MultipleShowObjectsException:
                     continue
@@ -165,7 +165,7 @@ class TraktPopular:
             log.warning('Could not connect to Trakt service: {0}', error)
             raise
 
-        return blacklist, trending_shows, removed_from_medusa
+        return blacklist, trending_series, removed_from_medusa
 
     def check_cache_for_poster(self, tvdb_id):
         """Verify if we already have a poster downloaded for this show."""

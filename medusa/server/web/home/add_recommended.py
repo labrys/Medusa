@@ -23,7 +23,7 @@ from medusa.server.web.core import PageTemplate
 from medusa.server.web.home.handler import Home
 
 
-@route('/addRecommended(/?.*)')
+@route('/add_recommended(/?.*)')
 class HomeAddRecommended(Home):
     """Landing page for the recommended shows."""
 

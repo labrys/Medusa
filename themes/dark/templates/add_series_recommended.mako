@@ -84,7 +84,7 @@
 </div> <!-- row -->
 
 <div id="recommended-shows-filters" class="row">
-    <div id="popularShows" class="col-md-12">
+    <div id="popular_series" class="col-md-12">
         <div id="container">
         % if not recommended_shows:
             <div class="recommended_show" style="width:100%; margin-top:20px">

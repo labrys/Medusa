@@ -68,7 +68,7 @@ class AnidbPopular:  # pylint: disable=too-few-public-methods
 
         return rec_show
 
-    def fetch_popular_shows(self, list_type=REQUEST_HOT):
+    def fetch_popular_series(self, list_type=REQUEST_HOT):
         """Get popular show information from IMDB."""
         shows = []
         result = []

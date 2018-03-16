@@ -19,12 +19,12 @@
 </%block>
 <%block name="content">
 <div id="container">
-% if not trending_shows:
+% if not trending_series:
     <div class="trakt_show" style="width:100%; margin-top:20px;">
         <p class="red-text">Trakt API did not return any results, please check your config.
     </div>
 % else:
-% for cur_show in trending_shows:
+% for cur_show in trending_series:
     <% show_url = 'http://www.trakt.tv/shows/%s' % cur_show['show']['ids']['slug'] %>
 % if 'poster' in cur_show['show']['images'] and cur_show['show']['images']['poster']['thumb']:
     <% poster_url = cur_show['show']['images']['poster']['thumb'] %>

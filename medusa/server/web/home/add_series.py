@@ -267,7 +267,7 @@ class HomeAddSeries(Home):
         t = PageTemplate(rh=self, filename="add_series_trending_series.mako")
         return t.render(title=page_title, header=page_title,
                         enable_anime_options=True, blacklist=[], whitelist=[], groups=[],
-                        traktList=trakt_list, controller="add_series", action="trending_series",
+                        trakt_list=trakt_list, controller="add_series", action="trending_series",
                         realpage="trending_series")
 
     def get_trending_series(self, trakt_list=None):
@@ -302,7 +302,7 @@ class HomeAddSeries(Home):
             page_url = "shows/anticipated"
 
         try:
-            (trakt_blacklist, recommended_shows, removed_from_medusa) = TraktPopular().fetch_popular_shows(page_url=page_url, trakt_list=trakt_list)
+            (trakt_blacklist, recommended_shows, removed_from_medusa) = TraktPopular().fetch_popular_series(page_url=page_url, trakt_list=trakt_list)
         except Exception as e:
             # print traceback.format_exc()
             trakt_blacklist = False
@@ -317,17 +317,27 @@ class HomeAddSeries(Home):
         Fetches data from IMDB to show a list of popular shows.
         """
         t = PageTemplate(rh=self, filename="add_series_recommended.mako")
+
         e = None
+        recommended_shows = None
 
         try:
-            recommended_shows = ImdbPopular().fetch_popular_shows()
-        except (RequestException, Exception) as e:
-            recommended_shows = None
-
-        return t.render(title="Popular Shows", header="Popular Shows",
-                        recommended_shows=recommended_shows, exception=e, groups=[],
-                        topmenu="home", enable_anime_options=True, blacklist=[], whitelist=[],
-                        controller="add_series", action="recommended_series", realpage="popular_series")
+            recommended_shows = ImdbPopular().fetch_popular_series()
+        except Exception as e:
+            pass
+        finally:
+            return t.render(
+                title="Popular Shows",
+                header="Popular Shows",
+                recommended_shows=recommended_shows,
+                exception=e,
+                groups=[],
+                topmenu="home",
+                enable_anime_options=True,
+                blacklist=[],
+                whitelist=[],
+                controller="add_series",
+                action="recommended_series", realpage="popular_series")
 
     def popular_anime(self, list_type=REQUEST_HOT):
         """
@@ -337,7 +347,7 @@ class HomeAddSeries(Home):
         e = None
 
         try:
-            recommended_shows = AnidbPopular().fetch_popular_shows(list_type)
+            recommended_shows = AnidbPopular().fetch_popular_series(list_type)
         except Exception as e:
             # print traceback.format_exc()
             recommended_shows = None

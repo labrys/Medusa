@@ -45,8 +45,8 @@
                 <div class="field-pair">
                     <label class="clearfix" for="configure_show_options">
                         <ul>
-                            <li><a id="trakt-tab-1" href="${base_url + 'add_series/' + realpage + '/'}?traktList=${traktList}#tabs-1">Manage Directories</a></li>
-                            <li><a id="trakt-tab-2" href="${base_url + 'add_series/' + realpage + '/'}?traktList=${traktList}#tabs-2">Customize Options</a></li>
+                            <li><a id="trakt-tab-1" href="${base_url + 'add_series/' + realpage + '/'}?trakt_list=${trakt_list}#tabs-1">Manage Directories</a></li>
+                            <li><a id="trakt-tab-2" href="${base_url + 'add_series/' + realpage + '/'}?trakt_list=${trakt_list}#tabs-2">Customize Options</a></li>
                         </ul>
                         <div id="tabs-1" class="existingtabs">
                             <%include file="/inc_root_dirs.mako"/>
@@ -81,25 +81,25 @@
     <div class="show-option">
         <span style="margin-left:12px;">Select Trakt List:</span>
         <select id="traktlistselection" class="form-control form-control-inline input-sm">
-            <option value="anticipated" ${' selected="selected"' if traktList == "anticipated" else ''}>Most Anticipated</option>
-            <option value="newshow" ${'selected="selected"' if traktList == "newshow" else ''}>New Shows</option>
-            <option value="newseason" ${'selected="selected"' if traktList == "newseason" else ''}>Season Premieres</option>
-            <option value="trending" ${'selected="selected"' if traktList == "trending" else ''}>Trending</option>
-            <option value="popular" ${'selected="selected"' if traktList == "popular" else ''}>Popular</option>
-            <option value="watched" ${'selected="selected"' if traktList == "watched" else '' }>Most Watched</option>
-            <option value="played" ${'selected="selected"' if traktList == "played" else '' }>Most Played</option>
-            <option value="collected" ${'selected="selected"' if traktList == "collected" else ''}>Most Collected</option>
+            <option value="anticipated" ${' selected="selected"' if trakt_list == "anticipated" else ''}>Most Anticipated</option>
+            <option value="newshow" ${'selected="selected"' if trakt_list == "newshow" else ''}>New Shows</option>
+            <option value="newseason" ${'selected="selected"' if trakt_list == "newseason" else ''}>Season Premieres</option>
+            <option value="trending" ${'selected="selected"' if trakt_list == "trending" else ''}>Trending</option>
+            <option value="popular" ${'selected="selected"' if trakt_list == "popular" else ''}>Popular</option>
+            <option value="watched" ${'selected="selected"' if trakt_list == "watched" else '' }>Most Watched</option>
+            <option value="played" ${'selected="selected"' if trakt_list == "played" else '' }>Most Played</option>
+            <option value="collected" ${'selected="selected"' if trakt_list == "collected" else ''}>Most Collected</option>
     % if app.TRAKT_ACCESS_TOKEN:
-            <option value="recommended"  ${'selected="selected"' if traktList == "recommended" else ''}>Recommended</option>
+            <option value="recommended"  ${'selected="selected"' if trakt_list == "recommended" else ''}>Recommended</option>
     % endif
         </select>
     </div>
 </div> <!-- col -->
 </div> <!-- row -->
 
-<div id="trendingShows"></div>
+<div id="trending_series"></div>
 
-% if traktList:
-    <input type="hidden" name="traktList" id="traktList" value="${traktList}" />
+% if trakt_list:
+    <input type="hidden" name="trakt_list" id="trakt_list" value="${trakt_list}" />
 % endif
 </%block>

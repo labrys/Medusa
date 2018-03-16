@@ -21,7 +21,7 @@
 
 <div id="addShowPortal">
     <br><br>
-    <a href="add_series/trendingShows/?traktList=anticipated" id="btnNewShow" class="btn btn-large">
+    <a href="add_series/trending_series/?trakt_list=anticipated" id="btnNewShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addtrakt"></div></div>
         <div class="buttontext">
             <h3>Add From Trakt Lists</h3>
@@ -29,7 +29,7 @@
         </div>
     </a>
 
-    <a href="add_series/popularShows/" id="btnNewShow" class="btn btn-large">
+    <a href="add_series/popular_series/" id="btnNewShow" class="btn btn-large">
         <div class="button"><div class="add-list-icon-addimdb"></div></div>
         <div class="buttontext">
             <h3>Add From IMDB's Popular Shows</h3>
