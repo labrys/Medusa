@@ -107,7 +107,7 @@ class ImdbPopular:
                                                         os.path.basename(show['image_url_large']))
                     show['image_url'] = '{0}{1}'.format(imdb_show['image']['url'].split('V1')[0], '_SY600_AL_.jpg')
                     show['imdb_url'] = 'http://www.imdb.com{imdb_id}'.format(imdb_id=imdb_show['id'])
-                    show['votes'] = show_details['ratings']['rating_count']
+                    show['votes'] = show_details['ratings']['ratingCount']
                     show['outline'] = show_details['plot'].get('outline', {}).get('text')
                     show['rating'] = show_details['ratings']['rating']
                 else:
