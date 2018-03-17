@@ -32,7 +32,7 @@
         <div id="config">
             <div id="config-content">
                 <form action="manage/massEditSubmit" method="post">
-                    <input type="hidden" name="toEdit" value="${showList}" />
+                    <input type="hidden" name="to_edit" value="${showList}" />
                     <div id="config-components">
                         ## @TODO: Fix this stupid hack
                         <script>document.write('<ul><li><a href="' + document.location.href + '#core-component-group1">Main</a></li></ul>');</script>

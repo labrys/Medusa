@@ -14,7 +14,7 @@ $(document).ready(() => {
 
         const submitForm = $(
             '<form method=\'post\' action=\'' + $('base').attr('href') + 'manage/mass_edit\'>' +
-            '<input type=\'hidden\' name=\'toEdit\' value=\'' + editArr.join('|') + '\'/>' +
+            '<input type=\'hidden\' name=\'to_edit\' value=\'' + editArr.join('|') + '\'/>' +
             '</form>'
         );
         submitForm.appendTo('body');
