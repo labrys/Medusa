@@ -156,11 +156,11 @@ $(document).ready(() => {
 
     $('#deleteRootDir').on('click', () => {
         if ($('#root_dirs option:selected').length !== 0) {
-            const toDelete = $('#root_dirs option:selected');
-            const newDefault = (toDelete.attr('id') === $('#whichDefaultRootDir').val());
+            const to_delete = $('#root_dirs option:selected');
+            const newDefault = (to_delete.attr('id') === $('#whichDefaultRootDir').val());
             const deletedNum = $('#root_dirs option:selected').attr('id').substr(3);
 
-            toDelete.remove();
+            to_delete.remove();
             syncOptionIDs();
 
             if (newDefault) {

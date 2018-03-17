@@ -21,7 +21,7 @@ MEDUSA.manage.failedDownloads = function() {
             return false;
         }
 
-        window.location.href = $('base').attr('href') + 'manage/failed_downloads?toRemove=' + removeArr.join('|');
+        window.location.href = $('base').attr('href') + 'manage/failed_downloads?to_remove=' + removeArr.join('|');
     });
 
     if ($('.removeCheck').length !== 0) {

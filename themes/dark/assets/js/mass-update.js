@@ -100,13 +100,13 @@ $(document).ready(() => {
                     }
                     const params = $.param({
                         to_update: updateArr.join('|'),
-                        toRefresh: refreshArr.join('|'),
-                        toRename: renameArr.join('|'),
-                        toSubtitle: subtitleArr.join('|'),
-                        toDelete: deleteArr.join('|'),
-                        toRemove: removeArr.join('|'),
-                        toMetadata: metadataArr.join('|'),
-                        toImageUpdate: imageUpdateArr.join('|')
+                        to_refresh: refreshArr.join('|'),
+                        to_rename: renameArr.join('|'),
+                        to_subtitle: subtitleArr.join('|'),
+                        to_delete: deleteArr.join('|'),
+                        to_remove: removeArr.join('|'),
+                        to_metadata: metadataArr.join('|'),
+                        to_image_update: imageUpdateArr.join('|')
                     });
 
                     window.location.href = $('base').attr('href') + 'manage/mass_update?' + params;
@@ -121,7 +121,7 @@ $(document).ready(() => {
             return false;
         }
         const url = $('base').attr('href') + 'manage/mass_update';
-        const params = 'to_update=' + updateArr.join('|') + '&toRefresh=' + refreshArr.join('|') + '&toRename=' + renameArr.join('|') + '&toSubtitle=' + subtitleArr.join('|') + '&toDelete=' + deleteArr.join('|') + '&toRemove=' + removeArr.join('|') + '&toMetadata=' + metadataArr.join('|') + '&toImageUpdate=' + imageUpdateArr.join('|');
+        const params = 'to_update=' + updateArr.join('|') + '&to_refresh=' + refreshArr.join('|') + '&to_rename=' + renameArr.join('|') + '&to_subtitle=' + subtitleArr.join('|') + '&to_delete=' + deleteArr.join('|') + '&to_remove=' + removeArr.join('|') + '&to_metadata=' + metadataArr.join('|') + '&to_image_update=' + imageUpdateArr.join('|');
         $.post(url, params, () => {
             location.reload(true);
         });

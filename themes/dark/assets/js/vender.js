@@ -30713,7 +30713,7 @@ var widgetsSelectable = $.widget( "ui.selectable", $.ui.mouse, {
 	version: "1.12.1",
 	options: {
 		appendTo: "body",
-		autoRefresh: true,
+		auto_refresh: true,
 		distance: 0,
 		filter: "*",
 		tolerance: "touch",
@@ -30797,7 +30797,7 @@ var widgetsSelectable = $.widget( "ui.selectable", $.ui.mouse, {
 			"height": 0
 		} );
 
-		if ( options.autoRefresh ) {
+		if ( options.auto_refresh ) {
 			this.refresh();
 		}
 
@@ -63442,10 +63442,10 @@ QTIP.defaults = {
 			if ( refreshing ) { return; }
 			var tbodyIndex, $tbody,
 				$tbodies = c.$tbodies,
-				toRemove = ( wo.zebra || [ 'even', 'odd' ] ).join( ' ' );
+				to_remove = ( wo.zebra || [ 'even', 'odd' ] ).join( ' ' );
 			for ( tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ){
 				$tbody = ts.processTbody( table, $tbodies.eq( tbodyIndex ), true ); // remove tbody
-				$tbody.children().removeClass( toRemove );
+				$tbody.children().removeClass( to_remove );
 				ts.processTbody( table, $tbody, false ); // restore tbody
 			}
 		}
