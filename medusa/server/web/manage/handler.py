@@ -92,7 +92,7 @@ class Manage(Home, WebRoot):
         if not status_list:
             return t.render(
                 title='Episode Overview', header='Episode Overview',
-                topmenu='manage', show_names=None, whichStatus=which_status,
+                topmenu='manage', show_names=None, which_status=which_status,
                 ep_counts=None, sorted_show_ids=None,
                 controller='manage', action='episode_statuses')
 
@@ -126,7 +126,7 @@ class Manage(Home, WebRoot):
 
         return t.render(
             title='Episode Overview', header='Episode Overview',
-            topmenu='manage', whichStatus=which_status,
+            topmenu='manage', which_status=which_status,
             show_names=show_names, ep_counts=ep_counts, sorted_show_ids=sorted_show_ids,
             controller='manage', action='episode_statuses')
 

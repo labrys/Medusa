@@ -27,8 +27,8 @@
 
 <h3>Backlog Search:</h3>
 <h5>Note: Limited by backlog days setting: last ${app.BACKLOG_DAYS} days</h5>
-<a class="btn" href="manage/manageSearches/forceBacklog"><i class="icon-exclamation-sign"></i> Force</a>
-<a class="btn" href="manage/manageSearches/pauseBacklog?paused=${('1', '0')[bool(backlogPaused)]}"><i class="icon-${('paused', 'play')[bool(backlogPaused)]}"></i> ${('pause', 'Unpause')[bool(backlogPaused)]}</a>
+<a class="btn" href="manage/manage_searches/forceBacklog"><i class="icon-exclamation-sign"></i> Force</a>
+<a class="btn" href="manage/manage_searches/pauseBacklog?paused=${('1', '0')[bool(backlogPaused)]}"><i class="icon-${('paused', 'play')[bool(backlogPaused)]}"></i> ${('pause', 'Unpause')[bool(backlogPaused)]}</a>
 % if not backlogRunning:
     Not in progress<br>
 % else:
@@ -37,11 +37,11 @@
 % endif
 
 <h3>Daily Search:</h3>
-<a class="btn" href="manage/manageSearches/forceSearch"><i class="icon-exclamation-sign"></i> Force</a>
+<a class="btn" href="manage/manage_searches/forceSearch"><i class="icon-exclamation-sign"></i> Force</a>
 ${('Not in progress', 'In Progress')[dailySearchStatus]}<br>
 
 <h3>Propers Search:</h3>
-<a class="btn ${('disabled', '')[bool(app.DOWNLOAD_PROPERS)]}" href="manage/manageSearches/forceFindPropers"><i class="icon-exclamation-sign"></i> Force</a>
+<a class="btn ${('disabled', '')[bool(app.DOWNLOAD_PROPERS)]}" href="manage/manage_searches/force_find_propers"><i class="icon-exclamation-sign"></i> Force</a>
 % if not app.DOWNLOAD_PROPERS:
     Propers search disabled <br>
 % elif not findPropersStatus:
@@ -51,7 +51,7 @@ ${('Not in progress', 'In Progress')[dailySearchStatus]}<br>
 % endif
 
 <h3>Subtitle Search:</h3>
-<a class="btn ${('disabled', '')[bool(app.USE_SUBTITLES)]}" href="manage/manageSearches/forceSubtitlesFinder"><i class="icon-exclamation-sign"></i> Force</a>
+<a class="btn ${('disabled', '')[bool(app.USE_SUBTITLES)]}" href="manage/manage_searches/forceSubtitlesFinder"><i class="icon-exclamation-sign"></i> Force</a>
 % if not app.USE_SUBTITLES:
     Subtitle search disabled <br>
 % elif not subtitlesFinderStatus:

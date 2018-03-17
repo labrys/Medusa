@@ -46,7 +46,7 @@
                         <div class="field-pair">
                             Select the folder you wish to save your backup file to:
                             <br><br>
-                            <input type="text" name="backupDir" id="backupDir" class="form-control input-sm input350"/>
+                            <input type="text" name="backup_dir" id="backup_dir" class="form-control input-sm input350"/>
                             <input class="btn btn-inline" type="button" value="Backup" id="Backup" />
                             <br>
                         </div>

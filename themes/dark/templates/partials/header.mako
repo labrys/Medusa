@@ -59,7 +59,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="manage/"><i class="menu-icon-manage"></i>&nbsp;Mass Update</a></li>
                         <li><a href="manage/backlog_overview/"><i class="menu-icon-backlog-view"></i>&nbsp;Backlog Overview</a></li>
-                        <li><a href="manage/manageSearches/"><i class="menu-icon-manage-searches"></i>&nbsp;Manage Searches</a></li>
+                        <li><a href="manage/manage_searches/"><i class="menu-icon-manage-searches"></i>&nbsp;Manage Searches</a></li>
                         <li><a href="manage/episode_statuses/"><i class="menu-icon-manage2"></i>&nbsp;Episode Status Management</a></li>
                     % if app.USE_PLEX_SERVER and app.PLEX_SERVER_HOST != []:
                         <li><a href="home/updatePLEX/"><i class="menu-icon-plex"></i>&nbsp;Update PLEX</a></li>

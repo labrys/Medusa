@@ -14,13 +14,13 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-@route('/manage/manageSearches(/?.*)')
+@route('/manage/manage_searches(/?.*)')
 class ManageSearches(Manage):
     def __init__(self, *args, **kwargs):
         super(ManageSearches, self).__init__(*args, **kwargs)
 
     def index(self):
-        t = PageTemplate(rh=self, filename='manage_manageSearches.mako')
+        t = PageTemplate(rh=self, filename='manage_manage_searches.mako')
 
         return t.render(backlogPaused=app.search_queue_scheduler.action.is_backlog_paused(),
                         backlogRunning=app.search_queue_scheduler.action.is_backlog_in_progress(),
@@ -30,7 +30,7 @@ class ManageSearches(Manage):
                         forcedSearchQueueLength=app.forced_search_queue_scheduler.action.queue_length(),
                         subtitlesFinderStatus=app.subtitles_finder_scheduler.action.am_active,
                         title='Manage Searches', header='Manage Searches', topmenu='manage',
-                        controller='manage', action='manageSearches')
+                        controller='manage', action='manage_searches')
 
     def force_backlog(self):
         # force it to run the next time it looks
@@ -39,7 +39,7 @@ class ManageSearches(Manage):
             log.info('Backlog search forced')
             ui.notifications.message('Backlog search started')
 
-        return self.redirect('/manage/manageSearches/')
+        return self.redirect('/manage/manage_searches/')
 
     def force_search(self):
 
@@ -49,7 +49,7 @@ class ManageSearches(Manage):
             log.info('Daily search forced')
             ui.notifications.message('Daily search started')
 
-        return self.redirect('/manage/manageSearches/')
+        return self.redirect('/manage/manage_searches/')
 
     def force_find_propers(self):
         # force it to run the next time it looks
@@ -58,7 +58,7 @@ class ManageSearches(Manage):
             log.info('Find propers search forced')
             ui.notifications.message('Find propers search started')
 
-        return self.redirect('/manage/manageSearches/')
+        return self.redirect('/manage/manage_searches/')
 
     def force_subtitles_finder(self):
         # force it to run the next time it looks
@@ -67,7 +67,7 @@ class ManageSearches(Manage):
             log.info('Subtitle search forced')
             ui.notifications.message('Subtitle search started')
 
-        return self.redirect('/manage/manageSearches/')
+        return self.redirect('/manage/manage_searches/')
 
     def pause_backlog(self, paused=None):
         if paused == '1':
@@ -75,4 +75,4 @@ class ManageSearches(Manage):
         else:
             app.search_queue_scheduler.action.unpause_backlog()
 
-        return self.redirect('/manage/manageSearches/')
+        return self.redirect('/manage/manage_searches/')

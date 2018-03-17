@@ -20,7 +20,7 @@
 % endif
 <div id="config">
     <div id="config-content">
-        <form id="configForm" action="config/search/saveSearch" method="post">
+        <form id="configForm" action="config/search/save_search" method="post">
             <div id="config-components">
                 <ul>
                     ## @TODO: Fix this stupid hack

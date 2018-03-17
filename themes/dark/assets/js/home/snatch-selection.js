@@ -1,4 +1,4 @@
-MEDUSA.home.snatchSelection = function() {
+MEDUSA.home.snatch_selection = function() {
     $('.imdbPlot').on('click', function() {
         $(this).prev('span').toggle();
         if ($(this).html() === '..show less') {

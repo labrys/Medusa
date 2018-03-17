@@ -18,13 +18,13 @@
 % else:
     <h1 class="title">${title}</h1>
 % endif
-% if not whichStatus or (whichStatus and not ep_counts):
-% if whichStatus:
-<h2>None of your episodes have status ${common.statusStrings[whichStatus]}</h2>
+% if not which_status or (which_status and not ep_counts):
+% if which_status:
+<h2>None of your episodes have status ${common.statusStrings[which_status]}</h2>
 <br>
 % endif
 <form action="manage/episode_statuses" method="get">
-Manage episodes with status <select name="whichStatus" class="form-control form-control-inline input-sm">
+Manage episodes with status <select name="which_status" class="form-control form-control-inline input-sm">
 % for cur_status in [common.SKIPPED, common.SNATCHED, common.WANTED, common.IGNORED] + common.Quality.DOWNLOADED + common.Quality.ARCHIVED:
     %if cur_status not in [common.ARCHIVED, common.DOWNLOADED]:
         <option value="${cur_status}">${common.statusStrings[cur_status]}</option>
@@ -35,14 +35,14 @@ Manage episodes with status <select name="whichStatus" class="form-control form-
 </form>
 % else:
 <form action="manage/changeepisode_statuses" method="post">
-<input type="hidden" id="oldStatus" name="oldStatus" value="${whichStatus}" />
-<h2>Shows containing ${common.statusStrings[whichStatus]} episodes</h2>
+<input type="hidden" id="oldStatus" name="oldStatus" value="${which_status}" />
+<h2>Shows containing ${common.statusStrings[which_status]} episodes</h2>
 <br>
 <%
-    if int(whichStatus) in [common.IGNORED, common.SNATCHED, common.SNATCHED_PROPER, common.SNATCHED_BEST] + common.Quality.DOWNLOADED + common.Quality.ARCHIVED:
+    if int(which_status) in [common.IGNORED, common.SNATCHED, common.SNATCHED_PROPER, common.SNATCHED_BEST] + common.Quality.DOWNLOADED + common.Quality.ARCHIVED:
         row_class = "good"
     else:
-        row_class = common.Overview.overviewStrings[int(whichStatus)]
+        row_class = common.Overview.overviewStrings[int(which_status)]
 %>
 <input type="hidden" id="row_class" value="${row_class}" />
 Set checked shows/episodes to <select name="newStatus" class="form-control form-control-inline input-sm">
@@ -51,9 +51,9 @@ Set checked shows/episodes to <select name="newStatus" class="form-control form-
     # Do not allow setting to bare downloaded or archived!
     statusList.remove(common.DOWNLOADED)
     statusList.remove(common.ARCHIVED)
-    if int(whichStatus) in statusList:
-        statusList.remove(int(whichStatus))
-    if int(whichStatus) in [common.SNATCHED, common.SNATCHED_PROPER, common.SNATCHED_BEST] + common.Quality.ARCHIVED + common.Quality.DOWNLOADED and app.USE_FAILED_DOWNLOADS:
+    if int(which_status) in statusList:
+        statusList.remove(int(which_status))
+    if int(which_status) in [common.SNATCHED, common.SNATCHED_PROPER, common.SNATCHED_BEST] + common.Quality.ARCHIVED + common.Quality.DOWNLOADED and app.USE_FAILED_DOWNLOADS:
         statusList.append(common.FAILED)
 %>
 % for cur_status in statusList:
