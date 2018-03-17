@@ -209,7 +209,7 @@ class Manage(Home, WebRoot):
         return json.dumps(result)
 
     def subtitle_missed(self, which_subs=None):
-        t = PageTemplate(rh=self, filename='manage_subtitleMissed.mako')
+        t = PageTemplate(rh=self, filename='manage_subtitle_missed.mako')
 
         if not which_subs:
             return t.render(whichSubs=which_subs, title='Missing Subtitles',
@@ -300,7 +300,7 @@ class Manage(Home, WebRoot):
         return self.redirect('/manage/subtitle_missed/')
 
     def subtitle_missed_pp(self):
-        t = PageTemplate(rh=self, filename='manage_subtitleMissedPP.mako')
+        t = PageTemplate(rh=self, filename='manage_subtitle_missed_pp.mako')
         app.RELEASES_IN_PP = []
         for root, _, files in os.walk(app.TV_DOWNLOAD_DIR, topdown=False):
             # Skip folders that are being used for unpacking
@@ -450,7 +450,7 @@ class Manage(Home, WebRoot):
             header='Backlog Overview', topmenu='manage')
 
     def mass_edit(self, to_edit=None):
-        t = PageTemplate(rh=self, filename='manage_massEdit.mako')
+        t = PageTemplate(rh=self, filename='manage_mass_edit.mako')
 
         if not to_edit:
             return self.redirect('/manage/')

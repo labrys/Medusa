@@ -34,7 +34,7 @@ Manage episodes with status <select name="which_status" class="form-control form
 <input class="btn btn-inline" type="submit" value="Manage" />
 </form>
 % else:
-<form action="manage/changeepisode_statuses" method="post">
+<form action="manage/change_episode_statuses" method="post">
 <input type="hidden" id="oldStatus" name="oldStatus" value="${which_status}" />
 <h2>Shows containing ${common.statusStrings[which_status]} episodes</h2>
 <br>

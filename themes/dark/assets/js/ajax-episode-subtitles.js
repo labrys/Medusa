@@ -53,7 +53,7 @@ const startAjaxEpisodeSubtitles = function() { // eslint-disable-line no-unused-
         });
 
         $('.epSubtitlesSearchPP').on('click', function(e) {
-            // This is for the page 'manage_subtitleMissedPP.mako'
+            // This is for the page 'manage_subtitle_missed_pp.mako'
             e.preventDefault();
             selectedEpisode = $(this);
             subtitlesTd = selectedEpisode.parent().siblings('.col-search');
@@ -82,7 +82,7 @@ const startAjaxEpisodeSubtitles = function() { // eslint-disable-line no-unused-
                     changeImage(subtitlePicked, 'images/yes16.png', 'subtitle saved', 'subtitle saved', 16, true);
                     if ($('table#releasesPP').length > 0) {
                         // Removes the release as we downloaded the subtitle
-                        // Only applied to manage_subtitleMissedPP.mako
+                        // Only applied to manage_subtitle_missed_pp.mako
                         selectedEpisode.parent().parent().remove();
                     } else {
                         // Update the subtitles column with new informations

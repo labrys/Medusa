@@ -99,7 +99,7 @@ $(document).ready(() => {
                         return false;
                     }
                     const params = $.param({
-                        toUpdate: updateArr.join('|'),
+                        to_update: updateArr.join('|'),
                         toRefresh: refreshArr.join('|'),
                         toRename: renameArr.join('|'),
                         toSubtitle: subtitleArr.join('|'),
@@ -121,7 +121,7 @@ $(document).ready(() => {
             return false;
         }
         const url = $('base').attr('href') + 'manage/mass_update';
-        const params = 'toUpdate=' + updateArr.join('|') + '&toRefresh=' + refreshArr.join('|') + '&toRename=' + renameArr.join('|') + '&toSubtitle=' + subtitleArr.join('|') + '&toDelete=' + deleteArr.join('|') + '&toRemove=' + removeArr.join('|') + '&toMetadata=' + metadataArr.join('|') + '&toImageUpdate=' + imageUpdateArr.join('|');
+        const params = 'to_update=' + updateArr.join('|') + '&toRefresh=' + refreshArr.join('|') + '&toRename=' + renameArr.join('|') + '&toSubtitle=' + subtitleArr.join('|') + '&toDelete=' + deleteArr.join('|') + '&toRemove=' + removeArr.join('|') + '&toMetadata=' + metadataArr.join('|') + '&toImageUpdate=' + imageUpdateArr.join('|');
         $.post(url, params, () => {
             location.reload(true);
         });
