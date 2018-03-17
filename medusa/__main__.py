@@ -500,7 +500,7 @@ class Application:
             app.SUBLIMINAL_LOG = bool(check_setting_int(app.CFG, 'General', 'subliminal_log', 0))
             app.PRIVACY_LEVEL = check_setting_str(app.CFG, 'General', 'privacy_level', 'normal')
             app.SSL_VERIFY = bool(check_setting_int(app.CFG, 'General', 'ssl_verify', 1))
-            app.INDEXER_DEFAULT_LANGUAGE = check_setting_str(app.CFG, 'General', 'indexerDefaultLang', 'en')
+            app.INDEXER_DEFAULT_LANGUAGE = check_setting_str(app.CFG, 'General', 'indexer_default_lang', 'en')
             app.EP_DEFAULT_DELETED_STATUS = check_setting_int(app.CFG, 'General', 'ep_default_deleted_status', 6)
             app.LAUNCH_BROWSER = bool(check_setting_int(app.CFG, 'General', 'launch_browser', 1))
             app.DOWNLOAD_URL = check_setting_str(app.CFG, 'General', 'download_url', '')
@@ -1461,7 +1461,7 @@ class Application:
         new_config['General']['naming_multi_ep'] = int(app.NAMING_MULTI_EP)
         new_config['General']['naming_anime_multi_ep'] = int(app.NAMING_ANIME_MULTI_EP)
         new_config['General']['naming_anime'] = int(app.NAMING_ANIME)
-        new_config['General']['indexerDefaultLang'] = app.INDEXER_DEFAULT_LANGUAGE
+        new_config['General']['indexer_default_lang'] = app.INDEXER_DEFAULT_LANGUAGE
         new_config['General']['ep_default_deleted_status'] = int(app.EP_DEFAULT_DELETED_STATUS)
         new_config['General']['launch_browser'] = int(app.LAUNCH_BROWSER)
         new_config['General']['trash_remove_show'] = int(app.TRASH_REMOVE_SHOW)

@@ -28,7 +28,7 @@
     % endif
     <div id="config">
         <div id="config-content">
-            <form id="configForm" action="config/postProcessing/save_post_processing" method="post">
+            <form id="configForm" action="config/post_processing/save_post_processing" method="post">
                 <div id="config-components">
                     <ul>
                         ## @TODO: Fix this stupid hack

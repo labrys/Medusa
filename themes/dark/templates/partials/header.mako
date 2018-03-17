@@ -97,7 +97,7 @@
                         <li><a href="config/search/"><i class="menu-icon-manage-searches"></i>&nbsp;Search Settings</a></li>
                         <li><a href="config/providers/"><i class="menu-icon-provider"></i>&nbsp;Search Providers</a></li>
                         <li><a href="config/subtitles/"><i class="menu-icon-backlog"></i>&nbsp;Subtitles Settings</a></li>
-                        <li><a href="config/postProcessing/"><i class="menu-icon-postprocess"></i>&nbsp;Post Processing</a></li>
+                        <li><a href="config/post_processing/"><i class="menu-icon-postprocess"></i>&nbsp;Post Processing</a></li>
                         <li><a href="config/notifications/"><i class="menu-icon-notification"></i>&nbsp;Notifications</a></li>
                         <li><a href="config/anime/"><i class="menu-icon-anime"></i>&nbsp;Anime</a></li>
                     </ul>

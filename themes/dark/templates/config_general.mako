@@ -130,10 +130,10 @@
                     <div class="component-group">
                         <fieldset class="component-group-list">
                             <div class="field-pair">
-                                <label for="indexerDefaultLang">
+                                <label for="indexer_default_lang">
                                     <span class="component-title">Default Indexer Language</span>
                                     <span class="component-desc">
-                                        <select name="indexerDefaultLang" id="indexerDefaultLang" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language=${app.INDEXER_DEFAULT_LANGUAGE} data-available="${','.join(IndexerAPI().config['valid_languages'])}"></select>
+                                        <select name="indexer_default_lang" id="indexer_default_lang" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language=${app.INDEXER_DEFAULT_LANGUAGE} data-available="${','.join(IndexerAPI().config['valid_languages'])}"></select>
                                         <span>for adding shows and metadata providers</span>
                                     </span>
                                 </label>

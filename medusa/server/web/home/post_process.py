@@ -15,9 +15,9 @@ class HomePostProcess(Home):
         super(HomePostProcess, self).__init__(*args, **kwargs)
 
     def index(self):
-        t = PageTemplate(rh=self, filename='home_postprocess.mako')
+        t = PageTemplate(rh=self, filename='home_post_process.mako')
         return t.render(title='Post Processing', header='Post Processing', topmenu='home',
-                        controller='home', action='postProcess')
+                        controller='home', action='post_process')
 
     def process_episode(self, proc_dir=None, nzb_name=None, job_name=None, quiet=None, process_method=None, force=None,
                         is_priority=None, delete_on='0', failed='0', proc_type='auto', ignore_subs=None, *args, **kwargs):

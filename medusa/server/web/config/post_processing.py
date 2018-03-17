@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-@route('/config/postProcessing(/?.*)')
+@route('/config/post_processing(/?.*)')
 class ConfigPostProcessing(Config):
     """Handler for Post Processor configuration."""
 
@@ -32,11 +32,11 @@ class ConfigPostProcessing(Config):
         """
         Render the Post Processor configuration page
         """
-        t = PageTemplate(rh=self, filename='config_postProcessing.mako')
+        t = PageTemplate(rh=self, filename='config_post_processing.mako')
 
         return t.render(submenu=self.config_menu(), title='Config - Post Processing',
                         header='Post Processing', topmenu='config',
-                        controller='config', action='postProcessing')
+                        controller='config', action='post_processing')
 
     def save_post_processing(self, kodi_data=None, kodi_12plus_data=None,
                              mediabrowser_data=None, sony_ps3_data=None,
@@ -160,7 +160,7 @@ class ConfigPostProcessing(Config):
         else:
             ui.notifications.message('Configuration Saved', os.path.join(app.CONFIG_FILE))
 
-        return self.redirect('/config/postProcessing/')
+        return self.redirect('/config/post_processing/')
 
     @staticmethod
     def test_naming(pattern=None, multi=None, abd=False, sports=False, anime_type=None):

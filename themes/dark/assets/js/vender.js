@@ -25250,7 +25250,7 @@ $.extend( Datepicker.prototype, {
 	 * @param  input  element - the input field attached to the date picker
 	 */
 	_hideDatepicker: function( input ) {
-		var showAnim, duration, postProcess, onClose,
+		var showAnim, duration, post_process, onClose,
 			inst = this._curInst;
 
 		if ( !inst || ( input && inst !== $.data( input, "datepicker" ) ) ) {
@@ -25260,20 +25260,20 @@ $.extend( Datepicker.prototype, {
 		if ( this._datepickerShowing ) {
 			showAnim = this._get( inst, "showAnim" );
 			duration = this._get( inst, "duration" );
-			postProcess = function() {
+			post_process = function() {
 				$.datepicker._tidyDialog( inst );
 			};
 
 			// DEPRECATED: after BC for 1.8.x $.effects[ showAnim ] is not needed
 			if ( $.effects && ( $.effects.effect[ showAnim ] || $.effects[ showAnim ] ) ) {
-				inst.dpDiv.hide( showAnim, $.datepicker._get( inst, "showOptions" ), duration, postProcess );
+				inst.dpDiv.hide( showAnim, $.datepicker._get( inst, "showOptions" ), duration, post_process );
 			} else {
 				inst.dpDiv[ ( showAnim === "slideDown" ? "slideUp" :
-					( showAnim === "fadeIn" ? "fadeOut" : "hide" ) ) ]( ( showAnim ? duration : null ), postProcess );
+					( showAnim === "fadeIn" ? "fadeOut" : "hide" ) ) ]( ( showAnim ? duration : null ), post_process );
 			}
 
 			if ( !showAnim ) {
-				postProcess();
+				post_process();
 			}
 			this._datepickerShowing = false;
 

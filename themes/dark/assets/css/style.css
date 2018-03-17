@@ -1056,10 +1056,10 @@ div.recommended-image {
 }
 
 /* =======================================================================
-home_postprocess.mako
+home_post_process.mako
 ========================================================================== */
 
-#postProcess {
+#post_process {
     width: 800px;
     padding-top: 10px;
     margin-right: auto;
@@ -2309,7 +2309,7 @@ select .selected {
 }
 
 /* =======================================================================
-config_postProcessing.mako
+config_post_processing.mako
 ========================================================================== */
 
 #config div.example {
