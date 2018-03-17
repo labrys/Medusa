@@ -136,13 +136,13 @@ if __name__ == '__main__':
     ######################################################################
     """)
     # create the test methods
-    for forceSearch in (True, False):
+    for force_search in (True, False):
         for name, data in TESTS.items():
             filename = name.replace(' ', '_')
 
             for provider in providers.sorted_provider_list():
                 if provider.provider_type == GenericProvider.TORRENT:
-                    if forceSearch:
+                    if force_search:
                         test_name = 'test_manual_%s_%s_%s' % (filename, data["tvdbid"], provider.name)
                     else:
                         test_name = 'test_%s_%s_%s' % (filename, data["tvdbid"], provider.name)

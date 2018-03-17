@@ -209,7 +209,7 @@ MEDUSA.home.snatch_selection = function() {
         const season = $('meta[data-last-prov-updates]').attr('data-season');
         const episode = $('meta[data-last-prov-updates]').attr('data-episode');
         const manualSearchType = $('meta[data-last-prov-updates]').attr('data-manual-search-type');
-        const forceSearch = $(this).attr('data-force-search');
+        const force_search = $(this).attr('data-force-search');
 
         const checkParams = [indexerName, seriesId, season, episode].every(checkIsTrue => {
             return checkIsTrue;
@@ -229,7 +229,7 @@ MEDUSA.home.snatch_selection = function() {
                 season,
                 episode,
                 manual_search_type: manualSearchType, // eslint-disable-line camelcase
-                perform_search: forceSearch // eslint-disable-line camelcase
+                perform_search: force_search // eslint-disable-line camelcase
             });
             // Force the search, but give the checkCacheUpdates the time to start up a search thread
             setTimeout(() => {

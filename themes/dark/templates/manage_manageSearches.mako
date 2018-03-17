@@ -27,8 +27,8 @@
 
 <h3>Backlog Search:</h3>
 <h5>Note: Limited by backlog days setting: last ${app.BACKLOG_DAYS} days</h5>
-<a class="btn" href="manage/manage_searches/forceBacklog"><i class="icon-exclamation-sign"></i> Force</a>
-<a class="btn" href="manage/manage_searches/pauseBacklog?paused=${('1', '0')[bool(backlogPaused)]}"><i class="icon-${('paused', 'play')[bool(backlogPaused)]}"></i> ${('pause', 'Unpause')[bool(backlogPaused)]}</a>
+<a class="btn" href="manage/manage_searches/force_backlog"><i class="icon-exclamation-sign"></i> Force</a>
+<a class="btn" href="manage/manage_searches/pause_backlog?paused=${('1', '0')[bool(backlogPaused)]}"><i class="icon-${('paused', 'play')[bool(backlogPaused)]}"></i> ${('pause', 'Unpause')[bool(backlogPaused)]}</a>
 % if not backlogRunning:
     Not in progress<br>
 % else:
@@ -37,7 +37,7 @@
 % endif
 
 <h3>Daily Search:</h3>
-<a class="btn" href="manage/manage_searches/forceSearch"><i class="icon-exclamation-sign"></i> Force</a>
+<a class="btn" href="manage/manage_searches/force_search"><i class="icon-exclamation-sign"></i> Force</a>
 ${('Not in progress', 'In Progress')[dailySearchStatus]}<br>
 
 <h3>Propers Search:</h3>
