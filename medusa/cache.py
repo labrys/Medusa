@@ -13,7 +13,6 @@ class MutexLock(AbstractFileLock):
     """:class:`MutexLock` is a thread-based rw lock based on :class:`dogpile.core.ReadWriteMutex`."""
 
     def __init__(self, filename):
-        super().__init__(filename)
         self.mutex = ReadWriteMutex()
 
     def acquire_read_lock(self, wait):

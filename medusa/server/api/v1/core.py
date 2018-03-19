@@ -623,7 +623,7 @@ class CmdHelp(ApiCall):
         # required
         # optional
         self.subject, args = self.check_params(args, kwargs, 'subject', 'help', False, 'string', function_mapper.keys())
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get help about a given command."""
@@ -655,7 +655,7 @@ class CmdComingEpisodes(ApiCall):
         self.paused, args = self.check_params(args, kwargs, 'paused', bool(app.COMING_EPS_DISPLAY_PAUSED), False,
                                               'bool', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the coming episodes."""
@@ -708,7 +708,7 @@ class CmdEpisode(ApiCall):
         # optional
         self.full_path, args = self.check_params(args, kwargs, 'full_path', False, False, 'bool', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get detailed information about an episode."""
@@ -775,7 +775,7 @@ class CmdEpisodeSearch(ApiCall):
         self.e, args = self.check_params(args, kwargs, 'episode', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Search for an episode."""
@@ -831,7 +831,7 @@ class CmdEpisodeSetStatus(ApiCall):
         self.e, args = self.check_params(args, kwargs, 'episode', None, False, 'int', [])
         self.force, args = self.check_params(args, kwargs, 'force', False, False, 'bool', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Set the status of an episode or a season (when no episode is provided)."""
@@ -945,7 +945,7 @@ class CmdSubtitleSearch(ApiCall):
         self.e, args = self.check_params(args, kwargs, 'episode', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Search for an episode subtitles."""
@@ -991,7 +991,7 @@ class CmdExceptions(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, False, 'int', [])
 
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the scene exceptions for all or a given show."""
@@ -1038,7 +1038,7 @@ class CmdHistory(ApiCall):
         self.type = self.type.lower() if isinstance(self.type, str) else None
 
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the downloaded and/or snatched history."""
@@ -1093,7 +1093,7 @@ class CmdHistoryClear(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Clear the entire history."""
@@ -1109,7 +1109,7 @@ class CmdHistoryTrim(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Trim history entries older than 30 days."""
@@ -1131,7 +1131,7 @@ class CmdFailed(ApiCall):
         # optional
         self.limit, args = self.check_params(args, kwargs, 'limit', 100, False, 'int', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the failed downloads."""
@@ -1153,7 +1153,7 @@ class CmdBacklog(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the backlogged episodes."""
@@ -1217,7 +1217,7 @@ class CmdPostProcess(ApiCall):
         self.failed, args = self.check_params(args, kwargs, 'failed', False, False, 'bool', [])
         self.type, args = self.check_params(args, kwargs, 'type', 'auto', None, 'string', ['auto', 'manual'])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Manually post-process the files in the download folder."""
@@ -1248,7 +1248,7 @@ class Cmd(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get miscellaneous information about Medusa."""
@@ -1274,7 +1274,7 @@ class CmdAddRootDir(ApiCall):
         # optional
         self.default, args = self.check_params(args, kwargs, 'default', False, False, 'bool', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Add a new root (parent) directory to Medusa."""
@@ -1328,7 +1328,7 @@ class CmdCheckVersion(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         check_version = CheckVersion()
@@ -1359,7 +1359,7 @@ class CmdCheckScheduler(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get information about the scheduler."""
@@ -1389,7 +1389,7 @@ class CmdDeleteRootDir(ApiCall):
         self.location, args = self.check_params(args, kwargs, 'location', None, True, 'string', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Delete a root (parent) directory from Medusa."""
@@ -1437,7 +1437,7 @@ class CmdGetDefaults(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get Medusa's user default configuration value."""
@@ -1456,7 +1456,7 @@ class CmdGetMessages(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         messages = []
@@ -1474,7 +1474,7 @@ class CmdGetRootDirs(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get all root (parent) directories."""
@@ -1494,7 +1494,7 @@ class CmdPauseBacklog(ApiCall):
         # optional
         self.pause, args = self.check_params(args, kwargs, 'pause', False, False, 'bool', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Pause or un-pause the backlog search."""
@@ -1513,7 +1513,7 @@ class CmdPing(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Ping Medusa to check if it is running."""
@@ -1530,7 +1530,7 @@ class CmdRestart(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Restart Medusa."""
@@ -1561,7 +1561,7 @@ class CmdSearchIndexers(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, False, 'int', [])
 
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Search for a show with a given name on all the indexers, in a specific language."""
@@ -1662,7 +1662,7 @@ class CmdSearchTVRAGE(CmdSearchIndexers):
     def __init__(self, args, kwargs):
         # Leave this one as APICall so it doesnt try and search anything
         # pylint: disable=non-parent-init-called,super-init-not-called
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         return _responds(RESULT_FAILURE, msg='TVRage is no more, invalid result')
@@ -1691,7 +1691,7 @@ class CmdSetDefaults(ApiCall):
         self.status, args = self.check_params(args, kwargs, 'status', None, False, 'string',
                                               ['wanted', 'skipped', 'ignored'])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Set Medusa's user default configuration value."""
@@ -1738,7 +1738,7 @@ class CmdShutdown(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Shutdown Medusa."""
@@ -1755,7 +1755,7 @@ class CmdUpdate(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         check_version = CheckVersion()
@@ -1787,7 +1787,7 @@ class CmdSeries(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get detailed information about a show."""
@@ -1895,7 +1895,7 @@ class CmdSeriesAddExisting(ApiCall):
         self.subtitles, args = self.check_params(args, kwargs, 'subtitles', int(app.USE_SUBTITLES),
                                                  False, 'int', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Add an existing show in Medusa."""
@@ -1992,7 +1992,7 @@ class CmdSeriesAddNew(ApiCall):
                                                      ['wanted', 'skipped', 'ignored'])
 
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Add a new show to Medusa."""
@@ -2118,7 +2118,7 @@ class CmdSeriesCache(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Check cache to see if the images for a show are valid."""
@@ -2160,7 +2160,7 @@ class CmdSeriesDelete(ApiCall):
         # optional
         self.remove_files, args = self.check_params(args, kwargs, 'remove_files', False, False, 'bool', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Delete a show in Medusa."""
@@ -2188,7 +2188,7 @@ class CmdSeriesGetQuality(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the quality setting of a show."""
@@ -2217,7 +2217,7 @@ class CmdSeriesGetPoster(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the poster a show."""
@@ -2243,7 +2243,7 @@ class CmdSeriesGetBanner(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the banner of a show."""
@@ -2269,7 +2269,7 @@ class CmdSeriesGetNetworkLogo(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """
@@ -2297,7 +2297,7 @@ class CmdSeriesGetFanart(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the fan art of a show."""
@@ -2325,7 +2325,7 @@ class CmdSeriesPause(ApiCall):
         # optional
         self.pause, args = self.check_params(args, kwargs, 'pause', False, False, 'bool', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Pause or un-pause a show."""
@@ -2353,7 +2353,7 @@ class CmdSeriesRefresh(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Refresh a show in Medusa."""
@@ -2383,7 +2383,7 @@ class CmdSeriesSeasonList(ApiCall):
         # optional
         self.sort, args = self.check_params(args, kwargs, 'sort', 'desc', False, 'string', ['asc', 'desc'])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the list of seasons of a show."""
@@ -2425,7 +2425,7 @@ class CmdSeriesSeasons(ApiCall):
         # optional
         self.season, args = self.check_params(args, kwargs, 'season', None, False, 'int', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the list of episodes for one or all seasons of a show."""
@@ -2507,7 +2507,7 @@ class CmdSeriesSetQuality(ApiCall):
         self.archive, args = self.check_params(args, kwargs, 'archive', None, False, 'list',
                                                list(quality_map).remove('unknown'))
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Set the quality setting of a show. If no quality is provided, the default user setting is used.."""
@@ -2551,7 +2551,7 @@ class CmdSeriesStats(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get episode statistics for a given show."""
@@ -2656,7 +2656,7 @@ class CmdSeriesUpdate(ApiCall):
         self.indexerid, args = self.check_params(args, kwargs, 'indexerid', None, True, 'int', [])
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Update a show in Medusa."""
@@ -2687,7 +2687,7 @@ class CmdAllSeries(ApiCall):
         self.sort, args = self.check_params(args, kwargs, 'sort', 'id', False, 'string', ['id', 'name'])
         self.paused, args = self.check_params(args, kwargs, 'paused', None, False, 'bool', [])
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get all shows in Medusa."""
@@ -2738,7 +2738,7 @@ class CmdAllSeriesStats(ApiCall):
         # required
         # optional
         # super, missing, help
-        super().__init__(self, args, kwargs)
+        super().__init__(args, kwargs)
 
     def run(self):
         """Get the global shows and episodes statistics."""

@@ -32,7 +32,7 @@ class CacheDBConnection(db.DBConnection):
 
     def __init__(self, provider_id):
         """Initialize the class."""
-        super().__init__(self, 'cache.db')
+        super().__init__('cache.db')
 
         # Create the table if it's not already there
         try:
