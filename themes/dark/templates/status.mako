@@ -10,7 +10,7 @@
 <%!
     from medusa import app
     from medusa import helpers
-    from medusa.show_queue import ShowQueueActions
+    from medusa.show.queue import ShowQueueActions
     from medusa.helper.common import dateTimeFormat
     from random import choice
     from six import iteritems

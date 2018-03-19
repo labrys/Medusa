@@ -44,7 +44,7 @@ from configobj import ConfigObj
 from medusa import (
     app, cache, event_queue, exception_handler,
     helpers, metadata, name_cache, naming, network_timezones, providers,
-    scheduler, show_queue, show_updater, subtitles, system, torrent_checker,
+    scheduler, show_queue, subtitles, system, torrent_checker,
     trakt_checker, version_checker,
 )
 from medusa.common import SD, SKIPPED, WANTED
@@ -66,6 +66,7 @@ from medusa.search.daily import DailySearcher
 from medusa.search.proper import ProperFinder
 from medusa.search.queue import ForcedSearchQueue, SearchQueue, SnatchQueue
 from medusa.server.core import AppWebServer
+from medusa.show import updater
 from medusa.themes import read_themes
 from medusa.tv import Series
 
@@ -1090,7 +1091,7 @@ class Application:
                                                            cycle_time=datetime.timedelta(seconds=3),
                                                            thread_name='SHOWQUEUE')
 
-            app.show_update_scheduler = scheduler.Scheduler(show_updater.ShowUpdater(),
+            app.show_update_scheduler = scheduler.Scheduler(updater.ShowUpdater(),
                                                             cycle_time=datetime.timedelta(hours=1),
                                                             thread_name='SHOWUPDATER',
                                                             start_time=datetime.time(hour=app.SHOWUPDATE_HOUR,
