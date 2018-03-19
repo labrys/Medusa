@@ -17,7 +17,7 @@ class ExpiringList(list):
         :param implicit_clean: If enabled, run the clean() method, to check for expired items. Else you'll have to run
         this periodically.
         """
-        list.__init__(self, items or [])
+        super().__init__(self, items or [])
         self.cache_timeout = cache_timeout
         self.implicit_clean = implicit_clean
 
@@ -86,7 +86,7 @@ class ExpiringKeyValue(list):
         :param implicit_clean: If enabled, run the clean() method, to check for expired items. Else you'll have to run
         this periodically.
         """
-        list.__init__(self, items or [])
+        super().__init__(self, items or [])
         self.cache_timeout = cache_timeout
         self.implicit_clean = implicit_clean
 

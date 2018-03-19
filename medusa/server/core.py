@@ -103,7 +103,7 @@ def get_apiv2_handlers(base):
 
 class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attributes
     def __init__(self, options=None, io_loop=None):
-        threading.Thread.__init__(self)
+        super().__init__(self)
         self.daemon = True
         self.alive = True
         self.name = 'TORNADO'
