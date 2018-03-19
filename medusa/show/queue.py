@@ -49,10 +49,6 @@ log.addHandler(logging.NullHandler())
 
 
 class ShowQueueActions:
-    """
-
-    """
-
     def __init__(self):
         pass
 
@@ -76,9 +72,6 @@ class ShowQueueActions:
 
 
 class ShowQueue(generic_queue.GenericQueue):
-    """
-
-    """
     mappings = {
         ShowQueueActions.ADD: 'This show is in the process of being downloaded - the info below is incomplete.',
         ShowQueueActions.UPDATE: 'The information on this page is in the process of being updated.',
@@ -101,116 +94,59 @@ class ShowQueue(generic_queue.GenericQueue):
         if not show:
             return False
 
-        return show.series_id in [x.show.series_id if x.show else 0 for x in self.queue if x.action_id in actions]
+        return show.series_id in [
+            x.show.series_id if x.show else 0
+            for x in self.queue
+            if x.action_id in actions
+        ]
 
     def _is_being_processed(self, show, actions):
-        return self.currentItem is not None and show == self.currentItem.show and self.currentItem.action_id in actions
+        return all([
+            self.currentItem is not None,
+            show == self.currentItem.show,
+            self.currentItem.action_id in actions,
+        ])
 
     def is_in_update_queue(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_in_queue(show, (ShowQueueActions.UPDATE,))
 
     def is_in_refresh_queue(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_in_queue(show, (ShowQueueActions.REFRESH,))
 
     def is_in_rename_queue(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_in_queue(show, (ShowQueueActions.RENAME,))
 
     def is_in_subtitle_queue(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_in_queue(show, (ShowQueueActions.SUBTITLE,))
 
     def is_in_remove_queue(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_in_queue(show, (ShowQueueActions.REMOVE,))
 
     def is_being_added(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_being_processed(show, (ShowQueueActions.ADD,))
 
     def is_being_updated(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_being_processed(show, (ShowQueueActions.UPDATE,))
 
     def is_being_refreshed(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_being_processed(show, (ShowQueueActions.REFRESH,))
 
     def is_being_renamed(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_being_processed(show, (ShowQueueActions.RENAME,))
 
     def is_being_subtitled(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_being_processed(show, (ShowQueueActions.SUBTITLE,))
 
     def is_being_removed(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self._is_being_processed(show, (ShowQueueActions.REMOVE,))
 
     def _get_loading_show_list(self):
         return [x for x in self.queue + [self.currentItem] if x is not None and x.is_loading]
 
     def get_queue_action_message(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         return self.get_queue_action(show)[1]
 
     def get_queue_action(self, show):
-        """
-
-        :param show:
-        :return:
-        """
         for action, message in self.mappings.items():
             if self._is_being_processed(show, (action,)):
                 return action, message
@@ -224,13 +160,6 @@ class ShowQueue(generic_queue.GenericQueue):
     loading_show_list = property(_get_loading_show_list)
 
     def update_show(self, show, season=None):
-
-        """
-
-        :param show:
-        :param season:
-        :return:
-        """
         if self.is_being_added(show):
             raise CantUpdateShowException(
                 u"{show_name} is still being added, wait until it is finished before you update."
@@ -255,13 +184,6 @@ class ShowQueue(generic_queue.GenericQueue):
         return queue_item_update_show
 
     def refresh_show(self, show, force=False):
-
-        """
-
-        :param show:
-        :param force:
-        :return:
-        """
         if self.is_being_refreshed(show) and not force:
             raise CantRefreshShowException("This show is already being refreshed, not refreshing again.")
 
@@ -286,12 +208,6 @@ class ShowQueue(generic_queue.GenericQueue):
         return queue_item_obj
 
     def rename_show_episodes(self, show):
-
-        """
-
-        :param show:
-        :return:
-        """
         queue_item_obj = QueueItemRename(show)
 
         self.add_item(queue_item_obj)
@@ -299,12 +215,6 @@ class ShowQueue(generic_queue.GenericQueue):
         return queue_item_obj
 
     def download_subtitles(self, show):
-
-        """
-
-        :param show:
-        :return:
-        """
         queue_item_obj = QueueItemSubtitle(show)
 
         self.add_item(queue_item_obj)
@@ -314,26 +224,6 @@ class ShowQueue(generic_queue.GenericQueue):
     def add_show(self, indexer, indexer_id, show_dir, default_status=None, quality=None, flatten_folders=None,
                  lang=None, subtitles=None, anime=None, scene=None, paused=None, blacklist=None, whitelist=None,
                  default_status_after=None, root_dir=None):
-
-        """
-
-        :param indexer:
-        :param indexer_id:
-        :param show_dir:
-        :param default_status:
-        :param quality:
-        :param flatten_folders:
-        :param lang:
-        :param subtitles:
-        :param anime:
-        :param scene:
-        :param paused:
-        :param blacklist:
-        :param whitelist:
-        :param default_status_after:
-        :param root_dir:
-        :return:
-        """
         if lang is None:
             lang = app.INDEXER_DEFAULT_LANGUAGE
 
@@ -346,12 +236,6 @@ class ShowQueue(generic_queue.GenericQueue):
         return queue_item_obj
 
     def remove_show(self, show, full=False):
-        """
-
-        :param show:
-        :param full:
-        :return:
-        """
         if show is None:
             raise CantRemoveShowException(u'Failed removing show: Show does not exist')
 
