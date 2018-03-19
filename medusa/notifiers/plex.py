@@ -4,7 +4,6 @@ import logging
 import re
 
 import requests
-from six import iteritems
 
 from medusa import app, common
 from medusa.helpers.utils import generate
@@ -192,7 +191,7 @@ class Notifier:
             result = u'PLEX: Updating all hosts with TV sections: {0}'
         log.debug(result.format(', '.join(hosts_try)))
 
-        for section_key, cur_host in iteritems(hosts_try):
+        for section_key, cur_host in hosts_try.items():
 
             url = '{schema}://{host}/library/sections/{key}/refresh'.format(
                 schema=schema, host=cur_host, key=section_key,

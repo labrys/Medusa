@@ -1,9 +1,8 @@
 # coding=utf-8
 
 import logging
-
-from requests.compat import quote
-from six.moves.urllib.request import Request, urlopen
+from urllib.parse import quote
+from urllib.request import Request, urlopen
 
 from medusa import app
 from medusa.common import (

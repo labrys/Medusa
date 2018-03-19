@@ -3,9 +3,9 @@
 """Kodi notifier module."""
 
 import logging
+from urllib.parse import unquote_plus
 
 from requests.auth import HTTPBasicAuth
-from requests.compat import unquote_plus
 from requests.exceptions import HTTPError, RequestException
 
 from medusa import app, common

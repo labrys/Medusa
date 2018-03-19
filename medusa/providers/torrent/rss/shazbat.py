@@ -3,8 +3,7 @@
 """Provider code for Shazbat."""
 
 import logging
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.helper.exceptions import AuthException

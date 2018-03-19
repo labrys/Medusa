@@ -4,8 +4,7 @@
 
 import logging
 import traceback
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.common import USER_AGENT

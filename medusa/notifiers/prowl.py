@@ -4,9 +4,8 @@ import ast
 import logging
 import socket
 import time
-
-from requests.compat import urlencode
-from six.moves.http_client import HTTPException, HTTPSConnection
+from http.client import HTTPException, HTTPSConnection
+from urllib.parse import urlencode
 
 from medusa import app, common, db
 from medusa.logger.adapters.style import BraceAdapter

@@ -4,7 +4,7 @@ import logging
 import threading
 import traceback
 
-from six.moves.queue import Empty, Queue
+from queue import Empty, Queue
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())

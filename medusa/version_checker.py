@@ -11,8 +11,6 @@ import tarfile
 import time
 from logging import DEBUG, WARNING
 
-import six
-
 from medusa import app, db, helpers, notifiers, ui
 from medusa.github_client import get_github_repo
 from medusa.logger.adapters.style import BraceAdapter
@@ -596,7 +594,7 @@ class GitUpdateManager(UpdateManager):
 
         if exit_status == 0 and output:
             cur_commit_hash = output.strip()
-            if isinstance(cur_commit_hash, six.binary_type):
+            if isinstance(cur_commit_hash, bytes):
                 cur_commit_hash = cur_commit_hash
             if not re.match('^[a-z0-9]+$', cur_commit_hash):
                 log.warning(u"Output doesn't look like a hash, not using it")

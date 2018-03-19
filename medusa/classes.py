@@ -1,9 +1,9 @@
 # coding=utf-8
 """Collection of generic used classes."""
 import logging
+from urllib.request import FancyURLopener
 
 from dateutil import parser
-from six.moves.urllib.request import FancyURLopener
 
 from medusa import app
 from medusa.common import Quality, USER_AGENT

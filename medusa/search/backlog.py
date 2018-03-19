@@ -6,8 +6,6 @@ import datetime
 import logging
 import threading
 
-from six import iteritems
-
 from medusa import app, common, db, scheduler, ui
 from medusa.helper.common import episode_num
 from medusa.logger.adapters.style import BraceAdapter
@@ -105,7 +103,7 @@ class BacklogSearcher:
 
             segments = self._get_segments(series_obj, from_date)
 
-            for season, segment in iteritems(segments):
+            for season, segment in segments.items():
                 self.currentSearchInfo = {'title': '{series_name} Season {season}'.format(series_name=series_obj.name,
                                                                                           season=season)}
 

@@ -27,9 +27,8 @@ import os
 import time
 from collections import OrderedDict
 from datetime import date, datetime
+from urllib.parse import unquote_plus
 
-from requests.compat import unquote_plus
-from six import iteritems
 from tornado.web import RequestHandler
 
 from medusa import (
@@ -105,7 +104,7 @@ class ApiHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         kwargs = self.request.arguments
-        for arg, value in iteritems(kwargs):
+        for arg, value in kwargs.items():
             if len(value) == 1:
                 kwargs[arg] = value[0]
 
@@ -133,11 +132,11 @@ class ApiHandler(RequestHandler):
         try:
             out_dict = _call_dispatcher(args, kwargs)
         except Exception as error:  # real internal error oohhh nooo :(
-            log.exception(u'API :: {0!r}', error.message)
+            log.exception(f'API :: {error!r}')
             error_data = {
-                'error_msg': error.message,
+                'error_msg': error,
                 'args': args,
-                'kwargs': kwargs
+                'kwargs': kwargs,
             }
             out_dict = _responds(RESULT_FATAL, error_data,
                                  'Medusa encountered an internal error! Please report to the Devs')
@@ -662,7 +661,7 @@ class CmdComingEpisodes(ApiCall):
         grouped_coming_episodes = ComingEpisodes.get_coming_episodes(self.type, self.sort, True, self.paused)
         data = {section: [] for section in grouped_coming_episodes.keys()}
 
-        for section, coming_episodes in iteritems(grouped_coming_episodes):
+        for section, coming_episodes in grouped_coming_episodes.items():
             for coming_episode in coming_episodes:
                 data[section].append({
                     'airdate': coming_episode['airdate'],
@@ -910,7 +909,7 @@ class CmdEpisodeSetStatus(ApiCall):
 
         extra_msg = ''
         if start_backlog:
-            for season, segment in iteritems(segments):
+            for season, segment in segments.items():
                 cur_backlog_queue_item = BacklogQueueItem(show_obj, segment)
                 app.search_queue_scheduler.action.add_item(cur_backlog_queue_item)  # @UndefinedVariable
 

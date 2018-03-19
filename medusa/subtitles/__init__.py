@@ -18,7 +18,6 @@ from babelfish import (
     language_converters,
 )
 from dogpile.cache.api import NO_VALUE
-from six import iteritems
 from subliminal import (
     ProviderPool,
     compute_score,
@@ -663,7 +662,7 @@ def get_video(tv_episode, video_path, subtitles_dir=None, subtitles=True, embedd
     payload = {'subtitles_dir': subtitles_dir, 'subtitles': subtitles, 'embedded_subtitles': embedded_subtitles,
                'release_name': release_name}
     cached_payload = memory_cache.get(key, expiration_time=VIDEO_EXPIRATION_TIME)
-    if cached_payload != NO_VALUE and {k: v for k, v in iteritems(cached_payload) if k != 'video'} == payload:
+    if cached_payload != NO_VALUE and {k: v for k, v in cached_payload.items() if k != 'video'} == payload:
         log.debug(u'Found cached video information under key {}', key)
         return cached_payload['video']
 
@@ -674,10 +673,8 @@ def get_video(tv_episode, video_path, subtitles_dir=None, subtitles=True, embedd
     try:
         video = scan_video(video_path)
     except ValueError as e:
-        log.warning(u'Unable to scan video: {}. Error: {}',
-                    video_path, e.message)
+        log.warning(f'Unable to scan video: {video_path}. Error: {e}')
     else:
-
         # Add hash of our custom provider Itasa
         video.size = os.path.getsize(video_path)
         if video.size > 10485760:

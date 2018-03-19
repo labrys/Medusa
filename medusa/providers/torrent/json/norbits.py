@@ -4,8 +4,7 @@
 
 import logging
 import traceback
-
-from requests.compat import urlencode, urljoin
+from urllib.parse import urlencode, urljoin
 
 from medusa import tv
 from medusa.helper.common import (

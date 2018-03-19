@@ -4,8 +4,8 @@
 
 import logging
 from collections import OrderedDict
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.exceptions import RequestException
 from tvdbapiv2 import (
     ApiClient,

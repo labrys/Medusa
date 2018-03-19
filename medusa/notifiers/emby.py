@@ -2,10 +2,9 @@
 
 import json
 import logging
-
-from requests.compat import urlencode
-from six.moves.urllib.error import URLError
-from six.moves.urllib.request import Request, urlopen
+from urllib.error import URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 from medusa import app
 from medusa.logger.adapters.style import BraceAdapter

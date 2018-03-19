@@ -1,11 +1,7 @@
 # coding=utf-8
-
-
-
 import logging
 import re
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import app, common
 from medusa.logger.adapters.style import BraceAdapter

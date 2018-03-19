@@ -11,15 +11,12 @@ import time
 import traceback
 from collections import Iterable
 from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import urljoin
 
 from mako.exceptions import RichTraceback
 from mako.lookup import TemplateLookup
 from mako.runtime import UNDEFINED
 from mako.template import Template as MakoTemplate
-from requests.compat import urljoin
-from six import (
-    iteritems,
-)
 from tornado.concurrent import run_on_executor
 from tornado.escape import utf8
 from tornado.gen import coroutine
@@ -272,7 +269,7 @@ class WebHandler(BaseHandler):
     def async_call(self, function):
         try:
             kwargs = self.request.arguments
-            for arg, value in iteritems(kwargs):
+            for arg, value in kwargs.items():
                 if len(value) == 1:
                     value = value[0]
                 else:

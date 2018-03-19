@@ -7,6 +7,7 @@ import ctypes
 import datetime
 import errno
 import hashlib
+import http.client
 import imghdr
 import io
 import logging
@@ -28,7 +29,7 @@ import zipfile
 from contextlib import suppress
 from itertools import cycle
 from shutil import Error
-from urllib.parse import splittype
+from urllib.parse import splittype, urlparse
 
 import adba
 import certifi
@@ -37,8 +38,6 @@ import requests
 from cachecontrol import CacheControlAdapter
 from cachecontrol.cache import DictCache
 from imdbpie import imdbpie
-from requests.compat import urlparse
-from six.moves import http_client
 
 from medusa import app, db
 from medusa.common import USER_AGENT
@@ -919,13 +918,18 @@ def check_url(url):
 
     We only check the URL header.
     """
-    # see also http://stackoverflow.com/questions/2924422
-    # http://stackoverflow.com/questions/1140661
-    good_codes = [http_client.OK, http_client.FOUND, http_client.MOVED_PERMANENTLY]
+    # see also:
+    #  http://stackoverflow.com/questions/2924422
+    #  http://stackoverflow.com/questions/1140661
+    good_codes = [
+        http.client.OK,
+        http.client.FOUND,
+        http.client.MOVED_PERMANENTLY,
+    ]
 
     host, path = urlparse(url)[1:3]  # elems [1] and [2]
     try:
-        conn = http_client.HTTPConnection(host)
+        conn = http.client.HTTPConnection(host)
         conn.request('HEAD', path)
         return conn.getresponse().status in good_codes
     except Exception:

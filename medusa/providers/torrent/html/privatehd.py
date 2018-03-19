@@ -3,8 +3,8 @@
 """Provider code for PrivateHD."""
 
 import logging
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv

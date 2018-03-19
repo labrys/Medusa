@@ -11,9 +11,8 @@ https://github.com/nzbget/nzbget
 import datetime
 import logging
 from base64 import standard_b64encode
-
-from six.moves.http_client import socket
-from six.moves.xmlrpc_client import ProtocolError, ServerProxy
+from http.client import socket
+from xmlrpc.client import ProtocolError, ServerProxy
 
 from medusa import app
 from medusa.common import Quality

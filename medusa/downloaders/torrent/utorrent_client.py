@@ -5,8 +5,7 @@
 import logging
 import re
 from collections import OrderedDict
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import app
 from medusa.downloaders.torrent.generic import GenericClient

@@ -7,7 +7,6 @@ import socket
 import time
 
 import jsonrpclib
-from six import itervalues
 
 from medusa import (
     app,
@@ -108,7 +107,7 @@ class BTNProvider(TorrentProvider):
         """
         items = []
 
-        torrent_rows = itervalues(data)
+        torrent_rows = data.values()
 
         for row in torrent_rows:
             title, download_url = self._process_title_and_url(row)

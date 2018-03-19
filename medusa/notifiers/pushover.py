@@ -2,10 +2,9 @@
 
 import logging
 import time
-
-from requests.compat import urlencode
-from six.moves.http_client import HTTPSConnection
-from six.moves.urllib.error import HTTPError
+from http.client import HTTPSConnection
+from urllib.error import HTTPError
+from urllib.parse import urlencode
 
 from medusa import app
 from medusa.common import (

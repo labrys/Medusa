@@ -2,9 +2,8 @@
 
 import logging
 import time
+from urllib.request import Request, urlopen
 from xml.dom.minidom import parseString
-
-from six.moves.urllib.request import Request, urlopen
 
 from medusa import app
 from medusa.logger.adapters.style import BraceAdapter

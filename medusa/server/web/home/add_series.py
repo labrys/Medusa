@@ -7,11 +7,9 @@ import json
 import logging
 import os
 import re
+from urllib.parse import unquote_plus
 
-from requests import RequestException
-from requests.compat import unquote_plus
 from simpleanidb import REQUEST_HOT
-from six import iteritems
 from tornroutes import route
 from traktor import TraktApi
 
@@ -97,7 +95,7 @@ class HomeAddSeries(Home):
                 except IndexerException as e:
                     log.info(u'Error searching for show: {error}'.format(error=e))
 
-        for i, shows in iteritems(results):
+        for i, shows in results.items():
             indexer_api = IndexerAPI(i)
             result_set = {
                 (

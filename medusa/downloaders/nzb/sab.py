@@ -10,8 +10,7 @@ https://github.com/sabnzbd/sabnzbd
 
 import datetime
 import logging
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import app
 from medusa.helper.common import sanitize_filename

@@ -4,9 +4,7 @@ import logging
 import os.path
 import re
 import sys
-
-from requests.compat import urlsplit
-from six.moves.urllib.parse import urlunsplit, uses_netloc
+from urllib.parse import urlsplit, urlunsplit, uses_netloc
 
 from medusa import app, db, helpers, naming, scheduler
 from medusa.helper.common import try_int

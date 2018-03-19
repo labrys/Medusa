@@ -5,8 +5,7 @@
 import logging
 import re
 from collections import OrderedDict
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser

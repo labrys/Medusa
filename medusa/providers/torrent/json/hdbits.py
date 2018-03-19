@@ -3,8 +3,7 @@
 """Provider code for HDBits."""
 
 import logging
-
-from requests.compat import urlencode, urljoin
+from urllib.parse import urlencode, urljoin
 
 from medusa import tv
 from medusa.logger.adapters.style import BraceAdapter

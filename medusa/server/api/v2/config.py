@@ -4,7 +4,6 @@ import logging
 import platform
 import sys
 
-from six import iteritems
 from tornado.escape import json_decode
 
 from medusa import (
@@ -183,7 +182,7 @@ class ConfigHandler(BaseRequestHandler):
         config_data['indexers'] = NonEmptyDict()
         config_data['indexers']['config'] = {
             indexer_id: indexer['identifier']
-            for indexer_id, indexer in iteritems(indexerConfig)
+            for indexer_id, indexer in indexerConfig.items()
         }
 
         if not identifier:

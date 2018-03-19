@@ -8,13 +8,9 @@ import logging
 import os
 import time
 from datetime import date, datetime
+from urllib.parse import quote_plus, unquote_plus
 
 import adba
-from requests.compat import (
-    quote_plus,
-    unquote_plus,
-)
-from six import iteritems
 from tornroutes import route
 from traktor import (
     MissingTokenException,
@@ -798,11 +794,16 @@ class Home(WebRoot):
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
         return json.dumps({
-            'seasonExceptions': {season: list(exception_name) for season, exception_name
-                                 in iteritems(get_all_scene_exceptions(series_obj))},
-            'xemNumbering': {tvdb_season_ep[0]: anidb_season_ep[0]
-                             for (tvdb_season_ep, anidb_season_ep)
-                             in iteritems(get_xem_numbering_for_show(series_obj, refresh_data=False))}
+            'seasonExceptions': {
+                season: list(exception_name)
+                for season, exception_name
+                in get_all_scene_exceptions(series_obj).items()
+            },
+            'xemNumbering': {
+                tvdb_season_ep[0]: anidb_season_ep[0]
+                for (tvdb_season_ep, anidb_season_ep)
+                in get_xem_numbering_for_show(series_obj, refresh_data=False).items()
+            },
         })
 
     def display_series(self, indexername=None, seriesid=None, ):
@@ -1109,7 +1110,7 @@ class Home(WebRoot):
 
         sql_episode = '' if manual_search_type == 'season' else episode
 
-        for provider, last_update in iteritems(last_prov_updates):
+        for provider, last_update in last_prov_updates.items():
             table_exists = main_db_con.select(
                 'SELECT name '
                 'FROM sqlite_master '
@@ -1404,7 +1405,7 @@ class Home(WebRoot):
             return 'No scene exceptions'
 
         out = []
-        for season, names in iter(sorted(iteritems(exceptions_list))):
+        for season, names in iter(sorted(exceptions_list.items())):
             if season == -1:
                 season = '*'
             out.append('S{season}: {names}'.format(season=season, names=', '.join(names)))
@@ -2063,7 +2064,7 @@ class Home(WebRoot):
             msg = 'Backlog was automatically started for the following seasons of <b>{show}</b>:<br>'.format(show=series_obj.name)
             msg += '<ul>'
 
-            for season, segment in iteritems(segments):
+            for season, segment in segments.items():
                 cur_backlog_queue_item = BacklogQueueItem(series_obj, segment)
                 app.search_queue_scheduler.action.add_item(cur_backlog_queue_item)
 
@@ -2091,7 +2092,7 @@ class Home(WebRoot):
             msg = 'Retrying Search was automatically started for the following season of <b>{show}</b>:<br>'.format(show=series_obj.name)
             msg += '<ul>'
 
-            for season, segment in iteritems(segments):
+            for season, segment in segments.items():
                 cur_failed_queue_item = FailedQueueItem(series_obj, segment)
                 app.search_queue_scheduler.action.add_item(cur_failed_queue_item)
 

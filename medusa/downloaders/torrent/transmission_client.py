@@ -8,8 +8,7 @@ import os
 import re
 from base64 import b64encode
 from datetime import datetime, timedelta
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import app
 from medusa.downloaders.torrent.generic import GenericClient

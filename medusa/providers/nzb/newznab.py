@@ -7,9 +7,9 @@ import os
 import re
 import time
 import traceback
+from urllib.parse import urljoin
 
 import validators
-from requests.compat import urljoin
 
 from medusa import (
     app,
