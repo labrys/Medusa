@@ -7,7 +7,7 @@ import threading
 from datetime import date, datetime, timedelta
 
 from medusa import app, common
-from medusa.db import DBConnection
+from medusa.databases.db import DBConnection
 from medusa.helper.common import try_int
 from medusa.helper.exceptions import MultipleShowObjectsException
 from medusa.logger.adapters.style import BraceAdapter

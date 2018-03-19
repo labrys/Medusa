@@ -32,12 +32,12 @@ from rarfile import Error as RarError, NeedFirstVolume
 from medusa import (
     app,
     common,
-    db,
     failed_history,
     helpers,
     history,
     notifiers,
 )
+from medusa.databases import db
 from medusa.helper.common import (
     episode_num,
     pretty_file_size,

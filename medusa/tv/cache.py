@@ -9,8 +9,8 @@ from time import time
 
 from medusa import (
     app,
-    db,
 )
+from medusa.databases import db
 from medusa.helper.common import episode_num
 from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter

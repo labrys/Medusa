@@ -5,8 +5,8 @@ import re
 
 from dateutil import tz
 
-from medusa import db
 from medusa.app import GITHUB_IO_URL
+from medusa.databases import db
 from medusa.helper.common import try_int
 from medusa.session.core import MedusaSafeSession
 

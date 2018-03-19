@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from medusa import db
+from medusa.databases import db
 
 
 # Add new migrations at the bottom of the list

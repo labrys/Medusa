@@ -6,7 +6,8 @@ import os.path
 import sys
 import warnings
 
-from medusa import common, db, helpers, subtitles
+from medusa import common, helpers, subtitles
+from medusa.databases import db
 from medusa.helper.common import dateTimeFormat, episode_num
 from medusa.indexers.config import STATUS_MAP
 from medusa.logger.adapters.style import BraceAdapter

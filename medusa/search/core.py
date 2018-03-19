@@ -11,7 +11,6 @@ import time
 from medusa import (
     app,
     common,
-    db,
     failed_history,
     helpers,
     history,
@@ -29,6 +28,7 @@ from medusa.common import (
     SNATCHED_PROPER,
     UNKNOWN,
 )
+from medusa.databases import db
 from medusa.downloaders import torrent
 from medusa.downloaders.nzb import (
     nzbget,

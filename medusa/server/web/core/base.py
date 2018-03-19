@@ -34,12 +34,12 @@ from tornroutes import route
 from medusa import (
     app,
     classes,
-    db,
     exception_handler,
     helpers,
     network_timezones,
     ui,
 )
+from medusa.databases import db
 from medusa.server.api.v1.core import function_mapper
 from medusa.show.coming_episodes import ComingEpisodes
 

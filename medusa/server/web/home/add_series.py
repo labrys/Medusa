@@ -13,9 +13,10 @@ from simpleanidb import REQUEST_HOT
 from tornroutes import route
 from traktor import TraktApi
 
-from medusa import app, classes, config, db, helpers, ui
+from medusa import app, classes, config, helpers, ui
 from medusa.black_and_white_list import short_group_names
 from medusa.common import Quality
+from medusa.databases import db
 from medusa.helper.common import sanitize_filename, try_int
 from medusa.helpers import get_showname_from_indexer
 from medusa.helpers.utils import generate

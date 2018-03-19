@@ -4,7 +4,7 @@ import logging
 import time
 import traceback
 
-from medusa import db
+from medusa.databases import db
 from medusa.indexers.api import IndexerAPI
 from medusa.scene_exceptions import safe_session
 

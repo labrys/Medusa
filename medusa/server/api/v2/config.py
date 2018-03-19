@@ -8,8 +8,8 @@ from tornado.escape import json_decode
 
 from medusa import (
     app,
-    db,
 )
+from medusa.databases import db
 from medusa.helper.mappings import NonEmptyDict
 from medusa.indexers.config import indexerConfig
 from medusa.server.api.v2.base import (

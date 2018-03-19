@@ -9,8 +9,9 @@ import re
 import threading
 import time
 
-from medusa import app, db, helpers
+from medusa import app, helpers
 from medusa.common import Quality, cpu_presets
+from medusa.databases import db
 from medusa.helper.common import enabled_providers
 from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter

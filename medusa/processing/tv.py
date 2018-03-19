@@ -16,7 +16,8 @@ from unrar2.rar_exceptions import (
     InvalidRARArchiveUsage,
 )
 
-from medusa import app, db, helpers, notifiers
+from medusa import app, helpers, notifiers
+from medusa.databases import db
 from medusa.downloaders import torrent
 from medusa.helper.common import is_sync_file
 from medusa.helper.exceptions import (

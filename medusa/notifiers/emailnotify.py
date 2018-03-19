@@ -10,7 +10,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
-from medusa import app, db
+from medusa import app
+from medusa.databases import db
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))

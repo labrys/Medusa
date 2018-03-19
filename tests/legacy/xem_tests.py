@@ -33,7 +33,7 @@ class XEMBasicTests(test.AppTestDBCase):
     @staticmethod
     def load_shows_from_db():
         """Populate the showList with shows from the database."""
-        test_main_db_con = test.db.DBConnection()
+        test_main_db_con = medusa.databases.db.DBConnection()
         sql_results = test_main_db_con.select("SELECT * FROM tv_shows")
 
         for sql_show in sql_results:
@@ -46,7 +46,7 @@ class XEMBasicTests(test.AppTestDBCase):
     @staticmethod
     def load_from_db():
         """Populate the showList with shows from the database."""
-        test_main_db_con = test.db.DBConnection()
+        test_main_db_con = medusa.databases.db.DBConnection()
         sql_results = test_main_db_con.select("SELECT * FROM tv_shows")
 
         for sql_show in sql_results:

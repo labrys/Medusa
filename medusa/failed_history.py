@@ -5,8 +5,8 @@ import logging
 import re
 from datetime import datetime, timedelta
 
-from medusa import db
 from medusa.common import FAILED, Quality, WANTED, statusStrings
+from medusa.databases import db
 from medusa.helper.common import episode_num
 from medusa.helper.exceptions import EpisodeNotFoundException
 from medusa.show.history import History

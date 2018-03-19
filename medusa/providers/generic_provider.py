@@ -30,7 +30,7 @@ from medusa.common import (
     SEASON_RESULT,
     USER_AGENT,
 )
-from medusa.db import DBConnection
+from medusa.databases.db import DBConnection
 from medusa.helper.common import (
     sanitize_filename,
 )

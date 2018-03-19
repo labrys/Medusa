@@ -5,7 +5,8 @@
 import logging
 import threading
 
-from medusa import app, db
+from medusa import app
+from medusa.databases import db
 from medusa.helpers import full_sanitize_scene_name
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.scene_exceptions import (

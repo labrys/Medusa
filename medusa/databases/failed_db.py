@@ -2,8 +2,8 @@
 
 import logging
 
-from medusa import db
 from medusa.common import Quality
+from medusa.databases import db
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))

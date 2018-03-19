@@ -5,7 +5,8 @@ import logging
 
 from adba.aniDBerrors import AniDBCommandTimeoutError
 
-from medusa import app, db, helpers
+from medusa import app, helpers
+from medusa.databases import db
 from medusa.logger.adapters.style import BraceAdapter
 
 log = logging.getLogger(__name__)

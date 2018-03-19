@@ -39,8 +39,9 @@ from cachecontrol import CacheControlAdapter
 from cachecontrol.cache import DictCache
 from imdbpie import imdbpie
 
-from medusa import app, db
+from medusa import app
 from medusa.common import USER_AGENT
+from medusa.databases import db
 from medusa.helper.common import (
     episode_num, http_code_description, media_extensions,
     pretty_file_size, subtitle_extensions,

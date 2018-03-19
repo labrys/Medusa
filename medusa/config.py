@@ -6,7 +6,8 @@ import re
 import sys
 from urllib.parse import urlsplit, urlunsplit, uses_netloc
 
-from medusa import app, db, helpers, naming, scheduler
+from medusa import app, helpers, naming, scheduler
+from medusa.databases import db
 from medusa.helper.common import try_int
 from medusa.helpers.utils import split_and_strip
 from medusa.logger.adapters.style import BraceAdapter

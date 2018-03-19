@@ -5,7 +5,8 @@ import time
 
 from requests.exceptions import HTTPError
 
-from medusa import app, db, network_timezones, ui
+from medusa import app, network_timezones, ui
+from medusa.databases import db
 from medusa.helper.exceptions import (
     CantRefreshShowException,
     CantUpdateShowException,

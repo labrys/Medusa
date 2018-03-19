@@ -14,7 +14,6 @@ import knowit
 
 from medusa import (
     app,
-    db,
     helpers,
     network_timezones,
     notifiers,
@@ -33,6 +32,7 @@ from medusa.common import (
     WANTED,
     statusStrings,
 )
+from medusa.databases import db
 from medusa.date_time import DateTime
 from medusa.helper.common import (
     dateFormat,

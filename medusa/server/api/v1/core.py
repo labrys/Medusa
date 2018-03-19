@@ -32,7 +32,7 @@ from urllib.parse import unquote_plus
 from tornado.web import RequestHandler
 
 from medusa import (
-    app, classes, date_time, db, helpers, image_cache,
+    app, classes, date_time, helpers, image_cache,
     network_timezones, subtitles, system, ui,
 )
 from medusa.common import (
@@ -41,6 +41,7 @@ from medusa.common import (
     UNAIRED, UNKNOWN, WANTED,
     statusStrings,
 )
+from medusa.databases import db
 from medusa.helper.common import (
     dateFormat, dateTimeFormat, pretty_file_size, sanitize_filename,
     timeFormat, try_int,

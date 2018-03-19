@@ -9,7 +9,8 @@ from collections import defaultdict
 
 import adba
 
-from medusa import app, db, helpers
+from medusa import app, helpers
+from medusa.databases import db
 from medusa.indexers.api import IndexerAPI
 from medusa.indexers.config import INDEXER_TVDB
 from medusa.logger.adapters.style import BraceAdapter

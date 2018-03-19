@@ -10,7 +10,8 @@ from traktor import (
     TraktException,
 )
 
-from medusa import app, db
+from medusa import app
+from medusa.databases import db
 from medusa.indexers.api import IndexerAPI
 from medusa.indexers.config import indexerConfig
 from medusa.indexers.exceptions import (

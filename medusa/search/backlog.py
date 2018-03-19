@@ -6,7 +6,8 @@ import datetime
 import logging
 import threading
 
-from medusa import app, common, db, scheduler, ui
+from medusa import app, common, scheduler, ui
+from medusa.databases import db
 from medusa.helper.common import episode_num
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.search.queue import BacklogQueueItem

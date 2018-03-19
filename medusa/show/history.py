@@ -26,7 +26,7 @@ class History:
     date_format = '%Y%m%d%H%M%S'
 
     def __init__(self):
-        from medusa.db import DBConnection
+        from medusa.databases.db import DBConnection
         self.db = DBConnection()
 
     def clear(self):

@@ -8,7 +8,8 @@ import pytest
 from six import iteritems, text_type
 from tornado.httpclient import HTTPError
 
-from medusa import app, db
+from medusa import app
+from medusa.databases import db
 from medusa.helper.mappings import NonEmptyDict
 from medusa.indexers.config import indexerConfig
 

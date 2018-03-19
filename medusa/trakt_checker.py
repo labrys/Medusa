@@ -12,8 +12,9 @@ from traktor import (
     TraktException,
 )
 
-from medusa import app, db, ui
+from medusa import app, ui
 from medusa.common import Quality, SKIPPED, WANTED
+from medusa.databases import db
 from medusa.helper.common import episode_num
 from medusa.helpers import get_title_without_year
 from medusa.indexers.config import EXTERNAL_IMDB, EXTERNAL_TRAKT, indexerConfig

@@ -11,7 +11,7 @@ import re
 from tornroutes import route
 
 from medusa import (
-    app, date_time, db, helpers, image_cache, network_timezones,
+    app, date_time, helpers, image_cache, network_timezones,
     subtitles, ui,
 )
 from medusa.common import (
@@ -19,6 +19,7 @@ from medusa.common import (
     Quality,
     SNATCHED,
 )
+from medusa.databases import db
 from medusa.helper.common import (
     episode_num,
     try_int,

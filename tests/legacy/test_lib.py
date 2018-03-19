@@ -28,8 +28,8 @@ import unittest
 
 from configobj import ConfigObj
 
-from medusa import app, config, db, providers
-from medusa.databases import cache_db, failed_db, main_db
+from medusa import app, config, providers
+from medusa.databases import cache_db, db, failed_db, main_db
 from medusa.providers.nzb.newznab import NewznabProvider
 from medusa.tv import Episode, cache
 
@@ -210,7 +210,7 @@ def setup_test_db():
 
 def teardown_test_db():
     """Tear down the test database."""
-    from medusa.db import db_cons
+    from medusa.databases.db import db_cons
     for connection in db_cons:
         db_cons[connection].commit()
     #     db_cons[connection].close()

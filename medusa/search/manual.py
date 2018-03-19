@@ -10,13 +10,14 @@ from datetime import datetime
 
 from dateutil import parser
 
-from medusa import app, db
+from medusa import app
 from medusa.common import (
     Overview,
     Quality,
     cpu_presets,
     statusStrings,
 )
+from medusa.databases import db
 from medusa.date_time import DateTime
 from medusa.helper.common import enabled_providers, pretty_file_size
 from medusa.logger.adapters.style import BraceAdapter

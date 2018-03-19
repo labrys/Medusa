@@ -27,15 +27,11 @@ def db_filename(filename=None, suffix=None):
     """
     filename = filename or app.APPLICATION_DB
     if suffix:
-        filename = "%s.%s" % (filename, suffix)
+        filename = f'{filename}.{suffix}'
     return os.path.join(app.DATA_DIR, filename)
 
 
 class DBConnection:
-    """
-
-    """
-
     def __init__(self, filename=None, suffix=None, row_type=None):
 
         self.filename = filename or app.APPLICATION_DB
@@ -385,26 +381,14 @@ class DBConnection:
 
 
 def sanity_check_database(connection, sanity_check):
-    """
-
-    :param connection:
-    :param sanity_check:
-    """
     sanity_check(connection).check()
 
 
 class DBSanityCheck:
-    """
-
-    """
-
     def __init__(self, connection):
         self.connection = connection
 
     def check(self):
-        """
-
-        """
         pass
 
 
@@ -424,11 +408,6 @@ def upgrade_database(connection, schema):
 
 
 def pretty_name(class_name):
-    """
-
-    :param class_name:
-    :return:
-    """
     return ' '.join([x.group() for x in re.finditer("([A-Z])([a-z0-9]+)", class_name)])
 
 
@@ -471,61 +450,27 @@ def _process_upgrade(connection, upgrade_class):
 
 # Base migration class. All future DB changes should be subclassed from this class
 class SchemaUpgrade:
-    """
-
-    """
-
     def __init__(self, connection):
         self.connection = connection
 
     def has_table(self, table_name):
-        """
-
-        :param table_name:
-        :return:
-        """
         return len(self.connection.select("SELECT 1 FROM sqlite_master WHERE name = ?;", (table_name,))) > 0
 
     def has_column(self, table_name, column):
-        """
-
-        :param table_name:
-        :param column:
-        :return:
-        """
         return column in self.connection.table_info(table_name)
 
     def add_column(self, table, column, column_type="NUMERIC", default=0):
-        """
-
-        :param table:
-        :param column:
-        :param column_type:
-        :param default:
-        """
         self.connection.action("ALTER TABLE [%s] ADD %s %s" % (table, column, column_type))
         self.connection.action("UPDATE [%s] SET %s = ?" % (table, column), (default,))
 
     def check_db_version(self):
-        """
-
-        :return:
-        """
         return self.connection.check_db_version()
 
     def inc_db_version(self):
-        """
-
-        :return:
-        """
         new_version = self.check_db_version() + 1
         self.connection.action("UPDATE db_version SET db_version = ?", [new_version])
         return new_version
 
     @property
     def major_version(self):
-        """
-
-        :return:
-        """
         return self.check_db_version()[0]

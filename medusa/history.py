@@ -1,8 +1,8 @@
 # coding=utf-8
 import datetime
 
-from medusa import db
 from medusa.common import FAILED, Quality, SNATCHED, SUBTITLED
+from medusa.databases import db
 from medusa.show.history import History
 
 

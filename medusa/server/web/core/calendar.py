@@ -11,7 +11,8 @@ import logging
 from dateutil import tz
 from tornado.web import authenticated
 
-from medusa import app, db, network_timezones
+from medusa import app, network_timezones
+from medusa.databases import db
 from medusa.helper.common import try_int
 from medusa.server.web.core.base import BaseHandler
 

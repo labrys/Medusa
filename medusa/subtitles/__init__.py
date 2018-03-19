@@ -30,9 +30,10 @@ from subliminal.core import search_external_subtitles
 from subliminal.score import episode_scores
 from subliminal.subtitle import get_subtitle_path
 
-from medusa import app, db, helpers, history
+from medusa import app, helpers, history
 from medusa.cache import cache, memory_cache
 from medusa.common import Quality, cpu_presets
+from medusa.databases import db
 from medusa.helper.common import (
     dateTimeFormat,
     episode_num,

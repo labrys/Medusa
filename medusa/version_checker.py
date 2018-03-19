@@ -11,7 +11,8 @@ import tarfile
 import time
 from logging import DEBUG, WARNING
 
-from medusa import app, db, helpers, notifiers, ui
+from medusa import app, helpers, notifiers, ui
+from medusa.databases import db
 from medusa.github_client import get_github_repo
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.session.core import MedusaSafeSession

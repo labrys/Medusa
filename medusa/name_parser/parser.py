@@ -10,11 +10,11 @@ import guessit
 
 from medusa import (
     common,
-    db,
     helpers,
     scene_exceptions,
     scene_numbering,
 )
+from medusa.databases import db
 from medusa.helper.common import episode_num
 from medusa.indexers.api import IndexerAPI
 from medusa.indexers.exceptions import (

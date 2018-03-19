@@ -25,7 +25,7 @@ from medusa.common import (
     SKIPPED,
     WANTED,
 )
-from medusa.db import DBConnection
+from medusa.databases.db import DBConnection
 from medusa.helper.exceptions import (
     CantRefreshShowException,
     CantRemoveShowException,

@@ -23,7 +23,7 @@
 
 from __future__ import print_function
 
-from medusa import db
+from medusa.databases import db
 from medusa.notifiers.emailnotify import Notifier as EmailNotifier
 from medusa.notifiers.prowl import Notifier as ProwlNotifier
 from medusa.server.web import Home

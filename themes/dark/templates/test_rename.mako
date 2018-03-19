@@ -12,7 +12,8 @@
     import calendar
     from medusa.common import SKIPPED, WANTED, UNAIRED, ARCHIVED, IGNORED, SNATCHED, SNATCHED_PROPER, SNATCHED_BEST, FAILED
     from medusa.common import Quality, qualityPresets, qualityPresetStrings
-    from medusa import db, date_time, network_timezones
+    from medusa import date_time, network_timezones
+    from medusa.databases import db
     from random import choice
     import datetime
     import re

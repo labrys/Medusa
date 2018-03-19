@@ -20,7 +20,6 @@ from imdbpie import imdbpie
 
 from medusa import (
     app,
-    db,
     helpers,
     image_cache,
     network_timezones,
@@ -45,6 +44,7 @@ from medusa.common import (
     qualityPresets,
     statusStrings,
 )
+from medusa.databases import db
 from medusa.date_time import DateTime
 from medusa.helper.common import (
     episode_num,

@@ -8,8 +8,8 @@ from tornroutes import route
 
 from medusa import (
     app,
-    db,
 )
+from medusa.databases import db
 from medusa.server.web.core import PageTemplate, WebRoot
 from medusa.version_checker import CheckVersion
 

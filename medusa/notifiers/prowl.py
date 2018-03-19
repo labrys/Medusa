@@ -7,7 +7,8 @@ import time
 from http.client import HTTPException, HTTPSConnection
 from urllib.parse import urlencode
 
-from medusa import app, common, db
+from medusa import app, common
+from medusa.databases import db
 from medusa.logger.adapters.style import BraceAdapter
 
 try:
