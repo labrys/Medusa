@@ -18,7 +18,7 @@ class NyaaProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(NyaaProvider, self).__init__('Nyaa')
+        super().__init__('Nyaa')
 
         # Credentials
         self.public = True

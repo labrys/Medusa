@@ -27,7 +27,7 @@ class HeBitsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(HeBitsProvider, self).__init__('HeBits')
+        super().__init__('HeBits')
 
         # Credentials
         self.username = None

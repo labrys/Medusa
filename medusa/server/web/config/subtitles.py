@@ -25,7 +25,7 @@ class ConfigSubtitles(Config):
     """Handler for Subtitle Search configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigSubtitles, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """

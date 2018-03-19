@@ -37,7 +37,7 @@ log.addHandler(logging.NullHandler())
 @route('/add_series(/?.*)')
 class HomeAddSeries(Home):
     def __init__(self, *args, **kwargs):
-        super(HomeAddSeries, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='add_series.mako')

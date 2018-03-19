@@ -19,7 +19,7 @@ class Scheduler(threading.Thread):
 
     def __init__(self, action, cycle_time=datetime.timedelta(minutes=10), run_delay=datetime.timedelta(minutes=0),
                  start_time=None, thread_name="ScheduledThread", silent=True):
-        super(Scheduler, self).__init__()
+        super().__init__()
 
         self.run_delay = run_delay
         if start_time is None:

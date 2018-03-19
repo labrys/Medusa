@@ -28,7 +28,7 @@ class KeyHandler(RequestHandler):
     """Handler for API Keys."""
 
     def __init__(self, *args, **kwargs):
-        super(KeyHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get(self, *args, **kwargs):
         """

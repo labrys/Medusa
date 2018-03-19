@@ -27,7 +27,7 @@ class HDSpaceProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(HDSpaceProvider, self).__init__('HDSpace')
+        super().__init__('HDSpace')
 
         # Credentials
         self.username = None

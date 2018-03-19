@@ -220,7 +220,7 @@ class NZBSearchResult(SearchResult):
     """Regular NZB result with an URL to the NZB."""
 
     def __init__(self, episodes, provider=None):
-        super(NZBSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'nzb'
 
 
@@ -228,7 +228,7 @@ class NZBDataSearchResult(SearchResult):
     """NZB result where the actual NZB XML data is stored in the extra_info."""
 
     def __init__(self, episodes, provider=None):
-        super(NZBDataSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'nzbdata'
 
 
@@ -236,7 +236,7 @@ class TorrentSearchResult(SearchResult):
     """Torrent result with an URL to the torrent."""
 
     def __init__(self, episodes, provider=None):
-        super(TorrentSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'torrent'
 
 

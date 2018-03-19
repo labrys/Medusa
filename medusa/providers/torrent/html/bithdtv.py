@@ -24,7 +24,7 @@ class BithdtvProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(BithdtvProvider, self).__init__('BITHDTV')
+        super().__init__('BITHDTV')
 
         # Torrent Stats
         self.minseed = 0

@@ -19,7 +19,7 @@ class Config(WebRoot):
     """Base handler for Config pages."""
 
     def __init__(self, *args, **kwargs):
-        super(Config, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @staticmethod
     def config_menu():

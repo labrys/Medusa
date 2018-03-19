@@ -149,7 +149,7 @@ class BaseRequestHandler(RequestHandler):
         if isinstance(e, HTTPError):
             self.api_finish(e.code, e.message)
         else:
-            super(BaseRequestHandler, self)._handle_request_exception(e)
+            super()._handle_request_exception(e)
 
     def _ok(self, data=None, headers=None, stream=None, content_type=None):
         self.api_finish(200, data=data, headers=headers, stream=stream, content_type=content_type)
@@ -402,7 +402,7 @@ class StringField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(StringField, self).__init__(target_type, attr, str, validator=validator, converter=converter,
+        super().__init__(target_type, attr, str, validator=validator, converter=converter,
                                           default_value=default_value, post_processor=post_processor)
 
 
@@ -411,7 +411,7 @@ class IntegerField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(IntegerField, self).__init__(target_type, attr, int, validator=validator, converter=converter,
+        super().__init__(target_type, attr, int, validator=validator, converter=converter,
                                            default_value=default_value, post_processor=post_processor)
 
 
@@ -420,7 +420,7 @@ class ListField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(ListField, self).__init__(target_type, attr, list, validator=validator, converter=converter,
+        super().__init__(target_type, attr, list, validator=validator, converter=converter,
                                         default_value=default_value, post_processor=post_processor)
 
 
@@ -429,7 +429,7 @@ class BooleanField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=int, default_value=None, post_processor=None):
         """Constructor."""
-        super(BooleanField, self).__init__(target_type, attr, bool, validator=validator, converter=converter,
+        super().__init__(target_type, attr, bool, validator=validator, converter=converter,
                                            default_value=default_value, post_processor=post_processor)
 
 
@@ -439,5 +439,5 @@ class EnumField(PatchField):
     def __init__(self, target_type, attr, enums, attr_type=str,
                  converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(EnumField, self).__init__(target_type, attr, attr_type, validator=lambda v: v in enums,
+        super().__init__(target_type, attr, attr_type, validator=lambda v: v in enums,
                                         converter=converter, default_value=default_value, post_processor=post_processor)

@@ -32,7 +32,7 @@ class Tmdb(BaseIndexer):
 
     def __init__(self, *args, **kwargs):  # pylint: disable=too-many-locals,too-many-arguments
         """Tmdb api constructor."""
-        super(Tmdb, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.tmdb = tmdb
         self.tmdb.API_KEY = TMDB_API_KEY

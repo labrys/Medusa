@@ -30,7 +30,7 @@ log.addHandler(logging.NullHandler())
 @route('/config/general(/?.*)')
 class ConfigGeneral(Config):
     def __init__(self, *args, **kwargs):
-        super(ConfigGeneral, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='config_general.mako')

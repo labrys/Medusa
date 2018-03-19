@@ -18,7 +18,7 @@ from medusa.server.web.core import PageTemplate
 @route('/config/backuprestore(/?.*)')
 class ConfigBackupRestore(Config):
     def __init__(self, *args, **kwargs):
-        super(ConfigBackupRestore, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='config_backuprestore.mako')

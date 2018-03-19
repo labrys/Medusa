@@ -111,7 +111,7 @@ class DelugeAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(DelugeAPI, self).__init__('Deluge', host, username, password)
+        super().__init__('Deluge', host, username, password)
         self.session.headers.update({'Content-Type': 'application/json'})
         self.url = '{host}json'.format(host=self.host)
 

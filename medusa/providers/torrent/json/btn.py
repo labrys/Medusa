@@ -32,7 +32,7 @@ class BTNProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(BTNProvider, self).__init__('BTN')
+        super().__init__('BTN')
 
         # Credentials
         self.api_key = None

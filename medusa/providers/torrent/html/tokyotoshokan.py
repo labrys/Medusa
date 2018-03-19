@@ -24,7 +24,7 @@ class TokyoToshokanProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TokyoToshokanProvider, self).__init__('TokyoToshokan')
+        super().__init__('TokyoToshokan')
 
         # Credentials
         self.public = True

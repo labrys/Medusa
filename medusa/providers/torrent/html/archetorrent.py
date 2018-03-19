@@ -23,7 +23,7 @@ class ArcheTorrentProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(ArcheTorrentProvider, self).__init__('ArcheTorrent')
+        super().__init__('ArcheTorrent')
 
         # Credentials
         self.username = None

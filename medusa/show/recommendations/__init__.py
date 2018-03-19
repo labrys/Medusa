@@ -25,7 +25,7 @@ class ExpiringList(list):
         """Add new items to the list."""
         if self.implicit_clean:
             self.clean()
-        super(ExpiringList, self).append((int(time.time()), item))
+        super().append((int(time.time()), item))
 
     def clean(self):
         """Use the cache_timeout to remove expired items."""
@@ -94,7 +94,7 @@ class ExpiringKeyValue(list):
         """Add new items to the list."""
         if self.implicit_clean:
             self.clean()
-        super(ExpiringKeyValue, self).append((int(time.time()), key, value))
+        super().append((int(time.time()), key, value))
 
     def clean(self):
         """Use the cache_timeout to remove expired items."""

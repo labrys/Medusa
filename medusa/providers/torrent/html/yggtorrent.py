@@ -26,7 +26,7 @@ class YggtorrentProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(YggtorrentProvider, self).__init__('Yggtorrent')
+        super().__init__('Yggtorrent')
 
         # Credentials
         self.username = None

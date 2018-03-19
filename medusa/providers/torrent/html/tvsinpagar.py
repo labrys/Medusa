@@ -26,7 +26,7 @@ class TVsinpagarProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TVsinpagarProvider, self).__init__('TVsinpagar')
+        super().__init__('TVsinpagar')
 
         # Credentials
         self.public = True

@@ -29,7 +29,7 @@ class MoreThanTVProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(MoreThanTVProvider, self).__init__('MoreThanTV')
+        super().__init__('MoreThanTV')
 
         # Credentials
         self.username = None

@@ -21,7 +21,7 @@ class ConfigNotifications(Config):
     """Handler for notification configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigNotifications, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """

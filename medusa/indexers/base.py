@@ -328,7 +328,7 @@ class ShowContainer(dict):
 
             self._lastgc = time.time()
 
-        super(ShowContainer, self).__setitem__(key, value)
+        super().__setitem__(key, value)
 
 
 class Show(dict):

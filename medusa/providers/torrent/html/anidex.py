@@ -21,7 +21,7 @@ class AniDexProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(AniDexProvider, self).__init__('AniDex')
+        super().__init__('AniDex')
 
         # Credentials
         self.public = True

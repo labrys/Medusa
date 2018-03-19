@@ -70,7 +70,7 @@ class BraceAdapter(logging.LoggerAdapter):
 
     def __init__(self, logger, extra=None):
         """Initialize the Brace adapter with a logger."""
-        super(BraceAdapter, self).__init__(logger, extra)
+        super().__init__(logger, extra)
         self.debug = functools.partial(self.log, logging.DEBUG)
         self.info = functools.partial(self.log, logging.INFO)
         self.warning = functools.partial(self.log, logging.WARNING)

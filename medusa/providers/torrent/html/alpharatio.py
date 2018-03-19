@@ -27,7 +27,7 @@ class AlphaRatioProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(AlphaRatioProvider, self).__init__('AlphaRatio')
+        super().__init__('AlphaRatio')
 
         # Credentials
         self.username = None

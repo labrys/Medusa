@@ -159,7 +159,7 @@ class BaseHandler(RequestHandler):
     def __init__(self, *args, **kwargs):
         self.startTime = time.time()
 
-        super(BaseHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def initialize(self):
         log.debug(f'Initializing {self!r}')
@@ -240,7 +240,7 @@ class WebHandler(BaseHandler):
     """Base Handler for the web server."""
 
     def __init__(self, *args, **kwargs):
-        super(WebHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.io_loop = IOLoop.current()
 
     executor = ThreadPoolExecutor(cpu_count())
@@ -302,7 +302,7 @@ class WebRoot(WebHandler):
     """Base Handler for the web server."""
 
     def __init__(self, *args, **kwargs):
-        super(WebRoot, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         return self.redirect('/{page}/'.format(page=app.DEFAULT_PAGE))
@@ -415,7 +415,7 @@ class WebRoot(WebHandler):
 @route('/ui(/?.*)')
 class UI(WebRoot):
     def __init__(self, *args, **kwargs):
-        super(UI, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @staticmethod
     def add_message():
@@ -443,7 +443,7 @@ class UI(WebRoot):
 
 class AuthenticatedStaticFileHandler(StaticFileHandler):
     def __init__(self, *args, **kwargs):
-        super(AuthenticatedStaticFileHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_current_user(self):
         if app.WEB_USERNAME and app.WEB_PASSWORD:
@@ -453,4 +453,4 @@ class AuthenticatedStaticFileHandler(StaticFileHandler):
     @addslash
     @authenticated
     def get(self, *args, **kwargs):
-        super(AuthenticatedStaticFileHandler, self).get(*args, **kwargs)
+        super().get(*args, **kwargs)

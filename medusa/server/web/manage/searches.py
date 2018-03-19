@@ -17,7 +17,7 @@ log.addHandler(logging.NullHandler())
 @route('/manage/manage_searches(/?.*)')
 class ManageSearches(Manage):
     def __init__(self, *args, **kwargs):
-        super(ManageSearches, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='manage_manage_searches.mako')

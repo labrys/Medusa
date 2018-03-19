@@ -23,7 +23,7 @@ class TorrentingProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TorrentingProvider, self).__init__('Torrenting')
+        super().__init__('Torrenting')
 
         # URLs
         self.url = 'https://www.torrenting.com/'

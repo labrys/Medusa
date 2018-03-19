@@ -50,7 +50,7 @@ class TVDB(BaseIndexer):
 
     def __init__(self, *args, **kwargs):  # pylint: disable=too-many-locals,too-many-arguments
         """Init object."""
-        super(TVDB, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.config['api_base_url'] = API_BASE_TVDB
 

@@ -35,7 +35,7 @@ class KODIMetadata(kodi_12plus.KODI12PlusMetadata):
                  season_banners=False,
                  season_all_poster=False,
                  season_all_banner=False):
-        super(KODIMetadata, self).__init__(show_metadata,
+        super().__init__(show_metadata,
                                            episode_metadata,
                                            fanart,
                                            poster,

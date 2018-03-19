@@ -28,7 +28,7 @@ class GFTrackerProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(GFTrackerProvider, self).__init__('GFTracker')
+        super().__init__('GFTracker')
 
         # Credentials
         self.username = None

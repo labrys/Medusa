@@ -17,23 +17,38 @@ def get_win_drives():
     assert os.name == 'nt'
     from ctypes import windll
 
-    drives = []
     bitmask = windll.kernel32.GetLogicalDrives()  # @UndefinedVariable
     for letter in string.ascii_uppercase:
         if bitmask & 1:
-            drives.append(letter)
+            yield letter
         bitmask >>= 1
-
-    return drives
 
 
 def get_file_list(path, include_files):
     """Return file list for the given path."""
     # prune out directories to protect the user from doing stupid things (already lower case the dir to reduce calls)
-    hide_list = ['boot', 'bootmgr', 'cache', 'config.msi', 'msocache', 'recovery', '$recycle.bin',
-                 'recycler', 'system volume information', 'temporary internet files']  # windows specific
-    hide_list += ['.fseventd', '.spotlight', '.trashes', '.vol', 'cachedmessages', 'caches', 'trash']  # osx specific
-    hide_list += ['.git']
+    hide_list = [
+        '.git'
+        # windows specific
+        'boot',
+        'bootmgr',
+        'cache',
+        'config.msi',
+        'msocache',
+        'recovery',
+        '$recycle.bin',
+        'recycler',
+        'system volume information',
+        'temporary internet files',
+        # osx specific
+        '.fseventd',
+        '.spotlight',
+        '.trashes',
+        '.vol',
+        'cachedmessages',
+        'caches',
+        'trash',
+    ]
 
     file_list = []
     for filename in os.listdir(path):

@@ -23,7 +23,7 @@ class EliteTorrentProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(EliteTorrentProvider, self).__init__('EliteTorrent')
+        super().__init__('EliteTorrent')
 
         # Credentials
         self.public = True

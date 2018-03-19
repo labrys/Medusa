@@ -27,7 +27,7 @@ class TorrentBytesProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TorrentBytesProvider, self).__init__('TorrentBytes')
+        super().__init__('TorrentBytes')
 
         # Credentials
         self.username = None

@@ -28,7 +28,7 @@ class UTorrentAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(UTorrentAPI, self).__init__('uTorrent', host, username, password)
+        super().__init__('uTorrent', host, username, password)
         self.url = urljoin(self.host, 'gui/')
 
     def _request(self, method='get', params=None, data=None, files=None, cookies=None):
@@ -42,7 +42,7 @@ class UTorrentAPI(GenericClient):
         })
         ordered_params.update(params)
 
-        return super(UTorrentAPI, self)._request(method=method, params=ordered_params, data=data, files=files)
+        return super()._request(method=method, params=ordered_params, data=data, files=files)
 
     def _get_auth(self):
         self.response = self.session.get(urljoin(self.url, 'token.html'), verify=False)

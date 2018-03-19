@@ -21,7 +21,7 @@ class HomeChangeLog(Home):
     session = MedusaSafeSession()
 
     def __init__(self, *args, **kwargs):
-        super(HomeChangeLog, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         # TODO: SESSION: Check if this needs some more explicit exception handling.

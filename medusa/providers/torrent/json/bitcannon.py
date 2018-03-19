@@ -25,7 +25,7 @@ class BitCannonProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(BitCannonProvider, self).__init__('BitCannon')
+        super().__init__('BitCannon')
 
         # Credentials
         self.api_key = None

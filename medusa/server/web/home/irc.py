@@ -11,7 +11,7 @@ from medusa.server.web.home.handler import Home
 @route('/IRC(/?.*)')
 class HomeIRC(Home):
     def __init__(self, *args, **kwargs):
-        super(HomeIRC, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='IRC.mako')

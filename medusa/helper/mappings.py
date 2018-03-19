@@ -8,4 +8,4 @@ class NonEmptyDict(dict):
     def __setitem__(self, key, value):
         """Discard None values and empty strings."""
         if key in self or value is not None and value != '':
-            super(NonEmptyDict, self).__setitem__(key, value)
+            super().__setitem__(key, value)

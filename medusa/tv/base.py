@@ -54,7 +54,7 @@ class TV:
         if key == '_location' or (not key.startswith('_') and key not in self.__ignored_properties):
             self.__dirty |= self.__dict__.get(key) != value
 
-        super(TV, self).__setattr__(key, value)
+        super().__setattr__(key, value)
 
     @property
     def dirty(self):

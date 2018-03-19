@@ -29,7 +29,7 @@ class HomeAddRecommended(Home):
 
     def __init__(self, *args, **kwargs):
         """Initialize route."""
-        super(HomeAddRecommended, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """Render template for route /home/addRecommeded."""

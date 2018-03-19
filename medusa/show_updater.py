@@ -319,7 +319,7 @@ class UpdateCache(db.DBConnection):
     """
 
     def __init__(self):
-        super(UpdateCache, self).__init__('cache.db')
+        super().__init__('cache.db')
 
     def get_last_indexer_update(self, indexer):
         """Get the last update timestamp from the lastUpdate table.

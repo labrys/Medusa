@@ -25,7 +25,7 @@ class SceneTimeProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(SceneTimeProvider, self).__init__('SceneTime')
+        super().__init__('SceneTime')
 
         # URLs
         self.url = 'https://www.scenetime.com'

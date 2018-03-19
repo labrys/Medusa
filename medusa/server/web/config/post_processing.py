@@ -26,7 +26,7 @@ class ConfigPostProcessing(Config):
     """Handler for Post Processor configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigPostProcessing, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """

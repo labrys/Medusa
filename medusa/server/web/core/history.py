@@ -13,7 +13,7 @@ from medusa.show.history import History as HistoryTool
 @route('/history(/?.*)')
 class History(WebRoot):
     def __init__(self, *args, **kwargs):
-        super(History, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.history = HistoryTool()
 

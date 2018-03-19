@@ -23,7 +23,7 @@ class ShanaProjectProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(ShanaProjectProvider, self).__init__('ShanaProject')
+        super().__init__('ShanaProject')
 
         # Credentials
         self.public = True

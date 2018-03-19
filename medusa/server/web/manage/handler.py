@@ -45,7 +45,7 @@ log.addHandler(logging.NullHandler())
 @route('/manage(/?.*)')
 class Manage(Home, WebRoot):
     def __init__(self, *args, **kwargs):
-        super(Manage, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='manage.mako')

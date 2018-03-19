@@ -30,7 +30,7 @@ class SDBitsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(SDBitsProvider, self).__init__('SDBits')
+        super().__init__('SDBits')
 
         # Credentials
         self.username = None

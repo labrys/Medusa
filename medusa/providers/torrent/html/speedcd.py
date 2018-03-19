@@ -26,7 +26,7 @@ class SpeedCDProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(SpeedCDProvider, self).__init__('Speedcd')
+        super().__init__('Speedcd')
 
         # Credentials
         self.username = None

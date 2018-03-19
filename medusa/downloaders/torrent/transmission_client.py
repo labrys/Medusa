@@ -38,7 +38,7 @@ class TransmissionAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(TransmissionAPI, self).__init__('Transmission', host, username, password)
+        super().__init__('Transmission', host, username, password)
 
         self.rpcurl = self.rpcurl.strip('/')
         self.url = urljoin(self.host, self.rpcurl + '/rpc')

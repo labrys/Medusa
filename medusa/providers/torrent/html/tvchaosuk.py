@@ -26,7 +26,7 @@ class TVChaosUKProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TVChaosUKProvider, self).__init__('TvChaosUK')
+        super().__init__('TvChaosUK')
 
         # Credentials
         self.username = None

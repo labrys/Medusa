@@ -24,7 +24,7 @@ class ConfigAnime(Config):
     """Handler for Anime configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigAnime, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """Render the Anime configuration page."""

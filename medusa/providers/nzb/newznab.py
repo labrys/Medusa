@@ -45,7 +45,7 @@ class NewznabProvider(NZBProvider):
     def __init__(self, name, url='', api_key='0', cat_ids=None, default=False, search_mode='eponly',
                  search_fallback=False, enable_daily=True, enable_backlog=False, enable_manualsearch=False):
         """Initialize the class."""
-        super(NewznabProvider, self).__init__(name)
+        super().__init__(name)
 
         self.url = url
         self.api_key = api_key

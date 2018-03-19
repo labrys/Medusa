@@ -25,7 +25,7 @@ class ConfigSearch(Config):
     """Handler for Search configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigSearch, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """

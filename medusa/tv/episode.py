@@ -222,7 +222,7 @@ class Episode(TV):
 
     def __init__(self, series, season, episode, filepath=''):
         """Instantiate a Episode with database information."""
-        super(Episode, self).__init__(
+        super().__init__(
             int(series.indexer) if series else 0,
             0,
             {'series',
@@ -269,7 +269,7 @@ class Episode(TV):
         try:
             refactor = self.__refactored[key]
         except KeyError:
-            super(Episode, self).__setattr__(key, value)
+            super().__setattr__(key, value)
         else:
             warnings.warn(
                 '{item} is deprecated, use {refactor} instead \n{trace}'.format(
@@ -277,12 +277,12 @@ class Episode(TV):
                 ),
                 DeprecationWarning
             )
-            super(Episode, self).__setattr__(refactor, value)
+            super().__setattr__(refactor, value)
 
     def __getattr__(self, item):
         """Get attribute values for deprecated attributes."""
         try:
-            return super(Episode, self).__getattribute__(item)
+            return super().__getattribute__(item)
         except AttributeError as error:
             try:
                 refactor = self.__refactored[item]
@@ -295,7 +295,7 @@ class Episode(TV):
                     ),
                     DeprecationWarning
                 )
-                return super(Episode, self).__getattribute__(refactor)
+                return super().__getattribute__(refactor)
 
     @classmethod
     def find_by_series_and_episode(cls, series, episode_number):

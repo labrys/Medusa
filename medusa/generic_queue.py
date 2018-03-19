@@ -97,7 +97,7 @@ class QueueItem(threading.Thread):
     """
 
     def __init__(self, name, action_id=0):
-        super(QueueItem, self).__init__()
+        super().__init__()
         self.name = name.replace(" ", "-").upper()
         self.inProgress = False
         self.priority = QueuePriorities.NORMAL

@@ -36,7 +36,7 @@ class DelugeDAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(DelugeDAPI, self).__init__('DelugeD', host, username, password)
+        super().__init__('DelugeD', host, username, password)
 
     def _get_auth(self):
         return True if self.connect() else None
@@ -183,7 +183,7 @@ class DelugeRPC:
         :param password:
         :type password: str
         """
-        super(DelugeRPC, self).__init__()
+        super().__init__()
         self.host = host
         self.port = port
         self.username = username

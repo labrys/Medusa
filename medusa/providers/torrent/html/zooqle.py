@@ -23,7 +23,7 @@ class ZooqleProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(ZooqleProvider, self).__init__('Zooqle')
+        super().__init__('Zooqle')
 
         # Credentials
         self.public = True

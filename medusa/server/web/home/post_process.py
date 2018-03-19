@@ -12,7 +12,7 @@ from medusa.server.web.home.handler import Home
 @route('/home/postprocess(/?.*)')
 class HomePostProcess(Home):
     def __init__(self, *args, **kwargs):
-        super(HomePostProcess, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='home_post_process.mako')

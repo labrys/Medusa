@@ -36,7 +36,7 @@ class DownloadStationAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(DownloadStationAPI, self).__init__('DownloadStation', host, username, password)
+        super().__init__('DownloadStation', host, username, password)
 
         self.urls = {
             'login': urljoin(self.host, 'webapi/auth.cgi'),

@@ -32,7 +32,7 @@ class TVmaze(BaseIndexer):
     """
 
     def __init__(self, *args, **kwargs):  # pylint: disable=too-many-locals,too-many-arguments
-        super(TVmaze, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # List of language from http://thetvmaze.com/api/0629B785CE550C8D/languages.xml
         # Hard-coded here as it is realtively static, and saves another HTTP request, as

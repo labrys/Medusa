@@ -118,7 +118,7 @@ log.addHandler(logging.NullHandler())
 @route('/home(/?.*)')
 class Home(WebRoot):
     def __init__(self, *args, **kwargs):
-        super(Home, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _generic_message(self, subject, message):
         t = PageTemplate(rh=self, filename='generic_message.mako')

@@ -29,7 +29,7 @@ class Torrent9Provider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(Torrent9Provider, self).__init__('Torrent9')
+        super().__init__('Torrent9')
 
         # Credentials
         self.public = True

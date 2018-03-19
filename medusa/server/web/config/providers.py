@@ -26,7 +26,7 @@ class ConfigProviders(Config):
     """Handler for Provider configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigProviders, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """

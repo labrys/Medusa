@@ -23,7 +23,7 @@ class PrivateHDProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(PrivateHDProvider, self).__init__('PrivateHD')
+        super().__init__('PrivateHD')
 
         # Credentials
         self.username = None

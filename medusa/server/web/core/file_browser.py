@@ -14,7 +14,7 @@ from medusa.server.web.core.base import WebRoot
 @route('/browser(/?.*)')
 class WebFileBrowser(WebRoot):
     def __init__(self, *args, **kwargs):
-        super(WebFileBrowser, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self, path='', include_files=False, *args, **kwargs):
         # @TODO: Move all cache control headers to the whole API end point so nothing's cached

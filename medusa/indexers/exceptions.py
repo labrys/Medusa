@@ -24,7 +24,7 @@ class IndexerShowNotFoundInLanguage(IndexerException):
 
     def __init__(self, message, language):
         """Initialize exception with language."""
-        super(IndexerShowNotFoundInLanguage, self).__init__(message)
+        super().__init__(message)
         self.language = language
 
 
