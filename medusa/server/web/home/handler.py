@@ -22,7 +22,6 @@ from traktor import (
 from medusa import (
     app,
     config,
-    db,
     helpers,
     name_cache,
     notifiers,
@@ -31,6 +30,7 @@ from medusa import (
     system,
     ui,
 )
+from medusa.databases import db
 from medusa.black_and_white_list import (
     BlackAndWhiteList,
     short_group_names,
@@ -1494,7 +1494,7 @@ class Home(WebRoot):
                         errors += 1
                         log.warning(
                             u'Unable to retreive Fansub Groups from AniDB.'
-                            u' Error:{error}'.format(error=e.message)
+                            u' Error:{error}'.format(error=e)
                         )
 
             with series_obj.lock:
@@ -1543,7 +1543,7 @@ class Home(WebRoot):
                 errors += 1
                 status = u'Failed getting show in'
                 msg += u' Please try again later. Error: {error}'.format(
-                    error=e.message,
+                    error=e,
                 )
             else:
                 language = indexer_lang
@@ -1611,7 +1611,7 @@ class Home(WebRoot):
                     errors += 1
                     log.warning(
                         "Unable to refresh show '{show}': {error}".format(
-                            show=series_obj.name, error=e.message
+                            show=series_obj.name, error=e
                         )
                     )
 
@@ -1682,7 +1682,7 @@ class Home(WebRoot):
                         log.warning(
                             "Unable to refresh show '{show}'."
                             " Error: {error}".format(
-                                show=series_obj.name, error=e.message
+                                show=series_obj.name, error=e
                             )
                         )
 
@@ -1698,7 +1698,7 @@ class Home(WebRoot):
                 errors += 1
                 log.warning(
                     "Unable to update show '{show}': {error}".format(
-                        show=series_obj.name, error=e.message
+                        show=series_obj.name, error=e
                     )
                 )
 
@@ -1707,12 +1707,12 @@ class Home(WebRoot):
                 update_scene_exceptions(series_obj, exceptions)
                 time.sleep(cpu_presets[app.CPU_PRESET])
                 name_cache.build_name_cache(series_obj)
-            except CantUpdateShowException:
+            except CantUpdateShowException as e:
                 errors += 1
                 log.warning(
                     "Unable to force an update on scene exceptions for show"
                     " '{show}': {error}".format(
-                        show=series_obj.name, error=e.message
+                        show=series_obj.name, error=e
                     )
                 )
 
@@ -1720,12 +1720,12 @@ class Home(WebRoot):
             try:
                 xem_refresh(series_obj)
                 time.sleep(cpu_presets[app.CPU_PRESET])
-            except CantUpdateShowException:
+            except CantUpdateShowException as e:
                 errors += 1
                 log.warning(
                     "Unable to force an update on scene numbering for show"
                     " '{show}': {error}".format(
-                        show=series_obj.name, error=e.message
+                        show=series_obj.name, error=e
                     )
                 )
 
@@ -1744,7 +1744,7 @@ class Home(WebRoot):
                 log.warning(
                     "Unable to refresh show '{show}'. Please manually trigger"
                     " a full show refresh. Error: {error}".format(
-                        show=series_obj.name, error=e.message
+                        show=series_obj.name, error=e
                     )
                 )
 

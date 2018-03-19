@@ -273,7 +273,7 @@ def copy_file(src_file, dest_file):
     except (SpecialFileError, Error) as error:
         log.warning('Error copying file: {error}', {'error': error})
     except OSError as error:
-        msg = BraceMessage('OSError: {0}', error.message)
+        msg = BraceMessage('OSError: {0}', error)
         if error.errno == errno.ENOSPC:
             # Only warn if device is out of space
             log.warning(msg)

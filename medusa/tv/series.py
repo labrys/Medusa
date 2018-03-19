@@ -1042,7 +1042,7 @@ class Series(TV):
                         u'{id}: {error_msg} (unaired/deleted) in the indexer {indexer} for {show}.'
                         u' Removing existing records from database', {
                             'id': cur_show_id,
-                            'error_msg': error.message,
+                            'error_msg': error,
                             'indexer': IndexerAPI(self.indexer).name,
                             'show': cur_show_name,
                         }

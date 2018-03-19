@@ -5,6 +5,7 @@
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
 from requests.utils import dict_from_cookiejar
 

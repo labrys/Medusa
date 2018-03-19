@@ -130,13 +130,13 @@ class NameParser:
                 except IndexerError as error:
                     log.warning(
                         'Unable to contact {indexer_api.name}: {error}',
-                        {'indexer_api': indexer_api, 'error': error.message}
+                        {'indexer_api': indexer_api, 'error': error}
                     )
                     episode_numbers = []
                 except IndexerException as error:
                     log.warning(
                         'Indexer exception: {indexer_api.name}: {error}',
-                        {'indexer_api': indexer_api, 'error': error.message}
+                        {'indexer_api': indexer_api, 'error': error}
                     )
                     episode_numbers = []
 

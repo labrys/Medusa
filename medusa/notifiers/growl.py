@@ -139,7 +139,7 @@ class Notifier:
             except Exception as error:
                 log.warning(
                     u'GROWL: Unable to send growl to {host}:{port} - {msg!r}',
-                    {'msg': ex(error), 'host': opts['host'], 'port': opts['port']}
+                    {'msg': error, 'host': opts['host'], 'port': opts['port']}
                 )
                 return False
 
@@ -185,6 +185,6 @@ class Notifier:
         except Exception as error:
             log.warning(
                 u'GROWL: Unable to send growl to {host}:{port} - {msg!r}',
-                {'msg': ex(error), 'host': opts['host'], 'port': opts['port']}
+                {'msg': error, 'host': opts['host'], 'port': opts['port']}
             )
             return False

@@ -6,7 +6,9 @@ import logging
 
 from requests.exceptions import RequestException
 from traktor import (
-    AuthException, TokenExpiredException, TraktApi,
+    AuthException,
+    TokenExpiredException,
+    TraktApi,
     TraktException,
 )
 
@@ -202,6 +204,6 @@ def load_externals_from_db(indexer=None, indexer_id=None):
             else:
                 externals[mappings[result['indexer']]] = result['indexer_id']
         except KeyError as e:
-            log.error(u'Indexer not supported in current mappings: {id}', {'id': e.message})
+            log.error(u'Indexer not supported in current mappings: {id}', {'id': e})
 
     return externals
