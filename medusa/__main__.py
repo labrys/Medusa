@@ -53,7 +53,7 @@ from medusa.config import (
     check_setting_float, check_setting_int, check_setting_list,
     check_setting_str, load_provider_setting, save_provider_setting,
 )
-from medusa.databases import cache_db, db, failed_db, main_db
+from medusa.databases import cache, db, failed, main
 from medusa.event_queue import Events
 from medusa.indexers.config import INDEXER_TVDB, INDEXER_TVMAZE
 from medusa.logger.adapters.style import BraceAdapter
@@ -1045,11 +1045,11 @@ class Application:
 
             # initialize the main SB database
             main_db_con = db.DBConnection()
-            db.upgrade_database(main_db_con, main_db.InitialSchema)
+            db.upgrade_database(main_db_con, main.InitialSchema)
 
             # initialize the cache database
             cache_db_con = db.DBConnection('cache.db')
-            db.upgrade_database(cache_db_con, cache_db.InitialSchema)
+            db.upgrade_database(cache_db_con, cache.InitialSchema)
 
             # Performs a vacuum on cache.db
             log.debug(u'Performing a vacuum on the CACHE database')
@@ -1057,11 +1057,11 @@ class Application:
 
             # initialize the failed downloads database
             failed_db_con = db.DBConnection('failed.db')
-            db.upgrade_database(failed_db_con, failed_db.InitialSchema)
+            db.upgrade_database(failed_db_con, failed.InitialSchema)
 
             # fix up any db problems
             main_db_con = db.DBConnection()
-            db.sanity_check_database(main_db_con, main_db.MainSanityCheck)
+            db.sanity_check_database(main_db_con, main.MainSanityCheck)
 
             # migrate the config if it needs it
             migrator = ConfigMigrator(app.CFG)

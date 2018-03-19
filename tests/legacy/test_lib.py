@@ -29,7 +29,7 @@ import unittest
 from configobj import ConfigObj
 
 from medusa import app, config, providers
-from medusa.databases import cache_db, db, failed_db, main_db
+from medusa.databases import cache, db, failed, main
 from medusa.providers.nzb.newznab import NewznabProvider
 from medusa.tv import Episode, cache
 
@@ -196,16 +196,16 @@ def setup_test_db():
     """Set up the test databases."""
     # Upgrade the db to the latest version.
     # upgrading the db
-    db.upgrade_database(db.DBConnection(), main_db.InitialSchema)
+    db.upgrade_database(db.DBConnection(), main.InitialSchema)
 
     # fix up any db problems
-    db.sanity_check_database(db.DBConnection(), main_db.MainSanityCheck)
+    db.sanity_check_database(db.DBConnection(), main.MainSanityCheck)
 
     # and for cache.db too
-    db.upgrade_database(db.DBConnection('cache.db'), cache_db.InitialSchema)
+    db.upgrade_database(db.DBConnection('cache.db'), cache.InitialSchema)
 
     # and for failed.db too
-    db.upgrade_database(db.DBConnection('failed.db'), failed_db.InitialSchema)
+    db.upgrade_database(db.DBConnection('failed.db'), failed.InitialSchema)
 
 
 def teardown_test_db():

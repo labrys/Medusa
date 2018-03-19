@@ -227,7 +227,7 @@ class CheckVersion:
             assert len(cur_hash) == 40, 'Commit hash wrong length: {length} hash: {hash}'.format(
                 length=len(cur_hash), hash=cur_hash)
 
-            check_url = 'http://cdn.rawgit.com/{org}/{repo}/{commit}/medusa/databases/main_db.py'.format(
+            check_url = 'http://cdn.rawgit.com/{org}/{repo}/{commit}/medusa/databases/main.py'.format(
                 org=app.GIT_ORG, repo=app.GIT_REPO, commit=cur_hash)
             response = self.session.get(check_url)
 
