@@ -297,15 +297,29 @@ class Tmdb(BaseIndexer):
 
         This interface will be improved in future versions.
         """
-        key_mapping = {'file_path': 'bannerpath', 'vote_count': 'ratingcount', 'vote_average': 'rating', 'id': 'id'}
-        image_sizes = {'fanart': 'backdrop_sizes', 'poster': 'poster_sizes'}
-        typecasts = {'rating': float, 'ratingcount': int}
+        key_mapping = {
+            'file_path': 'bannerpath',
+            'vote_count': 'ratingcount',
+            'vote_average': 'rating',
+            'id': 'id',
+        }
+        image_sizes = {
+            'fanart': 'backdrop_sizes',
+            'poster': 'poster_sizes',
+        }
+        typecasts = {
+            'rating': float,
+            'ratingcount': int,
+        }
 
         log.debug('Getting show banners for {0}', sid)
         _images = {}
 
         # Let's get the different type of images available for this series
-        params = {'include_image_language': '{search_language},null'.format(search_language=self.config['language'])}
+        language = self.config['language']
+        params = {
+            'include_image_language': f'{language},null',
+        }
 
         images = self.tmdb.TV(sid).images(params=params)
         bid = images['id']

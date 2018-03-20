@@ -17,7 +17,7 @@
     from medusa.metadata.generic import GenericMetadata
     from medusa.helpers import anon_url
     from medusa.indexers.api import IndexerAPI
-    gh_branch = app.GIT_REMOTE_BRANCHES or app.version_check_scheduler.action.list_remote_branches()
+    gh_branch = app.GIT_REMOTE_BRANCHES or list(pp.version_check_scheduler.action.remote_branches)
 %>
 <%block name="content">
 % if not header is UNDEFINED:

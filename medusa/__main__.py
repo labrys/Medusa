@@ -41,19 +41,43 @@ import time
 
 from configobj import ConfigObj
 
+import medusa.databases.cache
+import medusa.databases.db
+import medusa.databases.failed
+import medusa.databases.main
+import medusa.show.queue
 from medusa import (
-    app, cache, event_queue, exception_handler,
-    helpers, metadata, name_cache, naming, network_timezones, providers,
-    scheduler, show_queue, subtitles, system, torrent_checker,
-    trakt_checker, version_checker,
+    app,
+    cache,
+    databases,
+    event_queue,
+    exception_handler,
+    helpers,
+    metadata,
+    name_cache,
+    naming,
+    network_timezones,
+    providers,
+    scheduler,
+    show,
+    subtitles,
+    system,
+    torrent_checker,
+    trakt_checker,
+    version_checker,
 )
 from medusa.common import SD, SKIPPED, WANTED
 from medusa.config import (
-    ConfigMigrator, check_section, check_setting_bool,
-    check_setting_float, check_setting_int, check_setting_list,
-    check_setting_str, load_provider_setting, save_provider_setting,
+    ConfigMigrator,
+    check_section,
+    check_setting_bool,
+    check_setting_float,
+    check_setting_int,
+    check_setting_list,
+    check_setting_str,
+    load_provider_setting,
+    save_provider_setting,
 )
-from medusa.databases import cache, db, failed, main
 from medusa.event_queue import Events
 from medusa.indexers.config import INDEXER_TVDB, INDEXER_TVMAZE
 from medusa.logger.adapters.style import BraceAdapter
@@ -66,14 +90,9 @@ from medusa.search.daily import DailySearcher
 from medusa.search.proper import ProperFinder
 from medusa.search.queue import ForcedSearchQueue, SearchQueue, SnatchQueue
 from medusa.server.core import AppWebServer
-from medusa.show import updater
+from medusa.show.updater import ShowUpdater
 from medusa.themes import read_themes
 from medusa.tv import Series
-
-try:
-    from importlib import reload
-except ImportError:
-    pass
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -964,7 +983,7 @@ class Application:
                 if updater:
                     app.APP_VERSION = updater.get_cur_version()
 
-            app.MAJOR_DB_VERSION, app.MINOR_DB_VERSION = db.DBConnection().check_db_version()
+            app.MAJOR_DB_VERSION, app.MINOR_DB_VERSION = databases.db.DBConnection().check_db_version()
 
             # initialize the static NZB and TORRENT providers
             app.providerList = providers.make_provider_list()
@@ -1044,24 +1063,24 @@ class Application:
                 app.SUBTITLES_ERASE_CACHE = 0
 
             # initialize the main SB database
-            main_db_con = db.DBConnection()
-            db.upgrade_database(main_db_con, main.InitialSchema)
+            main_db_con = databases.db.DBConnection()
+            databases.db.upgrade_database(main_db_con, databases.main.InitialSchema)
 
             # initialize the cache database
-            cache_db_con = db.DBConnection('cache.db')
-            db.upgrade_database(cache_db_con, cache.InitialSchema)
+            cache_db_con = databases.db.DBConnection('cache.db')
+            databases.db.upgrade_database(cache_db_con, databases.cache.InitialSchema)
 
             # Performs a vacuum on cache.db
             log.debug(u'Performing a vacuum on the CACHE database')
             cache_db_con.action('VACUUM')
 
             # initialize the failed downloads database
-            failed_db_con = db.DBConnection('failed.db')
-            db.upgrade_database(failed_db_con, failed.InitialSchema)
+            failed_db_con = databases.db.DBConnection('failed.db')
+            databases.db.upgrade_database(failed_db_con, databases.failed.InitialSchema)
 
             # fix up any db problems
-            main_db_con = db.DBConnection()
-            db.sanity_check_database(main_db_con, main.MainSanityCheck)
+            databases.main_db_con = databases.db.DBConnection()
+            databases.db.sanity_check_database(main_db_con, databases.main.MainSanityCheck)
 
             # migrate the config if it needs it
             migrator = ConfigMigrator(app.CFG)
@@ -1087,11 +1106,11 @@ class Application:
                                                               cycle_time=datetime.timedelta(hours=app.UPDATE_FREQUENCY),
                                                               thread_name='CHECKVERSION', silent=False)
 
-            app.show_queue_scheduler = scheduler.Scheduler(show_queue.ShowQueue(),
+            app.show_queue_scheduler = scheduler.Scheduler(show.queue.ShowQueue(),
                                                            cycle_time=datetime.timedelta(seconds=3),
                                                            thread_name='SHOWQUEUE')
 
-            app.show_update_scheduler = scheduler.Scheduler(updater.ShowUpdater(),
+            app.show_update_scheduler = scheduler.Scheduler(ShowUpdater(),
                                                             cycle_time=datetime.timedelta(hours=1),
                                                             thread_name='SHOWUPDATER',
                                                             start_time=datetime.time(hour=app.SHOWUPDATE_HOUR,
@@ -2063,7 +2082,7 @@ class Application:
         """Populate the showList with shows from the database."""
         log.debug('Loading initial show list')
 
-        main_db_con = db.DBConnection()
+        main_db_con = databases.db.DBConnection()
         sql_results = main_db_con.select('SELECT indexer, indexer_id, location FROM tv_shows;')
 
         app.showList = []

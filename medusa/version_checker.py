@@ -372,7 +372,7 @@ class CheckVersion:
         :return:
         """
         if self.updater:
-            app.GIT_REMOTE_BRANCHES = self.updater.list_remote_branches()
+            app.GIT_REMOTE_BRANCHES = list(self.updater.remote_branches)
         return app.GIT_REMOTE_BRANCHES
 
     def get_branch(self):
@@ -1105,11 +1105,15 @@ class SourceUpdateManager(UpdateManager):
             log.debug(u'Unable to send update notification. Continuing the update process')
         return True
 
-    @staticmethod
-    def list_remote_branches():
-        """
-
-        :return:
-        """
+    @property
+    def remote_branches(self):
         gh = get_github_repo(app.GIT_ORG, app.GIT_REPO)
-        return [x.name for x in gh.get_branches() if x]
+        return (
+            x.name
+            for x in gh.get_branches()
+            if x
+        )
+
+    @classmethod
+    def list_remote_branches(cls):
+        return list(cls.remote_branches)
