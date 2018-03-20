@@ -320,11 +320,11 @@ class HomeAddSeries(Home):
         recommended_shows = None
         error = None
 
+        imdb = ImdbPopular()
         try:
-            recommended_shows = ImdbPopular().fetch_popular_series()
-        except Exception as e:
-            log.debug(e)
-            error = e
+            recommended_shows = imdb.fetch_popular_series()
+        except Exception as error:
+            pass
         finally:
             return t.render(
                 title="Popular Shows",
@@ -337,7 +337,9 @@ class HomeAddSeries(Home):
                 blacklist=[],
                 whitelist=[],
                 controller="add_series",
-                action="recommended_series", realpage="popular_series")
+                action="recommended_series",
+                realpage="popular_series",
+            )
 
     def popular_anime(self, list_type=REQUEST_HOT):
         """

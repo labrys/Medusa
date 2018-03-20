@@ -366,20 +366,16 @@ class CheckVersion:
             if self.updater.need_update():
                 return self.updater.update()
 
-    def list_remote_branches(self):
-        """
-
-        :return:
-        """
+    @property
+    def remote_branches(self):
         if self.updater:
             app.GIT_REMOTE_BRANCHES = list(self.updater.remote_branches)
         return app.GIT_REMOTE_BRANCHES
 
-    def get_branch(self):
-        """
+    def list_remote_branches(self):
+        return self.remote_branches
 
-        :return:
-        """
+    def get_branch(self):
         if self.updater:
             return self.updater.branch
 
@@ -387,26 +383,14 @@ class CheckVersion:
 class UpdateManager:
     @staticmethod
     def get_github_org():
-        """
-
-        :return:
-        """
         return app.GIT_ORG
 
     @staticmethod
     def get_github_repo():
-        """
-
-        :return:
-        """
         return app.GIT_REPO
 
     @staticmethod
     def get_update_url():
-        """
-
-        :return:
-        """
         return app.WEB_ROOT + "/home/update/?pid=" + str(app.PID)
 
 
@@ -809,12 +793,8 @@ class GitUpdateManager(UpdateManager):
         if exit_status == 0:
             return True
 
-    def list_remote_branches(self):
-        # update remote origin url
-        """
-
-        :return:
-        """
+    @property
+    def remote_branches(self):
         self.update_remote_origin()
         app.BRANCH = self._find_installed_branch()
 
@@ -823,6 +803,9 @@ class GitUpdateManager(UpdateManager):
             if branches:
                 return re.findall(r'refs/heads/(.*)', branches)
         return []
+
+    def list_remote_branches(self):
+        return self.remote_branches
 
     def update_remote_origin(self):
         """
@@ -846,10 +829,6 @@ class GitUpdateManager(UpdateManager):
 
 
 class SourceUpdateManager(UpdateManager):
-    """
-
-    """
-
     def __init__(self):
         self.github_org = self.get_github_org()
         self.github_repo = self.get_github_repo()

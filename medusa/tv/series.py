@@ -1589,7 +1589,7 @@ class Series(TV):
             'akas': '',
             'genres': '|'.join(safe_get(imdb_genres, ('genres',))),
             'rating': safe_get(imdb_info, ('ratings', 'rating')),
-            'votes': safe_get(imdb_info, ('ratings', 'rating_count')),
+            'votes': safe_get(imdb_info, ('ratings', 'ratingCount')),
             'runtimes': safe_get(imdb_info, ('base', 'runningTimeInMinutes')),
             'certificates': '',
             'plot': safe_get(imdb_info, ('plot', 'outline', 'text')),

@@ -101,11 +101,11 @@ class ShowQueue(generic_queue.GenericQueue):
         ]
 
     def _is_being_processed(self, show, actions):
-        return all([
-            self.currentItem is not None,
-            show == self.currentItem.show,
-            self.currentItem.action_id in actions,
-        ])
+        return (
+            self.currentItem is not None
+            and show == self.currentItem.show
+            and self.currentItem.action_id in actions
+        )
 
     def is_in_update_queue(self, show):
         return self._is_in_queue(show, (ShowQueueActions.UPDATE,))

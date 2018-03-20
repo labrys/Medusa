@@ -35,8 +35,9 @@ class MutexLock(AbstractFileLock):
 
 
 cache = make_region()
+cache.invalidate(hard=True)
 memory_cache = make_region()
-
+memory_cache.invalidate(hard=True)
 
 def configure(cache_dir):
     """Configure caches."""

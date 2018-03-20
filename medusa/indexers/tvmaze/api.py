@@ -297,14 +297,22 @@ class TVmaze(BaseIndexer):
             return False
 
         # Set the poster (using the original uploaded poster for now, as the medium formated is 210x195
-        _images = {u'poster': {u'1014x1500': {u'1': {u'rating': 1,
-                                                     u'language': u'en',
-                                                     u'ratingcount': 1,
-                                                     u'bannerpath': image_medium.split('/')[-1],
-                                                     u'bannertype': u'poster',
-                                                     u'bannertype2': u'210x195',
-                                                     u'_bannerpath': image_medium,
-                                                     u'id': u'1035106'}}}}
+        _images = {
+            u'poster': {
+                u'1014x1500': {
+                    u'1': {
+                        u'rating': 1,
+                        u'language': u'en',
+                        u'ratingcount': 1,
+                        u'bannerpath': image_medium.split('/')[-1],
+                        u'bannertype': u'poster',
+                        u'bannertype2': u'210x195',
+                        u'_bannerpath': image_medium,
+                        u'id': u'1035106',
+                    }
+                }
+            }
+        }
 
         season_images = self._parse_season_images(tvmaze_id)
         if season_images:

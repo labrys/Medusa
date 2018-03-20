@@ -423,9 +423,19 @@ class TVDB(BaseIndexer):
 
         This interface will be improved in future versions.
         """
-        key_mapping = {'file_name': 'bannerpath', 'language_id': 'language', 'key_type': 'bannertype',
-                       'resolution': 'bannertype2', 'ratings_info': {'count': 'ratingcount', 'average': 'rating'},
-                       'thumbnail': 'thumbnailpath', 'sub_key': 'sub_key', 'id': 'id'}
+        key_mapping = {
+            'file_name': 'bannerpath',
+            'language_id': 'language',
+            'key_type': 'bannertype',
+            'resolution': 'bannertype2',
+            'ratings_info': {
+                'count': 'ratingcount',
+                'average': 'rating'
+            },
+            'thumbnail': 'thumbnailpath',
+            'sub_key': 'sub_key',
+            'id': 'id',
+        }
 
         search_for_image_type = self.config['image_type']
 
