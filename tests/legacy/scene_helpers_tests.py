@@ -3,7 +3,8 @@
 
 import unittest
 
-from medusa import common, db, name_cache, scene_exceptions
+from medusa import common, name_cache, scene_exceptions
+from medusa.databases import db
 from medusa.show import naming
 from medusa.tv import Series
 from tests.legacy import test_lib as test

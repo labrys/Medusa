@@ -2,13 +2,11 @@
 
 """Provider code for HDTorrents."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -30,7 +28,7 @@ class HDTorrentsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(HDTorrentsProvider, self).__init__('HDTorrents')
+        super().__init__('HDTorrents')
 
         # Credentials
         self.username = None

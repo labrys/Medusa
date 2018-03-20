@@ -1,19 +1,22 @@
+# coding=utf-8
 import datetime
 import logging
 import os.path
 import re
 import sys
+from urllib.parse import urlsplit, urlunsplit, uses_netloc
 
-from contextlib2 import suppress
-from requests.compat import urlsplit
-from six import string_types, text_type
-from six.moves.urllib.parse import urlunsplit, uses_netloc
-
-from medusa import app, db, helpers, naming, scheduler
+from medusa import app, helpers, naming, scheduler
+from medusa.databases import db
 from medusa.helper.common import try_int
 from medusa.helpers.utils import split_and_strip
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.version_checker import CheckVersion
+
+try:
+    from contextlib2 import suppress
+except ImportError:
+    from contextlib import suppress
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -195,7 +198,7 @@ def change_auto_postprocessor_frequency(freq):
     if app.AUTOPOSTPROCESSOR_FREQUENCY < app.MIN_AUTOPOSTPROCESSOR_FREQUENCY:
         app.AUTOPOSTPROCESSOR_FREQUENCY = app.MIN_AUTOPOSTPROCESSOR_FREQUENCY
 
-    app.auto_post_processor_scheduler.cycleTime = datetime.timedelta(minutes=app.AUTOPOSTPROCESSOR_FREQUENCY)
+    app.auto_post_processor_scheduler.cycle_time = datetime.timedelta(minutes=app.AUTOPOSTPROCESSOR_FREQUENCY)
 
 
 def change_torrent_checker_frequency(freq):
@@ -209,7 +212,7 @@ def change_torrent_checker_frequency(freq):
     if app.TORRENT_CHECKER_FREQUECY < app.MIN_TORRENT_CHECKER_FREQUENCY:
         app.TORRENT_CHECKER_FREQUECY = app.MIN_TORRENT_CHECKER_FREQUENCY
 
-    app.torrent_checker_scheduler.cycleTime = datetime.timedelta(minutes=app.TORRENT_CHECKER_FREQUECY)
+    app.torrent_checker_scheduler.cycle_time = datetime.timedelta(minutes=app.TORRENT_CHECKER_FREQUECY)
 
 
 def change_daily_search_frequency(freq):
@@ -223,7 +226,7 @@ def change_daily_search_frequency(freq):
     if app.DAILYSEARCH_FREQUENCY < app.MIN_DAILYSEARCH_FREQUENCY:
         app.DAILYSEARCH_FREQUENCY = app.MIN_DAILYSEARCH_FREQUENCY
 
-    app.daily_search_scheduler.cycleTime = datetime.timedelta(minutes=app.DAILYSEARCH_FREQUENCY)
+    app.daily_search_scheduler.cycle_time = datetime.timedelta(minutes=app.DAILYSEARCH_FREQUENCY)
 
 
 def change_backlog_frequency(freq):
@@ -238,14 +241,14 @@ def change_backlog_frequency(freq):
     if app.BACKLOG_FREQUENCY < app.MIN_BACKLOG_FREQUENCY:
         app.BACKLOG_FREQUENCY = app.MIN_BACKLOG_FREQUENCY
 
-    app.backlog_search_scheduler.cycleTime = datetime.timedelta(minutes=app.BACKLOG_FREQUENCY)
+    app.backlog_search_scheduler.cycle_time = datetime.timedelta(minutes=app.BACKLOG_FREQUENCY)
 
 
 def change_propers_frequency(check_propers_interval):
     """
     Change frequency of backlog thread.
+    :param check_propers_interval:
 
-    :param freq: New frequency
     """
     if not app.DOWNLOAD_PROPERS:
         return
@@ -258,7 +261,7 @@ def change_propers_frequency(check_propers_interval):
     else:
         update_interval = datetime.timedelta(hours=1)
     app.CHECK_PROPERS_INTERVAL = check_propers_interval
-    app.proper_finder_scheduler.cycleTime = update_interval
+    app.proper_finder_scheduler.cycle_time = update_interval
 
 
 def change_update_frequency(freq):
@@ -272,7 +275,7 @@ def change_update_frequency(freq):
     if app.UPDATE_FREQUENCY < app.MIN_UPDATE_FREQUENCY:
         app.UPDATE_FREQUENCY = app.MIN_UPDATE_FREQUENCY
 
-    app.version_check_scheduler.cycleTime = datetime.timedelta(hours=app.UPDATE_FREQUENCY)
+    app.version_check_scheduler.cycle_time = datetime.timedelta(hours=app.UPDATE_FREQUENCY)
 
 
 def change_show_update_hour(freq):
@@ -309,14 +312,14 @@ def change_version_notify(version_notify):
 
     :param version_notify: New frequency
     """
-    oldSetting = app.VERSION_NOTIFY
+    old_setting = app.VERSION_NOTIFY
 
     app.VERSION_NOTIFY = version_notify
 
     if not version_notify:
         app.NEWEST_VERSION_STRING = None
 
-    if oldSetting is False and version_notify is True:
+    if old_setting is False and version_notify is True:
         app.version_check_scheduler.force_run()
 
 
@@ -328,7 +331,7 @@ def change_git_path():
     """
     app.version_check_scheduler = None
     app.version_check_scheduler = scheduler.Scheduler(
-        CheckVersion(), cycleTime=datetime.timedelta(hours=app.UPDATE_FREQUENCY), threadName="CHECKVERSION", silent=False)
+        CheckVersion(), cycle_time=datetime.timedelta(hours=app.UPDATE_FREQUENCY), thread_name="CHECKVERSION", silent=False)
     app.version_check_scheduler.enable = True
     app.version_check_scheduler.start()
     app.version_check_scheduler.force_run()
@@ -438,12 +441,12 @@ def change_process_automatically(process_automatically):
         app.auto_post_processor_scheduler.silent = True
 
 
-def check_section(CFG, sec):
+def check_section(cfg, sec):
     """Check if INI section exists, if not create it."""
-    if sec in CFG:
+    if sec in cfg:
         return True
 
-    CFG[sec] = {}
+    cfg[sec] = {}
     return False
 
 
@@ -558,7 +561,7 @@ def convert_csv_string_to_list(value, delimiter=',', trim=False):
     :param trim: Optionally trim the individual list items.
     :return: The delimited value as a list.
     """
-    if not isinstance(value, (string_types, text_type)):
+    if not isinstance(value, str):
         return value
 
     with suppress(AttributeError, ValueError):
@@ -588,6 +591,15 @@ def minimax(val, default, low, high):
 # Check_setting_int                                                            #
 ################################################################################
 def check_setting_int(config, cfg_name, item_name, def_val, silent=True):
+    """
+
+    :param config:
+    :param cfg_name:
+    :param item_name:
+    :param def_val:
+    :param silent:
+    :return:
+    """
     try:
         my_val = config[cfg_name][item_name]
         if str(my_val).lower() == 'true':
@@ -617,6 +629,15 @@ def check_setting_int(config, cfg_name, item_name, def_val, silent=True):
 # Check_setting_bool                                                           #
 ################################################################################
 def check_setting_bool(config, cfg_name, item_name, def_val, silent=True):
+    """
+
+    :param config:
+    :param cfg_name:
+    :param item_name:
+    :param def_val:
+    :param silent:
+    :return:
+    """
     return bool(check_setting_int(config=config, cfg_name=cfg_name, item_name=item_name, def_val=def_val, silent=silent))
 
 
@@ -624,6 +645,15 @@ def check_setting_bool(config, cfg_name, item_name, def_val, silent=True):
 # Check_setting_float                                                          #
 ################################################################################
 def check_setting_float(config, cfg_name, item_name, def_val, silent=True):
+    """
+
+    :param config:
+    :param cfg_name:
+    :param item_name:
+    :param def_val:
+    :param silent:
+    :return:
+    """
     try:
         my_val = float(config[cfg_name][item_name])
         if str(my_val) == str(None):
@@ -646,6 +676,17 @@ def check_setting_float(config, cfg_name, item_name, def_val, silent=True):
 # Check_setting_str                                                            #
 ################################################################################
 def check_setting_str(config, cfg_name, item_name, def_val, silent=True, valid_values=None, **kwargs):
+    """
+
+    :param config:
+    :param cfg_name:
+    :param item_name:
+    :param def_val:
+    :param silent:
+    :param valid_values:
+    :param kwargs:
+    :return:
+    """
     if kwargs:
         raise ValueError(kwargs)
     # For passwords you must include the word `password` in the item_name
@@ -697,7 +738,7 @@ def check_setting_list(config, cfg_name, item_name, default=None, silent=True, t
             config[cfg_name][item_name] = my_val
 
     if split_value:
-        if isinstance(my_val, string_types):
+        if isinstance(my_val, str):
             my_val = split_and_strip(my_val, split_value)
 
     # Make an attempt to cast the lists values.
@@ -748,6 +789,16 @@ def check_provider_setting(config, provider, attr_type, attr, default=None, sile
 # Load Provider Setting                                                        #
 ################################################################################
 def load_provider_setting(config, provider, attr_type, attr, default=None, silent=True, **kwargs):
+    """
+
+    :param config:
+    :param provider:
+    :param attr_type:
+    :param attr:
+    :param default:
+    :param silent:
+    :param kwargs:
+    """
     if hasattr(provider, attr):
         value = check_provider_setting(config, provider, attr_type, attr, default, silent, **kwargs)
         setattr(provider, attr, value)
@@ -757,6 +808,13 @@ def load_provider_setting(config, provider, attr_type, attr, default=None, silen
 # Load Provider Setting                                                        #
 ################################################################################
 def save_provider_setting(config, provider, attr, **kwargs):
+    """
+
+    :param config:
+    :param provider:
+    :param attr:
+    :param kwargs:
+    """
     if hasattr(provider, attr):
         section = kwargs.pop('section', provider.get_id().upper())
         setting = '{name}_{attr}'.format(name=provider.get_id(), attr=attr)
@@ -766,7 +824,11 @@ def save_provider_setting(config, provider, attr, **kwargs):
         config[section][setting] = value
 
 
-class ConfigMigrator(object):
+class ConfigMigrator:
+    """
+
+    """
+
     def __init__(self, config_obj):
         """Initializes a config migrator that can take the config from the version indicated in the config file up to the version required by Medusa."""
         self.config_obj = config_obj
@@ -846,7 +908,7 @@ class ConfigMigrator(object):
 
         # see if any of their shows used season folders
         main_db_con = db.DBConnection()
-        season_folder_shows = main_db_con.select(b'SELECT indexer_id FROM tv_shows WHERE flatten_folders = 0 LIMIT 1')
+        season_folder_shows = main_db_con.select('SELECT indexer_id FROM tv_shows WHERE flatten_folders = 0 LIMIT 1')
 
         # if any shows had season folders on then prepend season folder to the pattern
         if season_folder_shows:
@@ -875,7 +937,7 @@ class ConfigMigrator(object):
             log.info(u"No shows were using season folders before so I'm disabling flattening on all shows")
 
             # don't flatten any shows at all
-            main_db_con.action(b'UPDATE tv_shows SET flatten_folders = 0')
+            main_db_con.action('UPDATE tv_shows SET flatten_folders = 0')
 
         app.NAMING_FORCE_FOLDERS = naming.check_force_season_folders()
 
@@ -913,27 +975,27 @@ class ConfigMigrator(object):
         else:
             ep_string = naming_ep_type[ep_type]
 
-        finalName = ''
+        final_name = ''
 
         # start with the show name
         if use_show_name and show_name:
-            finalName += show_name + naming_sep_type[sep_type]
+            final_name += show_name + naming_sep_type[sep_type]
 
         # add the season/ep stuff
-        finalName += ep_string
+        final_name += ep_string
 
         # add the episode name
         if use_ep_name and ep_name:
-            finalName += naming_sep_type[sep_type] + ep_name
+            final_name += naming_sep_type[sep_type] + ep_name
 
         # add the quality
         if use_quality and ep_quality:
-            finalName += naming_sep_type[sep_type] + ep_quality
+            final_name += naming_sep_type[sep_type] + ep_quality
 
         if use_periods:
-            finalName = re.sub(r'\s+', '.', finalName)
+            final_name = re.sub(r'\s+', '.', final_name)
 
-        return finalName
+        return final_name
 
     # Migration v2: Dummy migration to sync backup number with config version number
     def _migrate_v2(self):

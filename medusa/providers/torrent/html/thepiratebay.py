@@ -2,13 +2,11 @@
 
 """Provider code for TPB."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
+from urllib.parse import urljoin
 
 import validators
-from requests.compat import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -28,7 +26,7 @@ class ThePirateBayProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(ThePirateBayProvider, self).__init__('ThePirateBay')
+        super().__init__('ThePirateBay')
 
         # Credentials
         self.public = True

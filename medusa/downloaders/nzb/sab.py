@@ -8,12 +8,9 @@ https://sabnzbd.org/wiki/advanced/api
 https://github.com/sabnzbd/sabnzbd
 """
 
-from __future__ import unicode_literals
-
 import datetime
 import logging
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import app
 from medusa.helper.common import sanitize_filename
@@ -68,6 +65,7 @@ def send_nzb_get(params, nzb):
     """
     Sends an NZB to SABnzbd via the API using a get request.
 
+    :param params:
     :param nzb: The NZBSearchResult object to send to SAB
     :return: result of the communication with sabnzbd (True/False)
     """

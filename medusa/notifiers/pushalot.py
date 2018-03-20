@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -12,12 +12,12 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def __init__(self):
         self.session = MedusaSession()
 
     def test_notify(self, pushalot_authorizationtoken):
-        return self._sendPushalot(
+        return self._send_pushalot(
             pushalot_authorizationtoken=pushalot_authorizationtoken,
             event='Test',
             message='Testing Pushalot settings from Medusa',
@@ -26,7 +26,7 @@ class Notifier(object):
 
     def notify_snatch(self, ep_name, is_proper):
         if app.PUSHALOT_NOTIFY_ONSNATCH:
-            self._sendPushalot(
+            self._send_pushalot(
                 pushalot_authorizationtoken=None,
                 event=common.notifyStrings[(common.NOTIFY_SNATCH, common.NOTIFY_SNATCH_PROPER)[is_proper]],
                 message=ep_name
@@ -34,7 +34,7 @@ class Notifier(object):
 
     def notify_download(self, ep_name):
         if app.PUSHALOT_NOTIFY_ONDOWNLOAD:
-            self._sendPushalot(
+            self._send_pushalot(
                 pushalot_authorizationtoken=None,
                 event=common.notifyStrings[common.NOTIFY_DOWNLOAD],
                 message=ep_name
@@ -42,7 +42,7 @@ class Notifier(object):
 
     def notify_subtitle_download(self, ep_name, lang):
         if app.PUSHALOT_NOTIFY_ONSUBTITLEDOWNLOAD:
-            self._sendPushalot(
+            self._send_pushalot(
                 pushalot_authorizationtoken=None,
                 event=common.notifyStrings[common.NOTIFY_SUBTITLE_DOWNLOAD],
                 message='{}:{}'.format(ep_name, lang)
@@ -51,7 +51,7 @@ class Notifier(object):
     def notify_git_update(self, new_version='??'):
         update_text = common.notifyStrings[common.NOTIFY_GIT_UPDATE_TEXT]
         title = common.notifyStrings[common.NOTIFY_GIT_UPDATE]
-        self._sendPushalot(
+        self._send_pushalot(
             pushalot_authorizationtoken=None,
             event=title,
             message=update_text + new_version
@@ -60,13 +60,13 @@ class Notifier(object):
     def notify_login(self, ipaddress=''):
         update_text = common.notifyStrings[common.NOTIFY_LOGIN_TEXT]
         title = common.notifyStrings[common.NOTIFY_LOGIN]
-        self._sendPushalot(
+        self._send_pushalot(
             pushalot_authorizationtoken=None,
             event=title,
             message=update_text.format(ipaddress)
         )
 
-    def _sendPushalot(self, pushalot_authorizationtoken=None, event=None, message=None, force=False):
+    def _send_pushalot(self, pushalot_authorizationtoken=None, event=None, message=None, force=False):
 
         if not (app.USE_PUSHALOT or force):
             return False

@@ -21,7 +21,7 @@ MEDUSA.manage.subtitleMissed = function() {
                 $(this).prop('value', 'Collapse');
             }
         } else {
-            $.getJSON('manage/showSubtitleMissed', {
+            $.getJSON('manage/show_subtitle_missed', {
                 indexer: indexerId, // eslint-disable-line camelcase
                 seriesid: seriesId, // eslint-disable-line camelcase
                 whichSubs: $('#selectSubLang').val()

@@ -2,8 +2,6 @@
 
 """Configure Post Processing."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
 
@@ -16,7 +14,6 @@ from medusa import (
     naming,
     ui,
 )
-from medusa.helper.exceptions import ex
 from medusa.server.web.config.handler import Config
 from medusa.server.web.core import PageTemplate
 
@@ -24,41 +21,41 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-@route('/config/postProcessing(/?.*)')
+@route('/config/post_processing(/?.*)')
 class ConfigPostProcessing(Config):
     """Handler for Post Processor configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigPostProcessing, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """
         Render the Post Processor configuration page
         """
-        t = PageTemplate(rh=self, filename='config_postProcessing.mako')
+        t = PageTemplate(rh=self, filename='config_post_processing.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Post Processing',
+        return t.render(submenu=self.config_menu(), title='Config - Post Processing',
                         header='Post Processing', topmenu='config',
-                        controller='config', action='postProcessing')
+                        controller='config', action='post_processing')
 
-    def savePostProcessing(self, kodi_data=None, kodi_12plus_data=None,
-                           mediabrowser_data=None, sony_ps3_data=None,
-                           wdtv_data=None, tivo_data=None, mede8er_data=None,
-                           keep_processed_dir=None, process_method=None,
-                           del_rar_contents=None, process_automatically=None,
-                           no_delete=None, rename_episodes=None, airdate_episodes=None,
-                           file_timestamp_timezone=None, unpack=None,
-                           move_associated_files=None, sync_files=None,
-                           postpone_if_sync_files=None, postpone_if_no_subs=None,
-                           allowed_extensions=None, tv_download_dir=None,
-                           create_missing_show_dirs=None, add_shows_wo_dir=None,
-                           extra_scripts=None, nfo_rename=None,
-                           naming_pattern=None, naming_multi_ep=None,
-                           naming_custom_abd=None, naming_anime=None,
-                           naming_abd_pattern=None, naming_strip_year=None,
-                           naming_custom_sports=None, naming_sports_pattern=None,
-                           naming_custom_anime=None, naming_anime_pattern=None,
-                           naming_anime_multi_ep=None, autopostprocessor_frequency=None):
+    def save_post_processing(self, kodi_data=None, kodi_12plus_data=None,
+                             mediabrowser_data=None, sony_ps3_data=None,
+                             wdtv_data=None, tivo_data=None, mede8er_data=None,
+                             keep_processed_dir=None, process_method=None,
+                             del_rar_contents=None, process_automatically=None,
+                             no_delete=None, rename_episodes=None, airdate_episodes=None,
+                             file_timestamp_timezone=None, unpack=None,
+                             move_associated_files=None, sync_files=None,
+                             postpone_if_sync_files=None, postpone_if_no_subs=None,
+                             allowed_extensions=None, tv_download_dir=None,
+                             create_missing_show_dirs=None, add_shows_wo_dir=None,
+                             extra_scripts=None, nfo_rename=None,
+                             naming_pattern=None, naming_multi_ep=None,
+                             naming_custom_abd=None, naming_anime=None,
+                             naming_abd_pattern=None, naming_strip_year=None,
+                             naming_custom_sports=None, naming_sports_pattern=None,
+                             naming_custom_anime=None, naming_anime_pattern=None,
+                             naming_anime_multi_ep=None, autopostprocessor_frequency=None):
 
         results = []
 
@@ -70,7 +67,7 @@ class ConfigPostProcessing(Config):
         config.change_process_automatically(process_automatically)
 
         if unpack:
-            if self.isRarSupported() != 'not supported':
+            if self.is_rar_supported() != 'not supported':
                 app.UNPACK = config.checkbox_to_value(unpack)
             else:
                 app.UNPACK = 0
@@ -119,7 +116,7 @@ class ConfigPostProcessing(Config):
         app.metadata_provider_dict['TIVO'].set_config(app.METADATA_TIVO)
         app.metadata_provider_dict['Mede8er'].set_config(app.METADATA_MEDE8ER)
 
-        if self.isNamingValid(naming_pattern, naming_multi_ep, anime_type=naming_anime) != 'invalid':
+        if self.is_naming_valid(naming_pattern, naming_multi_ep, anime_type=naming_anime) != 'invalid':
             app.NAMING_PATTERN = naming_pattern
             app.NAMING_MULTI_EP = int(naming_multi_ep)
             app.NAMING_ANIME = int(naming_anime)
@@ -130,7 +127,7 @@ class ConfigPostProcessing(Config):
             else:
                 results.append('You tried saving an invalid naming config, not saving your naming settings')
 
-        if self.isNamingValid(naming_anime_pattern, naming_anime_multi_ep, anime_type=naming_anime) != 'invalid':
+        if self.is_naming_valid(naming_anime_pattern, naming_anime_multi_ep, anime_type=naming_anime) != 'invalid':
             app.NAMING_ANIME_PATTERN = naming_anime_pattern
             app.NAMING_ANIME_MULTI_EP = int(naming_anime_multi_ep)
             app.NAMING_ANIME = int(naming_anime)
@@ -141,13 +138,13 @@ class ConfigPostProcessing(Config):
             else:
                 results.append('You tried saving an invalid naming config, not saving your naming settings')
 
-        if self.isNamingValid(naming_abd_pattern, None, abd=True) != 'invalid':
+        if self.is_naming_valid(naming_abd_pattern, None, abd=True) != 'invalid':
             app.NAMING_ABD_PATTERN = naming_abd_pattern
         else:
             results.append(
                 'You tried saving an invalid air-by-date naming config, not saving your air-by-date settings')
 
-        if self.isNamingValid(naming_sports_pattern, None, sports=True) != 'invalid':
+        if self.is_naming_valid(naming_sports_pattern, None, sports=True) != 'invalid':
             app.NAMING_SPORTS_PATTERN = naming_sports_pattern
         else:
             results.append(
@@ -163,10 +160,10 @@ class ConfigPostProcessing(Config):
         else:
             ui.notifications.message('Configuration Saved', os.path.join(app.CONFIG_FILE))
 
-        return self.redirect('/config/postProcessing/')
+        return self.redirect('/config/post_processing/')
 
     @staticmethod
-    def testNaming(pattern=None, multi=None, abd=False, sports=False, anime_type=None):
+    def test_naming(pattern=None, multi=None, abd=False, sports=False, anime_type=None):
         """Test episode naming pattern."""
         if multi is not None:
             multi = int(multi)
@@ -181,7 +178,7 @@ class ConfigPostProcessing(Config):
         return result
 
     @staticmethod
-    def isNamingValid(pattern=None, multi=None, abd=False, sports=False, anime_type=None):
+    def is_naming_valid(pattern=None, multi=None, abd=False, sports=False, anime_type=None):
         """
         Validate episode naming pattern
         """
@@ -219,7 +216,7 @@ class ConfigPostProcessing(Config):
             return 'invalid'
 
     @staticmethod
-    def isRarSupported():
+    def is_rar_supported():
         """
         Test Packing Support.
 
@@ -233,5 +230,5 @@ class ConfigPostProcessing(Config):
             log.error('Rar Not Supported: Can not read the content of test file')
             return 'not supported'
         except Exception as msg:
-            log.error('Rar Not Supported: {error}'.format(error=ex(msg)))
+            log.error('Rar Not Supported: {error}'.format(error=msg))
             return 'not supported'

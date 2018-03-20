@@ -9,6 +9,8 @@ from requests.adapters import HTTPAdapter
 from pytvmaze import endpoints
 from pytvmaze.exceptions import *
 
+import six
+
 
 class Show(object):
     def __init__(self, data):
@@ -499,11 +501,13 @@ def _valid_encoding(text):
     if sys.version_info > (3,):
         return text
     else:
-        return unicode(text).encode('utf-8')
+        return six.text_type(text, 'utf-8')
 
 
 def _url_quote(show):
-    return requests.compat.quote(show.encode('UTF-8'))
+    if not isinstance(show, six.text_type):
+        show = six.text_type(show, 'utf-8')
+    return requests.compat.quote(show)
 
 
 def _remove_tags(text):

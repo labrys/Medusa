@@ -1,6 +1,6 @@
 # coding=utf-8
 """GitHub issue submitter."""
-from __future__ import unicode_literals
+
 
 import difflib
 import locale
@@ -12,8 +12,9 @@ from datetime import datetime, timedelta
 from github import InputFileContent
 from github.GithubException import GithubException, RateLimitExceededException
 
-from medusa import app, db
+from medusa import app
 from medusa.classes import ErrorViewer
+from medusa.databases import db
 from medusa.github_client import (
     authenticate, get_github_repo,
     token_authenticate,
@@ -39,7 +40,7 @@ _STAFF NOTIFIED_: @{org}/support @{org}/moderators
 """
 
 
-class IssueSubmitter(object):
+class IssueSubmitter:
     """GitHub issue submitter."""
 
     MISSING_CREDENTIALS = 'Please set your GitHub Username and Password in the config.  Unable to submit issue ticket to GitHub.'
@@ -126,6 +127,12 @@ class IssueSubmitter(object):
     def submit_github_issue(self, version_checker, max_issues=500):
         """Submit errors to github."""
         def result(message, level=logging.WARNING):
+            """
+
+            :param message:
+            :param level:
+            :return:
+            """
             log.log(level, message)
             return [(message, None)]
 

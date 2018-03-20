@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Medusa. If not, see <http://www.gnu.org/licenses/>.
 """Post Processor Module."""
-from __future__ import unicode_literals
+
 
 import logging
 import os.path
@@ -27,7 +27,7 @@ from medusa.processing import tv
 logger = logging.getLogger(__name__)
 
 
-class PostProcessor(object):
+class PostProcessor:
     """Post Processor Scheduler Action."""
 
     def __init__(self):

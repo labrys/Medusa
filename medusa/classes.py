@@ -1,8 +1,9 @@
+# coding=utf-8
 """Collection of generic used classes."""
 import logging
+from urllib.request import FancyURLopener
 
 from dateutil import parser
-from six.moves.urllib.request import FancyURLopener
 
 from medusa import app
 from medusa.common import Quality, USER_AGENT
@@ -16,7 +17,7 @@ class ApplicationURLopener(FancyURLopener, object):
     version = USER_AGENT
 
 
-class SearchResult(object):
+class SearchResult:
     """Represents a search result from an indexer."""
 
     def __init__(self, episodes=None, provider=None):
@@ -116,6 +117,10 @@ class SearchResult(object):
 
     @property
     def actual_episode(self):
+        """
+
+        :return:
+        """
         return self._actual_episode
 
     @actual_episode.setter
@@ -124,6 +129,10 @@ class SearchResult(object):
 
     @property
     def actual_episodes(self):
+        """
+
+        :return:
+        """
         return self._actual_episodes
 
     @actual_episodes.setter
@@ -134,6 +143,10 @@ class SearchResult(object):
 
     @property
     def show(self):
+        """
+
+        :return:
+        """
         log.warning(
             'Please use SearchResult.series and not show. Show has been deprecated.',
             DeprecationWarning,
@@ -170,6 +183,10 @@ class SearchResult(object):
         return my_string
 
     def file_name(self):
+        """
+
+        :return:
+        """
         return u'{0}.{1}'.format(self.episodes[0].pretty_name(), self.result_type)
 
     def add_result_to_cache(self, cache):
@@ -191,6 +208,10 @@ class SearchResult(object):
         return self.episodes
 
     def finish_search_result(self, provider):
+        """
+
+        :param provider:
+        """
         self.size = provider._get_size(self.item)
         self.pubdate = provider._get_pubdate(self.item)
 
@@ -199,7 +220,7 @@ class NZBSearchResult(SearchResult):
     """Regular NZB result with an URL to the NZB."""
 
     def __init__(self, episodes, provider=None):
-        super(NZBSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'nzb'
 
 
@@ -207,7 +228,7 @@ class NZBDataSearchResult(SearchResult):
     """NZB result where the actual NZB XML data is stored in the extra_info."""
 
     def __init__(self, episodes, provider=None):
-        super(NZBDataSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'nzbdata'
 
 
@@ -215,11 +236,11 @@ class TorrentSearchResult(SearchResult):
     """Torrent result with an URL to the torrent."""
 
     def __init__(self, episodes, provider=None):
-        super(TorrentSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'torrent'
 
 
-class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
+class AllShowsListUI:  # pylint: disable=too-few-public-methods
     """This class is for indexer api.
 
     Instead of prompting with a UI to pick the desired result out of a
@@ -232,6 +253,11 @@ class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
         self.log = log
 
     def select_series(self, all_series):
+        """
+
+        :param all_series:
+        :return:
+        """
         from medusa.helper.common import dateTimeFormat
 
         search_results = []
@@ -263,7 +289,7 @@ class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
         return search_results
 
 
-class ShowListUI(object):  # pylint: disable=too-few-public-methods
+class ShowListUI:  # pylint: disable=too-few-public-methods
     """This class is for tvdb-api.
 
     Instead of prompting with a UI to pick the desired result out of a
@@ -277,6 +303,11 @@ class ShowListUI(object):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def select_series(all_series):
+        """
+
+        :param all_series:
+        :return:
+        """
         try:
             # try to pick a show that's in my show list
             show_id_list = [int(x.indexerid) for x in app.showList]
@@ -290,7 +321,7 @@ class ShowListUI(object):  # pylint: disable=too-few-public-methods
         return all_series[0]
 
 
-class Viewer(object):
+class Viewer:
     """Keep the Errors to be displayed in the UI."""
 
     def __init__(self):

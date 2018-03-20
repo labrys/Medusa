@@ -7,11 +7,9 @@ import re
 
 import tmdbsimple as tmdb
 from requests.exceptions import RequestException
-from six import iterkeys
 
 from medusa import app, exception_handler, helpers
 from medusa.helper.common import replace_extension
-from medusa.helper.exceptions import ex
 from medusa.helper.metadata import get_image
 from medusa.indexers.config import INDEXER_TMDB, INDEXER_TVDB, INDEXER_TVMAZE
 from medusa.indexers.exceptions import (
@@ -21,9 +19,9 @@ from medusa.indexers.exceptions import (
 from medusa.logger.adapters.style import BraceAdapter
 
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 # todo: Implement Fanart.tv v3 API
 
@@ -31,7 +29,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class GenericMetadata(object):
+class GenericMetadata:
     """
     Base class for all metadata providers. Default behavior is meant to mostly
     follow KODI 12+ metadata standards. Has support for:
@@ -81,10 +79,10 @@ class GenericMetadata(object):
         return u'|'.join([str(int(x)) for x in config_list])
 
     def get_id(self):
-        return GenericMetadata.makeID(self.name)
+        return GenericMetadata.make_id(self.name)
 
     @staticmethod
-    def makeID(name):
+    def make_id(name):
         name_id = re.sub(r'[+]', 'plus', name)
         name_id = re.sub(r'[^\w\d_]', '_', name_id).lower()
         return name_id
@@ -261,24 +259,24 @@ class GenericMetadata(object):
 
             try:
                 with io.open(nfo_file_path, u'rb') as xmlFileObj:
-                    showXML = etree.ElementTree(file=xmlFileObj)
+                    show_xml = ETree.ElementTree(file=xmlFileObj)
 
-                indexerid = showXML.find(u'id')
+                indexerid = show_xml.find(u'id')
 
-                root = showXML.getroot()
+                root = show_xml.getroot()
                 if indexerid is not None:
                     indexerid.text = str(show_obj.indexerid)
                 else:
-                    etree.SubElement(root, u'id').text = str(show_obj.indexerid)
+                    ETree.SubElement(root, u'id').text = str(show_obj.indexerid)
 
                 # Make it purdy
                 helpers.indent_xml(root)
 
-                showXML.write(nfo_file_path, encoding=u'UTF-8')
+                show_xml.write(nfo_file_path, encoding=u'UTF-8')
                 helpers.chmod_as_parent(nfo_file_path)
 
                 return True
-            except etree.ParseError as error:
+            except ETree.ParseError as error:
                 log.warning(
                     u'Received an invalid XML for {series}, try again later. Error: {error}',
                     {u'series': show_obj.name, u'error': error}
@@ -286,7 +284,7 @@ class GenericMetadata(object):
             except IOError as e:
                 log.error(
                     u'Unable to write file to {location} - are you sure the folder is writeable? {error}',
-                    {u'location': nfo_file_path, u'error': ex(e)}
+                    {u'location': nfo_file_path, u'error': e}
                 )
 
     def create_fanart(self, show_obj):
@@ -330,7 +328,7 @@ class GenericMetadata(object):
     def create_season_posters(self, show_obj):
         if self.season_posters and show_obj:
             result = []
-            for season in iterkeys(show_obj.episodes):
+            for season in show_obj.episodes.keys():
                 if not self._has_season_poster(show_obj, season):
                     log.debug(
                         u'Metadata provider {name} creating season posters for {series}',
@@ -347,7 +345,7 @@ class GenericMetadata(object):
                 u'Metadata provider {name} creating season banners for {series}',
                 {u'name': self.name, u'series': show_obj.name}
             )
-            for season in iterkeys(show_obj.episodes):  # @UnusedVariable
+            for season in show_obj.episodes.keys():  # @UnusedVariable
                 if not self._has_season_banner(show_obj, season):
                     result += [self.save_season_banners(show_obj, season)]
             return all(result)
@@ -593,13 +591,13 @@ class GenericMetadata(object):
                 )
                 continue
 
-            seasonData = get_image(season_url)
+            season_data = get_image(season_url)
 
-            if not seasonData:
+            if not season_data:
                 log.debug(u'No season poster data available, skipping this season')
                 continue
 
-            result += [self._write_image(seasonData, season_poster_file_path)]
+            result += [self._write_image(season_data, season_poster_file_path)]
 
         if result:
             return all(result)
@@ -641,13 +639,13 @@ class GenericMetadata(object):
                 )
                 continue
 
-            seasonData = get_image(season_url)
+            season_data = get_image(season_url)
 
-            if not seasonData:
+            if not season_data:
                 log.debug(u'No season banner data available, skipping this season')
                 continue
 
-            result += [self._write_image(seasonData, season_banner_file_path)]
+            result += [self._write_image(season_data, season_banner_file_path)]
 
         if result:
             return all(result)
@@ -705,9 +703,9 @@ class GenericMetadata(object):
                 os.makedirs(image_dir)
                 helpers.chmod_as_parent(image_dir)
 
-            outFile = io.open(image_path, u'wb')
-            outFile.write(image_data)
-            outFile.close()
+            out_file = io.open(image_path, u'wb')
+            out_file.write(image_data)
+            out_file.close()
             helpers.chmod_as_parent(image_path)
         except IOError as e:
             exception_handler.handle(e, u'Unable to write image to {location}', location=image_path)
@@ -875,7 +873,7 @@ class GenericMetadata(object):
 
         return my_show
 
-    def retrieveShowMetadata(self, folder):
+    def retrieve_show_metadata(self, folder):
         """
         Used only when mass adding Existing Shows, using previously generated
         Show metadata to reduce the need to query TVDB.
@@ -896,22 +894,22 @@ class GenericMetadata(object):
 
         try:
             with io.open(metadata_path, u'rb') as xmlFileObj:
-                showXML = etree.ElementTree(file=xmlFileObj)
+                show_xml = ETree.ElementTree(file=xmlFileObj)
 
-            if (showXML.findtext(u'title') is None or
-                    (showXML.findtext(u'tvdbid') is None and showXML.findtext(u'id') is None)):
+            if (show_xml.findtext(u'title') is None or
+                    (show_xml.findtext(u'tvdbid') is None and show_xml.findtext(u'id') is None)):
                 log.debug(
                     u'Invalid info in tvshow.nfo (missing name or id): {0} {1} {2}',
-                    showXML.findtext(u'title'), showXML.findtext(u'tvdbid'), showXML.findtext(u'id'),
+                    show_xml.findtext(u'title'), show_xml.findtext(u'tvdbid'), show_xml.findtext(u'id'),
                 )
                 return empty_return
 
-            name = showXML.findtext(u'title')
+            name = show_xml.findtext(u'title')
 
-            if showXML.findtext(u'tvdbid'):
-                indexer_id = int(showXML.findtext(u'tvdbid'))
-            elif showXML.findtext(u'id'):
-                indexer_id = int(showXML.findtext(u'id'))
+            if show_xml.findtext(u'tvdbid'):
+                indexer_id = int(show_xml.findtext(u'tvdbid'))
+            elif show_xml.findtext(u'id'):
+                indexer_id = int(show_xml.findtext(u'id'))
             else:
                 log.warning(u'Empty <id> or <tvdbid> field in NFO, unable to find a ID')
                 return empty_return
@@ -922,8 +920,8 @@ class GenericMetadata(object):
                 return empty_return
 
             indexer = None
-            if showXML.findtext(u'episodeguide/url'):
-                epg_url = showXML.findtext(u'episodeguide/url').lower()
+            if show_xml.findtext(u'episodeguide/url'):
+                epg_url = show_xml.findtext(u'episodeguide/url').lower()
                 if str(indexer_id) in epg_url:
                     if u'thetvdb.com' in epg_url:
                         indexer = INDEXER_TVDB
@@ -941,7 +939,7 @@ class GenericMetadata(object):
         except Exception as error:
             log.warning(
                 u'There was an error parsing your existing metadata file: {location} error: {error}',
-                {u'location': metadata_path, u'error': ex(error)}
+                {u'location': metadata_path, u'error': error}
             )
             return empty_return
 

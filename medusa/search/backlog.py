@@ -6,9 +6,8 @@ import datetime
 import logging
 import threading
 
-from six import iteritems
-
-from medusa import app, common, db, scheduler, ui
+from medusa import app, common, scheduler, ui
+from medusa.databases import db
 from medusa.helper.common import episode_num
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.search.queue import BacklogQueueItem
@@ -30,17 +29,17 @@ class BacklogSearchScheduler(scheduler.Scheduler):
         if self.action._last_backlog <= 1:
             return datetime.date.today()
         else:
-            backlog_frequency_in_days = int(self.action.cycleTime)
+            backlog_frequency_in_days = int(self.action.cycle_time)
             return datetime.date.fromordinal(self.action._last_backlog + backlog_frequency_in_days)
 
 
-class BacklogSearcher(object):
+class BacklogSearcher:
     """Backlog Searcher class."""
 
     def __init__(self):
         """Initialize the class."""
         self._last_backlog = self._get_last_backlog()
-        self.cycleTime = app.BACKLOG_FREQUENCY / 60.0 / 24
+        self.cycle_time = app.BACKLOG_FREQUENCY / 60.0 / 24
         self.lock = threading.Lock()
         self.am_active = False
         self.amPaused = False
@@ -105,7 +104,7 @@ class BacklogSearcher(object):
 
             segments = self._get_segments(series_obj, from_date)
 
-            for season, segment in iteritems(segments):
+            for season, segment in segments.items():
                 self.currentSearchInfo = {'title': '{series_name} Season {season}'.format(series_name=series_obj.name,
                                                                                           season=season)}
 

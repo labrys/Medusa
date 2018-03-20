@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     import datetime
@@ -8,8 +16,8 @@
     from medusa.date_time import DateTime, date_presets, time_presets
     from medusa.metadata.generic import GenericMetadata
     from medusa.helpers import anon_url
-    from medusa.indexers.api import indexerApi
-    gh_branch = app.GIT_REMOTE_BRANCHES or app.version_check_scheduler.action.list_remote_branches()
+    from medusa.indexers.api import IndexerAPI
+    gh_branch = app.GIT_REMOTE_BRANCHES or list(pp.version_check_scheduler.action.remote_branches)
 %>
 <%block name="content">
 % if not header is UNDEFINED:
@@ -23,7 +31,7 @@
 % endif
 <div id="config">
     <div id="config-content">
-        <form id="configForm" action="config/general/saveGeneral" method="post">
+        <form id="configForm" action="config/general/save_general" method="post">
             <div id="config-components">
                 <ul>
                     ## @TODO: Fix this stupid hack
@@ -108,7 +116,7 @@
                                     <span class="component-title">Show root directories</span>
                                     <span class="component-desc">
                                         <p>where the files of shows are located</p>
-                                        <%include file="/inc_rootDirs.mako"/>
+                                        <%include file="/inc_root_dirs.mako"/>
                                     </span>
                                 </label>
                             </div>
@@ -122,10 +130,10 @@
                     <div class="component-group">
                         <fieldset class="component-group-list">
                             <div class="field-pair">
-                                <label for="indexerDefaultLang">
+                                <label for="indexer_default_lang">
                                     <span class="component-title">Default Indexer Language</span>
                                     <span class="component-desc">
-                                        <select name="indexerDefaultLang" id="indexerDefaultLang" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language=${app.INDEXER_DEFAULT_LANGUAGE} data-available="${','.join(indexerApi().config['valid_languages'])}"></select>
+                                        <select name="indexer_default_lang" id="indexer_default_lang" class="form-control form-control-inline input-sm bfh-languages" data-blank="false" data-language=${app.INDEXER_DEFAULT_LANGUAGE} data-available="${','.join(IndexerAPI().config['valid_languages'])}"></select>
                                         <span>for adding shows and metadata providers</span>
                                     </span>
                                 </label>
@@ -155,8 +163,8 @@
                                     <span class="component-desc">
                                         <select id="indexer_default" name="indexer_default" class="form-control input-sm">
                                             <option value="0" ${'selected="selected"' if indexer == 0 else ''}>All Indexers</option>
-                                            % for indexer in indexerApi().indexers:
-                                            <option value="${indexer}" ${'selected="selected"' if app.INDEXER_DEFAULT == indexer else ''}>${indexerApi().indexers[indexer]}</option>
+                                            % for indexer in IndexerAPI().indexers:
+                                            <option value="${indexer}" ${'selected="selected"' if app.INDEXER_DEFAULT == indexer else ''}>${IndexerAPI().indexers[indexer]}</option>
                                             % endfor
                                         </select>
                                         <span>as the default selection when adding new shows</span>
@@ -355,7 +363,7 @@
                                 <span class="component-desc">
                                     <select id="time_presets" name="time_preset" class="form-control input-sm">
                                          % for cur_preset in time_presets:
-                                            <option value="${cur_preset}" ${'selected="selected"' if app.TIME_PRESET_W_SECONDS == cur_preset else ''}>${DateTime.(n)ow().display_time(show_seconds=True, t_preset=cur_preset)}</option>
+                                            <option value="${cur_preset}" ${'selected="selected"' if app.TIME_PRESET_W_SECONDS == cur_preset else ''}>${DateTime.now().display_time(show_seconds=True, t_preset=cur_preset)}</option>
                                          % endfor
                                     </select>
                                     <span><b>note:</b> seconds are only shown on the History page</span>

@@ -2,14 +2,10 @@
 
 """Series naming helpers for selecting results."""
 
-from __future__ import unicode_literals
-
 import fnmatch
 import logging
 import os
 import re
-
-from six import string_types
 
 from medusa import app
 from medusa.logger.adapters.style import BraceAdapter
@@ -20,7 +16,6 @@ from medusa.name_parser.parser import (
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
-
 
 resultFilters = [
     '(sub|nfo)fix',
@@ -78,7 +73,7 @@ def contains_at_least_one_word(name, words):
     if not (name and words):
         return False
 
-    if isinstance(words, string_types):
+    if isinstance(words, str):
         words = words.split(',')
     items = [(re.compile(r'(^|[\W_])%s($|[\W_])' % word.strip(), re.I), word.strip()) for word in words]
     for regexp, word in items:

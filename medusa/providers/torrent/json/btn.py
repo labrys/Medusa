@@ -2,14 +2,11 @@
 
 """Provider code for BTN."""
 
-from __future__ import unicode_literals
-
 import logging
 import socket
 import time
 
 import jsonrpclib
-from six import itervalues
 
 from medusa import (
     app,
@@ -35,7 +32,7 @@ class BTNProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(BTNProvider, self).__init__('BTN')
+        super().__init__('BTN')
 
         # Credentials
         self.api_key = None
@@ -110,7 +107,7 @@ class BTNProvider(TorrentProvider):
         """
         items = []
 
-        torrent_rows = itervalues(data)
+        torrent_rows = data.values()
 
         for row in torrent_rows:
             title, download_url = self._process_title_and_url(row)
@@ -246,14 +243,14 @@ class BTNProvider(TorrentProvider):
             )
             time.sleep(cpu_presets[app.CPU_PRESET])
         except jsonrpclib.jsonrpc.ProtocolError as error:
-            if error.message[1] == 'Invalid API Key':
+            if 'Invalid API Key' in str(error):
                 log.warning('Incorrect authentication credentials.')
-            elif error.message[1] == 'Call Limit Exceeded':
+            elif 'Call Limit Exceeded' in str(error):
                 log.warning('You have exceeded the limit of'
                             ' 150 calls per hour.')
             else:
                 log.error('JSON-RPC protocol error while accessing provider.'
-                          ' Error: {msg!r}', {'msg': error.message[1]})
+                          ' Error: {msg!r}', {'msg': error})
 
         except (socket.error, socket.timeout, ValueError) as error:
             log.warning('Error while accessing provider.'

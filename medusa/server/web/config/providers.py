@@ -2,8 +2,6 @@
 
 """Configure Providers."""
 
-from __future__ import unicode_literals
-
 import json
 import logging
 import os
@@ -28,7 +26,7 @@ class ConfigProviders(Config):
     """Handler for Provider configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigProviders, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """
@@ -36,12 +34,12 @@ class ConfigProviders(Config):
         """
         t = PageTemplate(rh=self, filename='config_providers.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Providers',
+        return t.render(submenu=self.config_menu(), title='Config - Providers',
                         header='Search Providers', topmenu='config',
                         controller='config', action='providers')
 
     @staticmethod
-    def canAddNewznabProvider(name):
+    def can_add_newznab_provider(name):
         """See if a Newznab provider can be added."""
         if not name:
             return json.dumps({'error': 'No Provider Name specified'})
@@ -56,7 +54,7 @@ class ConfigProviders(Config):
             return json.dumps({'success': temp_provider.get_id()})
 
     @staticmethod
-    def saveNewznabProvider(name, url, api_key=''):
+    def save_newznab_provider(name, url, api_key=''):
         """Save a Newznab Provider."""
         if not name or not url:
             return '0'
@@ -83,7 +81,7 @@ class ConfigProviders(Config):
             return '|'.join([new_provider.get_id(), new_provider.config_string()])
 
     @staticmethod
-    def getNewznabCategories(name, url, api_key):
+    def get_newznab_categories(name, url, api_key):
         """
         Retrieves a list of possible categories with category id's
         Using the default url/api?cat
@@ -112,7 +110,7 @@ class ConfigProviders(Config):
         return json.dumps({'success': success, 'tv_categories': tv_categories, 'error': error})
 
     @staticmethod
-    def deleteNewznabProvider(nnid):
+    def delete_newznab_provider(nnid):
         """Delete a Newznab Provider."""
         provider_dict = dict(zip([x.get_id() for x in app.newznabProviderList], app.newznabProviderList))
 
@@ -128,7 +126,7 @@ class ConfigProviders(Config):
         return '1'
 
     @staticmethod
-    def canAddTorrentRssProvider(name, url, cookies, title_tag):
+    def can_add_torrent_rss_provider(name, url, cookies, title_tag):
         """
         See if a Torrent provider can be added
         """
@@ -150,7 +148,7 @@ class ConfigProviders(Config):
                 return json.dumps({'error': validate['message']})
 
     @staticmethod
-    def saveTorrentRssProvider(name, url, cookies, title_tag):
+    def save_torrent_rss_provider(name, url, cookies, title_tag):
         """Save a Torrent Provider."""
         if not name or not url:
             return '0'
@@ -171,7 +169,7 @@ class ConfigProviders(Config):
             return '|'.join([new_provider.get_id(), new_provider.config_string()])
 
     @staticmethod
-    def deleteTorrentRssProvider(provider_id):
+    def delete_torrent_rss_provider(provider_id):
         """
         Delete a Torrent Provider
         """
@@ -189,7 +187,7 @@ class ConfigProviders(Config):
 
         return '1'
 
-    def saveProviders(self, newznab_string='', torrentrss_string='', provider_order=None, **kwargs):
+    def save_providers(self, newznab_string='', torrentrss_string='', provider_order=None, **kwargs):
         """
         Save Provider related settings
         """

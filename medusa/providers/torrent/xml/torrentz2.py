@@ -2,13 +2,10 @@
 
 """Provider code for Torrentz2."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -25,7 +22,7 @@ class Torrentz2Provider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(Torrentz2Provider, self).__init__('Torrentz2')
+        super().__init__('Torrentz2')
 
         # Credentials
         self.public = True

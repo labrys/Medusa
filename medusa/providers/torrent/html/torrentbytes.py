@@ -2,13 +2,11 @@
 
 """Provider code for TorrentBytes."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -29,7 +27,7 @@ class TorrentBytesProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TorrentBytesProvider, self).__init__('TorrentBytes')
+        super().__init__('TorrentBytes')
 
         # Credentials
         self.username = None
@@ -128,7 +126,7 @@ class TorrentBytesProvider(TorrentProvider):
 
                 try:
                     download_url = urljoin(self.url, cells[labels.index('Name')].find('a',
-                                           href=re.compile(r'download.php\?id='))['href'])
+                                                                                      href=re.compile(r'download.php\?id='))['href'])
                     title_element = cells[labels.index('Name')].find('a', href=re.compile(r'details.php\?id='))
                     title = title_element.get('title', '') or title_element.get_text(strip=True)
                     if not all([title, download_url]):

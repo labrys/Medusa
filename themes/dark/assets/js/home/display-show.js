@@ -1,4 +1,4 @@
-MEDUSA.home.displayShow = function() { // eslint-disable-line max-lines
+MEDUSA.home.display_series = function() { // eslint-disable-line max-lines
     $('.imdbPlot').on('click', function() {
         $(this).prev('span').toggle();
         if ($(this).html() === '..show less') {
@@ -152,7 +152,7 @@ MEDUSA.home.displayShow = function() { // eslint-disable-line max-lines
         if (seriesId === 0 || !indexerName) {
             return;
         }
-        window.location.href = $('base').attr('href') + 'home/displayShow?indexername=' + indexerName + '&seriesid=' + seriesId;
+        window.location.href = $('base').attr('href') + 'home/display_series?indexername=' + indexerName + '&seriesid=' + seriesId;
     });
 
     // Show/hide different types of rows when the checkboxes are changed
@@ -211,7 +211,7 @@ MEDUSA.home.displayShow = function() { // eslint-disable-line max-lines
             sceneEpisode = null;
         }
 
-        $.getJSON('home/setSceneNumbering', {
+        $.getJSON('home/set_scene_numbering', {
             indexername: indexerName,
             seriesid: seriesId,
             forSeason,
@@ -243,7 +243,7 @@ MEDUSA.home.displayShow = function() { // eslint-disable-line max-lines
             sceneAbsolute = null;
         }
 
-        $.getJSON('home/setSceneNumbering', {
+        $.getJSON('home/set_scene_numbering', {
             indexername: indexerName,
             seriesid: seriesId,
             forAbsolute,
@@ -358,7 +358,7 @@ MEDUSA.home.displayShow = function() { // eslint-disable-line max-lines
         $.tablesorter.columnSelector.attachTo($('#showTable, #animeTable'), '#popover-target');
     });
 
-    // Moved and rewritten this from displayShow. This changes the button when clicked for collapsing/expanding the
+    // Moved and rewritten this from display_series. This changes the button when clicked for collapsing/expanding the
     // Season to Show Episodes or Hide Episodes.
     $(() => {
         $('.collapse.toggle').on('hide.bs.collapse', function() {
@@ -414,7 +414,7 @@ MEDUSA.home.displayShow = function() { // eslint-disable-line max-lines
 
     // @TODO: OMG: This is just a basic json, in future it should be based on the CRUD route.
     // Get the season exceptions and the xem season mappings.
-    $.getJSON('home/getSeasonSceneExceptions', {
+    $.getJSON('home/get_season_scene_exceptions', {
         indexername: $('#indexer-name').val(),
         seriesid: $('#series-id').val() // eslint-disable-line camelcase
     }, data => {

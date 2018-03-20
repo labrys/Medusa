@@ -1,9 +1,14 @@
 # coding=utf-8
 """Request handler for series assets."""
 
+import logging
+
 from medusa.server.api.v2.base import BaseRequestHandler
 from medusa.server.api.v2.series import SeriesHandler
 from medusa.tv.series import Series, SeriesIdentifier
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
 
 
 class SeriesAssetHandler(BaseRequestHandler):
@@ -21,6 +26,7 @@ class SeriesAssetHandler(BaseRequestHandler):
     def get(self, series_slug, identifier, *args, **kwargs):
         """Get an asset."""
         series_identifier = SeriesIdentifier.from_slug(series_slug)
+        log.debug('{!r}'.format(series_identifier))
         if not series_identifier:
             return self._bad_request('Invalid series slug')
 

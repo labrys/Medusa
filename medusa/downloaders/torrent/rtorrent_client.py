@@ -2,8 +2,6 @@
 
 """rTorrent Client."""
 
-from __future__ import unicode_literals
-
 import logging
 
 from rtorrent import RTorrent
@@ -29,7 +27,7 @@ class RTorrentAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(RTorrentAPI, self).__init__('rTorrent', host, username, password)
+        super().__init__('rTorrent', host, username, password)
 
     def _get_auth(self):
         if self.auth is not None:

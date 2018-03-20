@@ -1,18 +1,15 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import datetime
 import io
 import logging
 import os
 
-from six import text_type
-
 from medusa import helpers
 from medusa.helper.common import episode_num
-from medusa.helper.exceptions import ex
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.exceptions import (
     IndexerEpisodeNotFound,
     IndexerSeasonNotFound,
@@ -77,7 +74,7 @@ class TIVOMetadata(generic.GenericMetadata):
         self.eg_season_all_banner = '<i>not supported</i>'
 
     # Override with empty methods for unsupported features
-    def retrieveShowMetadata(self, folder):
+    def retrieve_show_metadata(self, folder):
         # no show metadata generated, we abort this lookup function
         return None, None, None
 
@@ -171,13 +168,13 @@ class TIVOMetadata(generic.GenericMetadata):
                 log.debug(
                     u'Unable to find episode {number} on {indexer}... has it been removed? Should I delete from db?', {
                         'number': episode_num(ep_to_write.season, ep_to_write.episode),
-                        'indexer': indexerApi(ep_obj.series.indexer).name,
+                        'indexer': IndexerAPI(ep_obj.series.indexer).name,
                     }
                 )
                 return None
 
             if ep_obj.season == 0 and not getattr(my_ep, 'firstaired', None):
-                my_ep['firstaired'] = text_type(datetime.date.fromordinal(1))
+                my_ep['firstaired'] = datetime.date.fromordinal(1)
 
             if not (getattr(my_ep, 'episodename', None) and getattr(my_ep, 'firstaired', None)):
                 return None
@@ -277,9 +274,6 @@ class TIVOMetadata(generic.GenericMetadata):
         ses the episode's name with the extension in _ep_nfo_extension.
 
         :param ep_obj: Episode object for which to create the metadata
-        :param file_name_path: The file name to use for this metadata. Note that the extension
-                will be automatically added based on _ep_nfo_extension. This should
-                include an absolute path.
         """
         data = self._ep_data(ep_obj)
 
@@ -301,14 +295,14 @@ class TIVOMetadata(generic.GenericMetadata):
 
             with io.open(nfo_file_path, 'wb') as nfo_file:
                 # Calling encode directly, b/c often descriptions have wonky characters.
-                nfo_file.write(data.encode('utf-8'))
+                nfo_file.write(data)
 
             helpers.chmod_as_parent(nfo_file_path)
 
         except EnvironmentError as e:
             log.error(
                 u'Unable to write file to {path} - are you sure the folder is writable? {error}',
-                {'path': nfo_file_path, 'error': ex(e)}
+                {'path': nfo_file_path, 'error': e}
             )
             return False
 

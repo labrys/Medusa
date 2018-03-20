@@ -2,13 +2,11 @@
 
 """Provider code for Pretome."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -29,7 +27,7 @@ class PretomeProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(PretomeProvider, self).__init__('Pretome')
+        super().__init__('Pretome')
 
         # Credentials
         self.username = None

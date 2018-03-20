@@ -10,13 +10,14 @@ from datetime import datetime
 
 from dateutil import parser
 
-from medusa import app, db
+from medusa import app
 from medusa.common import (
     Overview,
     Quality,
     cpu_presets,
     statusStrings,
 )
+from medusa.databases import db
 from medusa.date_time import DateTime
 from medusa.helper.common import enabled_providers, pretty_file_size
 from medusa.logger.adapters.style import BraceAdapter
@@ -47,7 +48,7 @@ def get_episode(series_id, season=None, episode=None, absolute=None, indexer=Non
     """
     Get a specific episode object based on show, season and episode number.
 
-    :param show: Series id
+    :param series_id:
     :param season: Season number
     :param episode: Episode number
     :param absolute: Optional if the episode number is a scene absolute number
@@ -114,7 +115,7 @@ def get_episodes(search_thread, searchstatus):
 def update_finished_search_queue_item(snatch_queue_item):
     """Update the previous manual searched queue item with the correct status.
 
-    @param snatch_queue_item: A successful snatch queue item, send from pickManualSearch().
+    @param snatch_queue_item: A successful snatch queue item, send from pick_manual_search().
     @return: True if status update was successful, False if not.
     """
     # Finished Searches
@@ -185,7 +186,7 @@ def get_provider_cache_results(series_obj, show_all_results=None, perform_search
     ignored_words = series_obj.show_words().ignored_words
     required_words = series_obj.show_words().required_words
 
-    main_db_con = db.DBConnection('cache.db')
+    cache_db_conn = db.DBConnection('cache.db')
 
     provider_results = {'last_prov_updates': {}, 'error': {}, 'found_items': []}
     original_thread_name = threading.currentThread().name
@@ -198,14 +199,21 @@ def get_provider_cache_results(series_obj, show_all_results=None, perform_search
         threading.currentThread().name = '{thread} :: [{provider}]'.format(thread=original_thread_name, provider=cur_provider.name)
 
         # Let's check if this provider table already exists
-        table_exists = main_db_con.select(
-            b"SELECT name "
-            b"FROM sqlite_master "
-            b"WHERE type='table'"
-            b" AND name=?",
+        table_exists = cache_db_conn.select(
+            """
+            SELECT name
+            FROM sqlite_master
+            WHERE type='table'
+             AND name=?  
+            """,
             [cur_provider.get_id()]
         )
-        columns = [i[1] for i in main_db_con.select("PRAGMA table_info('{0}')".format(cur_provider.get_id()))] if table_exists else []
+        columns = [
+            i[1]
+            for i in cache_db_conn.select(
+                f"PRAGMA table_info('{cur_provider.get_id()}')"
+            )
+        ] if table_exists else []
         minseed = int(cur_provider.minseed) if getattr(cur_provider, 'minseed', None) else -1
         minleech = int(cur_provider.minleech) if getattr(cur_provider, 'minleech', None) else -1
 
@@ -215,13 +223,13 @@ def get_provider_cache_results(series_obj, show_all_results=None, perform_search
         if table_exists and all(required_column in columns for required_column in required_columns):
             # The default sql, that's executed for each providers cache table
             common_sql = (
-                b"SELECT rowid, ? AS 'provider_type', ? AS 'provider_image',"
-                b" ? AS 'provider', ? AS 'provider_id', ? 'provider_minseed',"
-                b" ? 'provider_minleech', name, season, episodes, indexer, indexerid,"
-                b" url, time, proper_tags, quality, release_group, version,"
-                b" seeders, leechers, size, time, pubdate, date_added "
-                b"FROM '{provider_id}' "
-                b"WHERE indexer = ? AND indexerid = ? AND quality > 0 ".format(
+                "SELECT rowid, ? AS 'provider_type', ? AS 'provider_image',"
+                " ? AS 'provider', ? AS 'provider_id', ? 'provider_minseed',"
+                " ? 'provider_minleech', name, season, episodes, indexer, indexerid,"
+                " url, time, proper_tags, quality, release_group, version,"
+                " seeders, leechers, size, time, pubdate, date_added "
+                "FROM '{provider_id}' "
+                "WHERE indexer = ? AND indexerid = ? AND quality > 0 ".format(
                     provider_id=cur_provider.get_id()
                 )
             )
@@ -256,20 +264,30 @@ def get_provider_cache_results(series_obj, show_all_results=None, perform_search
             combined_sql_params += add_params
 
             # Get the last updated cache items timestamp
-            last_update = main_db_con.select(b"SELECT max(time) AS lastupdate "
-                                             b"FROM '{provider_id}'".format(provider_id=cur_provider.get_id()))
+            last_update = cache_db_conn.select("SELECT max(time) AS lastupdate "
+                                             "FROM '{provider_id}'".format(provider_id=cur_provider.get_id()))
             provider_results['last_prov_updates'][cur_provider.get_id()] = last_update[0]['lastupdate'] if last_update[0]['lastupdate'] else 0
 
     # Check if we have the combined sql strings
     if combined_sql_q:
-        sql_prepend = b"SELECT * FROM ("
-        sql_append = b") ORDER BY CASE quality WHEN '{quality_unknown}' THEN -1 ELSE CAST(quality AS DECIMAL) END DESC, " \
-                     b" proper_tags DESC, seeders DESC".format(quality_unknown=Quality.UNKNOWN)
+        sql_query = """
+            SELECT * FROM (
+              {query}
+            )
+            ORDER BY
+             CASE quality
+              WHEN '{quality_unknown}' THEN -1
+              ELSE CAST(quality AS DECIMAL)
+             END DESC,
+             proper_tags DESC,
+             seeders DESC
+        """.format(
+            query=' UNION ALL '.join(combined_sql_q),
+            quality_unknown=Quality.UNKNOWN,
+        )
 
         # Add all results
-        sql_total += main_db_con.select(b'{0} {1} {2}'.
-                                        format(sql_prepend, ' UNION ALL '.join(combined_sql_q), sql_append),
-                                        combined_sql_params)
+        sql_total = cache_db_conn.select(sql_query, combined_sql_params)
 
     # Always start a search when no items found in cache
     if not sql_total or int(perform_search):

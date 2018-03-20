@@ -10506,7 +10506,7 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
     focus: function (e) {
       if (!this.focused) {
         this.focused = true;
-        if (this.options.showHintOnFocus && this.skipShowHintOnFocus !== true) {
+        if (this.options.showHintOnFocus && this.skip_seriesHintOnFocus !== true) {
           if(this.options.showHintOnFocus === "all") {
             this.lookup(""); 
           } else {
@@ -10514,8 +10514,8 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
           }
         }
       }
-      if (this.skipShowHintOnFocus) {
-        this.skipShowHintOnFocus = false;
+      if (this.skip_seriesHintOnFocus) {
+        this.skip_seriesHintOnFocus = false;
       }
     },
 
@@ -10526,7 +10526,7 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
       } else if (this.mouseddown) {
         // This is for IE that blurs the input when user clicks on scroll.
         // We set the focus back on the input and prevent the lookup to occur again
-        this.skipShowHintOnFocus = true;
+        this.skip_seriesHintOnFocus = true;
         this.$element.focus();
         this.mouseddown = false;
       } 
@@ -10534,7 +10534,7 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
 
     click: function (e) {
       e.preventDefault();
-      this.skipShowHintOnFocus = true;
+      this.skip_seriesHintOnFocus = true;
       this.select();
       this.$element.focus();
       this.hide();
@@ -13890,7 +13890,7 @@ return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e
         var selectedImage = that.images[newIndex];
 
         // Pause the slideshow
-        clearTimeout(that._cycleTimeout);
+        clearTimeout(that._cycle_timeout);
 
         // New image
 
@@ -14054,7 +14054,7 @@ return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e
         // Start/resume the slideshow
         if(this.images.length > 1) {
           // Clear the timeout, just in case
-          clearTimeout(this._cycleTimeout);
+          clearTimeout(this._cycle_timeout);
 
           var duration = (this._currentImage && this._currentImage.duration) || this.options.duration;
           var isVideo = isVideoSource(this._currentImage);
@@ -14100,7 +14100,7 @@ return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e
             
           } else {
             // Cycling according to specified duration
-            this._cycleTimeout = setTimeout($.proxy(callNext, this), duration);
+            this._cycle_timeout = setTimeout($.proxy(callNext, this), duration);
           }
           
         }
@@ -14117,7 +14117,7 @@ return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e
         }
         
         // Clear the timeout
-        clearTimeout(this._cycleTimeout);
+        clearTimeout(this._cycle_timeout);
 
         // Remove Backstretch
         if(!preserveBackground) {
@@ -24175,12 +24175,12 @@ $.widget( "ui.button", {
 	},
 
 	_setOptions: function( options ) {
-		var newShowLabel = options.showLabel === undefined ?
+		var new_seriesLabel = options.showLabel === undefined ?
 				this.options.showLabel :
 				options.showLabel,
 			newIcon = options.icon === undefined ? this.options.icon : options.icon;
 
-		if ( !newShowLabel && !newIcon ) {
+		if ( !new_seriesLabel && !newIcon ) {
 			options.showLabel = true;
 		}
 		this._super( options );
@@ -25250,7 +25250,7 @@ $.extend( Datepicker.prototype, {
 	 * @param  input  element - the input field attached to the date picker
 	 */
 	_hideDatepicker: function( input ) {
-		var showAnim, duration, postProcess, onClose,
+		var showAnim, duration, post_process, onClose,
 			inst = this._curInst;
 
 		if ( !inst || ( input && inst !== $.data( input, "datepicker" ) ) ) {
@@ -25260,20 +25260,20 @@ $.extend( Datepicker.prototype, {
 		if ( this._datepickerShowing ) {
 			showAnim = this._get( inst, "showAnim" );
 			duration = this._get( inst, "duration" );
-			postProcess = function() {
+			post_process = function() {
 				$.datepicker._tidyDialog( inst );
 			};
 
 			// DEPRECATED: after BC for 1.8.x $.effects[ showAnim ] is not needed
 			if ( $.effects && ( $.effects.effect[ showAnim ] || $.effects[ showAnim ] ) ) {
-				inst.dpDiv.hide( showAnim, $.datepicker._get( inst, "showOptions" ), duration, postProcess );
+				inst.dpDiv.hide( showAnim, $.datepicker._get( inst, "showOptions" ), duration, post_process );
 			} else {
 				inst.dpDiv[ ( showAnim === "slideDown" ? "slideUp" :
-					( showAnim === "fadeIn" ? "fadeOut" : "hide" ) ) ]( ( showAnim ? duration : null ), postProcess );
+					( showAnim === "fadeIn" ? "fadeOut" : "hide" ) ) ]( ( showAnim ? duration : null ), post_process );
 			}
 
 			if ( !showAnim ) {
-				postProcess();
+				post_process();
 			}
 			this._datepickerShowing = false;
 
@@ -30713,7 +30713,7 @@ var widgetsSelectable = $.widget( "ui.selectable", $.ui.mouse, {
 	version: "1.12.1",
 	options: {
 		appendTo: "body",
-		autoRefresh: true,
+		auto_refresh: true,
 		distance: 0,
 		filter: "*",
 		tolerance: "touch",
@@ -30797,7 +30797,7 @@ var widgetsSelectable = $.widget( "ui.selectable", $.ui.mouse, {
 			"height": 0
 		} );
 
-		if ( options.autoRefresh ) {
+		if ( options.auto_refresh ) {
 			this.refresh();
 		}
 
@@ -63442,10 +63442,10 @@ QTIP.defaults = {
 			if ( refreshing ) { return; }
 			var tbodyIndex, $tbody,
 				$tbodies = c.$tbodies,
-				toRemove = ( wo.zebra || [ 'even', 'odd' ] ).join( ' ' );
+				to_remove = ( wo.zebra || [ 'even', 'odd' ] ).join( ' ' );
 			for ( tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ){
 				$tbody = ts.processTbody( table, $tbodies.eq( tbodyIndex ), true ); // remove tbody
-				$tbody.children().removeClass( toRemove );
+				$tbody.children().removeClass( to_remove );
 				ts.processTbody( table, $tbody, false ); // restore tbody
 			}
 		}

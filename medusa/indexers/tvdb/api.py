@@ -4,10 +4,9 @@
 
 import logging
 from collections import OrderedDict
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.exceptions import RequestException
-from six import string_types, text_type
 from tvdbapiv2 import (
     ApiClient,
     EpisodesApi,
@@ -51,7 +50,7 @@ class TVDB(BaseIndexer):
 
     def __init__(self, *args, **kwargs):  # pylint: disable=too-many-locals,too-many-arguments
         """Init object."""
-        super(TVDB, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.config['api_base_url'] = API_BASE_TVDB
 
@@ -109,7 +108,7 @@ class TVDB(BaseIndexer):
                             continue
 
                         if isinstance(value, list):
-                            if list_separator and all(isinstance(x, string_types) for x in value):
+                            if list_separator and all(isinstance(x, str) for x in value):
                                 value = list_separator.join(value)
                             else:
                                 value = [self._object_to_dict(x, key_mapping) for x in value]
@@ -118,7 +117,7 @@ class TVDB(BaseIndexer):
                             if isinstance(value, dict) and isinstance(key_mapping[attribute], dict):
                                 # Let's map the children, i'm only going 1 deep, because usecases that I need it for,
                                 # I don't need to go any further
-                                for k, v in value.iteritems():
+                                for k, v in value.items():
                                     if key_mapping.get(attribute)[k]:
                                         return_dict[key_mapping[attribute][k]] = v
 
@@ -170,7 +169,6 @@ class TVDB(BaseIndexer):
         :param series: the query for the series name
         :return: An ordered dict with the show searched for. In the format of OrderedDict{"series": [list of shows]}
         """
-        series = series.encode('utf-8')
         log.debug('Searching for show: {0}', series)
 
         results = self._show_search(series, request_language=self.config['language'])
@@ -425,9 +423,19 @@ class TVDB(BaseIndexer):
 
         This interface will be improved in future versions.
         """
-        key_mapping = {'file_name': 'bannerpath', 'language_id': 'language', 'key_type': 'bannertype',
-                       'resolution': 'bannertype2', 'ratings_info': {'count': 'ratingcount', 'average': 'rating'},
-                       'thumbnail': 'thumbnailpath', 'sub_key': 'sub_key', 'id': 'id'}
+        key_mapping = {
+            'file_name': 'bannerpath',
+            'language_id': 'language',
+            'key_type': 'bannertype',
+            'resolution': 'bannertype2',
+            'ratings_info': {
+                'count': 'ratingcount',
+                'average': 'rating'
+            },
+            'thumbnail': 'thumbnailpath',
+            'sub_key': 'sub_key',
+            'id': 'id',
+        }
 
         search_for_image_type = self.config['image_type']
 
@@ -580,7 +588,7 @@ class TVDB(BaseIndexer):
             self._set_show_data(sid, k, v)
 
         # Create the externals structure
-        self._set_show_data(sid, 'externals', {'imdb_id': text_type(getattr(self[sid], 'imdb_id', ''))})
+        self._set_show_data(sid, 'externals', {'imdb_id': getattr(self[sid], 'imdb_id', '')})
 
         # get episode data
         if self.config['episodes_enabled']:
@@ -641,8 +649,8 @@ class TVDB(BaseIndexer):
     def get_last_updated_seasons(self, show_list, from_time, weeks=1):
         """Return updated seasons for shows passed, using the from_time.
 
-        :param show_list[int]: The list of shows, where seasons updates are retrieved for.
-        :param from_time[int]: epoch timestamp, with the start date/time
+        :param show_list:
+        :param from_time:
         :param weeks: number of weeks to get updates for.
         """
         show_season_updates = {}

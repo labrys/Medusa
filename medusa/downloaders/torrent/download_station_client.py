@@ -7,13 +7,11 @@ Uses the Synology Download Station API:
 http://download.synology.com/download/Document/DeveloperGuide/Synology_Download_Station_Web_API.pdf
 """
 
-from __future__ import unicode_literals
-
 import logging
 import os
 import re
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.exceptions import RequestException
 
 from medusa import app
@@ -38,7 +36,7 @@ class DownloadStationAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(DownloadStationAPI, self).__init__('DownloadStation', host, username, password)
+        super().__init__('DownloadStation', host, username, password)
 
         self.urls = {
             'login': urljoin(self.host, 'webapi/auth.cgi'),

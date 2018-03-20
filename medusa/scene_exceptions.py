@@ -2,18 +2,16 @@
 
 """Scene exceptions module."""
 
-from __future__ import unicode_literals
-
 import logging
 import threading
 import time
 from collections import defaultdict
 
 import adba
-from six import iteritems
 
-from medusa import app, db, helpers
-from medusa.indexers.api import indexerApi
+from medusa import app, helpers
+from medusa.databases import db
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.config import INDEXER_TVDB
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.session.core import MedusaSafeSession
@@ -38,16 +36,16 @@ def refresh_exceptions_cache():
 
     cache_db_con = db.DBConnection('cache.db')
     exceptions = cache_db_con.select(
-        b'SELECT indexer, indexer_id, show_name, season '
-        b'FROM scene_exceptions'
+        'SELECT indexer, indexer_id, show_name, season '
+        'FROM scene_exceptions'
     ) or []
 
     # Start building up a new exceptions_cache.
     for exception in exceptions:
-        indexer_id = int(exception[b'indexer'])
-        series_id = int(exception[b'indexer_id'])
-        season = int(exception[b'season'])
-        show = exception[b'show_name']
+        indexer_id = int(exception['indexer'])
+        series_id = int(exception['indexer_id'])
+        season = int(exception['season'])
+        show = exception['show_name']
 
         # To support multiple indexers with same series_id, we have to combine the min a tuple.
         series = (indexer_id, series_id)
@@ -62,7 +60,7 @@ def refresh_exceptions_cache():
 def get_last_refresh(ex_list):
     """Get the last update timestamp for the specific scene exception list."""
     cache_db_con = db.DBConnection('cache.db')
-    return cache_db_con.select(b'SELECT last_refreshed FROM scene_exceptions_refresh WHERE list = ?', [ex_list])
+    return cache_db_con.select('SELECT last_refreshed FROM scene_exceptions_refresh WHERE list = ?', [ex_list])
 
 
 def should_refresh(ex_list):
@@ -76,7 +74,7 @@ def should_refresh(ex_list):
     rows = get_last_refresh(ex_list)
 
     if rows:
-        last_refresh = int(rows[0][b'last_refreshed'])
+        last_refresh = int(rows[0]['last_refreshed'])
         return int(time.time()) > last_refresh + max_refresh_age_secs
     else:
         return True
@@ -90,9 +88,9 @@ def set_last_refresh(source):
     """
     cache_db_con = db.DBConnection('cache.db')
     cache_db_con.upsert(
-        b'scene_exceptions_refresh',
-        {b'last_refreshed': int(time.time())},
-        {b'list': source}
+        'scene_exceptions_refresh',
+        {'last_refreshed': int(time.time())},
+        {'list': source}
     )
 
 
@@ -130,8 +128,7 @@ def get_all_scene_exceptions(series_obj):
     """
     Get all scene exceptions for a show ID.
 
-    :param indexer_id: Indexer.
-    :param series_id: Series id.
+    :param series_obj:
     :return: dict of exceptions (e.g. exceptions_cache[season][exception_name])
     """
     return exceptions_cache.get((series_obj.indexer, series_obj.series_id), defaultdict(set))
@@ -143,26 +140,26 @@ def get_scene_exceptions_by_name(show_name):
     # Try the obvious case first
     cache_db_con = db.DBConnection('cache.db')
     scene_exceptions = cache_db_con.select(
-        b'SELECT indexer, indexer_id, season '
-        b'FROM scene_exceptions '
-        b'WHERE show_name = ? ORDER BY season ASC',
+        'SELECT indexer, indexer_id, season '
+        'FROM scene_exceptions '
+        'WHERE show_name = ? ORDER BY season ASC',
         [show_name])
     if scene_exceptions:
         # FIXME: Need to add additional layer indexer.
-        return [(int(exception[b'indexer_id']), int(exception[b'season']), int(exception[b'indexer']))
+        return [(int(exception['indexer_id']), int(exception['season']), int(exception['indexer']))
                 for exception in scene_exceptions]
 
     result = []
     scene_exceptions = cache_db_con.select(
-        b'SELECT show_name, indexer, indexer_id, season '
-        b'FROM scene_exceptions'
+        'SELECT show_name, indexer, indexer_id, season '
+        'FROM scene_exceptions'
     )
 
     for exception in scene_exceptions:
-        indexer = int(exception[b'indexer'])
-        indexer_id = int(exception[b'indexer_id'])
-        season = int(exception[b'season'])
-        exception_name = exception[b'show_name']
+        indexer = int(exception['indexer'])
+        indexer_id = int(exception['indexer_id'])
+        season = int(exception['season'])
+        exception_name = exception['show_name']
 
         sanitized_name = helpers.sanitize_scene_name(exception_name)
         show_names = (
@@ -186,10 +183,10 @@ def update_scene_exceptions(series_obj, scene_exceptions, season=-1):
 
     cache_db_con = db.DBConnection('cache.db')
     cache_db_con.action(
-        b'DELETE FROM scene_exceptions '
-        b'WHERE indexer_id=? AND '
-        b'    season=? AND '
-        b'    indexer=?',
+        'DELETE FROM scene_exceptions '
+        'WHERE indexer_id=? AND '
+        '    season=? AND '
+        '    indexer=?',
         [series_obj.series_id, season, series_obj.indexer]
     )
 
@@ -199,7 +196,7 @@ def update_scene_exceptions(series_obj, scene_exceptions, season=-1):
     exceptions_cache[(series_obj.indexer, series_obj.series_id)].clear()
 
     decoded_scene_exceptions = (
-        exception.decode('utf-8')
+        exception
         for exception in scene_exceptions
     )
     for exception in decoded_scene_exceptions:
@@ -209,9 +206,9 @@ def update_scene_exceptions(series_obj, scene_exceptions, season=-1):
 
             # Add to db
             cache_db_con.action(
-                b'INSERT INTO scene_exceptions '
-                b'    (indexer, indexer_id, show_name, season)'
-                b'VALUES (?,?,?,?)',
+                'INSERT INTO scene_exceptions '
+                '    (indexer, indexer_id, show_name, season)'
+                'VALUES (?,?,?,?)',
                 [series_obj.indexer, series_obj.series_id, exception, season]
             )
 
@@ -247,21 +244,21 @@ def retrieve_exceptions(force=False, exception_type=None):
     for indexer in combined_exceptions:
         for indexer_id in combined_exceptions[indexer]:
             sql_ex = cache_db_con.select(
-                b'SELECT show_name, indexer '
-                b'FROM scene_exceptions '
-                b'WHERE indexer = ? AND '
-                b'    indexer_id = ?',
+                'SELECT show_name, indexer '
+                'FROM scene_exceptions '
+                'WHERE indexer = ? AND '
+                '    indexer_id = ?',
                 [indexer, indexer_id]
             )
-            existing_exceptions = [x[b'show_name'] for x in sql_ex]
+            existing_exceptions = [x['show_name'] for x in sql_ex]
 
             for exception_dict in combined_exceptions[indexer][indexer_id]:
-                for scene_exception, season in iteritems(exception_dict):
+                for scene_exception, season in exception_dict.items():
                     if scene_exception not in existing_exceptions:
                         queries.append([
-                            b'INSERT OR IGNORE INTO scene_exceptions'
-                            b'(indexer, indexer_id, show_name, season)'
-                            b'VALUES (?,?,?,?)',
+                            'INSERT OR IGNORE INTO scene_exceptions'
+                            '(indexer, indexer_id, show_name, season)'
+                            'VALUES (?,?,?,?)',
                             [indexer, indexer_id, scene_exception, season]
                         ])
     if queries:
@@ -285,8 +282,8 @@ def _get_custom_exceptions(force):
     custom_exceptions = defaultdict(dict)
 
     if force or should_refresh('custom_exceptions'):
-        for indexer in indexerApi().indexers:
-            location = indexerApi(indexer).config['scene_loc']
+        for indexer in IndexerAPI().indexers:
+            location = IndexerAPI(indexer).config['scene_loc']
             log.info('Checking for scene exception updates from {location}',
                      {'location': location})
             try:
@@ -303,7 +300,7 @@ def _get_custom_exceptions(force):
                 # If unable to get scene exceptions, assume we can't connect to CDN so we don't `continue`
                 return custom_exceptions
 
-            indexer_ids = jdata[indexerApi(indexer).config['identifier']]
+            indexer_ids = jdata[IndexerAPI(indexer).config['identifier']]
             for indexer_id in indexer_ids:
                 indexer_exceptions = indexer_ids[indexer_id]
                 alias_list = [{exception: int(season)}
@@ -325,8 +322,8 @@ def _get_xem_exceptions(force):
     }
 
     if force or should_refresh('xem'):
-        for indexer in indexerApi().indexers:
-            indexer_api = indexerApi(indexer)
+        for indexer in IndexerAPI().indexers:
+            indexer_api = IndexerAPI(indexer)
 
             try:
                 # Get XEM origin for indexer
@@ -376,7 +373,7 @@ def _get_xem_exceptions(force):
                 )
                 continue
 
-            for indexer_id, exceptions in iteritems(jdata['data']):
+            for indexer_id, exceptions in jdata['data'].items():
                 try:
                     xem_exceptions[indexer][indexer_id] = exceptions
                 except Exception as error:
@@ -430,7 +427,7 @@ def _get_anidb_exceptions(force):
 
                 if anime and anime.name != show.name:
                     series_id = int(show.series_id)
-                    exceptions[series_id] = [{anime.name.decode('utf-8'): -1}]
+                    exceptions[series_id] = [{anime.name: -1}]
 
         set_last_refresh('anidb')
 

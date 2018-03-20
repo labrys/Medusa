@@ -2,15 +2,13 @@
 
 """Episode tagger to extract information from episodes."""
 
-from __future__ import unicode_literals
-
 import re
 
 from medusa.helper.common import try_int
 from medusa.recompiled import tags
 
 
-class EpisodeTags(object):
+class EpisodeTags:
     """
     Quality tags.
     """

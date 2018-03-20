@@ -2,11 +2,8 @@
 
 """Provider code for Torrenting."""
 
-from __future__ import unicode_literals
-
 import logging
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -26,7 +23,7 @@ class TorrentingProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TorrentingProvider, self).__init__('Torrenting')
+        super().__init__('Torrenting')
 
         # URLs
         self.url = 'https://www.torrenting.com/'

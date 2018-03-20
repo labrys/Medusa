@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import datetime
 import json
@@ -11,7 +11,7 @@ import re
 from tornroutes import route
 
 from medusa import (
-    app, date_time, db, helpers, image_cache, network_timezones,
+    app, date_time, helpers, image_cache, network_timezones,
     subtitles, ui,
 )
 from medusa.common import (
@@ -19,6 +19,7 @@ from medusa.common import (
     Quality,
     SNATCHED,
 )
+from medusa.databases import db
 from medusa.helper.common import (
     episode_num,
     try_int,
@@ -44,67 +45,67 @@ log.addHandler(logging.NullHandler())
 @route('/manage(/?.*)')
 class Manage(Home, WebRoot):
     def __init__(self, *args, **kwargs):
-        super(Manage, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='manage.mako')
         return t.render(title='Mass Update', header='Mass Update', topmenu='manage', controller='manage', action='index')
 
     @staticmethod
-    def showEpisodeStatuses(indexername, seriesid, whichStatus):
-        status_list = [int(whichStatus)]
+    def show_episode_statuses(indexername, seriesid, which_status):
+        status_list = [int(which_status)]
         if status_list[0] == SNATCHED:
             status_list = Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_BEST
 
         main_db_con = db.DBConnection()
         cur_show_results = main_db_con.select(
-            b'SELECT season, episode, name '
-            b'FROM tv_episodes '
-            b'WHERE indexer = ? AND showid = ? '
-            b'AND season != 0 AND status IN ({statuses})'.format(
+            'SELECT season, episode, name '
+            'FROM tv_episodes '
+            'WHERE indexer = ? AND showid = ? '
+            'AND season != 0 AND status IN ({statuses})'.format(
                 statuses=','.join(['?'] * len(status_list))),
             [int(indexer_name_to_id(indexername)), int(seriesid)] + status_list
         )
 
         result = {}
         for cur_result in cur_show_results:
-            cur_season = int(cur_result[b'season'])
-            cur_episode = int(cur_result[b'episode'])
+            cur_season = int(cur_result['season'])
+            cur_episode = int(cur_result['episode'])
 
             if cur_season not in result:
                 result[cur_season] = {}
 
-            result[cur_season][cur_episode] = cur_result[b'name']
+            result[cur_season][cur_episode] = cur_result['name']
 
         return json.dumps(result)
 
-    def episodeStatuses(self, whichStatus=None):
-        if whichStatus:
-            status_list = [int(whichStatus)]
+    def episode_statuses(self, which_status=None):
+        if which_status:
+            status_list = [int(which_status)]
             if status_list[0] == SNATCHED:
                 status_list = Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_BEST
         else:
             status_list = []
 
-        t = PageTemplate(rh=self, filename='manage_episodeStatuses.mako')
+        t = PageTemplate(rh=self, filename='manage_episode_statuses.mako')
 
         # if we have no status then this is as far as we need to go
         if not status_list:
             return t.render(
                 title='Episode Overview', header='Episode Overview',
-                topmenu='manage', show_names=None, whichStatus=whichStatus,
+                topmenu='manage', show_names=None, which_status=which_status,
                 ep_counts=None, sorted_show_ids=None,
-                controller='manage', action='episodeStatuses')
+                controller='manage', action='episode_statuses')
 
         main_db_con = db.DBConnection()
         status_results = main_db_con.select(
-            b'SELECT show_name, tv_shows.indexer, tv_shows.show_id, tv_shows.indexer_id AS indexer_id '
-            b'FROM tv_episodes, tv_shows '
-            b'WHERE season != 0 '
-            b'AND tv_episodes.showid = tv_shows.indexer_id '
-            b'AND tv_episodes.indexer = tv_shows.indexer '
-            b'AND tv_episodes.status IN ({statuses}) '
-            b'ORDER BY show_name'.format(statuses=','.join(['?'] * len(status_list))),
+            'SELECT show_name, tv_shows.indexer, tv_shows.show_id, tv_shows.indexer_id AS indexer_id '
+            'FROM tv_episodes, tv_shows '
+            'WHERE season != 0 '
+            'AND tv_episodes.showid = tv_shows.indexer_id '
+            'AND tv_episodes.indexer = tv_shows.indexer '
+            'AND tv_episodes.status IN ({statuses}) '
+            'ORDER BY show_name'.format(statuses=','.join(['?'] * len(status_list))),
             status_list
         )
 
@@ -113,25 +114,25 @@ class Manage(Home, WebRoot):
         sorted_show_ids = []
 
         for cur_status_result in status_results:
-            cur_indexer = int(cur_status_result[b'indexer'])
-            cur_series_id = int(cur_status_result[b'indexer_id'])
+            cur_indexer = int(cur_status_result['indexer'])
+            cur_series_id = int(cur_status_result['indexer_id'])
             if (cur_indexer, cur_series_id) not in ep_counts:
                 ep_counts[(cur_indexer, cur_series_id)] = 1
             else:
                 ep_counts[(cur_indexer, cur_series_id)] += 1
 
-            show_names[(cur_indexer, cur_series_id)] = cur_status_result[b'show_name']
+            show_names[(cur_indexer, cur_series_id)] = cur_status_result['show_name']
             if (cur_indexer, cur_series_id) not in sorted_show_ids:
                 sorted_show_ids.append((cur_indexer, cur_series_id))
 
         return t.render(
             title='Episode Overview', header='Episode Overview',
-            topmenu='manage', whichStatus=whichStatus,
+            topmenu='manage', which_status=which_status,
             show_names=show_names, ep_counts=ep_counts, sorted_show_ids=sorted_show_ids,
-            controller='manage', action='episodeStatuses')
+            controller='manage', action='episode_statuses')
 
-    def changeEpisodeStatuses(self, oldStatus, newStatus, *args, **kwargs):
-        status_list = [int(oldStatus)]
+    def change_episode_statuses(self, old_status, new_status, *args, **kwargs):
+        status_list = [int(old_status)]
         if status_list[0] == SNATCHED:
             status_list = Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_BEST
 
@@ -156,46 +157,46 @@ class Manage(Home, WebRoot):
             # get a list of all the eps we want to change if they just said 'all'
             if 'all' in to_change[(cur_indexer_id, cur_series_id)]:
                 all_eps_results = main_db_con.select(
-                    b'SELECT season, episode '
-                    b'FROM tv_episodes '
-                    b'WHERE status IN ({statuses}) '
-                    b'AND season != 0 '
-                    b'AND indexer = ? '
-                    b'AND showid = ?'.format(statuses=','.join(['?'] * len(status_list))),
+                    'SELECT season, episode '
+                    'FROM tv_episodes '
+                    'WHERE status IN ({statuses}) '
+                    'AND season != 0 '
+                    'AND indexer = ? '
+                    'AND showid = ?'.format(statuses=','.join(['?'] * len(status_list))),
                     status_list + [cur_indexer_id, cur_series_id]
                 )
 
-                all_eps = ['{season}x{episode}'.format(season=x[b'season'], episode=x[b'episode']) for x in all_eps_results]
+                all_eps = ['{season}x{episode}'.format(season=x['season'], episode=x['episode']) for x in all_eps_results]
                 to_change[cur_indexer_id, cur_series_id] = all_eps
 
-            self.setStatus(indexer_id_to_name(int(cur_indexer_id)), cur_series_id, '|'.join(to_change[(cur_indexer_id, cur_series_id)]), newStatus, direct=True)
+            self.setStatus(indexer_id_to_name(int(cur_indexer_id)), cur_series_id, '|'.join(to_change[(cur_indexer_id, cur_series_id)]), new_status, direct=True)
 
-        return self.redirect('/manage/episodeStatuses/')
+        return self.redirect('/manage/episode_statuses/')
 
     @staticmethod
-    def showSubtitleMissed(indexer, seriesid, whichSubs):
+    def show_subtitle_missed(indexer, seriesid, which_subs):
         main_db_con = db.DBConnection()
         cur_show_results = main_db_con.select(
-            b'SELECT season, episode, name, subtitles '
-            b'FROM tv_episodes '
-            b'WHERE indexer = ? '
-            b'AND showid = ? '
-            b'AND season != 0 '
-            b'AND status LIKE \'%4\' '
-            b'AND location != \'\'',
+            'SELECT season, episode, name, subtitles '
+            'FROM tv_episodes '
+            'WHERE indexer = ? '
+            'AND showid = ? '
+            'AND season != 0 '
+            'AND status LIKE \'%4\' '
+            'AND location != \'\'',
             [int(indexer), int(seriesid)]
         )
 
         result = {}
         for cur_result in cur_show_results:
-            if whichSubs == 'all':
-                if not frozenset(subtitles.wanted_languages()).difference(cur_result[b'subtitles'].split(',')):
+            if which_subs == 'all':
+                if not frozenset(subtitles.wanted_languages()).difference(cur_result['subtitles'].split(',')):
                     continue
-            elif whichSubs in cur_result[b'subtitles']:
+            elif which_subs in cur_result['subtitles']:
                 continue
 
-            cur_season = int(cur_result[b'season'])
-            cur_episode = int(cur_result[b'episode'])
+            cur_season = int(cur_result['season'])
+            cur_episode = int(cur_result['episode'])
 
             if cur_season not in result:
                 result[cur_season] = {}
@@ -203,63 +204,63 @@ class Manage(Home, WebRoot):
             if cur_episode not in result[cur_season]:
                 result[cur_season][cur_episode] = {}
 
-            result[cur_season][cur_episode]['name'] = cur_result[b'name']
-            result[cur_season][cur_episode]['subtitles'] = cur_result[b'subtitles']
+            result[cur_season][cur_episode]['name'] = cur_result['name']
+            result[cur_season][cur_episode]['subtitles'] = cur_result['subtitles']
 
         return json.dumps(result)
 
-    def subtitleMissed(self, whichSubs=None):
-        t = PageTemplate(rh=self, filename='manage_subtitleMissed.mako')
+    def subtitle_missed(self, which_subs=None):
+        t = PageTemplate(rh=self, filename='manage_subtitle_missed.mako')
 
-        if not whichSubs:
-            return t.render(whichSubs=whichSubs, title='Missing Subtitles',
+        if not which_subs:
+            return t.render(whichSubs=which_subs, title='Missing Subtitles',
                             header='Missing Subtitles', topmenu='manage',
                             show_names=None, ep_counts=None, sorted_show_ids=None,
-                            controller='manage', action='subtitleMissed')
+                            controller='manage', action='subtitle_missed')
 
         main_db_con = db.DBConnection()
         status_results = main_db_con.select(
-            b'SELECT show_name, tv_shows.show_id, tv_shows.indexer, '
-            b'tv_shows.indexer_id as indexer_id, tv_episodes.subtitles subtitles '
-            b'FROM tv_episodes, tv_shows '
-            b'WHERE tv_shows.subtitles = 1 '
-            b'AND tv_episodes.status LIKE \'%4\' '
-            b'AND tv_episodes.season != 0 '
-            b'AND tv_episodes.location != \'\' '
-            b'AND tv_episodes.showid = tv_shows.indexer_id '
-            b'AND tv_episodes.indexer = tv_shows.indexer '
-            b'ORDER BY show_name'
+            'SELECT show_name, tv_shows.show_id, tv_shows.indexer, '
+            'tv_shows.indexer_id as indexer_id, tv_episodes.subtitles subtitles '
+            'FROM tv_episodes, tv_shows '
+            'WHERE tv_shows.subtitles = 1 '
+            'AND tv_episodes.status LIKE \'%4\' '
+            'AND tv_episodes.season != 0 '
+            'AND tv_episodes.location != \'\' '
+            'AND tv_episodes.showid = tv_shows.indexer_id '
+            'AND tv_episodes.indexer = tv_shows.indexer '
+            'ORDER BY show_name'
         )
 
         ep_counts = {}
         show_names = {}
         sorted_show_ids = []
         for cur_status_result in status_results:
-            if whichSubs == 'all':
-                if not frozenset(subtitles.wanted_languages()).difference(cur_status_result[b'subtitles'].split(',')):
+            if which_subs == 'all':
+                if not frozenset(subtitles.wanted_languages()).difference(cur_status_result['subtitles'].split(',')):
                     continue
-            elif whichSubs in cur_status_result[b'subtitles']:
+            elif which_subs in cur_status_result['subtitles']:
                 continue
 
             # FIXME: This will cause multi-indexer results where series_id overlaps for different indexers.
             # Fix by using tv_shows.show_id in stead.
 
-            cur_indexer_id = int(cur_status_result[b'indexer'])
-            cur_series_id = int(cur_status_result[b'indexer_id'])
+            cur_indexer_id = int(cur_status_result['indexer'])
+            cur_series_id = int(cur_status_result['indexer_id'])
             if (cur_indexer_id, cur_series_id) not in ep_counts:
                 ep_counts[(cur_indexer_id, cur_series_id)] = 1
             else:
                 ep_counts[(cur_indexer_id, cur_series_id)] += 1
 
-            show_names[(cur_indexer_id, cur_series_id)] = cur_status_result[b'show_name']
+            show_names[(cur_indexer_id, cur_series_id)] = cur_status_result['show_name']
             if (cur_indexer_id, cur_series_id) not in sorted_show_ids:
                 sorted_show_ids.append((cur_indexer_id, cur_series_id))
 
-        return t.render(whichSubs=whichSubs, show_names=show_names, ep_counts=ep_counts, sorted_show_ids=sorted_show_ids,
+        return t.render(whichSubs=which_subs, show_names=show_names, ep_counts=ep_counts, sorted_show_ids=sorted_show_ids,
                         title='Missing Subtitles', header='Missing Subtitles', topmenu='manage',
-                        controller='manage', action='subtitleMissed')
+                        controller='manage', action='subtitle_missed')
 
-    def downloadSubtitleMissed(self, *args, **kwargs):
+    def download_subtitle_missed(self, *args, **kwargs):
         to_download = {}
 
         # make a list of all shows and their associated args
@@ -280,16 +281,16 @@ class Manage(Home, WebRoot):
             if 'all' in to_download[(cur_indexer_id, cur_series_id)]:
                 main_db_con = db.DBConnection()
                 all_eps_results = main_db_con.select(
-                    b'SELECT season, episode '
-                    b'FROM tv_episodes '
-                    b'WHERE status LIKE \'%4\' '
-                    b'AND season != 0 '
-                    b'AND indexer = ? '
-                    b'AND showid = ? '
-                    b'AND location != \'\'',
+                    'SELECT season, episode '
+                    'FROM tv_episodes '
+                    'WHERE status LIKE \'%4\' '
+                    'AND season != 0 '
+                    'AND indexer = ? '
+                    'AND showid = ? '
+                    'AND location != \'\'',
                     [cur_indexer_id, cur_series_id]
                 )
-                to_download[(cur_indexer_id, cur_series_id)] = [str(x[b'season']) + 'x' + str(x[b'episode']) for x in all_eps_results]
+                to_download[(cur_indexer_id, cur_series_id)] = [str(x['season']) + 'x' + str(x['episode']) for x in all_eps_results]
 
             for epResult in to_download[(cur_indexer_id, cur_series_id)]:
                 season, episode = epResult.split('x')
@@ -297,10 +298,10 @@ class Manage(Home, WebRoot):
                 series_obj = Show.find_by_id(app.showList, cur_indexer_id, cur_series_id)
                 series_obj.get_episode(season, episode).download_subtitles()
 
-        return self.redirect('/manage/subtitleMissed/')
+        return self.redirect('/manage/subtitle_missed/')
 
-    def subtitleMissedPP(self):
-        t = PageTemplate(rh=self, filename='manage_subtitleMissedPP.mako')
+    def subtitle_missed_pp(self):
+        t = PageTemplate(rh=self, filename='manage_subtitle_missed_pp.mako')
         app.RELEASES_IN_PP = []
         for root, _, files in os.walk(app.TV_DOWNLOAD_DIR, topdown=False):
             # Skip folders that are being used for unpacking
@@ -355,19 +356,19 @@ class Manage(Home, WebRoot):
 
         return t.render(releases_in_pp=app.RELEASES_IN_PP, title='Missing Subtitles in Post-Process folder',
                         header='Missing Subtitles in Post Process folder', topmenu='manage',
-                        controller='manage', action='subtitleMissedPP')
+                        controller='manage', action='subtitle_missed_pp')
 
-    def backlogShow(self, indexername, seriesid):
+    def backlog_show(self, indexername, seriesid):
         indexer_id = indexer_name_to_id(indexername)
         series_obj = Show.find_by_id(app.showList, indexer_id, seriesid)
 
         if series_obj:
             app.backlog_search_scheduler.action.search_backlog([series_obj])
 
-        return self.redirect('/manage/backlogOverview/')
+        return self.redirect('/manage/backlog_overview/')
 
-    def backlogOverview(self):
-        t = PageTemplate(rh=self, filename='manage_backlogOverview.mako')
+    def backlog_overview(self):
+        t = PageTemplate(rh=self, filename='manage_backlog_overview.mako')
 
         show_counts = {}
         show_cats = {}
@@ -414,29 +415,29 @@ class Manage(Home, WebRoot):
             filtered_episodes = []
             backlogged_episodes = [dict(row) for row in sql_results]
             for cur_result in backlogged_episodes:
-                cur_ep_cat = cur_show.get_overview(cur_result[b'status'], backlog_mode=True,
-                                                   manually_searched=cur_result[b'manually_searched'])
+                cur_ep_cat = cur_show.get_overview(cur_result['status'], backlog_mode=True,
+                                                   manually_searched=cur_result['manually_searched'])
                 if cur_ep_cat:
-                    if cur_ep_cat in selected_backlog_status and cur_result[b'airdate'] != 1:
-                        air_date = datetime.datetime.fromordinal(cur_result[b'airdate'])
+                    if cur_ep_cat in selected_backlog_status and cur_result['airdate'] != 1:
+                        air_date = datetime.datetime.fromordinal(cur_result['airdate'])
                         if air_date.year >= 1970 or cur_show.network:
                             air_date = date_time.DateTime.convert_to_setting(
-                                network_timezones.parse_date_time(cur_result[b'airdate'],
+                                network_timezones.parse_date_time(cur_result['airdate'],
                                                                   cur_show.airs,
                                                                   cur_show.network))
                             if backlog_period and air_date < datetime.datetime.now(app_timezone) - backlog_period:
                                 continue
                         else:
                             air_date = None
-                        episode_string = u'{ep}'.format(ep=(episode_num(cur_result[b'season'],
-                                                                        cur_result[b'episode']) or
-                                                            episode_num(cur_result[b'season'],
-                                                                        cur_result[b'episode'],
+                        episode_string = u'{ep}'.format(ep=(episode_num(cur_result['season'],
+                                                                        cur_result['episode']) or
+                                                            episode_num(cur_result['season'],
+                                                                        cur_result['episode'],
                                                                         numbering='absolute')))
                         ep_cats[episode_string] = cur_ep_cat
                         ep_counts[cur_ep_cat] += 1
-                        cur_result[b'airdate'] = air_date
-                        cur_result[b'episode_string'] = episode_string
+                        cur_result['airdate'] = air_date
+                        cur_result['episode_string'] = episode_string
                         filtered_episodes.append(cur_result)
 
             show_counts[(cur_show.indexer, cur_show.series_id)] = ep_counts
@@ -446,16 +447,16 @@ class Manage(Home, WebRoot):
         return t.render(
             showCounts=show_counts, showCats=show_cats,
             showSQLResults=show_sql_results, controller='manage',
-            action='backlogOverview', title='Backlog Overview',
+            action='backlog_overview', title='Backlog Overview',
             header='Backlog Overview', topmenu='manage')
 
-    def massEdit(self, toEdit=None):
-        t = PageTemplate(rh=self, filename='manage_massEdit.mako')
+    def mass_edit(self, to_edit=None):
+        t = PageTemplate(rh=self, filename='manage_mass_edit.mako')
 
-        if not toEdit:
+        if not to_edit:
             return self.redirect('/manage/')
 
-        series_slugs = toEdit.split('|')
+        series_slugs = to_edit.split('|')
         show_list = []
         show_names = []
         for slug in series_slugs:
@@ -579,15 +580,15 @@ class Manage(Home, WebRoot):
         dvd_order_value = last_dvd_order if dvd_order_all_same else None
         root_dir_list = root_dir_list
 
-        return t.render(showList=toEdit, showNames=show_names, default_ep_status_value=default_ep_status_value, dvd_order_value=dvd_order_value,
+        return t.render(showList=to_edit, showNames=show_names, default_ep_status_value=default_ep_status_value, dvd_order_value=dvd_order_value,
                         paused_value=paused_value, anime_value=anime_value, flatten_folders_value=flatten_folders_value,
                         quality_value=quality_value, subtitles_value=subtitles_value, scene_value=scene_value, sports_value=sports_value,
                         air_by_date_value=air_by_date_value, root_dir_list=root_dir_list, title='Mass Edit', header='Mass Edit', topmenu='manage')
 
-    def massEditSubmit(self, paused=None, default_ep_status=None, dvd_order=None,
-                       anime=None, sports=None, scene=None, flatten_folders=None, quality_preset=None,
-                       subtitles=None, air_by_date=None, allowed_qualities=None, preferred_qualities=None, toEdit=None, *args,
-                       **kwargs):
+    def mass_edit_submit(self, paused=None, default_ep_status=None, dvd_order=None,
+                         anime=None, sports=None, scene=None, flatten_folders=None, quality_preset=None,
+                         subtitles=None, air_by_date=None, allowed_qualities=None, preferred_qualities=None, to_edit=None, *args,
+                         **kwargs):
         allowed_qualities = allowed_qualities or []
         preferred_qualities = preferred_qualities or []
 
@@ -599,7 +600,7 @@ class Manage(Home, WebRoot):
             end_dir = kwargs['new_root_dir_{index}'.format(index=which_index)]
             dir_map[kwargs[cur_arg]] = end_dir
 
-        series_slugs = toEdit.split('|') if toEdit else []
+        series_slugs = to_edit.split('|') if to_edit else []
         errors = 0
         for series_slug in series_slugs:
             identifier = SeriesIdentifier.from_slug(series_slug)
@@ -677,31 +678,31 @@ class Manage(Home, WebRoot):
 
             exceptions_list = []
 
-            errors += self.editShow(identifier.indexer.slug, identifier.id, new_show_dir, allowed_qualities,
-                                    preferred_qualities, exceptions_list,
-                                    defaultEpStatus=new_default_ep_status,
-                                    flatten_folders=new_flatten_folders,
-                                    paused=new_paused, sports=new_sports, dvd_order=new_dvd_order,
-                                    subtitles=new_subtitles, anime=new_anime,
-                                    scene=new_scene, air_by_date=new_air_by_date,
-                                    directCall=True)
+            errors += self.edit_series(identifier.indexer.slug, identifier.id, new_show_dir, allowed_qualities,
+                                       preferred_qualities, exceptions_list,
+                                       default_ep_status=new_default_ep_status,
+                                       flatten_folders=new_flatten_folders,
+                                       paused=new_paused, sports=new_sports, dvd_order=new_dvd_order,
+                                       subtitles=new_subtitles, anime=new_anime,
+                                       scene=new_scene, air_by_date=new_air_by_date,
+                                       direct_call=True)
 
         if errors:
             ui.notifications.error('Errors', '{num} error{s} while saving changes. Please check logs'.format
-                                   (num=errors, s='s' if errors > 1 else ''))
+            (num=errors, s='s' if errors > 1 else ''))
 
         return self.redirect('/manage/')
 
-    def massUpdate(self, toUpdate=None, toRefresh=None, toRename=None, toDelete=None, toRemove=None, toMetadata=None,
-                   toSubtitle=None, toImageUpdate=None):
-        to_update = toUpdate.split('|') if toUpdate else []
-        to_refresh = toRefresh.split('|') if toRefresh else []
-        to_rename = toRename.split('|') if toRename else []
-        to_subtitle = toSubtitle.split('|') if toSubtitle else []
-        to_delete = toDelete.split('|') if toDelete else []
-        to_remove = toRemove.split('|') if toRemove else []
-        to_metadata = toMetadata.split('|') if toMetadata else []
-        to_image_update = toImageUpdate.split('|') if toImageUpdate else []
+    def mass_update(self, to_update=None, to_refresh=None, to_rename=None, to_delete=None, to_remove=None, to_metadata=None,
+                    to_subtitle=None, to_image_update=None):
+        to_update = to_update.split('|') if to_update else []
+        to_refresh = to_refresh.split('|') if to_refresh else []
+        to_rename = to_rename.split('|') if to_rename else []
+        to_subtitle = to_subtitle.split('|') if to_subtitle else []
+        to_delete = to_delete.split('|') if to_delete else []
+        to_remove = to_remove.split('|') if to_remove else []
+        to_metadata = to_metadata.split('|') if to_metadata else []
+        to_image_update = to_image_update.split('|') if to_image_update else []
 
         errors = []
         refreshes = []
@@ -768,7 +769,7 @@ class Manage(Home, WebRoot):
 
         return self.redirect('/manage/')
 
-    def manageTorrents(self):
+    def manage_torrents(self):
         if re.search('localhost', app.TORRENT_HOST):
 
             if app.LOCALHOST_IP == '':
@@ -788,37 +789,37 @@ class Manage(Home, WebRoot):
 
         return self.redirect(webui_url)
 
-    def failedDownloads(self, limit=100, toRemove=None):
+    def failed_downloads(self, limit=100, to_remove=None):
         failed_db_con = db.DBConnection('failed.db')
 
         if int(limit):
             sql_results = failed_db_con.select(
-                b'SELECT * '
-                b'FROM failed '
-                b'LIMIT ?',
+                'SELECT * '
+                'FROM failed '
+                'LIMIT ?',
                 [limit]
             )
         else:
             sql_results = failed_db_con.select(
-                b'SELECT * '
-                b'FROM failed'
+                'SELECT * '
+                'FROM failed'
             )
         sql_results = sql_results[::-1]
 
-        to_remove = toRemove.split('|') if toRemove is not None else []
+        to_remove = to_remove.split('|') if to_remove is not None else []
         for release in to_remove:
             failed_db_con.action(
-                b'DELETE FROM failed '
-                b'WHERE failed.release = ?',
+                'DELETE FROM failed '
+                'WHERE failed.release = ?',
                 [release]
             )
 
         if to_remove:
-            return self.redirect('/manage/failedDownloads/')
+            return self.redirect('/manage/failed_downloads/')
 
-        t = PageTemplate(rh=self, filename='manage_failedDownloads.mako')
+        t = PageTemplate(rh=self, filename='manage_failed_downloads.mako')
 
         return t.render(limit=limit, failedResults=sql_results,
                         title='Failed Downloads', header='Failed Downloads',
                         topmenu='manage', controller='manage',
-                        action='failedDownloads')
+                        action='failed_downloads')

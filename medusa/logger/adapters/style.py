@@ -2,20 +2,16 @@
 
 """Style Adapters for Python logging."""
 
-from __future__ import unicode_literals
-
 import collections
 import functools
 import logging
 import traceback
 
-from six import text_type
-
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-class BraceMessage(object):
+class BraceMessage:
     """Lazily convert a Brace-formatted message."""
 
     def __init__(self, msg, *args, **kwargs):
@@ -56,7 +52,7 @@ class BraceMessage(object):
         sep = ', '
         kw_repr = '{key}={value!r}'
         name = self.__class__.__name__
-        args = sep.join(map(text_type, self.args))
+        args = sep.join(self.args)
         kwargs = sep.join(kw_repr.format(key=k, value=v)
                           for k, v in self.kwargs.items())
         return '{cls}({args})'.format(
@@ -74,7 +70,7 @@ class BraceAdapter(logging.LoggerAdapter):
 
     def __init__(self, logger, extra=None):
         """Initialize the Brace adapter with a logger."""
-        super(BraceAdapter, self).__init__(logger, extra)
+        super().__init__(logger, extra)
         self.debug = functools.partial(self.log, logging.DEBUG)
         self.info = functools.partial(self.log, logging.INFO)
         self.warning = functools.partial(self.log, logging.WARNING)

@@ -2,15 +2,12 @@
 
 """Provider code for TNTVillage."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import parse_qs, urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
-from six.moves.urllib_parse import parse_qs
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -31,7 +28,7 @@ class TNTVillageProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TNTVillageProvider, self).__init__('TNTVillage')
+        super().__init__('TNTVillage')
 
         # Credentials
         self.username = None

@@ -3,13 +3,11 @@
 
 import os
 
-from six import text_type
-
 from medusa.helper.common import replace_extension
 from medusa.metadata import kodi_12plus
 
 
-class KODIMetadata(kodi_12plus.KODI_12PlusMetadata):
+class KODIMetadata(kodi_12plus.KODI12PlusMetadata):
     """
     Metadata generation class for KODI (legacy).
 
@@ -37,7 +35,7 @@ class KODIMetadata(kodi_12plus.KODI_12PlusMetadata):
                  season_banners=False,
                  season_all_poster=False,
                  season_all_banner=False):
-        super(KODIMetadata, self).__init__(show_metadata,
+        super().__init__(show_metadata,
                                            episode_metadata,
                                            fanart,
                                            poster,
@@ -99,7 +97,7 @@ class KODIMetadata(kodi_12plus.KODI_12PlusMetadata):
         if season == 0:
             season_poster_filename = 'season-specials'
         else:
-            season_poster_filename = 'season' + text_type(season).zfill(2)
+            season_poster_filename = 'season' + season.zfill(2)
 
         return os.path.join(show_obj.location, season_poster_filename + '.tbn')
 

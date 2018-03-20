@@ -5,8 +5,6 @@ Authentication Handlers:
 Login, Logout and API key
 """
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
 
@@ -30,7 +28,7 @@ class KeyHandler(RequestHandler):
     """Handler for API Keys."""
 
     def __init__(self, *args, **kwargs):
-        super(KeyHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get(self, *args, **kwargs):
         """

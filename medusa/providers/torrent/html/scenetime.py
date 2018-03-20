@@ -2,13 +2,10 @@
 
 """Provider code for SceneTime."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -28,7 +25,7 @@ class SceneTimeProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(SceneTimeProvider, self).__init__('SceneTime')
+        super().__init__('SceneTime')
 
         # URLs
         self.url = 'https://www.scenetime.com'

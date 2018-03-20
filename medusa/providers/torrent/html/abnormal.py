@@ -2,13 +2,11 @@
 
 """Provider code for Abnormal."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -29,7 +27,7 @@ class ABNormalProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(ABNormalProvider, self).__init__('ABNormal')
+        super().__init__('ABNormal')
 
         # Credentials
         self.username = None

@@ -2,13 +2,11 @@
 
 """Provider code for AlphaRatio."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -29,7 +27,7 @@ class AlphaRatioProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(AlphaRatioProvider, self).__init__('AlphaRatio')
+        super().__init__('AlphaRatio')
 
         # Credentials
         self.username = None

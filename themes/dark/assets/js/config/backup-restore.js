@@ -2,9 +2,9 @@ MEDUSA.config.backupRestore = function() {
     $('#Backup').on('click', () => {
         $('#Backup').prop('disabled', true);
         $('#Backup-result').html(MEDUSA.config.loading);
-        const backupDir = $('#backupDir').val();
+        const backup_dir = $('#backup_dir').val();
         $.get('config/backuprestore/backup', {
-            backupDir
+            backup_dir
         }).done(data => {
             $('#Backup-result').html(data);
             $('#Backup').prop('disabled', false);
@@ -22,7 +22,7 @@ MEDUSA.config.backupRestore = function() {
         });
     });
 
-    $('#backupDir').fileBrowser({
+    $('#backup_dir').fileBrowser({
         title: 'Select backup folder to save to',
         key: 'backupPath'
     });

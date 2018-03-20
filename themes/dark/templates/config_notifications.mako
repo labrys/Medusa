@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     import re
@@ -5,7 +13,7 @@
     from medusa.helpers import anon_url
     from medusa.common import SKIPPED, WANTED, UNAIRED, ARCHIVED, IGNORED, SNATCHED, SNATCHED_PROPER, SNATCHED_BEST, FAILED
     from medusa.common import Quality, qualityPresets, statusStrings, qualityPresetStrings, cpu_presets, MULTI_EP_STRINGS
-    from medusa.indexers.api import indexerApi
+    from medusa.indexers.api import IndexerAPI
     from medusa.indexers.utils import get_trakt_indexer
 %>
 <%block name="content">
@@ -16,7 +24,7 @@
 % endif
 <div id="config">
     <div id="config-content">
-        <form id="configForm" action="config/notifications/saveNotifications" method="post">
+        <form id="configForm" action="config/notifications/save_notifications" method="post">
             <div id="config-components">
                 <ul>
                     ## @TODO: Fix this stupid hack
@@ -1566,7 +1574,7 @@
                                         <span class="component-title">Default indexer</span>
                                         <span class="component-desc">
                                             <select id="trakt_default_indexer" name="trakt_default_indexer" class="form-control input-sm">
-                                                <% indexers = indexerApi().indexers %>
+                                                <% indexers = IndexerAPI().indexers %>
                                                 % for indexer in indexers:
                                                     <%
                                                         if not get_trakt_indexer(indexer):

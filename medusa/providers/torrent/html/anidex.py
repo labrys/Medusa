@@ -2,12 +2,9 @@
 
 """Provider code for AniDex."""
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -24,7 +21,7 @@ class AniDexProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(AniDexProvider, self).__init__('AniDex')
+        super().__init__('AniDex')
 
         # Credentials
         self.public = True

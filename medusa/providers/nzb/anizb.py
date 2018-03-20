@@ -2,12 +2,9 @@
 
 """Provider code for Anizb provider."""
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -24,7 +21,7 @@ class Anizb(NZBProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(Anizb, self).__init__('Anizb')
+        super().__init__('Anizb')
 
         # Credentials
         self.public = True

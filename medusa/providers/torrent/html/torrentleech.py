@@ -2,11 +2,9 @@
 
 """Provider code for TorrentLeech."""
 
-from __future__ import unicode_literals
-
 import logging
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -26,7 +24,7 @@ class TorrentLeechProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TorrentLeechProvider, self).__init__('TorrentLeech')
+        super().__init__('TorrentLeech')
 
         # Credentials
         self.username = None
@@ -105,6 +103,7 @@ class TorrentLeechProvider(TorrentProvider):
 
         :return: A list of items found
         """
+
         def process_column_header(td):
             result = ''
             if td.a:

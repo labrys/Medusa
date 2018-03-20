@@ -1,6 +1,6 @@
 # coding=utf-8
 """Handle the requests fro /token."""
-from __future__ import unicode_literals
+
 
 from tornado.web import authenticated
 
@@ -13,7 +13,7 @@ class TokenHandler(BaseHandler):
 
     def __init__(self, *args, **kwargs):
         """Initialize token handler."""
-        super(TokenHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @authenticated
     def get(self, *args, **kwargs):

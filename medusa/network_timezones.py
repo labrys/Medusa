@@ -1,12 +1,12 @@
+# coding=utf-8
 import datetime
 import logging
 import re
 
 from dateutil import tz
-from six import iteritems
 
-from medusa import db
-from medusa.app import BASE_PYMEDUSA_URL
+from medusa.app import GITHUB_IO_URL
+from medusa.databases import db
 from medusa.helper.common import try_int
 from medusa.session.core import MedusaSafeSession
 
@@ -32,7 +32,7 @@ session = MedusaSafeSession()
 def update_network_dict():
     """Update timezone information from Medusa repositories."""
     log.debug(u'Started updating network timezones')
-    url = '{base_url}/sb_network_timezones/network_timezones.txt'.format(base_url=BASE_PYMEDUSA_URL)
+    url = '{base_url}/sb_network_timezones/network_timezones.txt'.format(base_url=GITHUB_IO_URL)
     response = session.get(url)
     if not response or not response.text:
         log.info(u'Updating network timezones failed, this can happen from time to time. URL: %s' % url)
@@ -60,7 +60,7 @@ def update_network_dict():
     network_list = dict(cache_db_con.select('SELECT * FROM network_timezones;'))
 
     queries = []
-    for network, timezone in iteritems(remote_networks):
+    for network, timezone in remote_networks.items():
         existing = network in network_list
         if not existing:
             queries.append(['INSERT OR IGNORE INTO network_timezones VALUES (?,?);', [network, timezone]])
@@ -162,4 +162,9 @@ def parse_date_time(d, t, network):
 
 
 def test_timeformat(time_string):
+    """
+
+    :param time_string:
+    :return:
+    """
     return time_regex.search(time_string) is not None

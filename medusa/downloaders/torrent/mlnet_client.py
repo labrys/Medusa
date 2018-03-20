@@ -2,8 +2,6 @@
 
 """MLDonkey Client."""
 
-from __future__ import unicode_literals
-
 from medusa.downloaders.torrent.generic import GenericClient
 
 
@@ -20,7 +18,7 @@ class MLNetAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(MLNetAPI, self).__init__('mlnet', host, username, password)
+        super().__init__('mlnet', host, username, password)
         self.url = self.host
         # self.session.auth = HTTPDigestAuth(self.username, self.password);
 

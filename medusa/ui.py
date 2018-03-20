@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import json
 
@@ -8,7 +9,7 @@ MESSAGE = 'notice'
 ERROR = 'error'
 
 
-class Notifications(object):
+class Notifications:
     """A queue of Notification objects."""
 
     def __init__(self):
@@ -64,7 +65,7 @@ class Notifications(object):
 notifications = Notifications()
 
 
-class Notification(object):
+class Notification:
     """Represents a single notification. Tracks its own timeout and a list of which clients have seen it before."""
 
     def __init__(self, title, message='', notification_type=None, timeout=None):
@@ -100,21 +101,30 @@ class Notification(object):
         return self
 
 
-class ProgressIndicator(object):
+class ProgressIndicator:
 
-    def __init__(self, percentComplete=0, currentStatus=None):
-        self.percentComplete = percentComplete
-        self.currentStatus = currentStatus or {'title': ''}
+    """
+
+    """
+
+    def __init__(self, percent_complete=0, current_status=None):
+        self.percentComplete = percent_complete
+        self.currentStatus = current_status or {'title': ''}
 
 
-class ProgressIndicators(object):
-    _pi = {'massUpdate': [],
+class ProgressIndicators:
+    _pi = {'mass_update': [],
            'massAdd': [],
            'dailyUpdate': []
            }
 
     @staticmethod
     def get_indicator(name):
+        """
+
+        :param name:
+        :return:
+        """
         if name not in ProgressIndicators._pi:
             return []
 
@@ -128,26 +138,47 @@ class ProgressIndicators(object):
 
     @staticmethod
     def set_indicator(name, indicator):
+        """
+
+        :param name:
+        :param indicator:
+        """
         ProgressIndicators._pi[name].append(indicator)
 
 
-class QueueProgressIndicator(object):
+class QueueProgressIndicator:
     """A class used by the UI to show the progress of the queue or a part of it."""
 
-    def __init__(self, name, queueItemList):
-        self.queueItemList = queueItemList
+    def __init__(self, name, queue_item_list):
+        self.queueItemList = queue_item_list
         self.name = name
 
     def num_total(self):
+        """
+
+        :return:
+        """
         return len(self.queueItemList)
 
     def num_finished(self):
+        """
+
+        :return:
+        """
         return len([x for x in self.queueItemList if not x.is_in_queue()])
 
     def num_remaining(self):
+        """
+
+        :return:
+        """
         return len([x for x in self.queueItemList if x.is_in_queue()])
 
     def next_name(self):
+        """
+
+        :return:
+        """
         for curItem in [app.show_queue_scheduler.action.currentItem] + app.show_queue_scheduler.action.queue:  # @UndefinedVariable
             if curItem in self.queueItemList:
                 return curItem.name
@@ -155,16 +186,24 @@ class QueueProgressIndicator(object):
         return "Unknown"
 
     def percent_complete(self):
-        numFinished = self.num_finished()
-        numTotal = self.num_total()
+        """
 
-        if numTotal == 0:
+        :return:
+        """
+        num_finished = self.num_finished()
+        num_total = self.num_total()
+
+        if num_total == 0:
             return 0
         else:
-            return int(float(numFinished) / float(numTotal) * 100)
+            return int(float(num_finished) / float(num_total) * 100)
 
 
-class LoadingTVShow(object):
+class LoadingTVShow:
+    """
+
+    """
+
     def __init__(self, show_dir):
         self.show_dir = show_dir
         self.series = None

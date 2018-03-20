@@ -1,7 +1,7 @@
 """Trakt notifier module."""
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -19,7 +19,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     """A "notifier" for trakt.tv which keeps track of what has and hasn't been added to your library."""
 
     def notify_snatch(self, ep_name, is_proper):

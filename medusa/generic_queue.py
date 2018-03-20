@@ -7,13 +7,17 @@ import threading
 log = logging.getLogger()
 
 
-class QueuePriorities(object):
+class QueuePriorities:
     LOW = 10
     NORMAL = 20
     HIGH = 30
 
 
-class GenericQueue(object):
+class GenericQueue:
+    """
+
+    """
+
     def __init__(self):
         self.currentItem = None
         self.queue = []
@@ -66,21 +70,13 @@ class GenericQueue(object):
                 if self.queue:
 
                     # sort by priority
-                    def sorter(x, y):
+                    def sorter(x):
                         """
                         Sorts by priority descending then time ascending.
                         """
-                        if x.priority == y.priority:
-                            if y.added == x.added:
-                                return 0
-                            elif y.added < x.added:
-                                return 1
-                            elif y.added > x.added:
-                                return -1
-                        else:
-                            return y.priority - x.priority
+                        return x.priority, x.added
 
-                    self.queue.sort(cmp=sorter)
+                    self.queue.sort(key=sorter)
                     if self.queue[0].priority < self.min_priority:
                         return
 
@@ -96,8 +92,12 @@ class GenericQueue(object):
 
 
 class QueueItem(threading.Thread):
+    """
+
+    """
+
     def __init__(self, name, action_id=0):
-        super(QueueItem, self).__init__()
+        super().__init__()
         self.name = name.replace(" ", "-").upper()
         self.inProgress = False
         self.priority = QueuePriorities.NORMAL

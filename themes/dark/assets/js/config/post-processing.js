@@ -1,4 +1,4 @@
-MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
+MEDUSA.config.post_processing = function() { // eslint-disable-line max-lines
     $('#config-components').tabs();
     $('#tv_download_dir').fileBrowser({
         title: 'Select TV Download Directory'
@@ -14,7 +14,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
     })();
 
     function isRarSupported() {
-        $.get('config/postProcessing/isRarSupported', data => {
+        $.get('config/post_processing/is_rar_supported', data => {
             if (data !== 'supported') {
                 $('#unpack').qtip('option', {
                     'content.text': 'Unrar Executable not found.',
@@ -33,7 +33,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
         example.multi = $('#naming_multi_ep :selected').val();
         example.animeType = $('input[name="naming_anime"]:checked').val();
 
-        $.get('config/postProcessing/testNaming', {
+        $.get('config/post_processing/test_naming', {
             pattern: example.pattern,
             anime_type: 3 // eslint-disable-line camelcase
         }, data => {
@@ -45,7 +45,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
             }
         });
 
-        $.get('config/postProcessing/testNaming', {
+        $.get('config/post_processing/test_naming', {
             pattern: example.pattern,
             multi: example.multi,
             anime_type: 3 // eslint-disable-line camelcase
@@ -58,7 +58,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
             }
         });
 
-        $.get('config/postProcessing/isNamingValid', {
+        $.get('config/post_processing/is_naming_valid', {
             pattern: example.pattern,
             multi: example.multi,
             anime_type: example.animeType // eslint-disable-line camelcase
@@ -91,7 +91,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
     function fillAbdExamples() {
         const pattern = $('#naming_abd_pattern').val();
 
-        $.get('config/postProcessing/testNaming', {
+        $.get('config/post_processing/test_naming', {
             pattern,
             abd: 'True'
         }, data => {
@@ -103,7 +103,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
             }
         });
 
-        $.get('config/postProcessing/isNamingValid', {
+        $.get('config/post_processing/is_naming_valid', {
             pattern,
             abd: 'True'
         }, data => {
@@ -135,7 +135,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
     function fillSportsExamples() {
         const pattern = $('#naming_sports_pattern').val();
 
-        $.get('config/postProcessing/testNaming', {
+        $.get('config/post_processing/test_naming', {
             pattern,
             sports: 'True' // @TODO does this actually need to be a string or can it be a boolean?
         }, data => {
@@ -147,7 +147,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
             }
         });
 
-        $.get('config/postProcessing/isNamingValid', {
+        $.get('config/post_processing/is_naming_valid', {
             pattern,
             sports: 'True' // @TODO does this actually need to be a string or can it be a boolean?
         }, data => {
@@ -182,7 +182,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
         example.multi = $('#naming_anime_multi_ep :selected').val();
         example.animeType = $('input[name="naming_anime"]:checked').val();
 
-        $.get('config/postProcessing/testNaming', {
+        $.get('config/post_processing/test_naming', {
             pattern: example.pattern,
             anime_type: example.animeType // eslint-disable-line camelcase
         }, data => {
@@ -194,7 +194,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
             }
         });
 
-        $.get('config/postProcessing/testNaming', {
+        $.get('config/post_processing/test_naming', {
             pattern: example.pattern,
             multi: example.multi,
             anime_type: example.animeType // eslint-disable-line camelcase
@@ -207,7 +207,7 @@ MEDUSA.config.postProcessing = function() { // eslint-disable-line max-lines
             }
         });
 
-        $.get('config/postProcessing/isNamingValid', {
+        $.get('config/post_processing/is_naming_valid', {
             pattern: example.pattern,
             multi: example.multi,
             anime_type: example.animeType // eslint-disable-line camelcase

@@ -1,13 +1,12 @@
-
+# coding=utf-8
 """Black and White List module."""
-
-from __future__ import unicode_literals
 
 import logging
 
 from adba.aniDBerrors import AniDBCommandTimeoutError
 
-from medusa import app, db, helpers
+from medusa import app, helpers
+from medusa.databases import db
 from medusa.logger.adapters.style import BraceAdapter
 
 log = logging.getLogger(__name__)
@@ -15,7 +14,7 @@ log.addHandler(logging.NullHandler())
 log = BraceAdapter(log)
 
 
-class BlackAndWhiteList(object):
+class BlackAndWhiteList:
     """Black and White List."""
 
     def __init__(self, series_obj):
@@ -35,8 +34,8 @@ class BlackAndWhiteList(object):
         """Build black and whitelist."""
         log.debug('Building black and white list for {id}',
                   {'id': self.series_obj.name})
-        self.blacklist = self._load_list(b'blacklist')
-        self.whitelist = self._load_list(b'whitelist')
+        self.blacklist = self._load_list('blacklist')
+        self.whitelist = self._load_list('whitelist')
 
     def _add_keywords(self, table, values):
         """Add keywords into database for current show.
@@ -47,8 +46,8 @@ class BlackAndWhiteList(object):
         main_db_con = db.DBConnection()
         for value in values:
             main_db_con.action(
-                b'INSERT INTO [{table}] (show_id, keyword, indexer_id) '
-                b'VALUES (?, ?, ?)'.format(table=table),
+                'INSERT INTO [{table}] (show_id, keyword, indexer_id) '
+                'VALUES (?, ?, ?)'.format(table=table),
                 [self.series_obj.series_id, value, self.series_obj.indexer]
             )
 
@@ -57,8 +56,8 @@ class BlackAndWhiteList(object):
 
         :param values: Complete list of keywords to be set as blacklist
         """
-        self._del_all_keywords(b'blacklist')
-        self._add_keywords(b'blacklist', values)
+        self._del_all_keywords('blacklist')
+        self._add_keywords('blacklist', values)
         self.blacklist = values
         log.debug('Blacklist set to: {blacklist}',
                   {'blacklist': self.blacklist})
@@ -68,8 +67,8 @@ class BlackAndWhiteList(object):
 
         :param values: Complete list of keywords to be set as whitelist
         """
-        self._del_all_keywords(b'whitelist')
-        self._add_keywords(b'whitelist', values)
+        self._del_all_keywords('whitelist')
+        self._add_keywords('whitelist', values)
         self.whitelist = values
         log.debug('Whitelist set to: {whitelist}',
                   {'whitelist': self.whitelist})
@@ -81,8 +80,8 @@ class BlackAndWhiteList(object):
         """
         main_db_con = db.DBConnection()
         main_db_con.action(
-            b'DELETE FROM [{table}] '
-            b'WHERE show_id = ? AND indexer_id = ?'.format(table=table),
+            'DELETE FROM [{table}] '
+            'WHERE show_id = ? AND indexer_id = ?'.format(table=table),
             [self.series_obj.series_id, self.series_obj.indexer]
         )
 
@@ -95,13 +94,13 @@ class BlackAndWhiteList(object):
         """
         main_db_con = db.DBConnection()
         sql_results = main_db_con.select(
-            b'SELECT keyword '
-            b'FROM [{table}] '
-            b'WHERE show_id = ? AND indexer_id = ?'.format(table=table),
+            'SELECT keyword '
+            'FROM [{table}] '
+            'WHERE show_id = ? AND indexer_id = ?'.format(table=table),
             [self.series_obj.series_id, self.series_obj.indexer]
         )
 
-        groups = [result[b'keyword']
+        groups = [result['keyword']
                   for result in sql_results
                   ] if sql_results else []
 
@@ -168,8 +167,8 @@ def short_group_names(groups):
                           ' Trying next group')
             else:
                 for line in group.datalines:
-                    if line[b'shortname']:
-                        short_group_list.append(line[b'shortname'])
+                    if line['shortname']:
+                        short_group_list.append(line['shortname'])
                     else:
                         if group_name not in short_group_list:
                             short_group_list.append(group_name)

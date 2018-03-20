@@ -3,24 +3,22 @@
 import logging
 import re
 import telnetlib
-
-from requests.compat import urlencode
-from six.moves.urllib.request import Request, urlopen
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 from medusa import app
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def notify_settings(self, host):
         """
         Retrieve the settings from a NMJ/Popcorn hour
@@ -76,11 +74,11 @@ class Notifier(object):
 
     def notify_download(self, ep_name):
         if app.USE_NMJ:
-            self._notifyNMJ()
+            self._notify_nmj()
 
     def notify_subtitle_download(self, ep_name, lang):
         if app.USE_NMJ:
-            self._notifyNMJ()
+            self._notify_nmj()
 
     def notify_git_update(self, new_version):
         return False
@@ -90,9 +88,9 @@ class Notifier(object):
         return False
 
     def test_notify(self, host, database, mount):
-        return self._sendNMJ(host, database, mount)
+        return self._send_nmj(host, database, mount)
 
-    def _sendNMJ(self, host, database, mount=None):
+    def _send_nmj(self, host, database, mount=None):
         """
         Send a NMJ update command to the specified machine.
 
@@ -115,11 +113,11 @@ class Notifier(object):
                     log.warning(u'NMJ: Problem with Popcorn Hour on host {0}: {1}', host, error.code)
                 return False
             except Exception as error:
-                log.error(u'NMJ: Unknown exception: {0}', ex(error))
+                log.error(u'NMJ: Unknown exception: {0}', error)
                 return False
 
         # build up the request URL and parameters
-        UPDATE_URL = 'http://%(host)s:8008/metadata_database?%(params)s'
+        update_url = 'http://%(host)s:8008/metadata_database?%(params)s'
         params = {
             'arg0': 'scanner_start',
             'arg1': database,
@@ -127,12 +125,12 @@ class Notifier(object):
             'arg3': ''
         }
         params = urlencode(params)
-        updateUrl = UPDATE_URL % {'host': host, 'params': params}
+        update_url = update_url % {'host': host, 'params': params}
 
         # send the request to the server
         try:
-            req = Request(updateUrl)
-            log.debug(u'Sending NMJ scan update command via url: {0}', updateUrl)
+            req = Request(update_url)
+            log.debug(u'Sending NMJ scan update command via url: {0}', update_url)
             handle = urlopen(req)
             response = handle.read()
         except IOError as error:
@@ -142,12 +140,12 @@ class Notifier(object):
                 log.warning(u'NMJ: Problem with Popcorn Hour on host {0}: {1}', host, error.code)
             return False
         except Exception as error:
-            log.error(u'NMJ: Unknown exception: {0}', ex(error))
+            log.error(u'NMJ: Unknown exception: {0}', error)
             return False
 
         # try to parse the resulting XML
         try:
-            et = etree.fromstring(response)
+            et = ETree.fromstring(response)
             result = et.findtext('returnValue')
         except SyntaxError as error:
             log.error(u'Unable to parse XML returned from the Popcorn Hour: {0}', error)
@@ -161,7 +159,7 @@ class Notifier(object):
             log.info(u'NMJ started background scan')
             return True
 
-    def _notifyNMJ(self, host=None, database=None, mount=None, force=False):
+    def _notify_nmj(self, host=None, database=None, mount=None, force=False):
         """
         Sends a NMJ update command based on the SB config settings
 
@@ -184,4 +182,4 @@ class Notifier(object):
 
         log.debug(u'Sending scan command for NMJ ')
 
-        return self._sendNMJ(host, database, mount)
+        return self._send_nmj(host, database, mount)

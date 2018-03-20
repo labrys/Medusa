@@ -1,3 +1,4 @@
+# coding=utf-8
 import datetime
 import functools
 import locale
@@ -72,7 +73,11 @@ time_presets = ('%I:%M:%S %p', '%H:%M:%S')
 
 
 # helper class
-class StaticOrInstance(object):
+class StaticOrInstance:
+    """
+
+    """
+
     def __init__(self, func):
         self.func = func
 
@@ -87,6 +92,11 @@ class DateTime(datetime.datetime):
 
     @StaticOrInstance
     def convert_to_setting(self, dt=None):
+        """
+
+        :param dt:
+        :return:
+        """
         try:
             if app.TIMEZONE_DISPLAY == 'local':
                 return dt.astimezone(app_timezone) if self is None else self.astimezone(app_timezone)
@@ -145,7 +155,7 @@ class DateTime(datetime.datetime):
             except Exception:
                 DateTime.has_locale = False
 
-        return result.decode(app.SYS_ENCODING)
+        return result
 
     # display Date in application Format
     @StaticOrInstance
@@ -182,7 +192,7 @@ class DateTime(datetime.datetime):
             except Exception:
                 pass
 
-        return result.decode(app.SYS_ENCODING)
+        return result
 
     # display Datetime in application Format
     @StaticOrInstance
@@ -251,4 +261,4 @@ class DateTime(datetime.datetime):
             except Exception:
                 DateTime.has_locale = False
 
-        return result.decode(app.SYS_ENCODING)
+        return result

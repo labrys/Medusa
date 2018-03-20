@@ -2,12 +2,9 @@
 
 """Provider code for Limetorrents."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -21,7 +18,7 @@ from medusa.providers.torrent.torrent_provider import TorrentProvider
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
-id_regex = re.compile(r'(?:\/)(.*)(?:-torrent-([0-9]*)\.html)', re.I)
+id_regex = re.compile(r'(?:/)(.*)(?:-torrent-([0-9]*)\.html)', re.I)
 hash_regex = re.compile(r'(.*)([0-9a-f]{40})(.*)', re.I)
 
 
@@ -30,7 +27,7 @@ class LimeTorrentsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(LimeTorrentsProvider, self).__init__('LimeTorrents')
+        super().__init__('LimeTorrents')
 
         # Credentials
         self.public = True

@@ -1,3 +1,4 @@
+# coding=utf-8
 """Torrent checker module."""
 
 import logging
@@ -11,7 +12,7 @@ log.addHandler(logging.NullHandler())
 log = BraceAdapter(log)
 
 
-class TorrentChecker(object):
+class TorrentChecker:
     """Torrent checker class."""
 
     def __init__(self):

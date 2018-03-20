@@ -2,8 +2,6 @@
 
 """Provider code for RARBG."""
 
-from __future__ import unicode_literals
-
 import datetime
 import logging
 import time
@@ -25,7 +23,7 @@ class RarbgProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(RarbgProvider, self).__init__('Rarbg')
+        super().__init__('Rarbg')
 
         # Credentials
         self.public = True

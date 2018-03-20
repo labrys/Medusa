@@ -2,12 +2,9 @@
 
 """Provider code for Danishbits."""
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.common import USER_AGENT
@@ -24,7 +21,7 @@ class DanishbitsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(DanishbitsProvider, self).__init__('Danishbits')
+        super().__init__('Danishbits')
 
         # Credentials
         self.username = None

@@ -1,4 +1,4 @@
-MEDUSA.manage.episodeStatuses = function() {
+MEDUSA.manage.episode_statuses = function() {
     $('.allCheck').on('click', function() {
         const seriesId = $(this).attr('data-indexer-id') + '-' + $(this).attr('data-series-id');
         $('.' + seriesId + '-epcheck').prop('checked', $(this).prop('checked'));
@@ -22,10 +22,10 @@ MEDUSA.manage.episodeStatuses = function() {
                 $(this).prop('value', 'Collapse');
             }
         } else {
-            $.getJSON('manage/showEpisodeStatuses', {
+            $.getJSON('manage/show_episode_statuses', {
                 indexername: indexerName,
                 seriesid: seriesId, // eslint-disable-line camelcase
-                whichStatus: $('#oldStatus').val()
+                which_status: $('#oldStatus').val()
             }, data => {
                 $.each(data, (season, eps) => {
                     $.each(eps, (episode, name) => {

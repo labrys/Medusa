@@ -2,8 +2,6 @@
 
 """Configure Anime Look & Feel and AniDB authentication."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
 
@@ -26,18 +24,18 @@ class ConfigAnime(Config):
     """Handler for Anime configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigAnime, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """Render the Anime configuration page."""
         t = PageTemplate(rh=self, filename='config_anime.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Anime',
+        return t.render(submenu=self.config_menu(), title='Config - Anime',
                         header='Anime', topmenu='config',
                         controller='config', action='anime')
 
-    def saveAnime(self, use_anidb=None, anidb_username=None, anidb_password=None, anidb_use_mylist=None,
-                  split_home=None, split_home_in_tabs=None):
+    def save_anime(self, use_anidb=None, anidb_username=None, anidb_password=None, anidb_use_mylist=None,
+                   split_home=None, split_home_in_tabs=None):
         """Save anime related settings."""
         results = []
 

@@ -2,8 +2,6 @@
 
 """Configure Subtitle searching."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
 
@@ -27,7 +25,7 @@ class ConfigSubtitles(Config):
     """Handler for Subtitle Search configuration."""
 
     def __init__(self, *args, **kwargs):
-        super(ConfigSubtitles, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """
@@ -35,15 +33,15 @@ class ConfigSubtitles(Config):
         """
         t = PageTemplate(rh=self, filename='config_subtitles.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Subtitles',
+        return t.render(submenu=self.config_menu(), title='Config - Subtitles',
                         header='Subtitles', topmenu='config',
                         controller='config', action='subtitlesPage')
 
-    def saveSubtitles(self, use_subtitles=None, subtitles_plugins=None, subtitles_languages=None, subtitles_dir=None, subtitles_perfect_match=None,
-                      service_order=None, subtitles_history=None, subtitles_finder_frequency=None, subtitles_erase_cache=None,
-                      subtitles_multi=None, embedded_subtitles_all=None, subtitles_extra_scripts=None, subtitles_pre_scripts=None, subtitles_hearing_impaired=None,
-                      addic7ed_user=None, addic7ed_pass=None, itasa_user=None, itasa_pass=None, legendastv_user=None, legendastv_pass=None, opensubtitles_user=None, opensubtitles_pass=None,
-                      subtitles_keep_only_wanted=None, embedded_subtitles_unknown_lang=None, subtitles_stop_at_first=None):
+    def save_subtitles(self, use_subtitles=None, subtitles_plugins=None, subtitles_languages=None, subtitles_dir=None, subtitles_perfect_match=None,
+                       service_order=None, subtitles_history=None, subtitles_finder_frequency=None, subtitles_erase_cache=None,
+                       subtitles_multi=None, embedded_subtitles_all=None, subtitles_extra_scripts=None, subtitles_pre_scripts=None, subtitles_hearing_impaired=None,
+                       addic7ed_user=None, addic7ed_pass=None, itasa_user=None, itasa_pass=None, legendastv_user=None, legendastv_pass=None, opensubtitles_user=None, opensubtitles_pass=None,
+                       subtitles_keep_only_wanted=None, embedded_subtitles_unknown_lang=None, subtitles_stop_at_first=None):
         """
         Save Subtitle Search related settings
         """

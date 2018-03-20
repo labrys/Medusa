@@ -1,4 +1,4 @@
-MEDUSA.home.snatchSelection = function() {
+MEDUSA.home.snatch_selection = function() {
     $('.imdbPlot').on('click', function() {
         $(this).prev('span').toggle();
         if ($(this).html() === '..show less') {
@@ -134,7 +134,7 @@ MEDUSA.home.snatchSelection = function() {
 
         self.refreshResults = function() {
             $('#manualSearchTbody').loadContainer(
-                    'home/snatchSelection' + urlParams,
+                    'home/snatch_selection' + urlParams,
                     'Loading new search results...',
                     'Time out, refresh page to try again',
                     toggleHistoryTable // This is a callback function
@@ -142,7 +142,7 @@ MEDUSA.home.snatchSelection = function() {
         };
 
         $.ajax({
-            url: 'home/manualSearchCheckCache' + urlParams,
+            url: 'home/manual_search_check_cache' + urlParams,
             type: 'GET',
             data,
             contentType: 'application/json',
@@ -209,7 +209,7 @@ MEDUSA.home.snatchSelection = function() {
         const season = $('meta[data-last-prov-updates]').attr('data-season');
         const episode = $('meta[data-last-prov-updates]').attr('data-episode');
         const manualSearchType = $('meta[data-last-prov-updates]').attr('data-manual-search-type');
-        const forceSearch = $(this).attr('data-force-search');
+        const force_search = $(this).attr('data-force-search');
 
         const checkParams = [indexerName, seriesId, season, episode].every(checkIsTrue => {
             return checkIsTrue;
@@ -223,13 +223,13 @@ MEDUSA.home.snatchSelection = function() {
 
         if ($.isNumeric(seriesId) && $.isNumeric(season) && $.isNumeric(episode)) {
             updateSpinner('Started a forced manual search...', true);
-            $.getJSON('home/snatchSelection', {
+            $.getJSON('home/snatch_selection', {
                 indexername: indexerName,
                 seriesid: seriesId,
                 season,
                 episode,
                 manual_search_type: manualSearchType, // eslint-disable-line camelcase
-                perform_search: forceSearch // eslint-disable-line camelcase
+                perform_search: force_search // eslint-disable-line camelcase
             });
             // Force the search, but give the checkCacheUpdates the time to start up a search thread
             setTimeout(() => {
@@ -238,7 +238,7 @@ MEDUSA.home.snatchSelection = function() {
         }
     });
 
-    // Moved and rewritten this from displayShow. This changes the button when clicked for collapsing/expanding the
+    // Moved and rewritten this from display_series. This changes the button when clicked for collapsing/expanding the
     // "Show History" button to show or hide the snatch/download/failed history for a manual searched episode or pack.
 
     $('#popover').popover({

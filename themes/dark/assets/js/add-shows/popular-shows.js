@@ -1,4 +1,4 @@
-MEDUSA.addShows.popularShows = function() {
+MEDUSA.add_series.popular_series = function() {
     $.initRemoteShowGrid();
-    $.rootDirCheck();
+    $.root_dirCheck();
 };

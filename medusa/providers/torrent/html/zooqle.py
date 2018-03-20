@@ -2,11 +2,8 @@
 
 """Provider code for Zooqle."""
 
-from __future__ import unicode_literals
-
 import logging
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -26,7 +23,7 @@ class ZooqleProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(ZooqleProvider, self).__init__('Zooqle')
+        super().__init__('Zooqle')
 
         # Credentials
         self.public = True

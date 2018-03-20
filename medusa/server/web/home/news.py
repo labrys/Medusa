@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import markdown2
 from tornroutes import route
@@ -13,7 +13,7 @@ from medusa.server.web.home.handler import Home
 @route('/news(/?.*)')
 class HomeNews(Home):
     def __init__(self, *args, **kwargs):
-        super(HomeNews, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         news = app.version_check_scheduler.action.check_for_new_news(force=True)

@@ -1,4 +1,4 @@
-MEDUSA.manage.manageSearches = function() {
+MEDUSA.manage.manage_searches = function() {
     /**
      * Get total number current scene exceptions per source. Will request medusa, xem and anidb name exceptions.
      * @param exceptions - A list of exception types with their last_updates.

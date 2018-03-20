@@ -2,13 +2,10 @@
 
 """Provider code for EliteTracker."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -28,7 +25,7 @@ class EliteTrackerProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(EliteTrackerProvider, self).__init__('EliteTracker')
+        super().__init__('EliteTracker')
 
         # Credentials
         self.username = None

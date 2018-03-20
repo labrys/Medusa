@@ -23,7 +23,7 @@ from medusa import app, image_cache
 from medusa.helper.exceptions import MultipleShowObjectsException
 
 
-class GenericMedia(object):
+class GenericMedia:
     """Base class for series media."""
 
     img_type = None

@@ -346,21 +346,21 @@ MEDUSA.home.index = function() {
         });
     });
 
-    const rootDir = MEDUSA.config.rootDirs;
-    const rootDirIndex = MEDUSA.config.selectedRootIndex;
-    if (rootDir) {
-        const backendDirs = rootDir.slice(1);
+    const root_dir = MEDUSA.config.root_dirs;
+    const root_dirIndex = MEDUSA.config.selectedRootIndex;
+    if (root_dir) {
+        const backendDirs = root_dir.slice(1);
         if (backendDirs.length >= 2) {
             $('#showRoot').show();
             const item = ['All Folders'];
-            const rootDirOptions = item.concat(backendDirs);
-            $.each(rootDirOptions, (i, item) => {
+            const root_dirOptions = item.concat(backendDirs);
+            $.each(root_dirOptions, (i, item) => {
                 $('#showRootDir').append($('<option>', {
                     value: i - 1,
                     text: item
                 }));
             });
-            $('select#showRootDir').prop('selectedIndex', rootDirIndex + 1);
+            $('select#showRootDir').prop('selectedIndex', root_dirIndex + 1);
         } else {
             $('#showRoot').hide();
         }

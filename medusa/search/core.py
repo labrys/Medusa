@@ -11,7 +11,6 @@ import time
 from medusa import (
     app,
     common,
-    db,
     failed_history,
     helpers,
     history,
@@ -29,6 +28,7 @@ from medusa.common import (
     SNATCHED_PROPER,
     UNKNOWN,
 )
+from medusa.databases import db
 from medusa.downloaders import torrent
 from medusa.downloaders.nzb import (
     nzbget,
@@ -38,10 +38,7 @@ from medusa.helper.common import (
     enabled_providers,
     episode_num,
 )
-from medusa.helper.exceptions import (
-    AuthException,
-    ex,
-)
+from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.generic_provider import GenericProvider
 from medusa.show import naming
@@ -83,7 +80,7 @@ def _download_result(result):
             helpers.chmod_as_parent(file_name)
 
         except EnvironmentError as e:
-            log.error(u'Error trying to save NZB to black hole: {0}', ex(e))
+            log.error(u'Error trying to save NZB to black hole: {0}', e)
             new_result = False
     elif result.result_type == u'torrent':
         new_result = res_provider.download_result(result)
@@ -396,19 +393,19 @@ def wanted_episodes(series_obj, from_date):
 
     # check through the list of statuses to see if we want any
     for result in sql_results:
-        _, cur_quality = common.Quality.split_composite_status(int(result[b'status'] or UNKNOWN))
-        should_search, should_search_reason = Quality.should_search(result[b'status'], series_obj, result[b'manually_searched'])
+        _, cur_quality = common.Quality.split_composite_status(int(result['status'] or UNKNOWN))
+        should_search, should_search_reason = Quality.should_search(result['status'], series_obj, result['manually_searched'])
         if not should_search:
             continue
         else:
             log.debug(
                 u'Searching for {show} {ep}. Reason: {reason}', {
                     u'show': series_obj.name,
-                    u'ep': episode_num(result[b'season'], result[b'episode']),
+                    u'ep': episode_num(result['season'], result['episode']),
                     u'reason': should_search_reason,
                 }
             )
-        ep_obj = series_obj.get_episode(result[b'season'], result[b'episode'])
+        ep_obj = series_obj.get_episode(result['season'], result['episode'])
         ep_obj.wanted_quality = [i for i in all_qualities if i > cur_quality and i != common.Quality.UNKNOWN]
         wanted.append(ep_obj)
 
@@ -460,7 +457,7 @@ def search_for_needed_episodes(force=False):
         try:
             cur_found_results = cur_provider.search_rss(episodes)
         except AuthException as error:
-            log.error(u'Authentication error: {0}', ex(error))
+            log.error(u'Authentication error: {0}', error)
             continue
 
         # pick a single result for each episode, respecting existing results
@@ -607,7 +604,7 @@ def search_providers(series_obj, episodes, forced_search=False, down_cur_quality
                 search_results = cur_provider.find_search_results(series_obj, episodes, search_mode, forced_search,
                                                                   down_cur_quality, manual_search, manual_search_type)
             except AuthException as error:
-                log.error(u'Authentication error: {0}', ex(error))
+                log.error(u'Authentication error: {0}', error)
                 break
 
             if search_results:
@@ -687,7 +684,7 @@ def search_providers(series_obj, episodes, forced_search=False, down_cur_quality
                 ' AND ( season IN ( {0} ) )'.format(','.join(searched_seasons)),
                 [series_obj.indexer, series_obj.series_id]
             )
-            all_eps = [int(x[b'episode']) for x in selection]
+            all_eps = [int(x['episode']) for x in selection]
             log.debug(u'Episode list: {0}', all_eps)
 
             all_wanted = True

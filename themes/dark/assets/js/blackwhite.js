@@ -18,7 +18,7 @@ function updateBlackWhiteList(showName) { // eslint-disable-line no-unused-vars
 
     $('#blackwhitelist').show();
     if (showName) {
-        $.getJSON('home/fetch_releasegroups', {
+        $.getJSON('home/fetch_release_groups', {
             show_name: showName // eslint-disable-line camelcase
         }, data => {
             if (data.result === 'success') {

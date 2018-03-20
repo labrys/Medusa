@@ -7,8 +7,6 @@ This client script allows connection to Deluge Daemon directly, completely
 circumventing the requirement to use the WebUI.
 """
 
-from __future__ import unicode_literals
-
 import logging
 from base64 import b64encode
 
@@ -38,7 +36,7 @@ class DelugeDAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(DelugeDAPI, self).__init__('DelugeD', host, username, password)
+        super().__init__('DelugeD', host, username, password)
 
     def _get_auth(self):
         return True if self.connect() else None
@@ -164,7 +162,7 @@ class DelugeDAPI(GenericClient):
             self.remove_torrent(info_hash)
 
 
-class DelugeRPC(object):
+class DelugeRPC:
     """Deluge RPC client class."""
 
     host = 'localhost'
@@ -185,7 +183,7 @@ class DelugeRPC(object):
         :param password:
         :type password: str
         """
-        super(DelugeRPC, self).__init__()
+        super().__init__()
         self.host = host
         self.port = port
         self.username = username

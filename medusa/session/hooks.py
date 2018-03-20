@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -36,7 +36,7 @@ def log_url(response, **kwargs):
             body = ''
 
         # try to log post data using various codecs to decode
-        if isinstance(body, unicode):
+        if isinstance(body, str):
             log.debug('With post data: {0}', body)
             return
 
@@ -109,8 +109,10 @@ def cloudflare(resp, **kwargs):
 
 def sessioned(session):
     """Hooks factory to add a session to a response."""
+
     def sessioned_response_hook(response, *args, **kwargs):
         """Return a sessioned response."""
         response.session = session
         return response
+
     return sessioned_response_hook

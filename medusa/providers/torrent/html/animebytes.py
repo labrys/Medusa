@@ -2,13 +2,11 @@
 
 """Provider code for AnimeBytes."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -33,7 +31,7 @@ class AnimeBytes(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(AnimeBytes, self).__init__('AnimeBytes')
+        super().__init__('AnimeBytes')
 
         # Credentials
         self.username = None

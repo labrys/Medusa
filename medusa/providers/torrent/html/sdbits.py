@@ -2,15 +2,13 @@
 
 """Provider code for SDBits."""
 
-from __future__ import unicode_literals
-
 import datetime
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
 from pytimeparse import parse
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -32,7 +30,7 @@ class SDBitsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(SDBitsProvider, self).__init__('SDBits')
+        super().__init__('SDBits')
 
         # Credentials
         self.username = None

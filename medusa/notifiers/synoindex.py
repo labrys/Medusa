@@ -5,14 +5,13 @@ import os
 import subprocess
 
 from medusa import app
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def notify_snatch(self, ep_name, is_proper):
         pass
 
@@ -28,13 +27,13 @@ class Notifier(object):
     def notify_login(self, ipaddress=''):
         pass
 
-    def moveFolder(self, old_path, new_path):
-        self.moveObject(old_path, new_path)
+    def move_folder(self, old_path, new_path):
+        self.move_object(old_path, new_path)
 
     def move_file(self, old_file, new_file):
-        self.moveObject(old_file, new_file)
+        self.move_object(old_file, new_file)
 
-    def moveObject(self, old_path, new_path):
+    def move_object(self, old_path, new_path):
         if app.USE_SYNOINDEX:
             synoindex_cmd = ['/usr/syno/bin/synoindex', '-N', os.path.abspath(new_path),
                              os.path.abspath(old_path)]
@@ -46,21 +45,21 @@ class Notifier(object):
                 out, _ = p.communicate()
                 log.debug(u'Script result: {0}', out)
             except OSError as e:
-                log.error(u'Unable to run synoindex: {0}', ex(e))
+                log.error(u'Unable to run synoindex: {0}', e)
 
-    def deleteFolder(self, cur_path):
-        self.makeObject('-D', cur_path)
+    def delete_folder(self, cur_path):
+        self.make_object('-D', cur_path)
 
-    def addFolder(self, cur_path):
-        self.makeObject('-A', cur_path)
+    def add_folder(self, cur_path):
+        self.make_object('-A', cur_path)
 
-    def deleteFile(self, cur_file):
-        self.makeObject('-d', cur_file)
+    def delete_file(self, cur_file):
+        self.make_object('-d', cur_file)
 
-    def addFile(self, cur_file):
-        self.makeObject('-a', cur_file)
+    def add_file(self, cur_file):
+        self.make_object('-a', cur_file)
 
-    def makeObject(self, cmd_arg, cur_path):
+    def make_object(self, cmd_arg, cur_path):
         if app.USE_SYNOINDEX:
             synoindex_cmd = ['/usr/syno/bin/synoindex', cmd_arg, os.path.abspath(cur_path)]
             log.debug(u'Executing command {0}', synoindex_cmd)
@@ -71,4 +70,4 @@ class Notifier(object):
                 out, _ = p.communicate()
                 log.debug(u'Script result: {0}', out)
             except OSError as e:
-                log.error(u'Unable to run synoindex: {0}', ex(e))
+                log.error(u'Unable to run synoindex: {0}', e)

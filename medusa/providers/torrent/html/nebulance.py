@@ -2,13 +2,11 @@
 
 """Provider code for Nebulance."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -27,7 +25,7 @@ class NebulanceProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(NebulanceProvider, self).__init__('Nebulance')
+        super().__init__('Nebulance')
 
         # Credentials
         self.username = None

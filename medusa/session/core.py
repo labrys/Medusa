@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import errno
 import logging
@@ -69,7 +69,7 @@ class MedusaSession(BaseSession):
         cache_control = kwargs.pop('cache_control', None)
 
         # Initialize request.session after we've done the pop's.
-        super(MedusaSession, self).__init__(**kwargs)
+        super().__init__()
 
         # Add cache control of provided as a dict. Needs to be attached after super init.
         if cache_control:
@@ -88,7 +88,7 @@ class MedusaSession(BaseSession):
         self.headers.update(self.default_headers)
 
     def request(self, method, url, data=None, params=None, headers=None, timeout=30, verify=True, **kwargs):
-        return super(MedusaSession, self).request(method, url, data=data, params=params, headers=headers,
+        return super().request(method, url, data=data, params=params, headers=headers,
                                                   timeout=timeout, verify=self._get_ssl_cert(verify),
                                                   **kwargs)
 
@@ -131,13 +131,13 @@ class MedusaSafeSession(MedusaSession):
 
     def __init__(self, *args, **kwargs):
         # Initialize request.session
-        super(MedusaSafeSession, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def request(self, method, url, data=None, params=None, headers=None, timeout=30, verify=True, **kwargs):
         """Overwrite request, for adding basic exception handling."""
         resp = None
         try:
-            resp = super(MedusaSafeSession, self).request(method, url, data=data, params=params, headers=headers,
+            resp = super().request(method, url, data=data, params=params, headers=headers,
                                                           timeout=timeout, verify=verify, **kwargs)
             resp.raise_for_status()
         except requests.exceptions.HTTPError as error:

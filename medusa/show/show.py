@@ -25,12 +25,11 @@ from medusa.common import (
     SKIPPED,
     WANTED,
 )
-from medusa.db import DBConnection
+from medusa.databases.db import DBConnection
 from medusa.helper.exceptions import (
     CantRefreshShowException,
     CantRemoveShowException,
     MultipleShowObjectsException,
-    ex,
 )
 from medusa.logger.adapters.style import BraceAdapter
 
@@ -38,7 +37,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Show(object):
+class Show:
     def __init__(self):
         pass
 
@@ -63,7 +62,7 @@ class Show(object):
             try:
                 app.show_queue_scheduler.action.remove_show(show, bool(remove_files))
             except CantRemoveShowException as exception:
-                return ex(exception), show
+                return exception, show
 
         return None, show
 
@@ -145,7 +144,7 @@ class Show(object):
     def overall_stats():
         db = DBConnection()
         shows = app.showList
-        today = str(date.today().toordinal())
+        today = date.today().toordinal()
 
         downloaded_status = Quality.DOWNLOADED + Quality.ARCHIVED
         snatched_status = Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_BEST
@@ -188,6 +187,7 @@ class Show(object):
         """
         Change the pause state of a show.
 
+        :param series_id:
         :param indexer_id: The unique id of the show to update
         :param pause: ``True`` to pause the show, ``False`` to resume the show, ``None`` to toggle the pause state
         :return: A tuple containing:
@@ -213,6 +213,7 @@ class Show(object):
         """
         Try to refresh a show.
 
+        :param series_id:
         :param indexer_id: The unique id of the show to refresh
         :return: A tuple containing:
          - an error message if the show could not be refreshed, ``None`` otherwise
@@ -226,7 +227,7 @@ class Show(object):
         try:
             app.show_queue_scheduler.action.refresh_show(series_obj)
         except CantRefreshShowException as exception:
-            return ex(exception), series_obj
+            return exception, series_obj
 
         return None, series_obj
 

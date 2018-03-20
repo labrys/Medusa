@@ -6,21 +6,21 @@ import threading
 from medusa.indexers.config import INDEXER_TVDB
 
 
-class Identifier(object):
+class Identifier:
     """Base identifier class."""
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Magic method."""
         raise NotImplementedError
 
-    __bool__ = __nonzero__
+    __nonzero__ = __bool__
 
     def __ne__(self, other):
         """Magic method."""
         return not self == other
 
 
-class TV(object):
+class TV:
     """Base class for Series and Episode."""
 
     def __init__(self, indexer, indexerid, ignored_properties):
@@ -54,7 +54,7 @@ class TV(object):
         if key == '_location' or (not key.startswith('_') and key not in self.__ignored_properties):
             self.__dirty |= self.__dict__.get(key) != value
 
-        super(TV, self).__setattr__(key, value)
+        super().__setattr__(key, value)
 
     @property
     def dirty(self):

@@ -1,3 +1,4 @@
+# coding=utf-8
 """Base theme module."""
 import json
 import logging
@@ -12,7 +13,7 @@ log.logger.addHandler(logging.NullHandler())
 themes = []
 
 
-class Theme(object):
+class Theme:
     """Base theme class."""
 
     def __init__(self, **kwargs):

@@ -2,12 +2,9 @@
 
 """Provider code for ShanaProject."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -26,7 +23,7 @@ class ShanaProjectProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(ShanaProjectProvider, self).__init__('ShanaProject')
+        super().__init__('ShanaProject')
 
         # Credentials
         self.public = True

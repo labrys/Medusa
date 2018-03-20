@@ -2,12 +2,9 @@
 
 """Provider code for HorribleSubs."""
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -23,7 +20,7 @@ class HorribleSubsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(HorribleSubsProvider, self).__init__('HorribleSubs')
+        super().__init__('HorribleSubs')
 
         # Credentials
         self.public = True

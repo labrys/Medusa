@@ -2,9 +2,6 @@
 
 """Deluge Web Client."""
 
-from __future__ import unicode_literals
-
-import json
 import logging
 from base64 import b64encode
 
@@ -69,8 +66,8 @@ def read_torrent_status(torrent_data):
                 ' seed idle limit'
                 ' Removing it: [{name}]',
                 ratio=details['ratio'],
-                ratio_limit=torrent['stop_ratio'],
-                name=torrent['name']
+                ratio_limit=details['stop_ratio'],
+                name=details['name']
             )
             info_hash_to_remove.append(info_hash)
         elif status == 'seeding':
@@ -79,9 +76,9 @@ def read_torrent_status(torrent_data):
                     'Torrent did not reach minimum'
                     ' ratio: [{ratio:.3f}/{ratio_limit:.3f}].'
                     ' Keeping it: [{name}]',
-                    ratio=torrent['ratio'],
-                    ratio_limit=torrent['stop_ratio'],
-                    name=torrent['name']
+                    ratio=details['ratio'],
+                    ratio_limit=details['stop_ratio'],
+                    name=details['name']
                 )
             else:
                 log.info(
@@ -89,9 +86,9 @@ def read_torrent_status(torrent_data):
                     ' was force started again. Current'
                     ' ratio: [{ratio:.3f}/{ratio_limit:.3f}].'
                     ' Keeping it: [{name}]',
-                    ratio=torrent['uploadRatio'],
-                    ratio_limit=torrent['seedRatioLimit'],
-                    name=torrent['name']
+                    ratio=details['uploadRatio'],
+                    ratio_limit=details['seedRatioLimit'],
+                    name=details['name']
                 )
         else:
             log.info('Torrent is {status}. Keeping it: [{name}]', status=status, name=details['name'])
@@ -114,37 +111,36 @@ class DelugeAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(DelugeAPI, self).__init__('Deluge', host, username, password)
+        super().__init__('Deluge', host, username, password)
         self.session.headers.update({'Content-Type': 'application/json'})
         self.url = '{host}json'.format(host=self.host)
 
     def _get_auth(self):
-        post_data = json.dumps({
+        post_data = {
             'method': 'auth.login',
             'params': [
                 self.password,
             ],
             'id': 1,
-        })
+        }
 
         try:
-            self.response = self.session.post(self.url, data=post_data.encode('utf-8'),
-                                              verify=app.TORRENT_VERIFY_CERT)
+            self.response = self.session.post(self.url, json=post_data, verify=app.TORRENT_VERIFY_CERT)
         except RequestException:
             return None
 
         self.auth = self.response.json()['result']
 
-        post_data = json.dumps({
+        post_data = {
             'method': 'web.connected',
             'params': [],
             'id': 10,
-        })
+        }
 
         try:
             self.response = self.session.post(
                 self.url,
-                data=post_data.encode('utf-8'),
+                josn=post_data,
                 verify=app.TORRENT_VERIFY_CERT
             )
         except RequestException:
@@ -153,15 +149,15 @@ class DelugeAPI(GenericClient):
         connected = self.response.json()['result']
 
         if not connected:
-            post_data = json.dumps({
+            post_data = {
                 'method': 'web.get_hosts',
                 'params': [],
                 'id': 11,
-            })
+            }
             try:
                 self.response = self.session.post(
                     self.url,
-                    data=post_data.encode('utf-8'),
+                    json=post_data,
                     verify=app.TORRENT_VERIFY_CERT
                 )
             except RequestException:
@@ -173,33 +169,33 @@ class DelugeAPI(GenericClient):
                           {'name': self.name})
                 return None
 
-            post_data = json.dumps({
+            post_data = {
                 'method': 'web.connect',
                 'params': [
                     hosts[0][0],
                 ],
                 'id': 11,
-            })
+            }
 
             try:
                 self.response = self.session.post(
                     self.url,
-                    data=post_data.encode('utf-8'),
+                    json=post_data,
                     verify=app.TORRENT_VERIFY_CERT
                 )
             except RequestException:
                 return None
 
-            post_data = json.dumps({
+            post_data = {
                 'method': 'web.connected',
                 'params': [],
                 'id': 10,
-            })
+            }
 
             try:
                 self.response = self.session.post(
                     self.url,
-                    data=post_data.encode('utf-8'),
+                    json=post_data,
                     verify=app.TORRENT_VERIFY_CERT
                 )
             except RequestException:
@@ -215,16 +211,16 @@ class DelugeAPI(GenericClient):
 
     def _add_torrent_uri(self, result):
 
-        post_data = json.dumps({
+        post_data = {
             'method': 'core.add_torrent_magnet',
             'params': [
                 result.url,
                 {},
             ],
             'id': 2,
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         result.hash = self.response.json()['result']
 
@@ -232,7 +228,7 @@ class DelugeAPI(GenericClient):
 
     def _add_torrent_file(self, result):
 
-        post_data = json.dumps({
+        post_data = {
             'method': 'core.add_torrent_file',
             'params': [
                 '{name}.torrent'.format(name=result.name),
@@ -240,9 +236,9 @@ class DelugeAPI(GenericClient):
                 {},
             ],
             'id': 2,
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         result.hash = self.response.json()['result']
 
@@ -259,16 +255,16 @@ class DelugeAPI(GenericClient):
         if not app.TORRENT_SEED_LOCATION or not info_hash:
             return
 
-        post_data = json.dumps({
+        post_data = {
             'method': 'core.move_storage',
             'params': [
                 [info_hash],
                 app.TORRENT_SEED_LOCATION,
             ],
             'id': 72,
-        })
+        }
 
-        return not self.response.json()['error'] if self._request(method='post', data=post_data) else False
+        return not self.response.json()['error'] if self._request(method='post', json=post_data) else False
 
     def remove_torrent(self, info_hash):
         """Remove torrent from client using given info_hash.
@@ -278,16 +274,16 @@ class DelugeAPI(GenericClient):
         :return
         :rtype: bool
         """
-        post_data = json.dumps({
+        post_data = {
             'method': 'core.remove_torrent',
             'params': [
                 info_hash,
                 True,
             ],
             'id': 5,
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
         return not self.response.json()['error']
 
     def _set_torrent_label(self, result):
@@ -303,13 +299,13 @@ class DelugeAPI(GenericClient):
 
         if label:
             # check if label already exists and create it if not
-            post_data = json.dumps({
+            post_data = {
                 'method': 'label.get_labels',
                 'params': [],
                 'id': 3,
-            })
+            }
 
-            self._request(method='post', data=post_data)
+            self._request(method='post', json=post_data)
             labels = self.response.json()['result']
 
             if labels is not None:
@@ -317,29 +313,29 @@ class DelugeAPI(GenericClient):
                     log.debug('{name}: {label} label does not exist in Deluge'
                               ' we must add it',
                               {'name': self.name, 'label': label})
-                    post_data = json.dumps({
+                    post_data = {
                         'method': 'label.add',
                         'params': [
                             label,
                         ],
                         'id': 4,
-                    })
+                    }
 
-                    self._request(method='post', data=post_data)
+                    self._request(method='post', json=post_data)
                     log.debug('{name}: {label} label added to Deluge',
                               {'name': self.name, 'label': label})
 
                 # add label to torrent
-                post_data = json.dumps({
+                post_data = {
                     'method': 'label.set_torrent',
                     'params': [
                         result.hash,
                         label,
                     ],
                     'id': 5,
-                })
+                }
 
-                self._request(method='post', data=post_data)
+                self._request(method='post', json=post_data)
                 log.debug('{name}: {label} label added to torrent',
                           {'name': self.name, 'label': label})
 
@@ -358,42 +354,42 @@ class DelugeAPI(GenericClient):
 
         # blank is default client ratio, so we also shouldn't set ratio
         if ratio and float(ratio) >= 0:
-            post_data = json.dumps({
+            post_data = {
                 'method': 'core.set_torrent_stop_at_ratio',
                 'params': [
                     result.hash,
                     True,
                 ],
                 'id': 5,
-            })
+            }
 
-            self._request(method='post', data=post_data)
+            self._request(method='post', json=post_data)
 
             # if unable to set_torrent_stop_at_ratio return False
             # No reason to set ratio.
             if self.response.json()['error']:
                 return False
 
-            post_data = json.dumps({
+            post_data = {
                 'method': 'core.set_torrent_stop_ratio',
                 'params': [
                     result.hash,
                     float(ratio),
                 ],
                 'id': 6,
-            })
+            }
 
-            self._request(method='post', data=post_data)
+            self._request(method='post', json=post_data)
 
             return not self.response.json()['error']
 
         elif ratio and float(ratio) == -1:
             # Disable stop at ratio to seed forever
-            post_data = json.dumps({"method": "core.set_torrent_stop_at_ratio",
-                                    "params": [result.hash, False],
-                                    "id": 5})
+            post_data = {"method": "core.set_torrent_stop_at_ratio",
+                         "params": [result.hash, False],
+                         "id": 5}
 
-            self._request(method='post', data=post_data)
+            self._request(method='post', json=post_data)
 
             return not self.response.json()['error']
 
@@ -402,27 +398,27 @@ class DelugeAPI(GenericClient):
     def _set_torrent_path(self, result):
 
         if app.TORRENT_PATH:
-            post_data = json.dumps({
+            post_data = {
                 'method': 'core.set_torrent_move_completed',
                 'params': [
                     result.hash,
                     True,
                 ],
                 'id': 7,
-            })
+            }
 
-            self._request(method='post', data=post_data)
+            self._request(method='post', json=post_data)
 
-            post_data = json.dumps({
+            post_data = {
                 'method': 'core.set_torrent_move_completed_path',
                 'params': [
                     result.hash,
                     app.TORRENT_PATH,
                 ],
                 'id': 8,
-            })
+            }
 
-            self._request(method='post', data=post_data)
+            self._request(method='post', json=post_data)
 
             return not self.response.json()['error']
 
@@ -431,15 +427,15 @@ class DelugeAPI(GenericClient):
     def _set_torrent_pause(self, result):
 
         if app.TORRENT_PAUSED:
-            post_data = json.dumps({
+            post_data = {
                 'method': 'core.pause_torrent',
                 'params': [
                     [result.hash],
                 ],
                 'id': 9,
-            })
+            }
 
-            self._request(method='post', data=post_data)
+            self._request(method='post', json=post_data)
 
             return not self.response.json()['error']
 
@@ -453,7 +449,7 @@ class DelugeAPI(GenericClient):
         If is a RARed torrent then we don't have a media file so we check if that hash is from an
         episode that has a `Downloaded` status
         """
-        post_data = json.dumps({
+        post_data = {
             'method': 'core.get_torrents_status',
             'params': [
                 {},
@@ -461,10 +457,10 @@ class DelugeAPI(GenericClient):
                  'is_seed', 'is_finished', 'paused', 'files'],
             ],
             'id': 72,
-        })
+        }
 
         log.info('Checking Deluge torrent status.')
-        if self._request(method='post', data=post_data):
+        if self._request(method='post', json=post_data):
             if self.response.json()['error']:
                 log.info('Error while fetching torrents status')
                 return

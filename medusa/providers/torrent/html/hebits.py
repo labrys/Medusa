@@ -2,13 +2,11 @@
 
 """Provider code for HeBits."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -29,7 +27,7 @@ class HeBitsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(HeBitsProvider, self).__init__('HeBits')
+        super().__init__('HeBits')
 
         # Credentials
         self.username = None

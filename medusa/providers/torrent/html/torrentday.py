@@ -2,11 +2,8 @@
 
 """Provider code for TorrentDay."""
 
-from __future__ import unicode_literals
-
 import logging
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -23,7 +20,7 @@ class TorrentDayProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TorrentDayProvider, self).__init__('TorrentDay')
+        super().__init__('TorrentDay')
 
         # URLs
         self.url = 'https://www.torrentday.com'

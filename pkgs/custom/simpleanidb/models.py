@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
+import six
 from simpleanidb.helper import date_to_date
 
 
@@ -149,7 +150,7 @@ class BaseAttribute(object):  # pylint: disable=too-few-public-methods
     def __repr__(self):
         return '<{0}: {1}>'.format(
             self.__class__.__name__,
-            unicode(self)
+            six.text_type(self)
         )
 
 

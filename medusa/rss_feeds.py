@@ -4,7 +4,6 @@ import logging
 
 from feedparser.api import parse
 
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
@@ -12,6 +11,13 @@ log.logger.addHandler(logging.NullHandler())
 
 
 def get_feed(url, params=None, request_hook=None):
+    """
+
+    :param url:
+    :param params:
+    :param request_hook:
+    :return:
+    """
     try:
         response = request_hook(url, params=params, timeout=30)
         if not response:
@@ -30,6 +36,6 @@ def get_feed(url, params=None, request_hook=None):
             log.debug(u'RSS error loading data: {}', url)
 
     except Exception as e:
-        log.debug(u'RSS error: {}', ex(e))
+        log.debug(u'RSS error: {}'.format(e))
 
     return {'entries': []}

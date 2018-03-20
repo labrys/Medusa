@@ -1,8 +1,6 @@
 # coding=utf-8
 """Base module for all torrent downloaders."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import time
@@ -14,7 +12,8 @@ import requests
 from bencode import bdecode, bencode
 from bencode.BTL import BTFailure
 
-from medusa import app, db
+from medusa import app
+from medusa.databases import db
 from medusa.helper.common import http_code_description
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.session.core import MedusaSession
@@ -23,7 +22,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class GenericClient(object):
+class GenericClient:
     """Base class for all torrent downloaders."""
 
     def __init__(self, name, host=None, username=None, password=None):
@@ -50,7 +49,7 @@ class GenericClient(object):
         self.session = MedusaSession()
         self.session.auth = (self.username, self.password)
 
-    def _request(self, method='get', params=None, data=None, files=None, cookies=None):
+    def _request(self, method='get', params=None, data=None, files=None, cookies=None, json=None):
 
         if time.time() > self.last_time + 1800 or not self.auth:
             self.last_time = time.time()
@@ -216,8 +215,8 @@ class GenericClient(object):
                 )
                 cache_db_con = db.DBConnection('cache.db')
                 cache_db_con.action(
-                    b'DELETE FROM [{provider}] '
-                    b'WHERE name = ? '.format(provider=result.provider.get_id()),
+                    'DELETE FROM [{provider}] '
+                    'WHERE name = ? '.format(provider=result.provider.get_id()),
                     [result.name]
                 )
             except Exception:

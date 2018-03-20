@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -12,7 +12,7 @@ from tvdbapiv2.exceptions import ApiException
 from medusa import app
 from medusa.helper.common import try_int
 from medusa.helper.exceptions import MultipleShowObjectsException
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.config import INDEXER_TVDB
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.show.recommendations import ExpiringList
@@ -21,11 +21,10 @@ from medusa.show.recommendations.recommended import RecommendedShow
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
-
 missing_posters = ExpiringList(cache_timeout=3600 * 24 * 3)  # Cache 3 days
 
 
-class TraktPopular(object):
+class TraktPopular:
     """This class retrieves a speficed recommended show list from Trakt.
 
     The list of returned shows is mapped to a RecommendedShow object
@@ -37,7 +36,7 @@ class TraktPopular(object):
         self.recommender = "Trakt Popular"
         self.default_img_src = 'trakt-default.png'
         self.anidb = Anidb(cache_dir=app.CACHE_DIR)
-        self.tvdb_api_v2 = indexerApi(INDEXER_TVDB).indexer()
+        self.tvdb_api_v2 = IndexerAPI(INDEXER_TVDB).indexer()
 
     def _create_recommended_show(self, show_obj):
         """Create the RecommendedShow object from the returned showobj."""
@@ -59,8 +58,8 @@ class TraktPopular(object):
         try:
             if not missing_posters.has(show_obj['show']['ids']['tvdb']):
                 image = self.check_cache_for_poster(show_obj['show']['ids']['tvdb']) or \
-                    self.tvdb_api_v2.config['session'].series_api.series_id_images_query_get(show_obj['show']['ids']['tvdb'],
-                                                                                             key_type='poster').data[0].file_name
+                        self.tvdb_api_v2.config['session'].series_api.series_id_images_query_get(show_obj['show']['ids']['tvdb'],
+                                                                                                 key_type='poster').data[0].file_name
             else:
                 log.info('CACHE: Missing poster on TVDB for show {0}', show_obj['show']['title'])
                 use_default = self.default_img_src
@@ -101,7 +100,7 @@ class TraktPopular(object):
 
         return library_shows
 
-    def fetch_popular_shows(self, page_url=None, trakt_list=None):  # pylint: disable=too-many-nested-blocks,too-many-branches
+    def fetch_popular_series(self, page_url=None, trakt_list=None):  # pylint: disable=too-many-nested-blocks,too-many-branches
         """Get a list of popular shows from different Trakt lists based on a provided trakt_list.
 
         :param page_url: the page url opened to the base api url, for retreiving a specific list
@@ -109,7 +108,7 @@ class TraktPopular(object):
         :return: A list of RecommendedShow objects, an empty list of none returned
         :throw: ``Exception`` if an Exception is thrown not handled by the libtrats exceptions
         """
-        trending_shows = []
+        trending_series = []
         removed_from_medusa = []
 
         # Create a trakt settings dict
@@ -124,7 +123,7 @@ class TraktPopular(object):
             not_liked_show = ''
             if app.TRAKT_ACCESS_TOKEN != '':
                 library_shows = self.fetch_and_refresh_token(trakt_api, 'sync/watched/shows?extended=noseasons') + \
-                    self.fetch_and_refresh_token(trakt_api, 'sync/collection/shows?extended=full')
+                                self.fetch_and_refresh_token(trakt_api, 'sync/collection/shows?extended=full')
 
                 medusa_shows = [show.indexerid for show in app.showList if show.indexerid]
                 removed_from_medusa = [lshow['show']['ids']['tvdb'] for lshow in library_shows if lshow['show']['ids']['tvdb'] not in medusa_shows]
@@ -153,9 +152,9 @@ class TraktPopular(object):
                     if not_liked_show:
                         if show['show']['ids']['tvdb'] not in (show['show']['ids']['tvdb']
                                                                for show in not_liked_show if show['type'] == 'show'):
-                            trending_shows.append(self._create_recommended_show(show))
+                            trending_series.append(self._create_recommended_show(show))
                     else:
-                        trending_shows.append(self._create_recommended_show(show))
+                        trending_series.append(self._create_recommended_show(show))
 
                 except MultipleShowObjectsException:
                     continue
@@ -166,7 +165,7 @@ class TraktPopular(object):
             log.warning('Could not connect to Trakt service: {0}', error)
             raise
 
-        return blacklist, trending_shows, removed_from_medusa
+        return blacklist, trending_series, removed_from_medusa
 
     def check_cache_for_poster(self, tvdb_id):
         """Verify if we already have a poster downloaded for this show."""

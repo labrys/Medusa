@@ -1,7 +1,8 @@
+# coding=utf-8
 from bs4 import BeautifulSoup
 
 
-class BS4Parser(object):
+class BS4Parser:
     """Context Manager for BeautifulSoup parsing."""
 
     def __init__(self, *args, **kwargs):

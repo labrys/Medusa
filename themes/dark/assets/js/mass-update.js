@@ -13,8 +13,8 @@ $(document).ready(() => {
         }
 
         const submitForm = $(
-            '<form method=\'post\' action=\'' + $('base').attr('href') + 'manage/massEdit\'>' +
-            '<input type=\'hidden\' name=\'toEdit\' value=\'' + editArr.join('|') + '\'/>' +
+            '<form method=\'post\' action=\'' + $('base').attr('href') + 'manage/mass_edit\'>' +
+            '<input type=\'hidden\' name=\'to_edit\' value=\'' + editArr.join('|') + '\'/>' +
             '</form>'
         );
         submitForm.appendTo('body');
@@ -35,7 +35,7 @@ $(document).ready(() => {
         const indexerName = $(this).attr('data-indexer-name');
         const seriesId = $(this).attr('data-series-id');
 
-        $('.updateCheck').each(function() {
+        $('.update_check').each(function() {
             if (this.checked === true) {
                 updateArr.push(`${$(this).attr('data-indexer-name')}${$(this).attr('data-series-id')}`);
             }
@@ -99,17 +99,17 @@ $(document).ready(() => {
                         return false;
                     }
                     const params = $.param({
-                        toUpdate: updateArr.join('|'),
-                        toRefresh: refreshArr.join('|'),
-                        toRename: renameArr.join('|'),
-                        toSubtitle: subtitleArr.join('|'),
-                        toDelete: deleteArr.join('|'),
-                        toRemove: removeArr.join('|'),
-                        toMetadata: metadataArr.join('|'),
-                        toImageUpdate: imageUpdateArr.join('|')
+                        to_update: updateArr.join('|'),
+                        to_refresh: refreshArr.join('|'),
+                        to_rename: renameArr.join('|'),
+                        to_subtitle: subtitleArr.join('|'),
+                        to_delete: deleteArr.join('|'),
+                        to_remove: removeArr.join('|'),
+                        to_metadata: metadataArr.join('|'),
+                        to_image_update: imageUpdateArr.join('|')
                     });
 
-                    window.location.href = $('base').attr('href') + 'manage/massUpdate?' + params;
+                    window.location.href = $('base').attr('href') + 'manage/mass_update?' + params;
                 }
             });
         }
@@ -120,14 +120,14 @@ $(document).ready(() => {
         if (updateArr.length + refreshArr.length + renameArr.length + subtitleArr.length + deleteArr.length + removeArr.length + metadataArr.length + imageUpdateArr.length === 0) {
             return false;
         }
-        const url = $('base').attr('href') + 'manage/massUpdate';
-        const params = 'toUpdate=' + updateArr.join('|') + '&toRefresh=' + refreshArr.join('|') + '&toRename=' + renameArr.join('|') + '&toSubtitle=' + subtitleArr.join('|') + '&toDelete=' + deleteArr.join('|') + '&toRemove=' + removeArr.join('|') + '&toMetadata=' + metadataArr.join('|') + '&toImageUpdate=' + imageUpdateArr.join('|');
+        const url = $('base').attr('href') + 'manage/mass_update';
+        const params = 'to_update=' + updateArr.join('|') + '&to_refresh=' + refreshArr.join('|') + '&to_rename=' + renameArr.join('|') + '&to_subtitle=' + subtitleArr.join('|') + '&to_delete=' + deleteArr.join('|') + '&to_remove=' + removeArr.join('|') + '&to_metadata=' + metadataArr.join('|') + '&to_image_update=' + imageUpdateArr.join('|');
         $.post(url, params, () => {
             location.reload(true);
         });
     });
 
-    ['.editCheck', '.updateCheck', '.refreshCheck', '.renameCheck', '.deleteCheck', '.removeCheck', '.imageCheck'].forEach(name => {
+    ['.editCheck', '.update_check', '.refreshCheck', '.renameCheck', '.deleteCheck', '.removeCheck', '.imageCheck'].forEach(name => {
         let lastCheck = null;
 
         $(name).on('click', function(event) {

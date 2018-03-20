@@ -2,14 +2,11 @@
 
 """Process TV module."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
 import shutil
 import stat
 
-import shutil_custom
 from unrar2 import RarFile
 from unrar2.rar_exceptions import (
     ArchiveHeaderBroken,
@@ -19,12 +16,13 @@ from unrar2.rar_exceptions import (
     InvalidRARArchiveUsage,
 )
 
-from medusa import app, db, helpers, notifiers
+from medusa import app, helpers, notifiers
+from medusa.databases import db
 from medusa.downloaders import torrent
 from medusa.helper.common import is_sync_file
 from medusa.helper.exceptions import (
     EpisodePostProcessingFailedException,
-    FailedPostProcessingFailedException, ex,
+    FailedPostProcessingFailedException,
 )
 from medusa.name_parser.parser import (
     InvalidNameException,
@@ -33,13 +31,11 @@ from medusa.name_parser.parser import (
 from medusa.processing import failed, post
 from medusa.subtitles import accept_any, accept_unknown, get_embedded_subtitles
 
-shutil.copyfile = shutil_custom.copyfile_custom
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-class ProcessResult(object):
-
+class ProcessResult:
     IGNORED_FOLDERS = ('@eaDir', '#recycle',)
 
     def __init__(self, path, process_method=None):
@@ -268,7 +264,7 @@ class ProcessResult(object):
         """Return the path to a folder and its contents as a tuple."""
         # If resource_name is a file and not an NZB, process it directly
         if self.resource_name and (not self.resource_name.endswith('.nzb') and
-                                   os.path.isfile(os.path.join(path, self.resource_name))):
+                                       os.path.isfile(os.path.join(path, self.resource_name))):
             yield path, [self.resource_name]
         else:
             topdown = True if self.directory == path else False
@@ -376,14 +372,14 @@ class ProcessResult(object):
                 log.info("Deleting folder (if it's empty): {0}".format(folder))
                 os.rmdir(folder)
             except (OSError, IOError) as error:
-                log.warning('Unable to delete folder: {0}: {1}'.format(folder, ex(error)))
+                log.warning('Unable to delete folder: {0}: {1}'.format(folder, error))
                 return False
         else:
             try:
                 log.info('Deleting folder: {0}'.format(folder))
                 shutil.rmtree(folder)
             except (OSError, IOError) as error:
-                log.warning('Unable to delete folder: {0}: {1}'.format(folder, ex(error)))
+                log.warning('Unable to delete folder: {0}: {1}'.format(folder, error))
                 return False
 
         return True
@@ -421,11 +417,11 @@ class ProcessResult(object):
                 try:
                     os.chmod(cur_file_path, stat.S_IWRITE)
                 except OSError as error:
-                    self.log(logging.DEBUG, 'Cannot change permissions of {0}: {1}'.format(cur_file_path, ex(error)))
+                    self.log(logging.DEBUG, 'Cannot change permissions of {0}: {1}'.format(cur_file_path, error))
             try:
                 os.remove(cur_file_path)
             except OSError as error:
-                self.log(logging.DEBUG, 'Unable to delete file {0}: {1}'.format(cur_file, ex(error)))
+                self.log(logging.DEBUG, 'Unable to delete file {0}: {1}'.format(cur_file, error))
 
     def unrar(self, path, rar_files, force=False):
         """
@@ -455,13 +451,13 @@ class ProcessResult(object):
                                             if not each.isdir]:
                         if not force and self.already_postprocessed(file_in_archive):
                             self.log(logging.DEBUG, 'Archive file already post-processed, extraction skipped: {0}'.format
-                                     (file_in_archive))
+                            (file_in_archive))
                             skip_extraction = True
                             break
 
                         if app.POSTPONE_IF_NO_SUBS and os.path.isfile(os.path.join(path, file_in_archive)):
                             self.log(logging.DEBUG, 'Archive file already extracted, extraction skipped: {0}'.format
-                                     (file_in_archive))
+                            (file_in_archive))
                             skip_extraction = True
                             break
 
@@ -487,7 +483,7 @@ class ProcessResult(object):
                 except InvalidRARArchive:
                     failure = ('Invalid Rar Archive', 'Unpacking Failed with an Invalid Rar Archive Error')
                 except Exception as error:
-                    failure = (ex(error), 'Unpacking failed for an unknown reason')
+                    failure = (error, 'Unpacking failed for an unknown reason')
 
                 if failure is not None:
                     self.log(logging.WARNING, 'Failed unpacking archive {0}: {1}'.format(archive, failure[0]))
@@ -515,7 +511,7 @@ class ProcessResult(object):
 
         if history_result:
             self.log(logging.DEBUG, "You're trying to post-process a file that has already "
-                     "been processed, skipping: {0}".format(video_file))
+                                    "been processed, skipping: {0}".format(video_file))
             return True
 
     def process_media(self, path, video_files, force=False, is_priority=None, ignore_subs=False):
@@ -550,7 +546,7 @@ class ProcessResult(object):
             except EpisodePostProcessingFailedException as error:
                 processor = None
                 self.result = False
-                process_fail_message = ex(error)
+                process_fail_message = error
 
             if processor:
                 self._output.append(processor.output)
@@ -570,26 +566,26 @@ class ProcessResult(object):
                 # We want to ignore embedded subtitles and video has at least one
                 if accept_unknown(embedded_subs):
                     self.log(logging.INFO, "Found embedded unknown subtitles and we don't want to ignore them. "
-                             "Continuing the post-processing of this file: {0}".format(video))
+                                           "Continuing the post-processing of this file: {0}".format(video))
                 elif accept_any(embedded_subs):
                     self.log(logging.INFO, 'Found wanted embedded subtitles. '
-                             'Continuing the post-processing of this file: {0}'.format(video))
+                                           'Continuing the post-processing of this file: {0}'.format(video))
                 else:
                     associated_subs = processor.list_associated_files(path, subtitles_only=True)
                     if not associated_subs:
                         self.log(logging.DEBUG, 'No subtitles associated. Postponing the post-processing of this file: '
-                                 '{0}'.format(video))
+                                                '{0}'.format(video))
                         self.postpone_processing = True
                         return False
                     else:
                         self.log(logging.INFO, 'Found associated subtitles. '
-                                 'Continuing the post-processing of this file: {0}'.format(video))
+                                               'Continuing the post-processing of this file: {0}'.format(video))
             else:
                 self.log(logging.INFO, 'Subtitles disabled for this show. '
-                         'Continuing the post-processing of this file: {0}'.format(video))
+                                       'Continuing the post-processing of this file: {0}'.format(video))
         else:
             self.log(logging.INFO, 'Subtitles check was disabled for this episode in manual post-processing. '
-                     'Continuing the post-processing of this file: {0}'.format(video))
+                                   'Continuing the post-processing of this file: {0}'.format(video))
         return True
 
     def process_failed(self, path):
@@ -602,7 +598,7 @@ class ProcessResult(object):
             except FailedPostProcessingFailedException as error:
                 processor = None
                 self.result = False
-                process_fail_message = ex(error)
+                process_fail_message = error
 
             if processor:
                 self._output.append(processor.output)
@@ -613,10 +609,10 @@ class ProcessResult(object):
 
             if self.result:
                 self.log(logging.INFO, 'Failed Download Processing succeeded: {0}, {1}'.format
-                         (self.resource_name, path))
+                (self.resource_name, path))
             else:
                 self.log(logging.WARNING, 'Failed Download Processing failed: {0}, {1}: {2}'.format
-                         (self.resource_name, path, process_fail_message))
+                (self.resource_name, path, process_fail_message))
 
     @staticmethod
     def subtitles_enabled(*args):
@@ -636,7 +632,7 @@ class ProcessResult(object):
                     main_db_con = db.DBConnection()
                     sql_results = main_db_con.select("SELECT subtitles FROM tv_shows WHERE indexer = ? AND indexer_id = ? LIMIT 1",
                                                      [parse_result.series.indexer, parse_result.series.indexerid])
-                    return bool(sql_results[0][b'subtitles']) if sql_results else False
+                    return bool(sql_results[0]['subtitles']) if sql_results else False
 
                 log.warning('Empty indexer ID for: {name}'.format(name=name))
             except (InvalidNameException, InvalidShowException):

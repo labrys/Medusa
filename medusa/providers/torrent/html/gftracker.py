@@ -2,13 +2,11 @@
 
 """Provider code for GFTracker."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
-from requests.compat import urljoin
 from requests.utils import dict_from_cookiejar
 
 from medusa import tv
@@ -30,7 +28,7 @@ class GFTrackerProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(GFTrackerProvider, self).__init__('GFTracker')
+        super().__init__('GFTracker')
 
         # Credentials
         self.username = None
@@ -148,7 +146,7 @@ class GFTrackerProvider(TorrentProvider):
                 try:
 
                     title_anchor = cells[labels.index('Name')].find('a').find_next('a') or \
-                        cells[labels.index('Name')].find('a')
+                                   cells[labels.index('Name')].find('a')
                     title = title_anchor.get('title') if title_anchor else None
                     download_url = urljoin(self.url, cells[labels.index('DL')].find('a')['href'])
                     if not all([title, download_url]):

@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 import traceback
@@ -20,7 +20,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class AnidbPopular(object):  # pylint: disable=too-few-public-methods
+class AnidbPopular:  # pylint: disable=too-few-public-methods
     def __init__(self):
         """Class retrieves a specified recommended show list from Trakt.
 
@@ -68,7 +68,7 @@ class AnidbPopular(object):  # pylint: disable=too-few-public-methods
 
         return rec_show
 
-    def fetch_popular_shows(self, list_type=REQUEST_HOT):
+    def fetch_popular_series(self, list_type=REQUEST_HOT):
         """Get popular show information from IMDB."""
         shows = []
         result = []

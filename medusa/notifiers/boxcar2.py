@@ -2,8 +2,6 @@
 
 """Boxcar2 module."""
 
-from __future__ import unicode_literals
-
 import logging
 
 from medusa import app, common
@@ -14,7 +12,7 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     """Boxcar2 class."""
 
     def __init__(self):

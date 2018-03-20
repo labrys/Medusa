@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Medusa. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
+
 
 import os
 import posixpath
@@ -34,7 +34,7 @@ class MissingTvdbMapping(Exception):
     """Exception used when a show can't be mapped to a tvdb indexer id."""
 
 
-class RecommendedShow(object):
+class RecommendedShow:
     """Base class for show recommendations."""
 
     def __init__(self, rec_show_prov, series_id, title, mapped_indexer, mapped_series_id, **show_attr):
@@ -71,7 +71,7 @@ class RecommendedShow(object):
         self.votes = show_attr.get('votes')
         if self.votes and not isinstance(self.votes, int):
             trans_mapping = {ord(c): None for c in ['.', ',']}
-            self.votes = int(self.votes.decode('utf-8').translate(trans_mapping))
+            self.votes = int(self.votes.translate(trans_mapping))
 
         self.image_href = show_attr.get('image_href')
         self.image_src = show_attr.get('image_src')
@@ -80,8 +80,8 @@ class RecommendedShow(object):
 
         # Check if the show is currently already in the db
         self.show_in_list = bool([show.indexerid for show in app.showList
-                                 if show.series_id == self.mapped_series_id
-                                 and show.indexer == self.mapped_indexer])
+                                  if show.series_id == self.mapped_series_id
+                                  and show.indexer == self.mapped_indexer])
         self.session = session
 
     def cache_image(self, image_url, default=None):

@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Usage: python -m medusa [OPTION]...
 
@@ -22,8 +23,6 @@ Options:
                          is installed
 """
 
-from __future__ import print_function, unicode_literals
-
 import datetime
 import getopt
 import io
@@ -41,21 +40,44 @@ import threading
 import time
 
 from configobj import ConfigObj
-from six import text_type
 
+import medusa.databases.cache
+import medusa.databases.db
+import medusa.databases.failed
+import medusa.databases.main
+import medusa.show.queue
 from medusa import (
-    app, cache, db, event_queue, exception_handler,
-    helpers, metadata, name_cache, naming, network_timezones, providers,
-    scheduler, show_queue, show_updater, subtitles, system, torrent_checker,
-    trakt_checker, version_checker,
+    app,
+    cache,
+    databases,
+    event_queue,
+    exception_handler,
+    helpers,
+    metadata,
+    name_cache,
+    naming,
+    network_timezones,
+    providers,
+    scheduler,
+    show,
+    subtitles,
+    system,
+    torrent_checker,
+    trakt_checker,
+    version_checker,
 )
 from medusa.common import SD, SKIPPED, WANTED
 from medusa.config import (
-    ConfigMigrator, check_section, check_setting_bool,
-    check_setting_float, check_setting_int, check_setting_list,
-    check_setting_str, load_provider_setting, save_provider_setting,
+    ConfigMigrator,
+    check_section,
+    check_setting_bool,
+    check_setting_float,
+    check_setting_int,
+    check_setting_list,
+    check_setting_str,
+    load_provider_setting,
+    save_provider_setting,
 )
-from medusa.databases import cache_db, failed_db, main_db
 from medusa.event_queue import Events
 from medusa.indexers.config import INDEXER_TVDB, INDEXER_TVMAZE
 from medusa.logger.adapters.style import BraceAdapter
@@ -68,6 +90,7 @@ from medusa.search.daily import DailySearcher
 from medusa.search.proper import ProperFinder
 from medusa.search.queue import ForcedSearchQueue, SearchQueue, SnatchQueue
 from medusa.server.core import AppWebServer
+from medusa.show.updater import ShowUpdater
 from medusa.themes import read_themes
 from medusa.tv import Series
 
@@ -76,7 +99,7 @@ log.addHandler(logging.NullHandler())
 log = BraceAdapter(log)
 
 
-class Application(object):
+class Application:
     """Main application module."""
 
     def __init__(self):
@@ -171,31 +194,6 @@ class Application(object):
         app.PROG_DIR = os.path.dirname(app.MY_FULLNAME)
         app.DATA_DIR = app.PROG_DIR
         app.MY_ARGS = args
-
-        try:
-            locale.setlocale(locale.LC_ALL, '')
-            app.SYS_ENCODING = locale.getpreferredencoding()
-        except (locale.Error, IOError):
-            app.SYS_ENCODING = 'UTF-8'
-
-        # pylint: disable=no-member
-        if (not app.SYS_ENCODING or
-                app.SYS_ENCODING.lower() in ('ansi_x3.4-1968', 'us-ascii', 'ascii', 'charmap') or
-                (sys.platform.startswith('win') and
-                    sys.getwindowsversion()[0] >= 6 and
-                    text_type(getattr(sys.stdout, 'device', sys.stdout).encoding).lower() in ('cp65001', 'charmap'))):
-            app.SYS_ENCODING = 'UTF-8'
-
-        # TODO: Continue working on making this unnecessary, this hack creates all sorts of hellish problems
-        if not hasattr(sys, 'setdefaultencoding'):
-            reload(sys)
-
-        try:
-            # On non-unicode builds this will raise an AttributeError, if encoding type is not valid it throws a LookupError
-            sys.setdefaultencoding(app.SYS_ENCODING)  # pylint: disable=no-member
-        except (AttributeError, LookupError):
-            sys.exit('Sorry, you MUST add the Medusa folder to the PYTHONPATH environment variable or '
-                     'find another way to force Python to use {encoding} for string encoding.'.format(encoding=app.SYS_ENCODING))
 
         self.console_logging = (not hasattr(sys, 'frozen')) or (app.MY_NAME.lower().find('-console') > 0)
 
@@ -522,7 +520,7 @@ class Application(object):
             app.SUBLIMINAL_LOG = bool(check_setting_int(app.CFG, 'General', 'subliminal_log', 0))
             app.PRIVACY_LEVEL = check_setting_str(app.CFG, 'General', 'privacy_level', 'normal')
             app.SSL_VERIFY = bool(check_setting_int(app.CFG, 'General', 'ssl_verify', 1))
-            app.INDEXER_DEFAULT_LANGUAGE = check_setting_str(app.CFG, 'General', 'indexerDefaultLang', 'en')
+            app.INDEXER_DEFAULT_LANGUAGE = check_setting_str(app.CFG, 'General', 'indexer_default_lang', 'en')
             app.EP_DEFAULT_DELETED_STATUS = check_setting_int(app.CFG, 'General', 'ep_default_deleted_status', 6)
             app.LAUNCH_BROWSER = bool(check_setting_int(app.CFG, 'General', 'launch_browser', 1))
             app.DOWNLOAD_URL = check_setting_str(app.CFG, 'General', 'download_url', '')
@@ -930,7 +928,7 @@ class Application(object):
             app.HOME_LAYOUT = check_setting_str(app.CFG, 'GUI', 'home_layout', 'poster')
             app.HISTORY_LAYOUT = check_setting_str(app.CFG, 'GUI', 'history_layout', 'detailed')
             app.HISTORY_LIMIT = check_setting_str(app.CFG, 'GUI', 'history_limit', '100')
-            app.DISPLAY_SHOW_SPECIALS = bool(check_setting_int(app.CFG, 'GUI', 'display_show_specials', 1))
+            app.DISPLAY_SHOW_SPECIALS = bool(check_setting_int(app.CFG, 'GUI', 'display_series_specials', 1))
             app.COMING_EPS_LAYOUT = check_setting_str(app.CFG, 'GUI', 'coming_eps_layout', 'banner')
             app.COMING_EPS_DISPLAY_PAUSED = bool(check_setting_int(app.CFG, 'GUI', 'coming_eps_display_paused', 0))
             app.COMING_EPS_SORT = check_setting_str(app.CFG, 'GUI', 'coming_eps_sort', 'date')
@@ -966,18 +964,18 @@ class Application(object):
                 try:
                     import getpass
                     app.OS_USER = getpass.getuser()
-                except StandardError:
+                except Exception:
                     pass
 
             try:
                 app.LOCALE = locale.getdefaultlocale()
-            except StandardError:
+            except Exception:
                 app.LOCALE = None, None
 
             try:
                 import ssl
                 app.OPENSSL_VERSION = ssl.OPENSSL_VERSION
-            except StandardError:
+            except Exception:
                 pass
 
             if app.VERSION_NOTIFY:
@@ -985,7 +983,7 @@ class Application(object):
                 if updater:
                     app.APP_VERSION = updater.get_cur_version()
 
-            app.MAJOR_DB_VERSION, app.MINOR_DB_VERSION = db.DBConnection().check_db_version()
+            app.MAJOR_DB_VERSION, app.MINOR_DB_VERSION = databases.db.DBConnection().check_db_version()
 
             # initialize the static NZB and TORRENT providers
             app.providerList = providers.make_provider_list()
@@ -1065,24 +1063,24 @@ class Application(object):
                 app.SUBTITLES_ERASE_CACHE = 0
 
             # initialize the main SB database
-            main_db_con = db.DBConnection()
-            db.upgrade_database(main_db_con, main_db.InitialSchema)
+            main_db_con = databases.db.DBConnection()
+            databases.db.upgrade_database(main_db_con, databases.main.InitialSchema)
 
             # initialize the cache database
-            cache_db_con = db.DBConnection('cache.db')
-            db.upgrade_database(cache_db_con, cache_db.InitialSchema)
+            cache_db_con = databases.db.DBConnection('cache.db')
+            databases.db.upgrade_database(cache_db_con, databases.cache.InitialSchema)
 
             # Performs a vacuum on cache.db
             log.debug(u'Performing a vacuum on the CACHE database')
             cache_db_con.action('VACUUM')
 
             # initialize the failed downloads database
-            failed_db_con = db.DBConnection('failed.db')
-            db.upgrade_database(failed_db_con, failed_db.InitialSchema)
+            failed_db_con = databases.db.DBConnection('failed.db')
+            databases.db.upgrade_database(failed_db_con, databases.failed.InitialSchema)
 
             # fix up any db problems
-            main_db_con = db.DBConnection()
-            db.sanity_check_database(main_db_con, main_db.MainSanityCheck)
+            databases.main_db_con = databases.db.DBConnection()
+            databases.db.sanity_check_database(main_db_con, databases.main.MainSanityCheck)
 
             # migrate the config if it needs it
             migrator = ConfigMigrator(app.CFG)
@@ -1105,43 +1103,43 @@ class Application(object):
             # initialize schedulers
             # updaters
             app.version_check_scheduler = scheduler.Scheduler(version_checker.CheckVersion(),
-                                                              cycleTime=datetime.timedelta(hours=app.UPDATE_FREQUENCY),
-                                                              threadName='CHECKVERSION', silent=False)
+                                                              cycle_time=datetime.timedelta(hours=app.UPDATE_FREQUENCY),
+                                                              thread_name='CHECKVERSION', silent=False)
 
-            app.show_queue_scheduler = scheduler.Scheduler(show_queue.ShowQueue(),
-                                                           cycleTime=datetime.timedelta(seconds=3),
-                                                           threadName='SHOWQUEUE')
+            app.show_queue_scheduler = scheduler.Scheduler(show.queue.ShowQueue(),
+                                                           cycle_time=datetime.timedelta(seconds=3),
+                                                           thread_name='SHOWQUEUE')
 
-            app.show_update_scheduler = scheduler.Scheduler(show_updater.ShowUpdater(),
-                                                            cycleTime=datetime.timedelta(hours=1),
-                                                            threadName='SHOWUPDATER',
+            app.show_update_scheduler = scheduler.Scheduler(ShowUpdater(),
+                                                            cycle_time=datetime.timedelta(hours=1),
+                                                            thread_name='SHOWUPDATER',
                                                             start_time=datetime.time(hour=app.SHOWUPDATE_HOUR,
                                                                                      minute=random.randint(0, 59)))
 
             # snatcher used for manual search, manual picked results
             app.manual_snatch_scheduler = scheduler.Scheduler(SnatchQueue(),
-                                                              cycleTime=datetime.timedelta(seconds=3),
-                                                              threadName='MANUALSNATCHQUEUE')
+                                                              cycle_time=datetime.timedelta(seconds=3),
+                                                              thread_name='MANUALSNATCHQUEUE')
             # searchers
             app.search_queue_scheduler = scheduler.Scheduler(SearchQueue(),
-                                                             cycleTime=datetime.timedelta(seconds=3),
-                                                             threadName='SEARCHQUEUE')
+                                                             cycle_time=datetime.timedelta(seconds=3),
+                                                             thread_name='SEARCHQUEUE')
 
             app.forced_search_queue_scheduler = scheduler.Scheduler(ForcedSearchQueue(),
-                                                                    cycleTime=datetime.timedelta(seconds=3),
-                                                                    threadName='FORCEDSEARCHQUEUE')
+                                                                    cycle_time=datetime.timedelta(seconds=3),
+                                                                    thread_name='FORCEDSEARCHQUEUE')
 
             # TODO: update_interval should take last daily/backlog times into account!
             update_interval = datetime.timedelta(minutes=app.DAILYSEARCH_FREQUENCY)
             app.daily_search_scheduler = scheduler.Scheduler(DailySearcher(),
-                                                             cycleTime=update_interval,
-                                                             threadName='DAILYSEARCHER',
+                                                             cycle_time=update_interval,
+                                                             thread_name='DAILYSEARCHER',
                                                              run_delay=update_interval)
 
             update_interval = datetime.timedelta(minutes=app.BACKLOG_FREQUENCY)
             app.backlog_search_scheduler = BacklogSearchScheduler(BacklogSearcher(),
-                                                                  cycleTime=update_interval,
-                                                                  threadName='BACKLOG',
+                                                                  cycle_time=update_interval,
+                                                                  thread_name='BACKLOG',
                                                                   run_delay=update_interval)
 
             if app.CHECK_PROPERS_INTERVAL in app.PROPERS_SEARCH_INTERVAL:
@@ -1152,8 +1150,8 @@ class Application(object):
                 run_at = datetime.time(hour=1)  # 1 AM
 
             app.proper_finder_scheduler = scheduler.Scheduler(ProperFinder(),
-                                                              cycleTime=update_interval,
-                                                              threadName='FINDPROPERS',
+                                                              cycle_time=update_interval,
+                                                              thread_name='FINDPROPERS',
                                                               start_time=run_at,
                                                               run_delay=update_interval)
 
@@ -1161,28 +1159,28 @@ class Application(object):
             update_interval = datetime.timedelta(minutes=app.AUTOPOSTPROCESSOR_FREQUENCY)
             app.auto_post_processor_scheduler = scheduler.Scheduler(
                 auto.PostProcessor(),
-                cycleTime=update_interval,
-                threadName='POSTPROCESSOR',
+                cycle_time=update_interval,
+                thread_name='POSTPROCESSOR',
                 silent=not app.PROCESS_AUTOMATICALLY,
                 run_delay=update_interval)
             update_interval = datetime.timedelta(minutes=5)
             app.trakt_checker_scheduler = scheduler.Scheduler(trakt_checker.TraktChecker(),
-                                                              cycleTime=datetime.timedelta(hours=1),
-                                                              threadName='TRAKTCHECKER',
+                                                              cycle_time=datetime.timedelta(hours=1),
+                                                              thread_name='TRAKTCHECKER',
                                                               run_delay=update_interval,
                                                               silent=not app.USE_TRAKT)
 
             update_interval = datetime.timedelta(hours=app.SUBTITLES_FINDER_FREQUENCY)
             app.subtitles_finder_scheduler = scheduler.Scheduler(subtitles.SubtitlesFinder(),
-                                                                 cycleTime=update_interval,
-                                                                 threadName='FINDSUBTITLES',
+                                                                 cycle_time=update_interval,
+                                                                 thread_name='FINDSUBTITLES',
                                                                  run_delay=update_interval,
                                                                  silent=not app.USE_SUBTITLES)
 
             update_interval = datetime.timedelta(minutes=app.TORRENT_CHECKER_FREQUENCY)
             app.torrent_checker_scheduler = scheduler.Scheduler(torrent_checker.TorrentChecker(),
-                                                                cycleTime=update_interval,
-                                                                threadName='TORRENTCHECKER',
+                                                                cycle_time=update_interval,
+                                                                thread_name='TORRENTCHECKER',
                                                                 run_delay=update_interval)
 
             app.__INITIALIZED__ = True
@@ -1191,8 +1189,8 @@ class Application(object):
     @staticmethod
     def get_backlog_cycle_time():
         """Return backlog cycle frequency."""
-        cycletime = app.DAILYSEARCH_FREQUENCY * 2 + 7
-        return max([cycletime, 720])
+        cycle_time = app.DAILYSEARCH_FREQUENCY * 2 + 7
+        return max([cycle_time, 720])
 
     @staticmethod
     def restore_cache_folder(cache_folder):
@@ -1207,7 +1205,19 @@ class Application(object):
 
         try:
             def restore_cache(src_folder, dest_folder):
+                """
+
+                :param src_folder:
+                :param dest_folder:
+                :return:
+                """
+
                 def path_leaf(path):
+                    """
+
+                    :param path:
+                    :return:
+                    """
                     head, tail = os.path.split(path)
                     return tail or os.path.basename(head)
 
@@ -1471,7 +1481,7 @@ class Application(object):
         new_config['General']['naming_multi_ep'] = int(app.NAMING_MULTI_EP)
         new_config['General']['naming_anime_multi_ep'] = int(app.NAMING_ANIME_MULTI_EP)
         new_config['General']['naming_anime'] = int(app.NAMING_ANIME)
-        new_config['General']['indexerDefaultLang'] = app.INDEXER_DEFAULT_LANGUAGE
+        new_config['General']['indexer_default_lang'] = app.INDEXER_DEFAULT_LANGUAGE
         new_config['General']['ep_default_deleted_status'] = int(app.EP_DEFAULT_DELETED_STATUS)
         new_config['General']['launch_browser'] = int(app.LAUNCH_BROWSER)
         new_config['General']['trash_remove_show'] = int(app.TRASH_REMOVE_SHOW)
@@ -1838,7 +1848,7 @@ class Application(object):
         new_config['GUI']['home_layout'] = app.HOME_LAYOUT
         new_config['GUI']['history_layout'] = app.HISTORY_LAYOUT
         new_config['GUI']['history_limit'] = app.HISTORY_LIMIT
-        new_config['GUI']['display_show_specials'] = int(app.DISPLAY_SHOW_SPECIALS)
+        new_config['GUI']['display_series_specials'] = int(app.DISPLAY_SHOW_SPECIALS)
         new_config['GUI']['coming_eps_layout'] = app.COMING_EPS_LAYOUT
         new_config['GUI']['coming_eps_display_paused'] = int(app.COMING_EPS_DISPLAY_PAUSED)
         new_config['GUI']['coming_eps_sort'] = app.COMING_EPS_SORT
@@ -2025,7 +2035,7 @@ class Application(object):
 
         try:
             log.info('Shutting down Tornado')
-            self.web_server.shutDown()
+            self.web_server.shut_down()
             self.web_server.join(10)
         except Exception as error:
             exception_handler.handle(error)
@@ -2072,18 +2082,18 @@ class Application(object):
         """Populate the showList with shows from the database."""
         log.debug('Loading initial show list')
 
-        main_db_con = db.DBConnection()
+        main_db_con = databases.db.DBConnection()
         sql_results = main_db_con.select('SELECT indexer, indexer_id, location FROM tv_shows;')
 
         app.showList = []
         for sql_show in sql_results:
             try:
-                cur_show = Series(sql_show[b'indexer'], sql_show[b'indexer_id'])
+                cur_show = Series(sql_show['indexer'], sql_show['indexer_id'])
                 cur_show.next_episode()
                 app.showList.append(cur_show)
             except Exception as error:
                 exception_handler.handle(error, 'There was an error creating the show in {location}',
-                                         location=sql_show[b'location'])
+                                         location=sql_show['location'])
 
     @staticmethod
     def restore_db(src_dir, dst_dir):

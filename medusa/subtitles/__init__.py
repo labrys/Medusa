@@ -1,3 +1,4 @@
+# coding=utf-8
 """Subtitles module."""
 
 import datetime
@@ -17,7 +18,6 @@ from babelfish import (
     language_converters,
 )
 from dogpile.cache.api import NO_VALUE
-from six import iteritems, string_types, text_type
 from subliminal import (
     ProviderPool,
     compute_score,
@@ -30,16 +30,16 @@ from subliminal.core import search_external_subtitles
 from subliminal.score import episode_scores
 from subliminal.subtitle import get_subtitle_path
 
-from medusa import app, db, helpers, history
+from medusa import app, helpers, history
 from medusa.cache import cache, memory_cache
 from medusa.common import Quality, cpu_presets
+from medusa.databases import db
 from medusa.helper.common import (
     dateTimeFormat,
     episode_num,
     remove_extension,
     subtitle_extensions,
 )
-from medusa.helper.exceptions import ex
 from medusa.helpers import is_media_file, is_rar_file
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.show.show import Show
@@ -158,7 +158,7 @@ def needs_subtitles(subtitles):
     if not wanted:
         return False
 
-    if isinstance(subtitles, string_types):
+    if isinstance(subtitles, str):
         subtitles = {subtitle.strip() for subtitle in subtitles.split(',') if subtitle.strip()}
 
     if app.SUBTITLES_MULTI:
@@ -305,17 +305,7 @@ def score_subtitles(subtitles_list, video):
 
 
 def list_subtitles(tv_episode, video_path=None, limit=40):
-    """List subtitles for the given episode in the given path.
-
-    :param tv_episode:
-    :type tv_episode: medusa.tv.Episode
-    :param video_path:
-    :type video_path: text_type
-    :param limit:
-    :type limit: int
-    :return:
-    :rtype: list of dict
-    """
+    """List subtitles for the given episode in the given path."""
     subtitles_dir = get_subtitles_dir(video_path)
     release_name = tv_episode.release_name
 
@@ -328,7 +318,7 @@ def list_subtitles(tv_episode, video_path=None, limit=40):
     subtitles_list = pool.list_subtitles(video, languages)
     scored_subtitles = score_subtitles(subtitles_list, video)[:limit]
     for subtitle, _ in scored_subtitles:
-        cache.set(subtitle_key.format(id=subtitle.id).encode('utf-8'), subtitle)
+        cache.set(subtitle_key.format(id=subtitle.id), subtitle)
 
     log.debug("Scores computed for release: {release}",
               {'release': os.path.basename(video_path)})
@@ -349,18 +339,8 @@ def list_subtitles(tv_episode, video_path=None, limit=40):
 
 
 def save_subtitle(tv_episode, subtitle_id, video_path=None):
-    """Save the subtitle with the given id.
-
-    :param tv_episode:
-    :type tv_episode: medusa.tv.Episode
-    :param subtitle_id:
-    :type subtitle_id: text_type
-    :param video_path:
-    :type video_path: text_type
-    :return:
-    :rtype: list of str
-    """
-    subtitle = cache.get(subtitle_key.format(id=subtitle_id).encode('utf-8'))
+    """Save the subtitle with the given id."""
+    subtitle = cache.get(subtitle_key.format(id=subtitle_id))
     if subtitle == NO_VALUE:
         log.error('Unable to find cached subtitle ID: {}', subtitle_id)
         return
@@ -381,17 +361,11 @@ def download_subtitles(tv_episode, video_path=None, subtitles=True, embedded_sub
     Checks whether subtitles are needed or not
 
     :param tv_episode: the episode to download subtitles
-    :type tv_episode: medusa.tv.Episode
     :param video_path: the video path. If none, the episode location will be used
-    :type video_path: str
     :param subtitles: True if existing external subtitles should be taken into account
-    :type subtitles: bool
     :param embedded_subtitles: True if embedded subtitles should be taken into account
-    :type embedded_subtitles: bool
     :param lang:
-    :type lang: str
     :return: a sorted list of the opensubtitles codes for the downloaded subtitles
-    :rtype: list of str
     """
     video_path = video_path or tv_episode.location
     show_name = tv_episode.series.name
@@ -483,7 +457,7 @@ def save_subs(tv_episode, video, found_subtitles, video_path=None):
     show_indexerid = tv_episode.series.indexerid
     status = tv_episode.status
     subtitles_dir = get_subtitles_dir(video_path)
-    saved_subtitles = save_subtitles(video, found_subtitles, directory=_encode(subtitles_dir),
+    saved_subtitles = save_subtitles(video, found_subtitles, directory=subtitles_dir,
                                      single=not app.SUBTITLES_MULTI)
 
     for subtitle in saved_subtitles:
@@ -627,66 +601,6 @@ def get_current_subtitles(tv_episode):
         return get_subtitles(video)
 
 
-def _encode(value, fallback=None):
-    """Encode the value using the specified encoding.
-
-    It fallbacks to the specified encoding or SYS_ENCODING if not defined
-
-    :param value: the value to be encoded
-    :type value: str
-    :param encoding: the encoding to be used
-    :type encoding: str
-    :param fallback: the fallback encoding to be used
-    :type fallback: str
-    :return: the encoded value
-    :rtype: str
-    """
-    encoding = 'utf-8' if os.name != 'nt' else app.SYS_ENCODING
-
-    try:
-        return value.encode(encoding)
-    except UnicodeEncodeError:
-        log.debug(
-            u'Failed to encode to {encoding},'
-            u' falling back to {fallback}: {value!r}', {
-                'encoding': encoding,
-                'fallback': fallback or app.SYS_ENCODING,
-                'value': value,
-            }
-        )
-        return value.encode(fallback or app.SYS_ENCODING)
-
-
-def _decode(value, fallback=None):
-    """Decode the value using the specified encoding.
-
-    It fallbacks to the specified encoding or SYS_ENCODING if not defined
-
-    :param value: the value to be encoded
-    :type value: str
-    :param encoding: the encoding to be used
-    :type encoding: str
-    :param fallback: the fallback encoding to be used
-    :type fallback: str
-    :return: the decoded value
-    :rtype: unicode
-    """
-    encoding = 'utf-8' if os.name != 'nt' else app.SYS_ENCODING
-
-    try:
-        return text_type(value, encoding)
-    except UnicodeDecodeError:
-        log.debug(
-            u'Failed to decode to {encoding},'
-            u' falling back to {fallback}: {value!r}', {
-                'encoding': encoding,
-                'fallback': fallback or app.SYS_ENCODING,
-                'value': value,
-            }
-        )
-        return text_type(value, fallback or app.SYS_ENCODING)
-
-
 def get_subtitle_description(subtitle):
     """Return a human readable name/description for the given subtitle (if possible).
 
@@ -696,19 +610,19 @@ def get_subtitle_description(subtitle):
     :rtype: str
     """
     desc = None
-    sub_id = text_type(subtitle.id)
+    sub_id = subtitle.id
     if hasattr(subtitle, 'hash') and subtitle.hash:
-        desc = text_type(subtitle.hash)
+        desc = subtitle.hash
     if hasattr(subtitle, 'filename') and subtitle.filename:
         desc = subtitle.filename
     elif hasattr(subtitle, 'version') and subtitle.version:
-        desc = text_type(subtitle.version)
+        desc = subtitle.version
     elif hasattr(subtitle, 'name') and subtitle.name:
         desc = subtitle.name
     if hasattr(subtitle, 'release') and subtitle.release:
         desc = subtitle.release
     if hasattr(subtitle, 'releases') and subtitle.releases:
-        desc = text_type(subtitle.releases)
+        desc = subtitle.releases
 
     return sub_id if not desc else desc
 
@@ -749,22 +663,19 @@ def get_video(tv_episode, video_path, subtitles_dir=None, subtitles=True, embedd
     payload = {'subtitles_dir': subtitles_dir, 'subtitles': subtitles, 'embedded_subtitles': embedded_subtitles,
                'release_name': release_name}
     cached_payload = memory_cache.get(key, expiration_time=VIDEO_EXPIRATION_TIME)
-    if cached_payload != NO_VALUE and {k: v for k, v in iteritems(cached_payload) if k != 'video'} == payload:
+    if cached_payload != NO_VALUE and {k: v for k, v in cached_payload.items() if k != 'video'} == payload:
         log.debug(u'Found cached video information under key {}', key)
         return cached_payload['video']
 
-    video_path = _encode(video_path)
-    subtitles_dir = _encode(subtitles_dir or get_subtitles_dir(video_path))
+    subtitles_dir = subtitles_dir or get_subtitles_dir(video_path)
 
     log.debug(u'Scanning video {}...', video_path)
 
     try:
         video = scan_video(video_path)
     except ValueError as e:
-        log.warning(u'Unable to scan video: {}. Error: {}',
-                    video_path, e.message)
+        log.warning(f'Unable to scan video: {video_path}. Error: {e}')
     else:
-
         # Add hash of our custom provider Itasa
         video.size = os.path.getsize(video_path)
         if video.size > 10485760:
@@ -803,7 +714,7 @@ def get_subtitles_dir(video_path):
         return os.path.dirname(video_path)
 
     if os.path.isabs(app.SUBTITLES_DIR):
-        return _decode(app.SUBTITLES_DIR)
+        return app.SUBTITLES_DIR
 
     new_subtitles_path = os.path.join(os.path.dirname(video_path), app.SUBTITLES_DIR)
     if helpers.make_dir(new_subtitles_path):
@@ -853,7 +764,7 @@ def delete_unwanted_subtitles(dirpath, filename):
             os.remove(os.path.join(dirpath, filename))
         except OSError as error:
             log.info(u"Couldn't delete subtitle: {}. Error: {}",
-                     filename, ex(error))
+                     filename, error)
         else:
             log.debug(
                 u"Deleted {filename} because we don't want subtitle language"
@@ -865,7 +776,7 @@ def delete_unwanted_subtitles(dirpath, filename):
             )
 
 
-class SubtitlesFinder(object):
+class SubtitlesFinder:
     """The SubtitlesFinder will be executed every hour but will not necessarily search and download subtitles.
 
     Only if the defined rule is true.
@@ -1078,7 +989,7 @@ class SubtitlesFinder(object):
 
             ep_num = episode_num(ep_to_sub['season'], ep_to_sub['episode']) or \
                 episode_num(ep_to_sub['season'], ep_to_sub['episode'], numbering='absolute')
-            subtitle_path = _encode(ep_to_sub['location'], fallback='utf-8')
+            subtitle_path = ep_to_sub['location']
             if not os.path.isfile(subtitle_path):
                 log.debug(
                     u'Episode file does not exist,'
@@ -1224,6 +1135,6 @@ def run_subs_scripts(video_path, scripts, *args):
             log.debug(u'Script result: {}', out)
 
         except Exception as error:
-            log.info(u'Unable to run subtitles script: {}', ex(error))
+            log.info(u'Unable to run subtitles script: {}', error)
 
     invalidate_video_cache(video_path)

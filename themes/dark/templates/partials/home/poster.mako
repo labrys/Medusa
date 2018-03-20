@@ -1,11 +1,18 @@
 <%!
-    from medusa import app
     import calendar
+    import logging
+    import re
+
+    from medusa import app
     from medusa import date_time
     from medusa import network_timezones
     from medusa.helper.common import pretty_file_size
     from medusa.scene_numbering import get_xem_numbering_for_show
-    import re
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
 %>
 <%namespace file="/inc_defs.mako" import="renderQualityPill"/>
 <div class="loading-spinner"></div>
@@ -42,7 +49,7 @@
                 </div>
             % endif
         % endfor
-        <% my_show_list.sort(lambda x, y: cmp(x.name, y.name)) %>
+        <% my_show_list.sort(key=lambda x: x.name) %>
         % for cur_show in my_show_list:
         <%
             cur_airs_next = ''
@@ -99,7 +106,7 @@
                         <img src="images/poster-back-dark.png"/>
                     </div>
                     <div class="poster-overlay">
-                        <a href="home/displayShow?indexername=${cur_show.indexer_name}&seriesid=${cur_show.indexerid}"><img alt="" class="show-image" src="images/poster.png" lazy="on" series="${cur_show.slug}" asset="posterThumb"/></a>
+                        <a href="home/display_series?indexername=${cur_show.indexer_name}&seriesid=${cur_show.indexerid}"><img alt="" class="show-image" src="images/poster.png" lazy="on" series="${cur_show.slug}" asset="posterThumb"/></a>
                     </div>
                 </div>
                 <div class="show-poster-footer row">

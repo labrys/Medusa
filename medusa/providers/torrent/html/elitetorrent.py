@@ -2,12 +2,9 @@
 
 """Provider code for EliteTorrent."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -26,7 +23,7 @@ class EliteTorrentProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(EliteTorrentProvider, self).__init__('EliteTorrent')
+        super().__init__('EliteTorrent')
 
         # Credentials
         self.public = True

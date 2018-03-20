@@ -7,7 +7,6 @@ import datetime
 import logging
 import mimetypes
 import os
-import shutil
 import sys
 
 log = logging.getLogger(__name__)
@@ -23,8 +22,6 @@ def initialize():
     _register_utf8_codec()
     _configure_syspath()
     _unload_system_dogpile()
-    _use_shutil_custom()
-    _monkey_patch_fs_functions()
     # configuration
     _configure_mimetypes()
     _configure_ssl()
@@ -95,11 +92,6 @@ def _register_utf8_codec():
     codecs.register(_register_utf8)
 
 
-def _monkey_patch_fs_functions():
-    from medusa.init import filesystem
-    filesystem.initialize()
-
-
 def _early_basic_logging():
     import logging
     logging.basicConfig()
@@ -141,11 +133,6 @@ def _unload_system_dogpile():
     # prevent
     # http://stackoverflow.com/questions/2918898
     _unload_modules('dogpile')
-
-
-def _use_shutil_custom():
-    import shutil_custom
-    shutil.copyfile = shutil_custom.copyfile_custom
 
 
 def _strptime_workaround():

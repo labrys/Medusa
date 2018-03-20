@@ -123,17 +123,17 @@ if __name__ == '__main__':
     """)
     # create the test methods
     cur_tvdb_id = 1
-    for forceSearch in (True, False):
+    for force_search in (True, False):
         for name, data in TESTS.items():
             if not data["a"]:
                 continue
             filename = name.replace(' ', '_')
-            if forceSearch:
+            if force_search:
                 test_name = 'test_manual_%s_%s' % (filename, cur_tvdb_id)
             else:
                 test_name = 'test_%s_%s' % (filename, cur_tvdb_id)
 
-            test = generator(cur_tvdb_id, name, data, forceSearch)
+            test = generator(cur_tvdb_id, name, data, force_search)
             setattr(SearchTest, test_name, test)
             cur_tvdb_id += 1
 

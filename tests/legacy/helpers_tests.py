@@ -44,7 +44,7 @@ TEST_CASES = {
         '[ www.TorrentDay.com ] - Show.Name.S01E01.HDTV.x264-RLSGROUP',
         'Show.Name.S01E01.HDTV.x264-RLSGROUP[silv4]',
         'Show.Name.S01E01.HDTV.x264-RLSGROUP[AndroidTwoU]',
-        '[www.newpct1.com]Show.Name.S01E01.HDTV.x264-RLSGROUP',
+        '[www.tvsinpagar1.com]Show.Name.S01E01.HDTV.x264-RLSGROUP',
         'Show.Name.S01E01.HDTV.x264-RLSGROUP-NZBGEEK',
         '.www.Cpasbien.pwShow.Name.S01E01.HDTV.x264-RLSGROUP',
         'Show.Name.S01E01.HDTV.x264-RLSGROUP [1044]',

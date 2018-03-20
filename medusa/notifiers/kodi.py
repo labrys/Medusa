@@ -3,11 +3,10 @@
 """Kodi notifier module."""
 
 import logging
+from urllib.parse import unquote_plus
 
 from requests.auth import HTTPBasicAuth
-from requests.compat import unquote_plus
 from requests.exceptions import HTTPError, RequestException
-from six import string_types, text_type
 
 from medusa import app, common
 from medusa.logger.adapters.style import BraceAdapter
@@ -20,7 +19,7 @@ log.logger.addHandler(logging.NullHandler())
 session = MedusaSession()
 
 
-class Notifier(object):
+class Notifier:
     """Kodi notifier class."""
 
     def _get_kodi_version(self, host, username, password, dest_app='KODI'):
@@ -90,7 +89,7 @@ class Notifier(object):
             password = app.KODI_PASSWORD
 
         # Sanitize host when not passed as a list
-        if isinstance(host, (string_types, text_type)):
+        if isinstance(host, str):
             host = host.split(',')
 
         # suppress notifications if the notifier is disabled but the notify options are checked
@@ -117,15 +116,15 @@ class Notifier(object):
                         'jsonrpc': '2.0',
                         'method': 'GUI.ShowNotification',
                         'params': {
-                            'title': title.encode('utf-8'),
-                            'message': message.encode('utf-8'),
+                            'title': title,
+                            'message': message,
                             'image': app.LOGO_URL,
                         },
                         'id': '1',
                     }
                     notify_result = self._send_to_kodi(command, curHost, username, password, dest_app)
                     if notify_result and notify_result.get('result'):  # pylint: disable=no-member
-                        result += curHost + ':' + notify_result['result'].decode(app.SYS_ENCODING)
+                        result += curHost + ':' + notify_result['result']
             else:
                 if app.KODI_ALWAYS_ON or force:
                     log.warning(

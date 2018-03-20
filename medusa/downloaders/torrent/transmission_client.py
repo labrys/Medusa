@@ -2,16 +2,13 @@
 
 """Transmission Client."""
 
-from __future__ import unicode_literals
-
 import json
 import logging
 import os
 import re
 from base64 import b64encode
 from datetime import datetime, timedelta
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import app
 from medusa.downloaders.torrent.generic import GenericClient
@@ -41,7 +38,7 @@ class TransmissionAPI(GenericClient):
         :param password:
         :type password: string
         """
-        super(TransmissionAPI, self).__init__('Transmission', host, username, password)
+        super().__init__('Transmission', host, username, password)
 
         self.rpcurl = self.rpcurl.strip('/')
         self.url = urljoin(self.host, self.rpcurl + '/rpc')
@@ -55,23 +52,23 @@ class TransmissionAPI(GenericClient):
 
     def _get_auth(self):
 
-        post_data = json.dumps({
+        post_data = {
             'method': 'session-get',
-        })
+        }
 
-        self.response = self.session.post(self.url, data=post_data.encode('utf-8'), timeout=120,
+        self.response = self.session.post(self.url, json=post_data, timeout=120,
                                           verify=app.TORRENT_VERIFY_CERT)
         self.auth = re.search(r'X-Transmission-Session-Id:\s*(\w+)', self.response.text).group(1)
 
         self.session.headers.update({'x-transmission-session-id': self.auth})
 
         # Validating Transmission authorization
-        post_data = json.dumps({
+        post_data = {
             'arguments': {},
             'method': 'session-get',
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         return self.auth
 
@@ -84,12 +81,12 @@ class TransmissionAPI(GenericClient):
         if os.path.isabs(app.TORRENT_PATH):
             arguments['download-dir'] = app.TORRENT_PATH
 
-        post_data = json.dumps({
+        post_data = {
             'arguments': arguments,
             'method': 'torrent-add',
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         return self.check_response()
 
@@ -103,12 +100,12 @@ class TransmissionAPI(GenericClient):
         if os.path.isabs(app.TORRENT_PATH):
             arguments['download-dir'] = app.TORRENT_PATH
 
-        post_data = json.dumps({
+        post_data = {
             'arguments': arguments,
             'method': 'torrent-add',
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         return self.check_response()
 
@@ -133,12 +130,12 @@ class TransmissionAPI(GenericClient):
             'seedRatioMode': mode,
         }
 
-        post_data = json.dumps({
+        post_data = {
             'arguments': arguments,
             'method': 'torrent-set',
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         return self.check_response()
 
@@ -152,12 +149,12 @@ class TransmissionAPI(GenericClient):
                 'seedIdleMode': 1,
             }
 
-            post_data = json.dumps({
+            post_data = {
                 'arguments': arguments,
                 'method': 'torrent-set',
-            })
+            }
 
-            self._request(method='post', data=post_data)
+            self._request(method='post', json=post_data)
 
             return self.check_response()
         else:
@@ -179,12 +176,12 @@ class TransmissionAPI(GenericClient):
         else:
             arguments['priority-normal'] = []
 
-        post_data = json.dumps({
+        post_data = {
             'arguments': arguments,
             'method': 'torrent-set',
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         return self.check_response()
 
@@ -201,12 +198,12 @@ class TransmissionAPI(GenericClient):
             'delete-local-data': 1,
         }
 
-        post_data = json.dumps({
+        post_data = {
             'arguments': arguments,
             'method': 'torrent-remove',
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         return self.check_response()
 
@@ -227,12 +224,12 @@ class TransmissionAPI(GenericClient):
             'move': 'true'
         }
 
-        post_data = json.dumps({
+        post_data = {
             'arguments': arguments,
             'method': 'torrent-set-location',
-        })
+        }
 
-        self._request(method='post', data=post_data)
+        self._request(method='post', json=post_data)
 
         return self.check_response()
 
@@ -263,9 +260,9 @@ class TransmissionAPI(GenericClient):
                        'isFinished', 'uploadRatio', 'seedIdleLimit', 'files', 'activityDate']
         }
 
-        post_data = json.dumps({'arguments': return_params, 'method': 'torrent-get'})
+        post_data = {'arguments': return_params, 'method': 'torrent-get'}
 
-        if not self._request(method='post', data=post_data):
+        if not self._request(method='post', json=post_data):
             log.debug('Could not connect to Transmission. Check logs')
             return
 
