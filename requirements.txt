@@ -1,4 +1,3 @@
-dogpile
 certifi
 chardet
 six
