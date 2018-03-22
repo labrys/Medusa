@@ -89,8 +89,8 @@ class MedusaSession(BaseSession):
 
     def request(self, method, url, data=None, params=None, headers=None, timeout=30, verify=True, **kwargs):
         return super().request(method, url, data=data, params=params, headers=headers,
-                                                  timeout=timeout, verify=self._get_ssl_cert(verify),
-                                                  **kwargs)
+                               timeout=timeout, verify=self._get_ssl_cert(verify),
+                               **kwargs)
 
     def get_json(self, url, method='GET', *args, **kwargs):
         """Overwrite request, to be able to return the json value if possible. Else it will fail silently."""
@@ -138,7 +138,7 @@ class MedusaSafeSession(MedusaSession):
         resp = None
         try:
             resp = super().request(method, url, data=data, params=params, headers=headers,
-                                                          timeout=timeout, verify=verify, **kwargs)
+                                   timeout=timeout, verify=verify, **kwargs)
             resp.raise_for_status()
         except requests.exceptions.HTTPError as error:
             log.debug(u'The response returned a non-200 response while requestion url {url}. Error: {err_msg!r}'.format(url=url, err_msg=error))

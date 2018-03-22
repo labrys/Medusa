@@ -36,15 +36,15 @@ class KODIMetadata(kodi_12plus.KODI12PlusMetadata):
                  season_all_poster=False,
                  season_all_banner=False):
         super().__init__(show_metadata,
-                                           episode_metadata,
-                                           fanart,
-                                           poster,
-                                           banner,
-                                           episode_thumbnails,
-                                           season_posters,
-                                           season_banners,
-                                           season_all_poster,
-                                           season_all_banner)
+                         episode_metadata,
+                         fanart,
+                         poster,
+                         banner,
+                         episode_thumbnails,
+                         season_posters,
+                         season_banners,
+                         season_all_poster,
+                         season_all_banner)
         self.name = 'KODI'
 
         self.poster_name = self.banner_name = "folder.jpg"

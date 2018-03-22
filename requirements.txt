@@ -28,8 +28,8 @@ pytimeparse
 jsonrpclib-pelix
 bencode.py
 rarfile
-git+https://github.com/Diaoul/babelfish.git@f403000dd63092cfaaae80be9f309fd85c7f20c9#egg=babelfish
-git+https://github.com/Anorov/cloudflare-scrape.git@85cf963f6eb81804227878df2ca74fe4a309db67#egg=cfscrape
-git+https://github.com/kurtmckee/feedparser.git@f1dd1bb923ebfe6482fc2521c1f150b4032289ec#egg=feedparser
-git+https://github.com/joestump/python-oauth2.git@6689960ca23f79eccf9a25a39e93f6540f44ca23#egg=oauth2
-git+https://github.com/Diaoul/subliminal.git@4c0bcbfd68728241324f509317afdf6beb681f99#egg=subliminal
+git+https://github.com/Diaoul/babelfish.git@master#egg=babelfish
+git+https://github.com/Anorov/cloudflare-scrape.git@master#egg=cfscrape
+git+https://github.com/kurtmckee/feedparser.git@master#egg=feedparser
+git+https://github.com/joestump/python-oauth2.git@master#egg=oauth2
+git+https://github.com/Diaoul/subliminal.git@master#egg=subliminal

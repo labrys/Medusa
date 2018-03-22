@@ -732,7 +732,7 @@ class Home(WebRoot):
                                 controller='home', action='restart')
             else:
                 return self._generic_message('Update Failed',
-                                            'Update wasn\'t successful, not restarting. Check your log for more information.')
+                                             'Update wasn\'t successful, not restarting. Check your log for more information.')
         else:
             return self.redirect('/{page}/'.format(page=app.DEFAULT_PAGE))
 
@@ -1038,7 +1038,7 @@ class Home(WebRoot):
 
         if not series_obj:
             return self._generic_message('Error', 'Could not find a show with id {0} in the list of shows, '
-                                                 'did you remove the show?'.format(cached_result['indexerid']))
+                                                  'did you remove the show?'.format(cached_result['indexerid']))
 
         # Create a list of episode object(s)
         # Multi-episode: |1|2|

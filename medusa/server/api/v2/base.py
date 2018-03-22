@@ -19,7 +19,7 @@ from medusa import app
 class BaseRequestHandler(RequestHandler):
     """A base class used for shared RequestHandler methods."""
 
-    DEFAULT_ALLOWED_METHODS = ('OPTIONS', )
+    DEFAULT_ALLOWED_METHODS = ('OPTIONS',)
 
     #: resource name
     name = None
@@ -403,7 +403,7 @@ class StringField(PatchField):
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
         super().__init__(target_type, attr, str, validator=validator, converter=converter,
-                                          default_value=default_value, post_processor=post_processor)
+                         default_value=default_value, post_processor=post_processor)
 
 
 class IntegerField(PatchField):
@@ -412,7 +412,7 @@ class IntegerField(PatchField):
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
         super().__init__(target_type, attr, int, validator=validator, converter=converter,
-                                           default_value=default_value, post_processor=post_processor)
+                         default_value=default_value, post_processor=post_processor)
 
 
 class ListField(PatchField):
@@ -421,7 +421,7 @@ class ListField(PatchField):
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
         super().__init__(target_type, attr, list, validator=validator, converter=converter,
-                                        default_value=default_value, post_processor=post_processor)
+                         default_value=default_value, post_processor=post_processor)
 
 
 class BooleanField(PatchField):
@@ -430,7 +430,7 @@ class BooleanField(PatchField):
     def __init__(self, target_type, attr, validator=None, converter=int, default_value=None, post_processor=None):
         """Constructor."""
         super().__init__(target_type, attr, bool, validator=validator, converter=converter,
-                                           default_value=default_value, post_processor=post_processor)
+                         default_value=default_value, post_processor=post_processor)
 
 
 class EnumField(PatchField):
@@ -440,4 +440,4 @@ class EnumField(PatchField):
                  converter=None, default_value=None, post_processor=None):
         """Constructor."""
         super().__init__(target_type, attr, attr_type, validator=lambda v: v in enums,
-                                        converter=converter, default_value=default_value, post_processor=post_processor)
+                         converter=converter, default_value=default_value, post_processor=post_processor)

@@ -265,7 +265,7 @@ def get_provider_cache_results(series_obj, show_all_results=None, perform_search
 
             # Get the last updated cache items timestamp
             last_update = cache_db_conn.select("SELECT max(time) AS lastupdate "
-                                             "FROM '{provider_id}'".format(provider_id=cur_provider.get_id()))
+                                               "FROM '{provider_id}'".format(provider_id=cur_provider.get_id()))
             provider_results['last_prov_updates'][cur_provider.get_id()] = last_update[0]['lastupdate'] if last_update[0]['lastupdate'] else 0
 
     # Check if we have the combined sql strings
