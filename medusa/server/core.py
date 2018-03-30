@@ -50,6 +50,16 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 log = BraceAdapter(log)
 
+APPLICATION = Application(
+    [],
+    debug=True,
+    autoreload=False,
+    gzip=app.WEB_USE_GZIP,
+    xheaders=app.HANDLE_REVERSE_PROXY,
+    cookie_secret=app.WEB_COOKIE_SECRET,
+    login_url=r'{root}/login/',
+)
+
 
 def clean_url_path(*args, **kwargs):
     """Make sure we end with a clean route."""
@@ -166,16 +176,8 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
                 app.ENABLE_HTTPS = False
                 self.enable_https = False
 
-        # Load the app
-        self.app = Application(
-            [],
-            debug=True,
-            autoreload=False,
-            gzip=app.WEB_USE_GZIP,
-            xheaders=app.HANDLE_REVERSE_PROXY,
-            cookie_secret=app.WEB_COOKIE_SECRET,
-            login_url=r'{root}/login/'.format(root=self.options['theme_path']),
-        )
+        self.app = APPLICATION
+        # self.app.login_url = self.app.login_url.format(root=self.options['theme_path'])
 
         self.app.add_handlers('.*$', get_apiv2_handlers(self.options['api_v2_root']))
 
@@ -261,7 +263,8 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
 
         try:
             self.server.listen(self.options['port'], self.options['host'])
-        except Exception:
+        except Exception as error:
+            log.info(f'Error launching: {error!r}')
             if app.LAUNCH_BROWSER and not self.daemon:
                 app.instance.launch_browser('https' if app.ENABLE_HTTPS else 'http', self.options['port'], app.WEB_ROOT)
                 log.info('Launching browser and exiting')

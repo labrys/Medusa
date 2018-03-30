@@ -189,9 +189,12 @@ class Application:
         signal.signal(signal.SIGTERM, self.sig_handler)
 
         # do some preliminary stuff
-        app.MY_FULLNAME = os.path.normpath(os.path.abspath(os.path.join(__file__, '..', '..', 'start.py')))
-        app.MY_NAME = os.path.basename(app.MY_FULLNAME)
-        app.PROG_DIR = os.path.dirname(app.MY_FULLNAME)
+        import pathlib
+        here = pathlib.Path(__file__).parent
+        app_name = here / '..' / 'start.py'
+        app.MY_FULLNAME = app_name.resolve()
+        app.MY_NAME = app.MY_FULLNAME.name
+        app.PROG_DIR = app.MY_FULLNAME.parent
         app.DATA_DIR = app.PROG_DIR
         app.MY_ARGS = args
 
@@ -260,9 +263,6 @@ class Application:
             # Prevent resizing of the banner/posters even if PIL is installed
             if option in ('--noresize',):
                 app.NO_RESIZE = True
-
-        # Keep backwards compatibility
-        Application.backwards_compatibility()
 
         # The pid file is only useful in daemon mode, make sure we can write the file properly
         if self.create_pid:
@@ -1938,26 +1938,6 @@ class Application:
         if not isinstance(signum, type(None)):
             log.info(u'Signal {number} caught, saving and exiting...'.format(number=signum))
             system.shutdown(app, app.events, app.PID)
-
-    @staticmethod
-    def backwards_compatibility():
-        """Rename old files and folders to the expected ones."""
-        if os.path.isdir(app.DATA_DIR):
-            cwd = os.getcwd() if os.path.isabs(app.DATA_DIR) else ''
-            backup_re = re.compile(r'[^\d]+(?P<suffix>-\d{14}\.zip)')
-            for filename in os.listdir(app.DATA_DIR):
-                # Rename database file
-                if filename.startswith(app.LEGACY_DB) and not any(f.startswith(app.APPLICATION_DB) for f in os.listdir(app.DATA_DIR)):
-                    new_file = os.path.join(cwd, app.DATA_DIR, app.APPLICATION_DB + filename[len(app.LEGACY_DB):])
-                    os.rename(os.path.join(cwd, app.DATA_DIR, filename), new_file)
-                    continue
-
-                # Rename old backups
-                match = backup_re.match(filename)
-                if match:
-                    new_file = os.path.join(cwd, app.DATA_DIR, app.BACKUP_FILENAME_PREFIX + match.group('suffix'))
-                    os.rename(os.path.join(cwd, app.DATA_DIR, filename), new_file)
-                    continue
 
     def daemonize(self):
         """Fork off as a daemon."""
