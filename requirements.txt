@@ -18,7 +18,7 @@ python-dateutil
 requests
 SQLAlchemy
 stevedore
-tornado
+tornado<5
 tornroutes
 validators
 vcrpy
@@ -29,7 +29,7 @@ jsonrpclib-pelix
 bencode.py
 rarfile
 tmdbsimple
-fakeuseragent
+fake-useragent
 git+https://github.com/Diaoul/babelfish.git@master#egg=babelfish
 git+https://github.com/Anorov/cloudflare-scrape.git@master#egg=cfscrape
 git+https://github.com/kurtmckee/feedparser.git@develop#egg=feedparser
