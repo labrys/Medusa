@@ -18,7 +18,7 @@ python-dateutil
 requests
 SQLAlchemy
 stevedore
-tornado
+tornado<5
 tornroutes
 validators
 vcrpy
@@ -28,8 +28,10 @@ pytimeparse
 jsonrpclib-pelix
 bencode.py
 rarfile
+tmdbsimple
+fake-useragent
 git+https://github.com/Diaoul/babelfish.git@master#egg=babelfish
 git+https://github.com/Anorov/cloudflare-scrape.git@master#egg=cfscrape
-git+https://github.com/kurtmckee/feedparser.git@master#egg=feedparser
+git+https://github.com/kurtmckee/feedparser.git@develop#egg=feedparser
 git+https://github.com/joestump/python-oauth2.git@master#egg=oauth2
 git+https://github.com/Diaoul/subliminal.git@master#egg=subliminal

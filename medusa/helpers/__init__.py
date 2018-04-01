@@ -1412,11 +1412,8 @@ def get_size(start_path='.'):
 def generate_api_key():
     """Return a new randomized API_KEY."""
     log.info(u'Generating New API key')
-    timestamp = str(time.time())
-    secure_hash = hashlib.sha512(timestamp)
-    randomizer = str(random.SystemRandom().getrandbits(4096))
-    secure_hash.update(randomizer)
-    return secure_hash.hexdigest()[:32]
+    import secrets
+    return secrets.token_hex(16)
 
 
 def remove_article(text=''):

@@ -580,15 +580,14 @@ class Episode(TV):
             return True
         main_db_con = db.DBConnection()
         sql_results = main_db_con.select(
-            'SELECT '
-            '  * '
-            'FROM '
-            '  tv_episodes '
-            'WHERE '
-            '  indexer = ? '
+            'SELECT * '
+            'FROM tv_episodes '
+            'WHERE indexer = ? '
             '  AND showid = ? '
             '  AND season = ? '
-            '  AND episode = ?', [self.series.indexer, self.series.series_id, season, episode])
+            '  AND episode = ?',
+            [self.series.indexer, self.series.series_id, season, episode]
+        )
 
         if len(sql_results) > 1:
             raise MultipleEpisodesInDatabaseException('Your DB has two records for the same series somehow.')
