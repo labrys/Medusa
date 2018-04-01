@@ -11,7 +11,8 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-# adapted from http://stackoverflow.com/questions/827371/is-there-a-way-to-list-all-the-available-drive-letters-in-python/827490
+# adapted from
+# http://stackoverflow.com/questions/827371/is-there-a-way-to-list-all-the-available-drive-letters-in-python/827490
 def get_win_drives():
     """Return list of detected drives."""
     assert os.name == 'nt'

@@ -50,17 +50,6 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 log = BraceAdapter(log)
 
-APPLICATION = Application(
-    [],
-    debug=True,
-    autoreload=False,
-    gzip=app.WEB_USE_GZIP,
-    xheaders=app.HANDLE_REVERSE_PROXY,
-    cookie_secret=app.WEB_COOKIE_SECRET,
-    login_url=r'{root}/login/',
-)
-
-
 def clean_url_path(*args, **kwargs):
     """Make sure we end with a clean route."""
     end_with_slash = kwargs.pop('end_with_slash', False)
@@ -176,7 +165,16 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
                 app.ENABLE_HTTPS = False
                 self.enable_https = False
 
-        self.app = APPLICATION
+        self.app = Application(
+            [],
+            debug=True,
+            autoreload=False,
+            gzip=app.WEB_USE_GZIP,
+            xheaders=app.HANDLE_REVERSE_PROXY,
+            cookie_secret=app.WEB_COOKIE_SECRET,
+            login_url=r'{root}/login/',
+        )
+
         # self.app.login_url = self.app.login_url.format(root=self.options['theme_path'])
 
         self.app.add_handlers('.*$', get_apiv2_handlers(self.options['api_v2_root']))

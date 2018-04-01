@@ -749,8 +749,11 @@ class Home(WebRoot):
         return {
             'currentBranch': app.BRANCH,
             'resetBranches': app.GIT_RESET_BRANCHES,
-            'branches': [branch for branch in app.version_check_scheduler.action.list_remote_branches()
-                         if branch not in app.GIT_RESET_BRANCHES]
+            'branches': [
+                branch
+                for branch in app.version_check_scheduler.action.remote_branches
+                if branch not in app.GIT_RESET_BRANCHES
+            ]
         }
 
     @staticmethod

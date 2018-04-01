@@ -804,9 +804,6 @@ class GitUpdateManager(UpdateManager):
                 return re.findall(r'refs/heads/(.*)', branches)
         return []
 
-    def list_remote_branches(self):
-        return self.remote_branches
-
     def update_remote_origin(self):
         """
 
@@ -1092,7 +1089,3 @@ class SourceUpdateManager(UpdateManager):
             for x in gh.get_branches()
             if x
         )
-
-    @classmethod
-    def list_remote_branches(cls):
-        return list(cls.remote_branches)
