@@ -132,8 +132,8 @@
   episode_title: My Episode
   type: episode
 
-# newpct (SpanishNewpctReleaseName)
-? Show Name - Temporada 4 HDTV x264[Cap.408_409]SPANISH-AUDIO-NEWPCT
+# tvsinpagar (SpanishTVsinpagarReleaseName)
+? Show Name - Temporada 4 HDTV x264[Cap.408_409]SPANISH-AUDIO-TVSINPAGAR
 : title: Show Name
   season: 4
   episode: [8, 9]
@@ -141,10 +141,10 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
-# newpct (SpanishNewpctReleaseName)
+# tvsinpagar (SpanishTVsinpagarReleaseName)
 ? - Show Name - Temporada 4 [HDTV][Cap.408][Espanol Castellano]
   - Show Name - Temporada 4 [HDTV][Cap.408][Español Castellano]
 : title: Show Name
@@ -154,8 +154,8 @@
   language: ca
   type: episode
 
-# newpct (SpanishNewpctReleaseName)
-? Show Name - Temporada 4 HDTV x264[Cap.409]SPANISH AUDIO-NEWPCT)
+# tvsinpagar (SpanishTVsinpagarReleaseName)
+? Show Name - Temporada 4 HDTV x264[Cap.409]SPANISH AUDIO-TVSINPAGAR)
 : title: Show Name
   season: 4
   episode: 9
@@ -163,7 +163,7 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
 # scene_date_format
@@ -2126,10 +2126,10 @@
   release_group: abc
   type: episode
 
-# SpanishNewpctReleaseName - season and episode:
-? - Show.Name.-.Temporada.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-NEWPCT
-  - /Show Name/Season 01/Show.Name.-.Temporada.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-NEWPCT
-  - /Show Name/Temporada 01/Show.Name.-.Temporada.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-NEWPCT
+# SpanishTVsinpagarReleaseName - season and episode:
+? - Show.Name.-.Temporada.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-TVSINPAGAR
+  - /Show Name/Season 01/Show.Name.-.Temporada.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-TVSINPAGAR
+  - /Show Name/Temporada 01/Show.Name.-.Temporada.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-TVSINPAGAR
 : title: Show Name
   season: 1
   episode: 2
@@ -2138,10 +2138,10 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
-# SpanishNewpctReleaseName
+# SpanishTVsinpagarReleaseName
 ? Show.Name.-.Temporada1.[HDTV][Cap.105][Español.Castellano]
 : title: Show Name
   format: HDTV
@@ -2150,7 +2150,7 @@
   language: ca
   type: episode
 
-# SpanishNewpctReleaseName
+# SpanishTVsinpagarReleaseName
 ? Show.Name.-.Temporada1.[HDTV][Cap.105][Español]
 : title: Show Name
   format: HDTV
@@ -2159,8 +2159,8 @@
   language: es
   type: episode
 
-# SpanishNewpctReleaseName - season and episode with range:
-? Show.Name.-.Temporada.1.720p.HDTV.x264[Cap.102_104]SPANISH.AUDIO-NEWPCT
+# SpanishTVsinpagarReleaseName - season and episode with range:
+? Show.Name.-.Temporada.1.720p.HDTV.x264[Cap.102_104]SPANISH.AUDIO-TVSINPAGAR
 : title: Show Name
   season: 1
   episode: [2, 3, 4]
@@ -2169,11 +2169,11 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
-# SpanishNewpctReleaseName - season and episode (2 digit season)
-? Show.Name.-.Temporada.15.720p.HDTV.x264[Cap.1503]SPANISH.AUDIO-NEWPCT
+# SpanishTVsinpagarReleaseName - season and episode (2 digit season)
+? Show.Name.-.Temporada.15.720p.HDTV.x264[Cap.1503]SPANISH.AUDIO-TVSINPAGAR
 : title: Show Name
   season: 15
   episode: 3
@@ -2182,11 +2182,11 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
-# SpanishNewpctReleaseName - season and episode (2 digit season with range)
-? Show.Name.-.Temporada.15.720p.HDTV.x264[Cap.1503_1506]SPANISH.AUDIO-NEWPCT
+# SpanishTVsinpagarReleaseName - season and episode (2 digit season with range)
+? Show.Name.-.Temporada.15.720p.HDTV.x264[Cap.1503_1506]SPANISH.AUDIO-TVSINPAGAR
 : title: Show Name
   season: 15
   episode: [3, 4, 5, 6]
@@ -2195,11 +2195,11 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
-# SpanishNewpctReleaseName - season and episode:
-? Show.Name.-.Temp.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-NEWPCT
+# SpanishTVsinpagarReleaseName - season and episode:
+? Show.Name.-.Temp.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-TVSINPAGAR
 : title: Show Name
   season: 1
   episode: 2
@@ -2208,11 +2208,11 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
-# SpanishNewpctReleaseName - season and episode:
-? Show.Name.-.Tem.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-NEWPCT
+# SpanishTVsinpagarReleaseName - season and episode:
+? Show.Name.-.Tem.1.720p.HDTV.x264[Cap.102]SPANISH.AUDIO-TVSINPAGAR
 : title: Show Name
   season: 1
   episode: 2
@@ -2221,11 +2221,11 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
-# SpanishNewpctReleaseName - season and episode:
-? Show.Name.-.Tem.1.720p.HDTV.x264[Cap.112_114.Final]SPANISH.AUDIO-NEWPCT
+# SpanishTVsinpagarReleaseName - season and episode:
+? Show.Name.-.Tem.1.720p.HDTV.x264[Cap.112_114.Final]SPANISH.AUDIO-TVSINPAGAR
 : title: Show Name
   season: 1
   episode: [12, 13, 14]
@@ -2234,7 +2234,7 @@
   video_codec: h264
   video_encoder: x264
   language: es
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   other: FINAL
   type: episode
 
@@ -4172,7 +4172,7 @@
   type: episode
 
 # TODO: Guessit 3 to handle HDR, BT2020 and more
-? Doctor.Estraño.HDR.VISIONPLUS.1000.[4K.UHD.2160p.HEVC.X265][BT2020][DTS-5.1.Castellano.DTS-HD.7.1-Ingles+Subs][ES-EN].x264-NEWPCT
+? Doctor.Estraño.HDR.VISIONPLUS.1000.[4K.UHD.2160p.HEVC.X265][BT2020][DTS-5.1.Castellano.DTS-HD.7.1-Ingles+Subs][ES-EN].x264-TVSINPAGAR
 : title: Doctor Estraño HDR VISIONPLUS
   absolute_episode: 1000
   episode: 1000
@@ -4185,7 +4185,7 @@
   language: ca
   audio_profile: HD
   subtitle_language: [es, en]
-  release_group: NEWPCT
+  release_group: TVSINPAGAR
   type: episode
 
 ? Saint.Seiya.E76.1080p.BluRay-Yomi.mkv

@@ -9,9 +9,9 @@ MEDUSA.config.search = function() {
         const selectedProvider = $('#nzb_method :selected').val();
         const blackholeSettings = '#blackhole_settings';
         const sabnzbdSettings = '#sabnzbd_settings';
-        const testSABnzbd = '#testSABnzbd';
+        const testSABnzbd = '#test_sabnzbd';
         const testSABnzbdResult = '#testSABnzbd_result';
-        const testNZBget = '#testNZBget';
+        const testNZBget = '#test_nzbget';
         const testNZBgetResult = '#testNZBgetResult';
         const nzbgetSettings = '#nzbget_settings';
 
@@ -186,7 +186,7 @@ MEDUSA.config.search = function() {
 
     $(this).nzbMethodHandler();
 
-    $('#testSABnzbd').on('click', () => {
+    $('#test_sabnzbd').on('click', () => {
         const sab = {};
         $('#testSABnzbd_result').html(MEDUSA.config.loading);
         sab.host = $('#sab_host').val();
@@ -194,7 +194,7 @@ MEDUSA.config.search = function() {
         sab.password = $('#sab_password').val();
         sab.apiKey = $('#sab_apikey').val();
 
-        $.get('home/testSABnzbd', {
+        $.get('home/test_sabnzbd', {
             host: sab.host,
             username: sab.username,
             password: sab.password,
@@ -204,7 +204,7 @@ MEDUSA.config.search = function() {
         });
     });
 
-    $('#testNZBget').on('click', () => {
+    $('#test_nzbget').on('click', () => {
         const nzbget = {};
         $('#testNZBget_result').html(MEDUSA.config.loading);
         nzbget.host = $('#nzbget_host').val();
@@ -212,7 +212,7 @@ MEDUSA.config.search = function() {
         nzbget.password = $('#nzbget_password').val();
         nzbget.useHttps = $('#nzbget_use_https').prop('checked');
 
-        $.get('home/testNZBget', {
+        $.get('home/test_nzbget', {
             host: nzbget.host,
             username: nzbget.username,
             password: nzbget.password,
@@ -234,7 +234,7 @@ MEDUSA.config.search = function() {
         torrent.username = $('#torrent_username').val();
         torrent.password = $('#torrent_password').val();
 
-        $.get('home/testTorrent', {
+        $.get('home/test_torrent', {
             torrent_method: torrent.method, // eslint-disable-line camelcase
             host: torrent.host,
             username: torrent.username,

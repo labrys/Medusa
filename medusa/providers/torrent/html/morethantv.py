@@ -2,12 +2,13 @@
 
 """Provider code for MoreThanTV."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import time
 import traceback
+from urllib.parse import parse_qs, urljoin
+
+from requests.utils import dict_from_cookiejar
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -19,10 +20,6 @@ from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.torrent.torrent_provider import TorrentProvider
 
-from requests.compat import urljoin
-from requests.utils import dict_from_cookiejar
-from six.moves.urllib_parse import parse_qs
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
@@ -32,7 +29,7 @@ class MoreThanTVProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(MoreThanTVProvider, self).__init__('MoreThanTV')
+        super().__init__('MoreThanTV')
 
         # Credentials
         self.username = None
@@ -117,6 +114,7 @@ class MoreThanTVProvider(TorrentProvider):
 
         :return: A list of items found
         """
+
         def process_column_header(td):
             result = ''
             if td.a and td.a.img:

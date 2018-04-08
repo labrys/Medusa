@@ -2,10 +2,11 @@
 
 """Provider code for Speed.cd."""
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
+from urllib.parse import urljoin
+
+from requests.utils import dict_from_cookiejar
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -16,9 +17,6 @@ from medusa.helper.common import (
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.torrent.torrent_provider import TorrentProvider
 
-from requests.compat import urljoin
-from requests.utils import dict_from_cookiejar
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
@@ -28,7 +26,7 @@ class SpeedCDProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(SpeedCDProvider, self).__init__('Speedcd')
+        super().__init__('Speedcd')
 
         # Credentials
         self.username = None
@@ -193,9 +191,6 @@ class SpeedCDProvider(TorrentProvider):
             log.warning('Invalid username or password. Check your settings')
             return False
         return True
-
-        log.warning('Unable to connect to provider')
-        return
 
     def login_url(self):
         """Get the login url (post) as speed.cd keeps changing it."""

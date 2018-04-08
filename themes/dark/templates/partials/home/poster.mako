@@ -1,11 +1,18 @@
 <%!
-    from medusa import app
     import calendar
-    from medusa import sbdatetime
+    import logging
+    import re
+
+    from medusa import app
+    from medusa import date_time
     from medusa import network_timezones
     from medusa.helper.common import pretty_file_size
     from medusa.scene_numbering import get_xem_numbering_for_show
-    import re
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
 %>
 <%namespace file="/inc_defs.mako" import="renderQualityPill"/>
 <div class="loading-spinner"></div>
@@ -32,7 +39,7 @@
             % endif
         % endif
         <div class="posterview">
-        % for cur_loading_show in app.show_queue_scheduler.action.loadingShowList:
+        % for cur_loading_show in app.show_queue_scheduler.action.loading_show_list:
             % if cur_loading_show.show is None:
                 <div class="show-container" data-name="0" data-date="010101" data-network="0" data-progress="101">
                     <img alt="" title="${cur_loading_show.show_name}" class="show-image" style="border-bottom: 1px solid rgb(17, 17, 17);" src="images/poster.png" />
@@ -42,7 +49,7 @@
                 </div>
             % endif
         % endfor
-        <% my_show_list.sort(lambda x, y: cmp(x.name, y.name)) %>
+        <% my_show_list.sort(key=lambda x: x.name) %>
         % for cur_show in my_show_list:
         <%
             cur_airs_next = ''
@@ -84,7 +91,7 @@
             progressbar_percent = nom * 100 / den
             data_date = '6000000000.0'
             if cur_airs_next:
-                data_date = calendar.timegm(sbdatetime.sbdatetime.convert_to_setting(network_timezones.parse_date_time(cur_airs_next, cur_show.airs, cur_show.network)).timetuple())
+                data_date = calendar.timegm(date_time.DateTime.convert_to_setting(network_timezones.parse_date_time(cur_airs_next, cur_show.airs, cur_show.network)).timetuple())
             elif None is not display_status:
                 if 'nded' not in display_status and 1 == int(cur_show.paused):
                     data_date = '5000000500.0'
@@ -99,7 +106,7 @@
                         <img src="images/poster-back-dark.png"/>
                     </div>
                     <div class="poster-overlay">
-                        <a href="home/displayShow?indexername=${cur_show.indexer_name}&seriesid=${cur_show.indexerid}"><img alt="" class="show-image" src="images/poster.png" lazy="on" series="${cur_show.slug}" asset="posterThumb"/></a>
+                        <a href="home/display_series?indexername=${cur_show.indexer_name}&seriesid=${cur_show.indexerid}"><img alt="" class="show-image" src="images/poster.png" lazy="on" series="${cur_show.slug}" asset="posterThumb"/></a>
                     </div>
                 </div>
                 <div class="show-poster-footer row">
@@ -115,10 +122,10 @@
                         </div>
                         <div class="show-date">
                 % if cur_airs_next:
-                    <% ldatetime = sbdatetime.sbdatetime.convert_to_setting(network_timezones.parse_date_time(cur_airs_next, cur_show.airs, cur_show.network)) %>
+                    <% ldatetime = date_time.DateTime.convert_to_setting(network_timezones.parse_date_time(cur_airs_next, cur_show.airs, cur_show.network)) %>
                     <%
                         try:
-                            out = str(sbdatetime.sbdatetime.sbfdate(ldatetime))
+                            out = str(date_time.DateTime.display_date(ldatetime))
                         except ValueError:
                             out = 'Invalid date'
                             pass

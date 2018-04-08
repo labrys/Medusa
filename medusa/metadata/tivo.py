@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import datetime
 import io
@@ -9,12 +9,13 @@ import os
 
 from medusa import helpers
 from medusa.helper.common import episode_num
-from medusa.helper.exceptions import ex
-from medusa.indexers.api import indexerApi
-from medusa.indexers.exceptions import IndexerEpisodeNotFound, IndexerSeasonNotFound
+from medusa.indexers.api import IndexerAPI
+from medusa.indexers.exceptions import (
+    IndexerEpisodeNotFound,
+    IndexerSeasonNotFound,
+)
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.metadata import generic
-from six import text_type
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -73,14 +74,14 @@ class TIVOMetadata(generic.GenericMetadata):
         self.eg_season_all_banner = '<i>not supported</i>'
 
     # Override with empty methods for unsupported features
-    def retrieveShowMetadata(self, folder):
+    def retrieve_show_metadata(self, folder):
         # no show metadata generated, we abort this lookup function
         return None, None, None
 
     def create_show_metadata(self, show_obj):
         pass
 
-    def update_show_indexer_metadata(self, show_obj):
+    def update_series_indexer_metadata(self, show_obj):
         pass
 
     def get_show_file_path(self, show_obj):
@@ -141,22 +142,16 @@ class TIVOMetadata(generic.GenericMetadata):
 
     def _ep_data(self, ep_obj):
         """
-        Creates a key value structure for a Tivo episode metadata file and
-        returns the resulting data object.
-
-        ep_obj: a Episode instance to create the metadata file for.
+        Creates a key value structure for a Tivo episode metadata file and returns the resulting data object.
 
         Lookup the show in http://thetvdb.com/ using the python library:
-
-        https://github.com/dbr/indexer_api/
-
+            https://github.com/dbr/indexer_api/
         The results are saved in the object myShow.
-
         The key values for the tivo metadata file are from:
+            http://pytivo.sourceforge.net/wiki/index.php/Metadata
 
-        http://pytivo.sourceforge.net/wiki/index.php/Metadata
+        :param ep_obj: an Episode instance to create the metadata file for.
         """
-
         data = ''
 
         eps_to_write = [ep_obj] + ep_obj.related_episodes
@@ -173,13 +168,13 @@ class TIVOMetadata(generic.GenericMetadata):
                 log.debug(
                     u'Unable to find episode {number} on {indexer}... has it been removed? Should I delete from db?', {
                         'number': episode_num(ep_to_write.season, ep_to_write.episode),
-                        'indexer': indexerApi(ep_obj.series.indexer).name,
+                        'indexer': IndexerAPI(ep_obj.series.indexer).name,
                     }
                 )
                 return None
 
             if ep_obj.season == 0 and not getattr(my_ep, 'firstaired', None):
-                my_ep['firstaired'] = text_type(datetime.date.fromordinal(1))
+                my_ep['firstaired'] = datetime.date.fromordinal(1)
 
             if not (getattr(my_ep, 'episodename', None) and getattr(my_ep, 'firstaired', None)):
                 return None
@@ -274,17 +269,12 @@ class TIVOMetadata(generic.GenericMetadata):
 
     def write_ep_file(self, ep_obj):
         """
-        Generates and writes ep_obj's metadata under the given path with the
-        given filename root. Uses the episode's name with the extension in
-        _ep_nfo_extension.
+        Generates and writes ep_obj's metadata under the given path with the given filename root.
 
-        ep_obj: Episode object for which to create the metadata
+        ses the episode's name with the extension in _ep_nfo_extension.
 
-        file_name_path: The file name to use for this metadata. Note that the extension
-                will be automatically added based on _ep_nfo_extension. This should
-                include an absolute path.
+        :param ep_obj: Episode object for which to create the metadata
         """
-
         data = self._ep_data(ep_obj)
 
         if not data:
@@ -305,14 +295,14 @@ class TIVOMetadata(generic.GenericMetadata):
 
             with io.open(nfo_file_path, 'wb') as nfo_file:
                 # Calling encode directly, b/c often descriptions have wonky characters.
-                nfo_file.write(data.encode('utf-8'))
+                nfo_file.write(data)
 
             helpers.chmod_as_parent(nfo_file_path)
 
         except EnvironmentError as e:
             log.error(
                 u'Unable to write file to {path} - are you sure the folder is writable? {error}',
-                {'path': nfo_file_path, 'error': ex(e)}
+                {'path': nfo_file_path, 'error': e}
             )
             return False
 

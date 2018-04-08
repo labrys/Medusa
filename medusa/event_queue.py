@@ -4,29 +4,25 @@ import logging
 import threading
 import traceback
 
-from medusa.helper.exceptions import ex
-
-from six.moves.queue import Empty, Queue
+from queue import Empty, Queue
 
 log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
 
 
-class Event(object):
+class Event:
     def __init__(self, event_type):
         self._type = event_type
 
     @property
     def event_type(self):
-        """
-        Returns the type of the event
-        """
-
+        """Returns the type of the event."""
         return self._type
 
 
 class Events(threading.Thread):
     def __init__(self, callback):
-        super(Events, self).__init__()
+        super().__init__()
         self.queue = Queue()
         # http://stackoverflow.com/a/20598791
         self.daemon = False
@@ -35,11 +31,15 @@ class Events(threading.Thread):
         self.stop = threading.Event()
 
     def put(self, event_type):
+        """
+
+        :param event_type:
+        """
         self.queue.put(event_type)
 
     def run(self):
         """
-        Actually runs the thread to process events
+        Actually runs the thread to process events.
         """
         try:
             while not self.stop.is_set():
@@ -58,8 +58,7 @@ class Events(threading.Thread):
             # exiting thread
             self.stop.clear()
         except Exception as error:
-            log.error(u"Exception generated in thread %s: %s",
-                      self.name, ex(error))
+            log.error(u"Exception generated in thread {}: {}".format(self.name, error))
             log.debug(repr(traceback.format_exc()))
 
 

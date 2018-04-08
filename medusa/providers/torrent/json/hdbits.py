@@ -2,15 +2,12 @@
 
 """Provider code for HDBits."""
 
-from __future__ import unicode_literals
-
 import logging
+from urllib.parse import urlencode, urljoin
 
 from medusa import tv
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.torrent.torrent_provider import TorrentProvider
-
-from requests.compat import urlencode, urljoin
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -21,7 +18,7 @@ class HDBitsProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(HDBitsProvider, self).__init__('HDBits')
+        super().__init__('HDBits')
 
         # Credentials
         self.username = None

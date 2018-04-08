@@ -407,10 +407,10 @@ inc_bottom.mako
 }
 
 /* =======================================================================
-inc_rootDirs.mako
+inc_root_dirs.mako
 ========================================================================== */
 .rootdir-selectbox,
-.rootdir-selectbox #rootDirs,
+.rootdir-selectbox #root_dirs,
 .rootdir-controls {
     width: 100%;
     max-width: 430px;
@@ -624,7 +624,7 @@ div.xem {
     border: 1px solid rgb(136, 136, 136);
 }
 
-/* Used by the displayShow and snatchSelection show header posters */
+/* Used by the display_series and snatch_selection show header posters */
 #col-show-summary img.show-image {
     max-width: 180px;
 }
@@ -832,7 +832,7 @@ td.tvShow a:hover {
 }
 
 /* =======================================================================
-home_addShows.mako
+home_add_series.mako
 ========================================================================== */
 
 #addShowPortal {
@@ -903,11 +903,11 @@ div.buttontext p {
 }
 
 /* =======================================================================
-home_newShow.mako
+home_new_series.mako
 ========================================================================== */
 
 #addShowForm,
-#recommendedShowsForm {
+#recommended_seriesForm {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -915,7 +915,7 @@ home_newShow.mako
     font-size: 13px;
 }
 
-#newShowPortal {
+#new_seriesPortal {
     max-width: 960px;
     padding: 10px 0;
     margin-right: auto;
@@ -942,14 +942,14 @@ home_addExistingShow.mako
     padding: 1em 1.4em;
 }
 
-ul#rootDirStaticList {
+ul#root_dirStaticList {
     margin-right: auto;
     margin-left: auto;
     text-align: left;
     padding-left: 0;
 }
 
-ul#rootDirStaticList li {
+ul#root_dirStaticList li {
     padding: 4px 5px;
     margin: 2px;
     list-style: none outside none;
@@ -957,17 +957,17 @@ ul#rootDirStaticList li {
     background: url("../css/lib/images/ui-bg_highlight-soft_75_efefef_1x100.png") repeat-x scroll 50% 50% rgb(239, 239, 239);
 }
 
-ul#rootDirStaticList li label {
+ul#root_dirStaticList li label {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-ul#rootDirStaticList li input[type="checkbox"] {
+ul#root_dirStaticList li input[type="checkbox"] {
     vertical-align: -2px;
 }
 
 /* =======================================================================
-home_recommendedShows.mako
+home_recommended_series.mako
 ========================================================================== */
 
 .recommendedShowTitleIcons {
@@ -1056,10 +1056,10 @@ div.recommended-image {
 }
 
 /* =======================================================================
-home_postprocess.mako
+home_post_process.mako
 ========================================================================== */
 
-#postProcess {
+#post_process {
     width: 800px;
     padding-top: 10px;
     margin-right: auto;
@@ -1086,7 +1086,7 @@ home_postprocess.mako
 }
 
 /* =======================================================================
-displayShow.mako
+display_series.mako
 ========================================================================== */
 
 .modal-wide .modal-dialog {
@@ -1119,7 +1119,7 @@ div#col-show-summary {
     margin-bottom: 15px;
 }
 
-#showSelector {
+#series_selector {
     height: 31px;
     display: table-cell;
     left: 20px;
@@ -1173,7 +1173,7 @@ div#col-show-summary {
         margin-left: 305px;
     }
 
-    .showSelector {
+    .series_selector {
         width: 100%;
     }
 
@@ -1197,7 +1197,7 @@ div#col-show-summary {
 }
 
 @media (max-width: 767px) {
-    #showSelector {
+    #series_selector {
         float: left;
         width: 100%;
     }
@@ -1546,7 +1546,7 @@ span.snatched b {
     opacity: 0.4;
 }
 
-.displayShowTable {
+.display_seriesTable {
     table-layout: auto;
     width: 100%;
     border-collapse: collapse;
@@ -1557,11 +1557,11 @@ span.snatched b {
     color: rgb(0, 0, 0) !important;
 }
 
-.displayShowTable.display_show {
+.display_seriesTable.display_series {
     clear: both;
 }
 
-.displayShowTable th.row-seasonheader {
+.display_seriesTable th.row-seasonheader {
     border: none !important;
     background-color: rgb(34, 34, 34) !important;
     color: rgb(255, 255, 255) !important;
@@ -1569,11 +1569,11 @@ span.snatched b {
     text-align: left !important;
 }
 
-.displayShowTable td.col-search {
+.display_seriesTable td.col-search {
     text-align: center;
 }
 
-.displayShowTableFanArt {
+.display_seriesTableFanArt {
     table-layout: auto;
     width: 100%;
     border-collapse: collapse;
@@ -1584,7 +1584,7 @@ span.snatched b {
     color: rgb(0, 0, 0) !important;
 }
 
-.displayShowTableFanArt.display_show {
+.display_seriesTableFanArt.display_series {
     clear: both;
     opacity: 0.9;
 }
@@ -1593,7 +1593,7 @@ span.snatched b {
     opacity: 0.9;
 }
 
-.displayShowTableFanArt th.row-seasonheader {
+.display_seriesTableFanArt th.row-seasonheader {
     border: none !important;
     background-color: transparent !important;
     color: rgb(255, 255, 255) !important;
@@ -1601,7 +1601,7 @@ span.snatched b {
     text-align: left !important;
 }
 
-.displayShowTableFanArt td.col-search {
+.display_seriesTableFanArt td.col-search {
     text-align: center;
 }
 
@@ -1623,7 +1623,7 @@ span.snatched b {
     empty-cells: show;
 }
 
-.defaultTable.display_show {
+.defaultTable.display_series {
     clear: both;
 }
 
@@ -2309,7 +2309,7 @@ select .selected {
 }
 
 /* =======================================================================
-config_postProcessing.mako
+config_post_processing.mako
 ========================================================================== */
 
 #config div.example {
@@ -4056,7 +4056,7 @@ input.tablesorter-filter.disabled {
 }
 
 /* =======================================================================
-snatchSelection.mako
+snatch_selection.mako
 ========================================================================== */
 
 div#searchNotification {

@@ -2,18 +2,17 @@
 
 """Provider code for Binsearch provider."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 from os.path import join
+from urllib.parse import urljoin
+
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
 from medusa.helper.common import convert_size, sanitize_filename
 from medusa.helpers import download_file
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.nzb.nzb_provider import NZBProvider
-from requests.compat import urljoin
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -30,7 +29,7 @@ class BinSearchProvider(NZBProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(BinSearchProvider, self).__init__('BinSearch')
+        super().__init__('BinSearch')
 
         # Credentials
         self.public = True
@@ -101,6 +100,7 @@ class BinSearchProvider(NZBProvider):
 
         :return: A list of items found
         """
+
         def process_column_header(td):
             return td.get_text(strip=True).lower()
 
@@ -189,7 +189,7 @@ class BinSearchProvider(NZBProvider):
             for extension in ('.nfo', '.par2', '.rar', '.zip', '.nzb', '.part'):
                 # Strip extensions that aren't part of the file name
                 if title.endswith(extension):
-                    title = title[:len(title)-len(extension)]
+                    title = title[:len(title) - len(extension)]
             return title
         except AttributeError:
             return None

@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
-
 import logging
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 from medusa import app
 from medusa.common import (
@@ -19,19 +19,17 @@ from medusa.common import (
 from medusa.helper.common import http_status_code
 from medusa.logger.adapters.style import BraceAdapter
 
-from requests.compat import urlencode
-from six.moves.urllib.request import Request, urlopen
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     """
     Use Telegram to send notifications
 
     https://telegram.org/
     """
+
     def test_notify(self, user_id=None, api_key=None):
         """
         Send a test notification
@@ -57,7 +55,7 @@ class Notifier(object):
 
         log.debug('Telegram in use with API KEY: {0}', api_key)
 
-        message = '%s : %s' % (title.encode(), msg.encode())
+        message = '%s : %s' % (title, msg)
         payload = urlencode({'chat_id': user_id, 'text': message})
         telegram_api = 'https://api.telegram.org/bot%s/%s'
 
@@ -70,7 +68,7 @@ class Notifier(object):
             success = True
         except IOError as e:
             message = 'Unknown IO error: %s' % e
-            if hasattr(e, b'code'):
+            if hasattr(e, 'code'):
                 error_message = {
                     400: 'Missing parameter(s). Double check your settings or if the channel/user exists.',
                     401: 'Authentication failed.',
@@ -143,7 +141,7 @@ class Notifier(object):
 
     def _notify_telegram(self, title, message, user_id=None, api_key=None, force=False):
         """
-        Sends a Telegram notification
+        Sends a Telegram notification.
 
         :param title: The title of the notification to send
         :param message: The message string to send
@@ -153,7 +151,6 @@ class Notifier(object):
 
         :returns: the message to send
         """
-
         if not (force or app.USE_TELEGRAM):
             log.debug('Notification for Telegram not enabled, skipping this notification')
             return False, 'Disabled'

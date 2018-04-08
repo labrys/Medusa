@@ -11,6 +11,8 @@ import warnings
 from itertools import chain
 from operator import itemgetter
 
+import requests
+
 from medusa.indexers.exceptions import (
     IndexerAttributeNotFound,
     IndexerEpisodeNotFound,
@@ -21,15 +23,11 @@ from medusa.indexers.exceptions import (
 from medusa.indexers.ui import BaseUI, ConsoleUI
 from medusa.logger.adapters.style import BraceAdapter
 
-import requests
-from six import integer_types
-
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class BaseIndexer(object):
+class BaseIndexer:
     """Base class for indexer api's."""
 
     def __init__(self,
@@ -54,30 +52,23 @@ class BaseIndexer(object):
         self.shows = ShowContainer()  # Holds all Show classes
         self.corrections = {}  # Holds show-name to show_id mapping
 
-        self.config = {}
-
-        self.config['debug_enabled'] = debug  # show debugging messages
-
-        self.config['custom_ui'] = custom_ui
-
-        self.config['interactive'] = interactive  # prompt for correct series?
-
-        self.config['select_first'] = select_first
-
-        self.config['search_all_languages'] = search_all_languages
-
-        self.config['use_zip'] = use_zip
-
-        self.config['dvdorder'] = dvdorder
-
-        self.config['proxy'] = proxy
+        self.config = {
+            'debug_enabled': debug,
+            'custom_ui': custom_ui,
+            'interactive': interactive,
+            'select_first': select_first,
+            'search_all_languages': search_all_languages,
+            'use_zip': use_zip,
+            'dvdorder': dvdorder,
+            'proxy': proxy,
+        }
 
         if cache is True:
             self.config['cache_enabled'] = True
             self.config['cache_location'] = self._get_temp_dir()
         elif cache is False:
             self.config['cache_enabled'] = False
-        elif isinstance(cache, basestring):
+        elif isinstance(cache, str):
             self.config['cache_enabled'] = True
             self.config['cache_location'] = cache
         else:
@@ -189,7 +180,7 @@ class BaseIndexer(object):
         Since the nice-to-use tvdb[1][24]['name] interface
         makes it impossible to do tvdb[1][24]['name] = "name"
         and still be capable of checking if an episode exists
-        so we can raise tvdb_shownotfound, we have a slightly
+        so we can raise TVDBShowNotFound, we have a slightly
         less pretty method of setting items.. but since the API
         is supposed to be read-only, this is the best way to
         do it!
@@ -284,7 +275,7 @@ class BaseIndexer(object):
 
     def __getitem__(self, key):
         """Handle tvdb_instance['seriesname'] calls. The dict index should be the show id."""
-        if isinstance(key, (integer_types, long)):
+        if isinstance(key, int):
             # Item is integer, treat as show id
             if key not in self.shows:
                 self._get_show_data(key, self.config['language'])
@@ -337,7 +328,7 @@ class ShowContainer(dict):
 
             self._lastgc = time.time()
 
-        super(ShowContainer, self).__setitem__(key, value)
+        super().__setitem__(key, value)
 
 
 class Show(dict):
@@ -378,7 +369,7 @@ class Show(dict):
             return dict.__getitem__(self.data, key)
 
         # Data wasn't found, raise appropriate error
-        if isinstance(key, integer_types) or key.isdigit():
+        if isinstance(key, int) or key.isdigit():
             # Episode number x was not found
             raise IndexerSeasonNotFound('Could not find season {0!r}'.format(key))
         else:
@@ -517,20 +508,19 @@ class Episode(dict):
         if term is None:
             raise TypeError('must supply string to search for (contents)')
 
-        term = unicode(term).lower()
+        term = term.lower()
         for cur_key, cur_value in self.items():
-            cur_key, cur_value = unicode(cur_key).lower(), unicode(cur_value).lower()
+            cur_key = cur_key.lower()
+            cur_value = cur_value.lower()
             if key is not None and cur_key != key:
                 # Do not search this key
                 continue
-            if cur_value.find(unicode(term).lower()) > -1:
+            if cur_value.find(term.lower()) > -1:
                 return self
 
 
 class Actors(list):
     """Hold all Actor instances for a show."""
-
-    pass
 
 
 class Actor(dict):

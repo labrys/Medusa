@@ -2,10 +2,9 @@
 
 """Provider code for Norbits."""
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
+from urllib.parse import urlencode, urljoin
 
 from medusa import tv
 from medusa.helper.common import (
@@ -16,8 +15,6 @@ from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.torrent.torrent_provider import TorrentProvider
 
-from requests.compat import urlencode, urljoin
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
@@ -27,7 +24,7 @@ class NorbitsProvider(TorrentProvider):
 
     def __init__(self):
         """.Initialize the class."""
-        super(NorbitsProvider, self).__init__('Norbits')
+        super().__init__('Norbits')
 
         # Credentials
         self.username = None

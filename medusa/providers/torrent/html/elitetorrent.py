@@ -2,18 +2,15 @@
 
 """Provider code for EliteTorrent."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
 from medusa.helper.common import try_int
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.torrent.torrent_provider import TorrentProvider
-
-from requests.compat import urljoin
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -26,7 +23,7 @@ class EliteTorrentProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(EliteTorrentProvider, self).__init__('EliteTorrent')
+        super().__init__('EliteTorrent')
 
         # Credentials
         self.public = True

@@ -5,10 +5,9 @@ import os
 
 from medusa.helper.common import replace_extension
 from medusa.metadata import kodi_12plus
-from six import text_type
 
 
-class KODIMetadata(kodi_12plus.KODI_12PlusMetadata):
+class KODIMetadata(kodi_12plus.KODI12PlusMetadata):
     """
     Metadata generation class for KODI (legacy).
 
@@ -36,16 +35,16 @@ class KODIMetadata(kodi_12plus.KODI_12PlusMetadata):
                  season_banners=False,
                  season_all_poster=False,
                  season_all_banner=False):
-        super(KODIMetadata, self).__init__(show_metadata,
-                                           episode_metadata,
-                                           fanart,
-                                           poster,
-                                           banner,
-                                           episode_thumbnails,
-                                           season_posters,
-                                           season_banners,
-                                           season_all_poster,
-                                           season_all_banner)
+        super().__init__(show_metadata,
+                         episode_metadata,
+                         fanart,
+                         poster,
+                         banner,
+                         episode_thumbnails,
+                         season_posters,
+                         season_banners,
+                         season_all_poster,
+                         season_all_banner)
         self.name = 'KODI'
 
         self.poster_name = self.banner_name = "folder.jpg"
@@ -90,16 +89,15 @@ class KODIMetadata(kodi_12plus.KODI_12PlusMetadata):
         """
         Returns the full path to the file for a given season poster.
 
-        show_obj: a Series instance for which to generate the path
-        season: a season number to be used for the path. Note that season 0
-                means specials.
+        :param show_obj: a Series instance for which to generate the path
+        :param season: a season number to be used for the path
+            Note that season 0 means specials.
         """
-
         # Our specials thumbnail is, well, special
         if season == 0:
             season_poster_filename = 'season-specials'
         else:
-            season_poster_filename = 'season' + text_type(season).zfill(2)
+            season_poster_filename = 'season' + season.zfill(2)
 
         return os.path.join(show_obj.location, season_poster_filename + '.tbn')
 

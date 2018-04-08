@@ -3,25 +3,23 @@
 import logging
 import re
 
+import requests
+
 from medusa import app, common
-from medusa.helper.exceptions import ex
 from medusa.helpers.utils import generate
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.session.core import MedusaSession
 
-import requests
-from six import iteritems
-
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def __init__(self):
         self.session = MedusaSession()
         self.session.headers.update({
@@ -100,16 +98,13 @@ class Notifier(object):
     def update_library(self, ep_obj=None, hosts=None,  # pylint: disable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches
                        username=None, password=None,
                        plex_server_token=None, force=False):
-
-        """Handles updating the Plex Media Server host via HTTP API
+        """
+        Update Plex Media Server host via HTTP API.
 
         Plex Media Server currently only supports updating the whole video library and not a specific path.
 
-        Returns:
-            Returns None for no issue, else a string of host with connection issues
-
+        :returns: None for no issue or a string of host with connection issues
         """
-
         if not (app.USE_PLEX_SERVER and app.PLEX_UPDATE_LIBRARY) and not force:
             return None
 
@@ -138,7 +133,7 @@ class Notifier(object):
             try:
                 response = self.session.get(url)
             except requests.RequestException as error:
-                log.warning(u'PLEX: Error while trying to contact Plex Media Server: {0}', ex(error))
+                log.warning(u'PLEX: Error while trying to contact Plex Media Server: {0}', error)
                 failed_hosts.add(cur_host)
                 continue
 
@@ -148,7 +143,7 @@ class Notifier(object):
                 if response.status_code == 401:
                     log.warning(u'PLEX: Unauthorized. Please set TOKEN or USERNAME and PASSWORD in Plex settings')
                 else:
-                    log.warning(u'PLEX: Error while trying to contact Plex Media Server: {0}', ex(error))
+                    log.warning(u'PLEX: Error while trying to contact Plex Media Server: {0}', error)
                 failed_hosts.add(cur_host)
                 continue
             else:
@@ -158,7 +153,7 @@ class Notifier(object):
                     failed_hosts.add(cur_host)
                     continue
                 else:
-                    media_container = etree.fromstring(xml_response)
+                    media_container = ETree.fromstring(xml_response)
 
             sections = media_container.findall('.//Directory')
             if not sections:
@@ -196,7 +191,7 @@ class Notifier(object):
             result = u'PLEX: Updating all hosts with TV sections: {0}'
         log.debug(result.format(', '.join(hosts_try)))
 
-        for section_key, cur_host in iteritems(hosts_try):
+        for section_key, cur_host in hosts_try.items():
 
             url = '{schema}://{host}/library/sections/{key}/refresh'.format(
                 schema=schema, host=cur_host, key=section_key,
@@ -204,7 +199,7 @@ class Notifier(object):
             try:
                 response = self.session.get(url)
             except requests.RequestException as error:
-                log.warning(u'PLEX: Error updating library section for Plex Media Server: {0}', ex(error))
+                log.warning(u'PLEX: Error updating library section for Plex Media Server: {0}', error)
                 failed_hosts.add(cur_host)
             else:
                 del response  # request succeeded so response is not needed

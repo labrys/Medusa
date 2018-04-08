@@ -3,6 +3,8 @@
 import logging
 import socket
 
+from requests.exceptions import RequestException
+
 from medusa import app
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.notifiers import (
@@ -27,10 +29,7 @@ from medusa.notifiers import (
     synology_notifier,
     telegram,
     trakt,
-    tweet,
 )
-
-from requests.exceptions import RequestException
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -57,7 +56,6 @@ pushbullet_notifier = pushbullet.Notifier()
 freemobile_notifier = freemobile.Notifier()
 telegram_notifier = telegram.Notifier()
 # social
-twitter_notifier = tweet.Notifier()
 trakt_notifier = trakt.Notifier()
 email_notifier = emailnotify.Notifier()
 slack_notifier = slack.Notifier()
@@ -80,7 +78,6 @@ notifiers = [
     nma_notifier,
     pushalot_notifier,
     pushbullet_notifier,
-    twitter_notifier,
     trakt_notifier,
     email_notifier,
     slack_notifier

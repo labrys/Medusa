@@ -2,10 +2,10 @@
 
 """Configure Searches."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
+
+from tornroutes import route
 
 from medusa import (
     app,
@@ -16,19 +16,16 @@ from medusa.helper.common import try_int
 from medusa.server.web.config.handler import Config
 from medusa.server.web.core import PageTemplate
 
-from tornroutes import route
-
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
 @route('/config/search(/?.*)')
 class ConfigSearch(Config):
-    """
-    Handler for Search configuration
-    """
+    """Handler for Search configuration."""
+
     def __init__(self, *args, **kwargs):
-        super(ConfigSearch, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """
@@ -36,41 +33,38 @@ class ConfigSearch(Config):
         """
         t = PageTemplate(rh=self, filename='config_search.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Episode Search',
+        return t.render(submenu=self.config_menu(), title='Config - Episode Search',
                         header='Search Settings', topmenu='config',
                         controller='config', action='search')
 
-    def saveSearch(self, use_nzbs=None, use_torrents=None, nzb_dir=None, sab_username=None, sab_password=None,
-                   sab_apikey=None, sab_category=None, sab_category_anime=None, sab_category_backlog=None,
-                   sab_category_anime_backlog=None, sab_host=None, nzbget_username=None, nzbget_password=None,
-                   nzbget_category=None, nzbget_category_backlog=None, nzbget_category_anime=None,
-                   nzbget_category_anime_backlog=None, nzbget_priority=None, nzbget_host=None,
-                   nzbget_use_https=None, backlog_days=None, backlog_frequency=None, dailysearch_frequency=None,
-                   nzb_method=None, torrent_method=None, usenet_retention=None, download_propers=None,
-                   check_propers_interval=None, allow_high_priority=None, sab_forced=None, remove_from_client=None,
-                   randomize_providers=None, use_failed_downloads=None, delete_failed=None, propers_search_days=None,
-                   torrent_dir=None, torrent_username=None, torrent_password=None, torrent_host=None,
-                   torrent_label=None, torrent_label_anime=None, torrent_path=None, torrent_verify_cert=None,
-                   torrent_seed_time=None, torrent_paused=None, torrent_high_bandwidth=None,
-                   torrent_rpcurl=None, torrent_auth_type=None, ignore_words=None, torrent_checker_frequency=None,
-                   preferred_words=None, undesired_words=None, trackers_list=None, require_words=None,
-                   ignored_subs_list=None, ignore_und_subs=None, cache_trimming=None, max_cache_age=None,
-                   torrent_seed_location=None):
-        """
-        Save Search related settings
-        """
-
+    def save_search(self, use_nzbs=None, use_torrents=None, nzb_dir=None, sab_username=None, sab_password=None,
+                    sab_apikey=None, sab_category=None, sab_category_anime=None, sab_category_backlog=None,
+                    sab_category_anime_backlog=None, sab_host=None, nzbget_username=None, nzbget_password=None,
+                    nzbget_category=None, nzbget_category_backlog=None, nzbget_category_anime=None,
+                    nzbget_category_anime_backlog=None, nzbget_priority=None, nzbget_host=None,
+                    nzbget_use_https=None, backlog_days=None, backlog_frequency=None, dailysearch_frequency=None,
+                    nzb_method=None, torrent_method=None, usenet_retention=None, download_propers=None,
+                    check_propers_interval=None, allow_high_priority=None, sab_forced=None, remove_from_client=None,
+                    randomize_providers=None, use_failed_downloads=None, delete_failed=None, propers_search_days=None,
+                    torrent_dir=None, torrent_username=None, torrent_password=None, torrent_host=None,
+                    torrent_label=None, torrent_label_anime=None, torrent_path=None, torrent_verify_cert=None,
+                    torrent_seed_time=None, torrent_paused=None, torrent_high_bandwidth=None,
+                    torrent_rpcurl=None, torrent_auth_type=None, ignore_words=None, torrent_checker_frequency=None,
+                    preferred_words=None, undesired_words=None, trackers_list=None, require_words=None,
+                    ignored_subs_list=None, ignore_und_subs=None, cache_trimming=None, max_cache_age=None,
+                    torrent_seed_location=None):
+        """Save Search related settings."""
         results = []
 
-        if not config.change_NZB_DIR(nzb_dir):
+        if not config.change_nzb_dir(nzb_dir):
             results += ['Unable to create directory {dir}, dir not changed.'.format(dir=os.path.normpath(nzb_dir))]
 
-        if not config.change_TORRENT_DIR(torrent_dir):
+        if not config.change_torrent_dir(torrent_dir):
             results += ['Unable to create directory {dir}, dir not changed.'.format(dir=os.path.normpath(torrent_dir))]
 
-        config.change_DAILYSEARCH_FREQUENCY(dailysearch_frequency)
-        config.change_TORRENT_CHECKER_FREQUENCY(torrent_checker_frequency)
-        config.change_BACKLOG_FREQUENCY(backlog_frequency)
+        config.change_daily_search_frequency(dailysearch_frequency)
+        config.change_torrent_checker_frequency(torrent_checker_frequency)
+        config.change_backlog_frequency(backlog_frequency)
         app.BACKLOG_DAYS = try_int(backlog_days, 7)
 
         app.CACHE_TRIMMING = config.checkbox_to_value(cache_trimming)
@@ -93,10 +87,10 @@ class ConfigSearch(Config):
 
         app.RANDOMIZE_PROVIDERS = config.checkbox_to_value(randomize_providers)
 
-        config.change_DOWNLOAD_PROPERS(download_propers)
+        config.change_download_propers(download_propers)
         app.PROPERS_SEARCH_DAYS = try_int(propers_search_days, 2)
         app.REMOVE_FROM_CLIENT = config.checkbox_to_value(remove_from_client)
-        config.change_PROPERS_FREQUENCY(check_propers_interval)
+        config.change_propers_frequency(check_propers_interval)
 
         app.ALLOW_HIGH_PRIORITY = config.checkbox_to_value(allow_high_priority)
 

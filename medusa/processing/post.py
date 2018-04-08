@@ -26,16 +26,18 @@ import subprocess
 from collections import OrderedDict
 
 import adba
+import rarfile
+from rarfile import Error as RarError, NeedFirstVolume
 
 from medusa import (
     app,
     common,
-    db,
     failed_history,
     helpers,
     history,
     notifiers,
 )
+from medusa.databases import db
 from medusa.helper.common import (
     episode_num,
     pretty_file_size,
@@ -56,11 +58,6 @@ from medusa.name_parser.parser import (
 from medusa.show import naming
 from medusa.subtitles import from_code, from_ietf_code, get_subtitles_dir
 
-import rarfile
-from rarfile import Error as RarError, NeedFirstVolume
-
-from six import text_type
-
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
@@ -78,7 +75,7 @@ LANGUAGE_TAGS = {
 }
 
 
-class PostProcessor(object):
+class PostProcessor:
     """A class which will process a media file according to the post processing settings in the config."""
 
     EXISTS_LARGER = 1
@@ -204,7 +201,7 @@ class PostProcessor(object):
         processed_file_name = os.path.splitext(os.path.basename(file_path))[0].lower()
 
         processed_names = (processed_file_name,)
-        processed_names += filter(None, (self._rar_basename(file_path, files),))
+        processed_names += tuple(filter(None, (self._rar_basename(file_path, files),)))
 
         associated_files = set()
         for found_file in files:
@@ -289,7 +286,7 @@ class PostProcessor(object):
                 # Escaping is done by wrapping any of "*?[" between square brackets.
                 # Modified from: https://hg.python.org/cpython/file/tip/Lib/glob.py#l161
                 if isinstance(new_pattern, bytes):
-                    new_pattern = re.compile(b'([*?[])').sub(br'[\1]', new_pattern)
+                    new_pattern = re.compile('([*?[])').sub(br'[\1]', new_pattern)
                 else:
                     new_pattern = re.compile('([*?[])').sub(r'[\1]', new_pattern)
 
@@ -365,7 +362,7 @@ class PostProcessor(object):
                 os.remove(filename)
 
                 # do the library update for synoindex
-                notifiers.synoindex_notifier.deleteFile(filename)
+                notifiers.synoindex_notifier.delete_file(filename)
 
     @staticmethod
     def rename_associated_file(new_path, new_basename, filepath):
@@ -929,27 +926,14 @@ class PostProcessor(object):
         if not app.EXTRA_SCRIPTS:
             return
 
-        def _attempt_to_encode(item, _encoding):
-            if isinstance(item, text_type):
-                try:
-                    item = item.encode(_encoding)
-                except UnicodeEncodeError:
-                    pass  # ignore it
-                finally:
-                    return item
-
-        encoding = app.SYS_ENCODING
-
-        file_path = _attempt_to_encode(self.file_path, encoding)
-        ep_location = _attempt_to_encode(ep_obj.location, encoding)
+        file_path = self.file_path
+        ep_location = ep_obj.location
         indexer_id = str(ep_obj.series.indexerid)
         season = str(ep_obj.season)
         episode = str(ep_obj.episode)
         airdate = str(ep_obj.airdate)
 
         for cur_script_name in app.EXTRA_SCRIPTS:
-            cur_script_name = _attempt_to_encode(cur_script_name, encoding)
-
             # generate a safe command line string to execute the script and provide all the parameters
             script_cmd = [piece for piece in re.split(r'(\'.*?\'|".*?"| )', cur_script_name) if piece.strip()]
             script_cmd[0] = os.path.abspath(script_cmd[0])
@@ -1128,7 +1112,7 @@ class PostProcessor(object):
                 helpers.chmod_as_parent(ep_obj.series._location)
 
                 # do the library update for synoindex
-                notifiers.synoindex_notifier.addFolder(ep_obj.series._location)
+                notifiers.synoindex_notifier.add_folder(ep_obj.series._location)
             except (OSError, IOError) as error:
                 raise EpisodePostProcessingFailedException(u'Unable to create the show directory: {location}. '
                                                            u'Error: {msg}'.format(location=ep_obj.series._location,
@@ -1274,7 +1258,7 @@ class PostProcessor(object):
         # do the library update for NMJ
         # nmj_notifier kicks off its library update when the notify_download is issued (inside notifiers)
         # do the library update for Synology Indexer
-        notifiers.synoindex_notifier.addFile(ep_obj.location)
+        notifiers.synoindex_notifier.add_file(ep_obj.location)
         # do the library update for pyTivo
         notifiers.pytivo_notifier.update_library(ep_obj)
         # do the library update for Trakt

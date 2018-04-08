@@ -2,13 +2,14 @@
 
 """Provider code for Newznab provider."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
 import re
 import time
 import traceback
+from urllib.parse import urljoin
+
+import validators
 
 from medusa import (
     app,
@@ -20,7 +21,6 @@ from medusa.helper.common import (
     convert_size,
     try_int,
 )
-from medusa.helper.encoding import ss
 from medusa.helpers.utils import split_and_strip
 from medusa.indexers.config import (
     INDEXER_TMDB,
@@ -30,9 +30,6 @@ from medusa.indexers.config import (
 from medusa.indexers.utils import mappings
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.nzb.nzb_provider import NZBProvider
-
-from requests.compat import urljoin
-import validators
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -48,7 +45,7 @@ class NewznabProvider(NZBProvider):
     def __init__(self, name, url='', api_key='0', cat_ids=None, default=False, search_mode='eponly',
                  search_fallback=False, enable_daily=True, enable_backlog=False, enable_manualsearch=False):
         """Initialize the class."""
-        super(NewznabProvider, self).__init__(name)
+        super().__init__(name)
 
         self.url = url
         self.api_key = api_key
@@ -314,7 +311,7 @@ class NewznabProvider(NZBProvider):
         except (AttributeError, TypeError):
             return self._check_auth()
 
-        log.info(ss(err_desc))
+        log.info(err_desc)
 
         return False
 
@@ -598,7 +595,7 @@ class NewznabProvider(NZBProvider):
             },
             {
                 'name': 'Usenet-Crawler',
-                'url': 'https://api.usenet-crawler.com/',
+                'url': 'https://usenet-crawler.com/',
                 'api_key': '',
                 'category_ids': ['5030', '5040'],
                 'enabled': False,

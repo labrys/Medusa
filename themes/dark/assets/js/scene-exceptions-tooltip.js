@@ -6,7 +6,7 @@ $(() => {
             content: {
                 text: 'Loading...',
                 ajax: {
-                    url: 'home/sceneExceptions',
+                    url: 'home/scene_exceptions',
                     type: 'GET',
                     data: {
                         indexername: indexerName,

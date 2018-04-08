@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import cgi
+import html
 import logging
 import os
 
@@ -17,7 +17,7 @@ def diagnose():
     user-readable message indicating possible issues.
     """
     try:
-        from gi.repository import Notify  # @UnusedImport
+        from gi.repository import Notify  # noqa: F401
     except ImportError:
         return (u"<p>Error: gir-notify isn't installed. On Ubuntu/Debian, install the "
                 u"<a href=\"apt:gir1.2-notify-0.7\">gir1.2-notify-0.7</a> or "
@@ -35,17 +35,17 @@ def diagnose():
             bus = dbus.SessionBus()
         except dbus.DBusException as e:
             return (u"<p>Error: unable to connect to D-Bus session bus: <code>%s</code>."
-                    u"<p>Are you running Medusa in a desktop session?") % (cgi.escape(e),)
+                    u"<p>Are you running Medusa in a desktop session?") % (html.escaoe(e),)
         try:
             bus.get_object('org.freedesktop.Notifications',
                            '/org/freedesktop/Notifications')
         except dbus.DBusException as e:
             return (u"<p>Error: there doesn't seem to be a notification daemon available: <code>%s</code> "
-                    u"<p>Try installing notification-daemon or notify-osd.") % (cgi.escape(e),)
+                    u"<p>Try installing notification-daemon or notify-osd.") % (html.escape(e),)
     return u"<p>Error: Unable to send notification."
 
 
-class Notifier(object):
+class Notifier:
     def __init__(self):
         self.Notify = None
         self.gobject = None

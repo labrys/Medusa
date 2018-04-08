@@ -7,6 +7,7 @@ import ctypes
 import datetime
 import errno
 import hashlib
+import http.client
 import imghdr
 import io
 import logging
@@ -23,47 +24,42 @@ import time
 import traceback
 import uuid
 import warnings
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ETree
 import zipfile
-from itertools import cycle, izip
+from contextlib import suppress
+from itertools import cycle
+from shutil import Error
+from urllib.parse import splittype, urlparse
 
 import adba
-
+import certifi
+import guessit
+import requests
 from cachecontrol import CacheControlAdapter
 from cachecontrol.cache import DictCache
-
-import certifi
-
-from contextlib2 import suppress
-
-import guessit
-
 from imdbpie import imdbpie
 
-from medusa import app, db
+from medusa import app
 from medusa.common import USER_AGENT
-from medusa.helper.common import (episode_num, http_code_description, media_extensions,
-                                  pretty_file_size, subtitle_extensions)
+from medusa.databases import db
+from medusa.helper.common import (
+    episode_num, http_code_description, media_extensions,
+    pretty_file_size, subtitle_extensions,
+)
 from medusa.helpers.utils import generate
 from medusa.indexers.exceptions import IndexerException
 from medusa.logger.adapters.style import BraceAdapter, BraceMessage
 from medusa.session.core import MedusaSafeSession
 from medusa.show.show import Show
 
-import requests
-from requests.compat import urlparse
-
-from six import binary_type, string_types, text_type
-from six.moves import http_client
+try:
+    from shutil import SpecialFileError
+except ImportError:
+    class SpecialFileError(Error):
+        """SpecialFileError replacement for shutil."""
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
-
-
-try:
-    from urllib.parse import splittype
-except ImportError:
-    from urllib2 import splittype
 
 
 def indent_xml(elem, level=0):
@@ -133,7 +129,6 @@ def is_subtitle(file_path):
     """Return whether the file is a subtitle or not.
 
     :param file_path: path to the file
-    :type file_path: text_type
     :return: True if it is a subtitle, else False
     :rtype: bool
     """
@@ -144,9 +139,7 @@ def get_extension(file_path):
     """Return the file extension without leading dot.
 
     :param file_path: path to the file
-    :type file_path: text_type
     :return: extension or empty string
-    :rtype: text_type
     """
     return os.path.splitext(file_path)[1][1:]
 
@@ -177,7 +170,7 @@ def make_dir(path):
 
             # do the library update for synoindex
             from medusa import notifiers
-            notifiers.synoindex_notifier.addFolder(path)
+            notifiers.synoindex_notifier.add_folder(path)
         except OSError:
             return False
     return True
@@ -186,22 +179,21 @@ def make_dir(path):
 def search_indexer_for_show_id(show_name, indexer=None, series_id=None, ui=None):
     """Contact indexer to check for information on shows by showid.
 
+    :param series_id:
     :param show_name: Name of show
     :type show_name: str
     :param indexer: Which indexer to use
     :type indexer: int
-    :param indexer_id: Which indexer ID to look for
-    :type indexer_id: int
     :param ui: Custom UI for indexer use
     :return:
     """
-    from medusa.indexers.api import indexerApi
+    from medusa.indexers.api import IndexerAPI
     show_names = [re.sub('[. -]', ' ', show_name)]
 
     # Query Indexers for each search term and build the list of results
-    for i in indexerApi().indexers if not indexer else int(indexer or []):
+    for i in IndexerAPI().indexers if not indexer else int(indexer or []):
         # Query Indexers for each search term and build the list of results
-        indexer_api = indexerApi(i)
+        indexer_api = IndexerAPI(i)
         indexer_api_params = indexer_api.api_params.copy()
         if ui is not None:
             indexer_api_params['custom_ui'] = ui
@@ -275,18 +267,13 @@ def copy_file(src_file, dest_file):
     :param dest_file: Path of destination file
     :type dest_file: str
     """
-    try:
-        from shutil import SpecialFileError, Error
-    except ImportError:
-        from shutil import Error
-        SpecialFileError = Error
 
     try:
         shutil.copyfile(src_file, dest_file)
     except (SpecialFileError, Error) as error:
         log.warning('Error copying file: {error}', {'error': error})
     except OSError as error:
-        msg = BraceMessage('OSError: {0}', error.message)
+        msg = BraceMessage('OSError: {0}', error)
         if error.errno == errno.ENOSPC:
             # Only warn if device is out of space
             log.warning(msg)
@@ -327,7 +314,7 @@ def link(src, dst):
     :type dst: str
     """
     if os.name == 'nt':
-        if ctypes.windll.kernel32.CreateHardLinkW(text_type(dst), text_type(src), 0) == 0:
+        if ctypes.windll.kernel32.CreateHardLinkW(dst, src, 0) == 0:
             raise ctypes.WinError()
     else:
         os.link(src, dst)
@@ -376,8 +363,11 @@ def symlink(src, dst):
     :type dst: str
     """
     if os.name == 'nt':
-        if ctypes.windll.kernel32.CreateSymbolicLinkW(text_type(dst), text_type(src),
-                                                      1 if os.path.isdir(src) else 0) in [0, 1280]:
+        if ctypes.windll.kernel32.CreateSymbolicLinkW(
+                dst,
+                src,
+                1 if os.path.isdir(src) else 0
+        ) in [0, 1280]:
             raise ctypes.WinError()
     else:
         os.symlink(src, dst)
@@ -426,6 +416,7 @@ def make_dirs(path):
     :param path:
     :rtype path: str
     """
+    import pathlib
     log.debug(u'Checking if the path {path} already exists', {'path': path})
 
     if not os.path.isdir(path):
@@ -463,7 +454,7 @@ def make_dirs(path):
 
                     # do the library update for synoindex
                     from medusa import notifiers
-                    notifiers.synoindex_notifier.addFolder(sofar)
+                    notifiers.synoindex_notifier.add_folder(sofar)
                 except (OSError, IOError) as msg:
                     log.error(u'Failed creating {path} : {error!r}',
                               {'path': sofar, 'error': msg})
@@ -554,7 +545,7 @@ def delete_empty_folders(top_dir, keep_dir=None):
 
                 # Do the library update for synoindex
                 from medusa import notifiers
-                notifiers.synoindex_notifier.deleteFolder(dirpath)
+                notifiers.synoindex_notifier.delete_folder(dirpath)
             except OSError as msg:
                 log.warning(u'Unable to delete {folder}. Error: {error!r}',
                             {'folder': dirpath, 'error': msg})
@@ -601,7 +592,7 @@ def chmod_as_parent(child_path):
     parent_path_stat = os.stat(parent_path)
     parent_mode = stat.S_IMODE(parent_path_stat[stat.ST_MODE])
 
-    child_path_stat = os.stat(child_path.encode(app.SYS_ENCODING))
+    child_path_stat = os.stat(child_path)
     child_path_mode = stat.S_IMODE(child_path_stat[stat.ST_MODE])
 
     if os.path.isfile(child_path):
@@ -654,7 +645,7 @@ def fix_set_group_id(child_path):
 
     if parent_mode & stat.S_ISGID:
         parent_gid = parent_stat[stat.ST_GID]
-        child_stat = os.stat(child_path.encode(app.SYS_ENCODING))
+        child_stat = os.stat(child_path)
         child_gid = child_stat[stat.ST_GID]
 
         if child_gid == parent_gid:
@@ -698,7 +689,7 @@ def update_anime_support():
 def get_absolute_number_from_season_and_episode(series_obj, season, episode):
     """Find the absolute number for a show episode.
 
-    :param show: Show object
+    :param series_obj:
     :param season: Season number
     :param episode: Episode number
     :return: The absolute number
@@ -707,11 +698,11 @@ def get_absolute_number_from_season_and_episode(series_obj, season, episode):
 
     if season and episode:
         main_db_con = db.DBConnection()
-        sql = b'SELECT * FROM tv_episodes WHERE indexer = ? AND showid = ? AND season = ? AND episode = ?'
+        sql = 'SELECT * FROM tv_episodes WHERE indexer = ? AND showid = ? AND season = ? AND episode = ?'
         sql_results = main_db_con.select(sql, [series_obj.indexer, series_obj.series_id, season, episode])
 
         if len(sql_results) == 1:
-            absolute_number = int(sql_results[0][b'absolute_number'])
+            absolute_number = int(sql_results[0]['absolute_number'])
             log.debug(
                 u'Found absolute number {absolute} for show {show} {ep}', {
                     'absolute': absolute_number,
@@ -929,24 +920,28 @@ def check_url(url):
 
     We only check the URL header.
     """
-    # see also http://stackoverflow.com/questions/2924422
-    # http://stackoverflow.com/questions/1140661
-    good_codes = [http_client.OK, http_client.FOUND, http_client.MOVED_PERMANENTLY]
+    # see also:
+    #  http://stackoverflow.com/questions/2924422
+    #  http://stackoverflow.com/questions/1140661
+    good_codes = [
+        http.client.OK,
+        http.client.FOUND,
+        http.client.MOVED_PERMANENTLY,
+    ]
 
     host, path = urlparse(url)[1:3]  # elems [1] and [2]
     try:
-        conn = http_client.HTTPConnection(host)
+        conn = http.client.HTTPConnection(host)
         conn.request('HEAD', path)
         return conn.getresponse().status in good_codes
-    except StandardError:
+    except Exception:
         return None
 
 
 def anon_url(*url):
     """Return a URL string consisting of the Anonymous redirect URL and an arbitrary number of values appended."""
-    # normalize to byte
-    url = [u.encode('utf-8') if isinstance(u, text_type) else binary_type(u) for u in url]
-    return '' if None in url else '{0}{1}'.format(app.ANON_REDIRECT, ''.join(url)).decode('utf-8')
+    return '' if None in url else '{0}{1}'.format(app.ANON_REDIRECT, ''.join(map(str, url)))
+
 
 # Encryption
 # ==========
@@ -964,6 +959,7 @@ def anon_url(*url):
 # Key Generators
 unique_key1 = hex(uuid.getnode() ** 2)  # Used in encryption v1
 
+
 # Encryption Functions
 
 
@@ -971,18 +967,18 @@ def encrypt(data, encryption_version=0, _decrypt=False):
     # Version 1: Simple XOR encryption (this is not very secure, but works)
     if encryption_version == 1:
         if _decrypt:
-            return ''.join(chr(ord(x) ^ ord(y)) for (x, y) in izip(base64.decodestring(data), cycle(unique_key1)))
+            return ''.join(chr(ord(x) ^ ord(y)) for (x, y) in zip(base64.decodebytes(data), cycle(unique_key1)))
         else:
-            return base64.encodestring(
-                ''.join(chr(ord(x) ^ ord(y)) for (x, y) in izip(data, cycle(unique_key1)))).strip()
+            return base64.encodebytes(
+                ''.join(chr(ord(x) ^ ord(y)) for (x, y) in zip(data, cycle(unique_key1)))).strip()
     # Version 2: Simple XOR encryption (this is not very secure, but works)
     elif encryption_version == 2:
         if _decrypt:
-            return ''.join(chr(ord(x) ^ ord(y)) for (x, y) in izip(base64.decodestring(data),
-                                                                   cycle(app.ENCRYPTION_SECRET)))
+            return ''.join(chr(ord(x) ^ ord(y)) for (x, y) in zip(base64.decodebytes(data),
+                                                                  cycle(app.ENCRYPTION_SECRET)))
         else:
-            return base64.encodestring(
-                ''.join(chr(ord(x) ^ ord(y)) for (x, y) in izip(data, cycle(app.ENCRYPTION_SECRET)))).strip()
+            return base64.encodebytes(
+                ''.join(chr(ord(x) ^ ord(y)) for (x, y) in zip(data, cycle(app.ENCRYPTION_SECRET)))).strip()
     # Version 0: Plain text
     else:
         return data
@@ -1017,7 +1013,7 @@ def get_show(name, try_indexers=False):
 
     for series_name in generate(name):
         # check cache for series
-        indexer_id, series_id = name_cache.retrieveNameFromCache(series_name)
+        indexer_id, series_id = name_cache.retrieve_name_from_cache(series_name)
         if series_id:
             from_cache = True
             series = Show.find_by_id(app.showList, indexer_id, series_id)
@@ -1036,15 +1032,18 @@ def get_show(name, try_indexers=False):
                 series = Show.find_by_id(app.showList, indexer_id, series_id)
 
         if not series:
-            match_name_only = (s.name for s in app.showList if text_type(s.imdb_year) in s.name and
-                               series_name.lower() == s.name.lower().replace(u' ({year})'.format(year=s.imdb_year), u''))
+            match_name_only = (
+                s.name for s in app.showList
+                if str(s.imdb_year) in s.name and
+                   series_name.lower() == s.name.lower().replace(u' ({year})'.format(year=s.imdb_year), u'')
+            )
             for found_series in match_name_only:
                 log.warning("Consider adding '{name}' in scene exceptions for series '{series}'".format
                             (name=series_name, series=found_series))
 
         # add show to cache
         if series and not from_cache:
-            name_cache.addNameToCache(series_name, series.indexer, series.indexerid)
+            name_cache.add_name_to_cache(series_name, series.indexer, series.indexerid)
 
         return series
 
@@ -1055,13 +1054,14 @@ def is_hidden_folder(folder):
     On Linux based systems hidden folders start with . (dot)
     :param folder: Full path of folder to check
     """
+
     def is_hidden(filepath):
         name = os.path.basename(os.path.abspath(filepath))
         return name.startswith('.') or has_hidden_attribute(filepath)
 
     def has_hidden_attribute(filepath):
         try:
-            attrs = ctypes.windll.kernel32.GetFileAttributesW(text_type(filepath))
+            attrs = ctypes.windll.kernel32.GetFileAttributesW(filepath)
             assert attrs != -1
             result = bool(attrs & 2)
         except (AttributeError, AssertionError):
@@ -1085,12 +1085,12 @@ def real_path(path):
 
 def validate_show(show, season=None, episode=None):
     """Reindex show from originating indexer, and return indexer information for the passed episode."""
-    from medusa.indexers.api import indexerApi
+    from medusa.indexers.api import IndexerAPI
     from medusa.indexers.exceptions import IndexerEpisodeNotFound, IndexerSeasonNotFound, IndexerShowNotFound
     indexer_lang = show.lang
 
     try:
-        indexer_api_params = indexerApi(show.indexer).api_params.copy()
+        indexer_api_params = IndexerAPI(show.indexer).api_params.copy()
 
         if indexer_lang and not indexer_lang == app.INDEXER_DEFAULT_LANGUAGE:
             indexer_api_params['language'] = indexer_lang
@@ -1173,6 +1173,7 @@ def restore_config_zip(archive, target_dir):
             def path_leaf(path):
                 head, tail = os.path.split(path)
                 return tail or os.path.basename(head)
+
             bak_filename = '{0}-{1}'.format(path_leaf(target_dir), datetime.datetime.now().strftime('%Y%m%d_%H%M%S'))
             shutil.move(target_dir, os.path.join(os.path.dirname(target_dir), bak_filename))
 
@@ -1412,9 +1413,8 @@ def get_size(start_path='.'):
 def generate_api_key():
     """Return a new randomized API_KEY."""
     log.info(u'Generating New API key')
-    secure_hash = hashlib.sha512(str(time.time()))
-    secure_hash.update(str(random.SystemRandom().getrandbits(4096)))
-    return secure_hash.hexdigest()[:32]
+    import secrets
+    return secrets.token_hex(16)
 
 
 def remove_article(text=''):
@@ -1560,7 +1560,6 @@ def get_disk_space_usage(disk_path=None, pretty=True):
 
 
 def get_tvdb_from_id(indexer_id, indexer):
-
     session = MedusaSafeSession()
     tvdb_id = ''
 
@@ -1571,7 +1570,7 @@ def get_tvdb_from_id(indexer_id, indexer):
             return tvdb_id
 
         with suppress(SyntaxError):
-            tree = ET.fromstring(data)
+            tree = ETree.fromstring(data)
             for show in tree.iter("Series"):
                 tvdb_id = show.findtext("seriesid")
 
@@ -1585,7 +1584,7 @@ def get_tvdb_from_id(indexer_id, indexer):
             return tvdb_id
 
         with suppress(SyntaxError):
-            tree = ET.fromstring(data)
+            tree = ETree.fromstring(data)
             for show in tree.iter("Series"):
                 tvdb_id = show.findtext("seriesid")
 
@@ -1613,22 +1612,22 @@ def get_tvdb_from_id(indexer_id, indexer):
 
 
 def get_showname_from_indexer(indexer, indexer_id, lang='en'):
-    from medusa.indexers.api import indexerApi
-    indexer_api_params = indexerApi(indexer).api_params.copy()
+    from medusa.indexers.api import IndexerAPI
+    indexer_api_params = IndexerAPI(indexer).api_params.copy()
     if lang:
         indexer_api_params['language'] = lang
 
-    log.info(u'{0}: {1!r}', indexerApi(indexer).name, indexer_api_params)
+    log.info(u'{0}: {1!r}', IndexerAPI(indexer).name, indexer_api_params)
 
     s = None
     try:
-        indexer_api = indexerApi(indexer).indexer(**indexer_api_params)
+        indexer_api = IndexerAPI(indexer).indexer(**indexer_api_params)
         s = indexer_api[int(indexer_id)]
     except IndexerException as msg:
         log.warning(
             'Show name unavailable for {name} id {id} in {language}:'
             ' {reason}', {
-                'name': indexerApi(indexer).name,
+                'name': IndexerAPI(indexer).name,
                 'id': indexer_id,
                 'language': lang,
                 'reason': msg,
@@ -1701,20 +1700,6 @@ def is_ip_private(ip):
     return bool(priv_lo.match(ip) or priv_24.match(ip) or priv_20.match(ip) or priv_16.match(ip))
 
 
-def unicodify(value):
-    """Return the value as unicode.
-
-    :param value:
-    :type value: str
-    :return:
-    :rtype: str
-    """
-    if isinstance(value, string_types) and not isinstance(value, text_type):
-        return text_type(value, 'utf-8', 'replace')
-
-    return value
-
-
 def single_or_list(value, allow_multi=False):
     """Return a single value or a list.
 
@@ -1745,41 +1730,31 @@ def ensure_list(value):
     return sorted(value) if isinstance(value, list) else [value] if value is not None else []
 
 
-def canonical_name(obj, fmt=u'{key}:{value}', separator=u'|', ignore_list=frozenset()):
+def canonical_name(obj, fmt='{key}:{value}', separator='|', ignore_list=frozenset()):
     """Create a canonical name from a release name or a guessed dictionary.
 
     The return value is always unicode.
-
-    :param obj:
-    :type obj: str or dict
-    :param fmt:
-    :type fmt: str or unicode
-    :param separator:
-    :type separator: str or unicode
-    :param ignore_list:
-    :type ignore_list: set
-    :return:
-    :rtype: text_type
     """
     guess = obj if isinstance(obj, dict) else guessit.guessit(obj)
-    return text_type(
-        text_type(separator).join(
-            [text_type(fmt).format(key=unicodify(k), value=unicodify(v))
-             for k, v in guess.items() if k not in ignore_list]))
+    return separator.join([
+        fmt.format(key=k, value=v)
+        for k, v in guess.items()
+        if k not in ignore_list
+    ])
 
 
 def get_broken_providers():
     """Get broken providers."""
     # Check if last broken providers update happened less than 60 minutes ago
     if app.BROKEN_PROVIDERS_UPDATE and isinstance(app.BROKEN_PROVIDERS_UPDATE, datetime.datetime) and \
-            (datetime.datetime.now() - app.BROKEN_PROVIDERS_UPDATE).seconds < 3600:
+                    (datetime.datetime.now() - app.BROKEN_PROVIDERS_UPDATE).seconds < 3600:
         log.debug('Broken providers already updated in the last hour')
         return
 
     # Update last broken providers update-timestamp to avoid updating again in less than 60 minutes
     app.BROKEN_PROVIDERS_UPDATE = datetime.datetime.now()
 
-    url = '{base_url}/providers/broken_providers.json'.format(base_url=app.BASE_PYMEDUSA_URL)
+    url = '{base_url}/providers/broken_providers.json'.format(base_url=app.GITHUB_IO_URL)
 
     response = MedusaSafeSession().get_json(url)
     if response is None:

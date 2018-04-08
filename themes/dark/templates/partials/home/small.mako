@@ -1,13 +1,20 @@
 <%!
-    from medusa import app
     import calendar
-    from medusa import sbdatetime
+    import logging
+    import re
+
+    from medusa import app
+    from medusa import date_time
     from medusa import network_timezones
-    from medusa.indexers.api import indexerApi
+    from medusa.indexers.api import IndexerAPI
     from medusa.helpers import anon_url
     from medusa.helper.common import pretty_file_size
     from medusa.scene_numbering import get_xem_numbering_for_show
-    import re
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
 %>
 <%namespace file="/inc_defs.mako" import="renderQualityPill"/>
 % for cur_show_list in show_lists:
@@ -37,7 +44,7 @@
             </thead>
             <tfoot class="hidden-print">
                 <tr>
-                    <th rowspan="1" colspan="1" align="center"><a href="addShows/">Add ${('Show', 'Anime')[cur_list_type == 'Anime']}</a></th>
+                    <th rowspan="1" colspan="1" align="center"><a href="add_series/">Add ${('Show', 'Anime')[cur_list_type == 'Anime']}</a></th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
@@ -50,9 +57,9 @@
                     <th>&nbsp;</th>
                 </tr>
             </tfoot>
-            % if app.show_queue_scheduler.action.loadingShowList:
+            % if app.show_queue_scheduler.action.loading_show_list:
                 <tbody class="tablesorter-infoOnly">
-                % for cur_loading_show in app.show_queue_scheduler.action.loadingShowList:
+                % for cur_loading_show in app.show_queue_scheduler.action.loading_show_list:
                     <% if cur_loading_show.show is not None and cur_loading_show.show in app.showList:
                         continue
                     %>
@@ -63,7 +70,7 @@
                         % if cur_loading_show.show is None:
                         <span title="">Loading... (${cur_loading_show.show_name})</span>
                         % else:
-                        <a href="displayShow?indexername=${cur_loading_show.show.indexer_name}&seriesid=${cur_loading_show.show.series_id}">${cur_loading_show.show.name}</a>
+                        <a href="display_series?indexername=${cur_loading_show.show.indexer_name}&seriesid=${cur_loading_show.show.series_id}">${cur_loading_show.show.name}</a>
                         % endif
                         </td>
                         <td></td>
@@ -75,7 +82,7 @@
                 </tbody>
             % endif
             <tbody>
-            <% my_show_list.sort(lambda x, y: cmp(x.name, y.name)) %>
+            <% my_show_list.sort(key=lambda x: x.name) %>
             % for cur_show in my_show_list:
             <%
                 cur_airs_next = ''
@@ -116,10 +123,10 @@
             %>
                 <tr>
                 % if cur_airs_next:
-                    <% airDate = sbdatetime.sbdatetime.convert_to_setting(network_timezones.parse_date_time(cur_airs_next, cur_show.airs, cur_show.network)) %>
+                    <% airDate = date_time.DateTime.convert_to_setting(network_timezones.parse_date_time(cur_airs_next, cur_show.airs, cur_show.network)) %>
                     % try:
                         <td align="center" class="min-cell-width nowrap">
-                            <time datetime="${airDate.isoformat('T')}" class="date">${sbdatetime.sbdatetime.sbfdate(airDate)}</time>
+                            <time datetime="${airDate.isoformat('T')}" class="date">${date_time.DateTime.display_date(airDate)}</time>
                         </td>
                     % except ValueError:
                         <td align="center" class="min-cell-width nowrap"></td>
@@ -128,10 +135,10 @@
                     <td align="center" class="min-cell-width nowrap"></td>
                 % endif
                 % if cur_airs_prev:
-                    <% airDate = sbdatetime.sbdatetime.convert_to_setting(network_timezones.parse_date_time(cur_airs_prev, cur_show.airs, cur_show.network)) %>
+                    <% airDate = date_time.DateTime.convert_to_setting(network_timezones.parse_date_time(cur_airs_prev, cur_show.airs, cur_show.network)) %>
                     % try:
                         <td align="center" class="min-cell-width nowrap">
-                            <time datetime="${airDate.isoformat('T')}" class="date">${sbdatetime.sbdatetime.sbfdate(airDate)}</time>
+                            <time datetime="${airDate.isoformat('T')}" class="date">${date_time.DateTime.display_date(airDate)}</time>
                         </td>
                     % except ValueError:
                         <td align="center" class="min-cell-width nowrap"></td>
@@ -141,10 +148,10 @@
                 % endif
                     <td class="tvShow">
                         <div class="imgsmallposter small">
-                            <a href="home/displayShow?indexername=${cur_show.indexer_name}&seriesid=${cur_show.series_id}" title="${cur_show.name}">
+                            <a href="home/display_series?indexername=${cur_show.indexer_name}&seriesid=${cur_show.series_id}" title="${cur_show.name}">
                                 <img src="images/poster.png" lazy="on" series="${cur_show.slug}" asset="posterThumb" class="small" alt="${cur_show.slug}"/>
                             </a>
-                            <a href="home/displayShow?indexername=${cur_show.indexer_name}&seriesid=${cur_show.series_id}" style="vertical-align: middle;">${cur_show.name}</a>
+                            <a href="home/display_series?indexername=${cur_show.indexer_name}&seriesid=${cur_show.series_id}" style="vertical-align: middle;">${cur_show.name}</a>
                         </div>
                     </td>
                     <td align="center">
@@ -167,8 +174,8 @@
                                 <img alt="[trakt]" height="16" width="16" src="images/trakt.png" />
                             </a>
                         % endif
-                        <a data-indexer-name="${indexerApi(cur_show.indexer).name}" href="${anon_url(indexerApi(cur_show.indexer).config['show_url'], cur_show.indexerid)}" rel="noreferrer" onclick="window.open(this.href, '_blank'); return false" title="${indexerApi(cur_show.indexer).config['show_url']}${cur_show.indexerid}">
-                            <img alt="${indexerApi(cur_show.indexer).name}" height="16" width="16" src="images/${indexerApi(cur_show.indexer).config['icon']}" />
+                        <a data-indexer-name="${IndexerAPI(cur_show.indexer).name}" href="${anon_url(IndexerAPI(cur_show.indexer).config['show_url'], cur_show.indexerid)}" rel="noreferrer" onclick="window.open(this.href, '_blank'); return false" title="${IndexerAPI(cur_show.indexer).config['show_url']}${cur_show.indexerid}">
+                            <img alt="${IndexerAPI(cur_show.indexer).name}" height="16" width="16" src="images/${IndexerAPI(cur_show.indexer).config['icon']}" />
                         </a>
                     </td>
                     <td align="center" class="min-cell-width">${renderQualityPill(cur_show.quality, showTitle=True)}</td>

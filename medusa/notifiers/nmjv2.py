@@ -2,32 +2,31 @@
 
 import logging
 import time
+from urllib.request import Request, urlopen
 from xml.dom.minidom import parseString
 
 from medusa import app
 from medusa.logger.adapters.style import BraceAdapter
 
-from six.moves.urllib.request import Request, urlopen
-
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def notify_snatch(self, ep_name, is_proper):  # pylint: disable=unused-argument
         return False
         # Not implemented: Start the scanner when snatched does not make any sense
 
     def notify_download(self, ep_name):  # pylint: disable=unused-argument
-        self._notifyNMJ()
+        self._notify_nmj()
 
     def notify_subtitle_download(self, ep_name, lang):  # pylint: disable=unused-argument
-        self._notifyNMJ()
+        self._notify_nmj()
 
     def notify_git_update(self, new_version):  # pylint: disable=unused-argument
         return False
@@ -37,7 +36,7 @@ class Notifier(object):
         return False
 
     def test_notify(self, host):
-        return self._sendNMJ(host)
+        return self._send_nmj(host)
 
     def notify_settings(self, host, dbloc, instance):
         """
@@ -57,9 +56,9 @@ class Notifier(object):
             xml = parseString(response1)
             time.sleep(300.0 / 1000.0)
             for node in xml.getElementsByTagName('path'):
-                xmlTag = node.toxml()
-                xmlData = xmlTag.replace('<path>', '').replace('</path>', '').replace('[=]', '')
-                url_db = 'http://' + host + ':8008/metadata_database?arg0=check_database&arg1=' + xmlData
+                xml_tag = node.toxml()
+                xml_data = xml_tag.replace('<path>', '').replace('</path>', '').replace('[=]', '')
+                url_db = 'http://' + host + ':8008/metadata_database?arg0=check_database&arg1=' + xml_data
                 reqdb = Request(url_db)
                 handledb = urlopen(reqdb)
                 responsedb = handledb.read()
@@ -67,15 +66,15 @@ class Notifier(object):
                 returnvalue = xmldb.getElementsByTagName('returnValue')[0].toxml().replace('<returnValue>', '').replace(
                     '</returnValue>', '')
                 if returnvalue == '0':
-                    DB_path = xmldb.getElementsByTagName('database_path')[0].toxml().replace(
+                    db_path = xmldb.getElementsByTagName('database_path')[0].toxml().replace(
                         '<database_path>', '').replace('</database_path>', '').replace('[=]', '')
-                    if dbloc == 'local' and DB_path.find('localhost') > -1:
+                    if dbloc == 'local' and db_path.find('localhost') > -1:
                         app.NMJv2_HOST = host
-                        app.NMJv2_DATABASE = DB_path
+                        app.NMJv2_DATABASE = db_path
                         return True
-                    if dbloc == 'network' and DB_path.find('://') > -1:
+                    if dbloc == 'network' and db_path.find('://') > -1:
                         app.NMJv2_HOST = host
-                        app.NMJv2_DATABASE = DB_path
+                        app.NMJv2_DATABASE = db_path
                         return True
 
         except IOError as e:
@@ -83,7 +82,7 @@ class Notifier(object):
             return False
         return False
 
-    def _sendNMJ(self, host):
+    def _send_nmj(self, host):
         """
         Send a NMJ update command to the specified machine
 
@@ -110,13 +109,13 @@ class Notifier(object):
             log.warning(u'Warning: Unable to contact popcorn hour on host {0}: {1}', host, error)
             return False
         try:
-            et = etree.fromstring(response1)
+            et = ETree.fromstring(response1)
             result1 = et.findtext('returnValue')
         except SyntaxError as error:
             log.error(u'Unable to parse XML returned from the Popcorn Hour: update_scandir, {0}', error)
             return False
         try:
-            et = etree.fromstring(response2)
+            et = ETree.fromstring(response2)
             result2 = et.findtext('returnValue')
         except SyntaxError as error:
             log.error(u'Unable to parse XML returned from the Popcorn Hour: scanner_start, {0}', error)
@@ -144,7 +143,7 @@ class Notifier(object):
                 log.info(u'NMJv2 started background scan')
                 return True
 
-    def _notifyNMJ(self, host=None, force=False):
+    def _notify_nmj(self, host=None, force=False):
         """
         Sends a NMJ update command based on the SB config settings
 
@@ -163,4 +162,4 @@ class Notifier(object):
 
         log.debug(u'Sending scan command for NMJ')
 
-        return self._sendNMJ(host)
+        return self._send_nmj(host)

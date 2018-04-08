@@ -2,6 +2,11 @@
 """Configuration for pytest."""
 import os
 
+# Import medusa early to initialize libs
+import medusa  # noqa: I100
+
+import pytest
+import yaml
 from babelfish.language import Language
 from github.AuthenticatedUser import AuthenticatedUser
 from github.Gist import Gist
@@ -9,19 +14,16 @@ from github.Issue import Issue
 from github.MainClass import Github
 from github.Organization import Organization
 from github.Repository import Repository
-from medusa import app, cache
+from mock.mock import Mock
+from subliminal.subtitle import Subtitle
+from subliminal.video import Video
+from yaml.constructor import ConstructorError
+from yaml.nodes import MappingNode, SequenceNode
+
 from medusa.common import DOWNLOADED, Quality
 from medusa.indexers.config import INDEXER_TVDB
 from medusa.tv import Episode, Series
 from medusa.version_checker import CheckVersion
-from mock.mock import Mock
-import pytest
-
-from subliminal.subtitle import Subtitle
-from subliminal.video import Video
-import yaml
-from yaml.constructor import ConstructorError
-from yaml.nodes import MappingNode, SequenceNode
 
 
 def pytest_collection_modifyitems(config, items):
@@ -73,13 +75,13 @@ def _patch_object(monkeypatch, target, **kwargs):
 
 @pytest.fixture(scope="session", autouse=True)
 def execute_before_any_test():
-    cache.fallback()
+    medusa.cache.fallback()
 
 
 @pytest.fixture
 def app_config(monkeypatch):
     def config(name, value):
-        monkeypatch.setattr(app, name, value)
+        monkeypatch.setattr(medusa.app, name, value)
         return value
 
     return config
@@ -188,7 +190,7 @@ def version_checker(monkeypatch):
 @pytest.fixture
 def commit_hash(monkeypatch):
     target = 'abcdef0'
-    monkeypatch.setattr(app, 'CUR_COMMIT_HASH', target)
+    monkeypatch.setattr(medusa.app, 'CUR_COMMIT_HASH', target)
     return target
 
 

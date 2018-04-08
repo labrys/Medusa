@@ -1,28 +1,14 @@
 # coding=utf-8
-# Author: Nic Wolfe <nic@wolfeden.ca>
-#
-# This file is part of Medusa.
-#
-# Medusa is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Medusa is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Medusa. If not, see <http://www.gnu.org/licenses/>.
-
 import datetime
 import logging
 import os
 
 from medusa import app, common, tv
 from medusa.common import DOWNLOADED, Quality
-from medusa.name_parser.parser import InvalidNameException, InvalidShowException, NameParser
+from medusa.name_parser.parser import (
+    InvalidNameException,
+    InvalidShowException, NameParser,
+)
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -50,7 +36,11 @@ name_sports_presets = (
 )
 
 
-class TVShow(object):  # pylint: disable=too-few-public-methods
+class TVShow:  # pylint: disable=too-few-public-methods
+    """
+
+    """
+
     def __init__(self):
         self.name = "Show Name"
         self.genre = "Comedy"
@@ -67,7 +57,7 @@ class TVShow(object):  # pylint: disable=too-few-public-methods
 
     def _is_anime(self):
         """
-        Find out if show is anime
+        Find out if show is anime.
         :return: True if show is anime, False if not
         """
         return bool(self.anime)
@@ -76,7 +66,7 @@ class TVShow(object):  # pylint: disable=too-few-public-methods
 
     def _is_sports(self):
         """
-        Find out if show is sports
+        Find out if show is sports.
         :return: True if show is sports, False if not
         """
         return bool(self.sports)
@@ -85,7 +75,7 @@ class TVShow(object):  # pylint: disable=too-few-public-methods
 
     def _is_scene(self):
         """
-        Find out if show is scene numbering
+        Find out if show is scene numbering.
         :return: True if show is scene numbering, False if not
         """
         return bool(self.scene)
@@ -94,8 +84,12 @@ class TVShow(object):  # pylint: disable=too-few-public-methods
 
 
 class TVEpisode(tv.Episode):  # pylint: disable=too-many-instance-attributes
+    """
+
+    """
+
     def __init__(self, season, episode, absolute_number, name):  # pylint: disable=super-init-not-called
-        super(TVEpisode, self).__init__(None, season, episode)
+        super().__init__(None, season, episode)
         self.related_episodes = []
         self.name = name
         self.absolute_number = absolute_number
@@ -111,8 +105,7 @@ class TVEpisode(tv.Episode):  # pylint: disable=too-many-instance-attributes
 
 def check_force_season_folders(pattern=None, multi=None, anime_type=None):
     """
-    Checks if the name can still be parsed if you strip off the folders to determine if we need to force season folders
-    to be enabled or not.
+    Checks if the name can still be parsed if you strip off the folders to determine if we need to force season folders to be enabled or not.
 
     :return: true if season folders need to be forced on or false otherwise.
     """
@@ -185,7 +178,7 @@ def check_valid_sports_naming(pattern=None):
 def validate_name(pattern, multi=None, anime_type=None,  # pylint: disable=too-many-arguments, too-many-return-statements
                   file_only=False, abd=False, sports=False):
     """
-    See if we understand a name
+    See if we understand a name.
 
     :param pattern: Name to analyse
     :param multi: Is this a multi-episode name
@@ -238,6 +231,14 @@ def validate_name(pattern, multi=None, anime_type=None,  # pylint: disable=too-m
 
 def generate_sample_ep(multi=None, abd=False, sports=False, anime_type=None):
     # make a fake episode object
+    """
+
+    :param multi:
+    :param abd:
+    :param sports:
+    :param anime_type:
+    :return:
+    """
     ep = TVEpisode(2, 3, 3, "Ep Name")
 
     # pylint: disable=protected-access
@@ -265,29 +266,38 @@ def generate_sample_ep(multi=None, abd=False, sports=False, anime_type=None):
 
             ep.release_name = 'Show.Name.003-004.HDTV.x264-RLSGROUP'
 
-            secondEp = TVEpisode(2, 4, 4, "Ep Name (2)")
-            secondEp.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
-            secondEp.release_name = ep.release_name
+            second_ep = TVEpisode(2, 4, 4, "Ep Name (2)")
+            second_ep.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
+            second_ep.release_name = ep.release_name
 
-            ep.related_episodes.append(secondEp)
+            ep.related_episodes.append(second_ep)
         else:
             ep.release_name = 'Show.Name.S02E03E04E05.HDTV.x264-RLSGROUP'
 
-            secondEp = TVEpisode(2, 4, 4, "Ep Name (2)")
-            secondEp.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
-            secondEp.release_name = ep.release_name
+            second_ep = TVEpisode(2, 4, 4, "Ep Name (2)")
+            second_ep.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
+            second_ep.release_name = ep.release_name
 
-            thirdEp = TVEpisode(2, 5, 5, "Ep Name (3)")
-            thirdEp.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
-            thirdEp.release_name = ep.release_name
+            third_ep = TVEpisode(2, 5, 5, "Ep Name (3)")
+            third_ep.status = Quality.composite_status(DOWNLOADED, Quality.HDTV)
+            third_ep.release_name = ep.release_name
 
-            ep.related_episodes.append(secondEp)
-            ep.related_episodes.append(thirdEp)
+            ep.related_episodes.append(second_ep)
+            ep.related_episodes.append(third_ep)
 
     return ep
 
 
 def test_name(pattern, multi=None, abd=False, sports=False, anime_type=None):
+    """
+
+    :param pattern:
+    :param multi:
+    :param abd:
+    :param sports:
+    :param anime_type:
+    :return:
+    """
     ep = generate_sample_ep(multi, abd, sports, anime_type)
 
     return {'name': ep.formatted_filename(pattern, multi, anime_type), 'dir': ep.formatted_dir(pattern, multi)}

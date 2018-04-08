@@ -1,10 +1,11 @@
+# coding=utf-8
 """Base theme module."""
 import json
 import logging
 import os
+
 from medusa import app
 from medusa.logger.adapters.style import BraceAdapter
-
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -12,7 +13,7 @@ log.logger.addHandler(logging.NullHandler())
 themes = []
 
 
-class Theme(object):
+class Theme:
     """Base theme class."""
 
     def __init__(self, **kwargs):

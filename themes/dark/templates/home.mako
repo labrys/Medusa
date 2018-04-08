@@ -1,8 +1,16 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
     import calendar
-    from medusa import sbdatetime
+    from medusa import date_time
     from medusa import network_timezones
     from medusa.helper.common import pretty_file_size
     from random import choice

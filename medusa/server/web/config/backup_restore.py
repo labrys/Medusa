@@ -1,9 +1,11 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import os
 import time
+
+from tornroutes import route
 
 from medusa import (
     app,
@@ -12,31 +14,29 @@ from medusa import (
 from medusa.server.web.config.handler import Config
 from medusa.server.web.core import PageTemplate
 
-from tornroutes import route
-
 
 @route('/config/backuprestore(/?.*)')
 class ConfigBackupRestore(Config):
     def __init__(self, *args, **kwargs):
-        super(ConfigBackupRestore, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         t = PageTemplate(rh=self, filename='config_backuprestore.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Backup/Restore',
+        return t.render(submenu=self.config_menu(), title='Config - Backup/Restore',
                         header='Backup/Restore', topmenu='config',
                         controller='config', action='backupRestore')
 
     @staticmethod
-    def backup(backupDir=None):
+    def backup(backup_dir=None):
 
         final_result = ''
 
-        if backupDir:
+        if backup_dir:
             source = [os.path.join(app.DATA_DIR, app.APPLICATION_DB), app.CONFIG_FILE,
                       os.path.join(app.DATA_DIR, app.FAILED_DB),
                       os.path.join(app.DATA_DIR, app.CACHE_DB)]
-            target = os.path.join(backupDir, 'medusa-{date}.zip'.format(date=time.strftime('%Y%m%d%H%M%S')))
+            target = os.path.join(backup_dir, 'medusa-{date}.zip'.format(date=time.strftime('%Y%m%d%H%M%S')))
 
             for (path, dirs, files) in os.walk(app.CACHE_DIR, topdown=True):
                 for dirname in dirs:
@@ -57,12 +57,12 @@ class ConfigBackupRestore(Config):
         return final_result
 
     @staticmethod
-    def restore(backupFile=None):
+    def restore(backup_file=None):
 
         final_result = ''
 
-        if backupFile:
-            source = backupFile
+        if backup_file:
+            source = backup_file
             target_dir = os.path.join(app.DATA_DIR, 'restore')
 
             if helpers.restore_config_zip(source, target_dir):

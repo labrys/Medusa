@@ -2,30 +2,27 @@
 
 """Base handler for Config pages."""
 
-from __future__ import unicode_literals
-
 import os
+
+from tornroutes import route
 
 from medusa import (
     app,
-    db,
 )
+from medusa.databases import db
 from medusa.server.web.core import PageTemplate, WebRoot
 from medusa.version_checker import CheckVersion
-
-from tornroutes import route
 
 
 @route('/config(/?.*)')
 class Config(WebRoot):
-    """
-    Base handler for Config pages
-    """
+    """Base handler for Config pages."""
+
     def __init__(self, *args, **kwargs):
-        super(Config, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @staticmethod
-    def ConfigMenu():
+    def config_menu():
         """
         Config menu
         """
@@ -35,7 +32,7 @@ class Config(WebRoot):
             {'title': 'Search Settings', 'path': 'config/search/', 'icon': 'menu-icon-manage-searches'},
             {'title': 'Search Providers', 'path': 'config/providers/', 'icon': 'menu-icon-provider'},
             {'title': 'Subtitles Settings', 'path': 'config/subtitles/', 'icon': 'menu-icon-backlog'},
-            {'title': 'Post Processing', 'path': 'config/postProcessing/', 'icon': 'menu-icon-postprocess'},
+            {'title': 'Post Processing', 'path': 'config/post_processing/', 'icon': 'menu-icon-postprocess'},
             {'title': 'Notifications', 'path': 'config/notifications/', 'icon': 'menu-icon-notification'},
             {'title': 'Anime', 'path': 'config/anime/', 'icon': 'menu-icon-anime'},
         ]
@@ -55,19 +52,19 @@ class Config(WebRoot):
             try:
                 import getpass
                 app_user = getpass.getuser()
-            except StandardError:
+            except Exception:
                 app_user = 'Unknown'
 
         try:
             import locale
             app_locale = locale.getdefaultlocale()
-        except StandardError:
+        except Exception:
             app_locale = 'Unknown', 'Unknown'
 
         try:
             import ssl
             ssl_version = ssl.OPENSSL_VERSION
-        except StandardError:
+        except Exception:
             ssl_version = 'Unknown'
 
         app_version = ''
@@ -77,10 +74,10 @@ class Config(WebRoot):
                 app_version = updater.get_cur_version()
 
         main_db_con = db.DBConnection()
-        cur_branch_major_db_version, cur_branch_minor_db_version = main_db_con.checkDBVersion()
+        cur_branch_major_db_version, cur_branch_minor_db_version = main_db_con.check_db_version()
 
         return t.render(
-            submenu=self.ConfigMenu(), title='Medusa Configuration',
+            submenu=self.config_menu(), title='Medusa Configuration',
             header='Medusa Configuration', topmenu='config',
             app_user=app_user, app_locale=app_locale, ssl_version=ssl_version,
             app_version=app_version, cur_branch_major_db_version=cur_branch_major_db_version,

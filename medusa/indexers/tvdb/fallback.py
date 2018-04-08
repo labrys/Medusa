@@ -1,22 +1,24 @@
+# coding=utf-8
 """Plex or other tvdb fallback sources."""
 
 import datetime
 import functools
 import logging
 
-from medusa import app, ui
-from medusa.indexers.exceptions import (
-    IndexerEpisodeNotFound, IndexerSeasonNotFound, IndexerShowIncomplete, IndexerShowNotFound,
-    IndexerShowNotFoundInLanguage, IndexerUnavailable
-)
-
 from tvdbapiv2.auth.tvdb import TVDBAuth
 from tvdbapiv2.exceptions import ApiException
+
+from medusa import app, ui
+from medusa.indexers.exceptions import (
+    IndexerEpisodeNotFound, IndexerSeasonNotFound, IndexerShowIncomplete,
+    IndexerShowNotFound,
+    IndexerShowNotFoundInLanguage, IndexerUnavailable,
+)
 
 logger = logging.getLogger(__name__)
 
 
-class PlexFallBackConfig(object):
+class PlexFallBackConfig:
     """Update the plex fallback config options.
 
     This will update the plex fallback config options, every time it is updated through the UI.
@@ -32,7 +34,7 @@ class PlexFallBackConfig(object):
         return functools.partial(self.__call__, obj)
 
     def __call__(self, *args, **kwargs):
-        """Update the config every time we're accessing the indexerApi."""
+        """Update the config every time we're accessing the IndexerAPI."""
         if args[0].indexer_id == 1:
             session = args[0].api_params.get('session')
             if not hasattr(session, 'fallback_config'):
@@ -56,7 +58,7 @@ class PlexFallBackConfig(object):
         return self.func(*args, **kwargs)
 
 
-class PlexFallback(object):
+class PlexFallback:
     """Fallback to plex if tvdb fails to connect.
 
     Decorator that can be used to catch an exception and fallback to the plex proxy.
@@ -113,11 +115,11 @@ class PlexFallback(object):
                 IndexerShowNotFound, IndexerShowNotFoundInLanguage):
             raise
         except ApiException as e:
-            logger.warning("could not connect to TheTvdb.com, reason '%s'", e.reason)
+            logger.warning("could not connect to TheTvdb.com, reason '%s'", e)
         except IndexerUnavailable as e:
-            logger.warning("could not connect to TheTvdb.com, with reason '%s'", e.message)
+            logger.warning("could not connect to TheTvdb.com, with reason '%s'", e)
         except Exception as e:
-            logger.warning("could not connect to TheTvdb.com, with reason '%s'", e.message)
+            logger.warning("could not connect to TheTvdb.com, with reason '%s'", e)
 
         # If we got this far, it means we hit an exception, and we want to switch to the plex fallback.
         session.api_client.host = fallback_config['api_base_url'] = app.FALLBACK_PLEX_API_URL

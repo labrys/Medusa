@@ -1,14 +1,14 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 
 import cfscrape
-
-from medusa.logger.adapters.style import BraceAdapter
 import requests
 from requests.utils import dict_from_cookiejar
+
+from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -36,7 +36,7 @@ def log_url(response, **kwargs):
             body = ''
 
         # try to log post data using various codecs to decode
-        if isinstance(body, unicode):
+        if isinstance(body, str):
             log.debug('With post data: {0}', body)
             return
 
@@ -109,8 +109,10 @@ def cloudflare(resp, **kwargs):
 
 def sessioned(session):
     """Hooks factory to add a session to a response."""
+
     def sessioned_response_hook(response, *args, **kwargs):
         """Return a sessioned response."""
         response.session = session
         return response
+
     return sessioned_response_hook

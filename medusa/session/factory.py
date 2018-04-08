@@ -1,6 +1,8 @@
+# coding=utf-8
 """Session class factory methods."""
 
 import logging
+
 from cachecontrol import CacheControlAdapter
 from cachecontrol.cache import DictCache
 
@@ -9,11 +11,7 @@ from medusa import app
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
-
-try:
-    from urllib.parse import splittype
-except ImportError:
-    from urllib2 import splittype
+from urllib.parse import splittype
 
 
 def add_cache_control(session, cache_control_config):

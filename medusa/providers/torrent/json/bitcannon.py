@@ -2,10 +2,11 @@
 
 """Provider code for Bitcannon."""
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
+from urllib.parse import urljoin
+
+import validators
 
 from medusa import tv
 from medusa.helper.common import (
@@ -14,9 +15,6 @@ from medusa.helper.common import (
 )
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.torrent.torrent_provider import TorrentProvider
-
-from requests.compat import urljoin
-import validators
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -27,7 +25,7 @@ class BitCannonProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(BitCannonProvider, self).__init__('BitCannon')
+        super().__init__('BitCannon')
 
         # Credentials
         self.api_key = None
@@ -159,7 +157,6 @@ class BitCannonProvider(TorrentProvider):
         if not all([isinstance(data, dict),
                     data.pop('status', 200) != 401,
                     data.pop('message', '') != 'Invalid API key']):
-
             log.warning('Invalid api key. Check your settings')
             return False
 

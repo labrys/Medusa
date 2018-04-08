@@ -2,10 +2,10 @@
 
 """Configure Subtitle searching."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
+
+from tornroutes import route
 
 from medusa import (
     app,
@@ -16,19 +16,16 @@ from medusa import (
 from medusa.server.web.config.handler import Config
 from medusa.server.web.core import PageTemplate
 
-from tornroutes import route
-
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
 @route('/config/subtitles(/?.*)')
 class ConfigSubtitles(Config):
-    """
-    Handler for Subtitle Search configuration
-    """
+    """Handler for Subtitle Search configuration."""
+
     def __init__(self, *args, **kwargs):
-        super(ConfigSubtitles, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """
@@ -36,22 +33,22 @@ class ConfigSubtitles(Config):
         """
         t = PageTemplate(rh=self, filename='config_subtitles.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Subtitles',
+        return t.render(submenu=self.config_menu(), title='Config - Subtitles',
                         header='Subtitles', topmenu='config',
                         controller='config', action='subtitlesPage')
 
-    def saveSubtitles(self, use_subtitles=None, subtitles_plugins=None, subtitles_languages=None, subtitles_dir=None, subtitles_perfect_match=None,
-                      service_order=None, subtitles_history=None, subtitles_finder_frequency=None, subtitles_erase_cache=None,
-                      subtitles_multi=None, embedded_subtitles_all=None, subtitles_extra_scripts=None, subtitles_pre_scripts=None, subtitles_hearing_impaired=None,
-                      addic7ed_user=None, addic7ed_pass=None, itasa_user=None, itasa_pass=None, legendastv_user=None, legendastv_pass=None, opensubtitles_user=None, opensubtitles_pass=None,
-                      subtitles_keep_only_wanted=None, embedded_subtitles_unknown_lang=None, subtitles_stop_at_first=None):
+    def save_subtitles(self, use_subtitles=None, subtitles_plugins=None, subtitles_languages=None, subtitles_dir=None, subtitles_perfect_match=None,
+                       service_order=None, subtitles_history=None, subtitles_finder_frequency=None, subtitles_erase_cache=None,
+                       subtitles_multi=None, embedded_subtitles_all=None, subtitles_extra_scripts=None, subtitles_pre_scripts=None, subtitles_hearing_impaired=None,
+                       addic7ed_user=None, addic7ed_pass=None, itasa_user=None, itasa_pass=None, legendastv_user=None, legendastv_pass=None, opensubtitles_user=None, opensubtitles_pass=None,
+                       subtitles_keep_only_wanted=None, embedded_subtitles_unknown_lang=None, subtitles_stop_at_first=None):
         """
         Save Subtitle Search related settings
         """
         results = []
 
-        config.change_SUBTITLES_FINDER_FREQUENCY(subtitles_finder_frequency)
-        config.change_USE_SUBTITLES(use_subtitles)
+        config.change_subtitles_finder_frequency(subtitles_finder_frequency)
+        config.change_use_subtitles(use_subtitles)
         app.SUBTITLES_ERASE_CACHE = config.checkbox_to_value(subtitles_erase_cache)
         app.SUBTITLES_LANGUAGES = [code.strip() for code in subtitles_languages.split(',') if code.strip() in subtitles.subtitle_code_filter()] if subtitles_languages else []
         app.SUBTITLES_DIR = subtitles_dir

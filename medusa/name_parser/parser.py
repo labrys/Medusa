@@ -2,8 +2,6 @@
 
 """Parser module which contains NameParser class."""
 
-from __future__ import unicode_literals
-
 import logging
 import time
 from collections import OrderedDict
@@ -12,13 +10,13 @@ import guessit
 
 from medusa import (
     common,
-    db,
     helpers,
     scene_exceptions,
     scene_numbering,
 )
+from medusa.databases import db
 from medusa.helper.common import episode_num
-from medusa.indexers.api import indexerApi
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.exceptions import (
     IndexerEpisodeNotFound,
     IndexerError,
@@ -26,14 +24,11 @@ from medusa.indexers.exceptions import (
 )
 from medusa.logger.adapters.style import BraceAdapter
 
-from six import iteritems
-
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class NameParser(object):
+class NameParser:
     """Responsible to parse release names."""
 
     def __init__(self, series=None, try_indexers=False, naming_pattern=False, parse_method=None,
@@ -82,7 +77,7 @@ class NameParser(object):
             airdate = result.air_date.toordinal()
             main_db_con = db.DBConnection()
             sql_result = main_db_con.select(
-                b'SELECT season, episode FROM tv_episodes WHERE indexer = ? AND showid = ? AND airdate = ?',
+                'SELECT season, episode FROM tv_episodes WHERE indexer = ? AND showid = ? AND airdate = ?',
                 [result.series.indexer, result.series.series_id, airdate])
 
             season_number = None
@@ -110,12 +105,12 @@ class NameParser(object):
                 log.debug('Series {name} has no season or episodes, using indexer',
                           {'name': result.series.name})
                 try:
-                    indexer_api_params = indexerApi(result.series.indexer).api_params.copy()
+                    indexer_api_params = IndexerAPI(result.series.indexer).api_params.copy()
 
                     if result.series.lang:
                         indexer_api_params['language'] = result.series.lang
 
-                    indexer_api = indexerApi(result.series.indexer).indexer(**indexer_api_params)
+                    indexer_api = IndexerAPI(result.series.indexer).indexer(**indexer_api_params)
                     tv_episode = indexer_api[result.series.indexerid].aired_on(result.air_date)[0]
 
                     season_number = int(tv_episode['seasonnumber'])
@@ -135,13 +130,13 @@ class NameParser(object):
                 except IndexerError as error:
                     log.warning(
                         'Unable to contact {indexer_api.name}: {error}',
-                        {'indexer_api': indexer_api, 'error': error.message}
+                        {'indexer_api': indexer_api, 'error': error}
                     )
                     episode_numbers = []
                 except IndexerException as error:
                     log.warning(
                         'Indexer exception: {indexer_api.name}: {error}',
-                        {'indexer_api': indexer_api, 'error': error.message}
+                        {'indexer_api': indexer_api, 'error': error}
                     )
                     episode_numbers = []
 
@@ -280,8 +275,6 @@ class NameParser(object):
         :return:
         :rtype: ParseResult
         """
-        name = helpers.unicodify(name)
-
         if self.naming_pattern:
             cache_result = False
 
@@ -352,7 +345,7 @@ class NameParser(object):
                            proper_tags=helpers.ensure_list(guess.get('proper_tag')), version=guess.get('version', -1))
 
 
-class ParseResult(object):
+class ParseResult:
     """Represent the release information for a given name."""
 
     def __init__(self, guess, series_name=None, season_number=None, episode_numbers=None, ab_episode_numbers=None,
@@ -477,7 +470,7 @@ class ParseResult(object):
         return self.guess.get('video_codec')
 
 
-class NameParserCache(object):
+class NameParserCache:
     """Name parser cache."""
 
     def __init__(self, max_size=1000):
@@ -513,7 +506,7 @@ class NameParserCache(object):
         """Remove cache item given indexer and indexer_id."""
         if not indexer or not indexer_id:
             return
-        to_remove = (cached_name for cached_name, cached_parsed_result in iteritems(self.cache) if
+        to_remove = (cached_name for cached_name, cached_parsed_result in self.cache.items() if
                      cached_parsed_result.series.indexer == indexer and cached_parsed_result.series.indexerid == indexer_id)
         for item in to_remove:
             self.cache.popitem(item)

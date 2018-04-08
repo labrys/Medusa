@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading subtitle_modal')
+%>
 <div id="manualSubtitleSearchModal" class="modal fade modal-wide" >
     <div class="modal-dialog">
         <div class="modal-content">

@@ -1,11 +1,21 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 import os
 import threading
 from posixpath import join
+
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
+from tornado.web import (
+    Application,
+    RedirectHandler,
+    StaticFileHandler,
+    url,
+)
+from tornroutes import route
 
 from medusa import app
 from medusa.helpers import (
@@ -34,18 +44,7 @@ from medusa.server.web import (
     LogoutHandler,
     TokenHandler,
 )
-from medusa.server.web.core.base import AuthenticatedStaticFileHandler
 from medusa.ws import MedusaWebSocketHandler
-
-from tornado.httpserver import HTTPServer
-from tornado.ioloop import IOLoop
-from tornado.web import (
-    Application,
-    RedirectHandler,
-    StaticFileHandler,
-    url,
-)
-from tornroutes import route
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -104,7 +103,7 @@ def get_apiv2_handlers(base):
 
 class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attributes
     def __init__(self, options=None, io_loop=None):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.daemon = True
         self.alive = True
         self.name = 'TORNADO'
@@ -156,7 +155,7 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
         if self.enable_https:
             # If either the HTTPS certificate or key do not exist, make some self-signed ones.
             if not (self.https_cert and os.path.exists(self.https_cert)) or not (
-                    self.https_key and os.path.exists(self.https_key)):
+                        self.https_key and os.path.exists(self.https_key)):
                 if not create_https_certificates(self.https_cert, self.https_key):
                     log.info('Unable to create CERT/KEY files, disabling HTTPS')
                     app.ENABLE_HTTPS = False
@@ -214,14 +213,6 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
             # videos
             (r'{base}/videos/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
              {'path': self.video_root}),
-
-            # vue dist
-            (r'{base}/vue/dist/(.*)'.format(base=self.options['theme_path']), StaticFileHandler,
-             {'path': os.path.join(self.options['theme_data_root'], 'vue')}),
-
-            # vue index.html
-            (r'{base}/vue/?.*()'.format(base=self.options['theme_path']), AuthenticatedStaticFileHandler,
-             {'path': os.path.join(self.options['theme_data_root'], 'index.html'), 'default_filename': 'index.html'}),
         ])
 
         # API v1 handlers
@@ -284,6 +275,6 @@ class AppWebServer(threading.Thread):  # pylint: disable=too-many-instance-attri
             # Ignore errors like 'ValueError: I/O operation on closed kqueue fd'. These might be thrown during a reload.
             pass
 
-    def shutDown(self):
+    def shut_down(self):
         self.alive = False
         self.io_loop.stop()

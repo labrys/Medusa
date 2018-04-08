@@ -1,7 +1,16 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
-    from medusa.clients import torrent
+    from medusa.downloaders import torrent
+    from six import iteritems
 %>
 <%block name="content">
 % if not header is UNDEFINED:
@@ -11,7 +20,7 @@
 % endif
 <div id="config">
     <div id="config-content">
-        <form id="configForm" action="config/search/saveSearch" method="post">
+        <form id="configForm" action="config/search/save_search" method="post">
             <div id="config-components">
                 <ul>
                     ## @TODO: Fix this stupid hack
@@ -560,7 +569,7 @@
                                         <span class="component-desc">
                                             <select name="torrent_auth_type" id="torrent_auth_type" class="form-control input-sm">
                                             <% http_authtype = {'none': "None", 'basic': "Basic", 'digest': "Digest"} %>
-                                            % for authvalue, authname in http_authtype.iteritems():
+                                            % for authvalue, authname in iteritems(http_authtype):
                                                 <option id="torrent_auth_type_value" value="${authvalue}" ${'selected="selected"' if app.TORRENT_AUTH_TYPE == authvalue else ''}>${authname}</option>
                                             % endfor
                                             </select>

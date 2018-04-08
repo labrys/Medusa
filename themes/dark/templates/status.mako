@@ -1,10 +1,19 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
     from medusa import helpers
-    from medusa.show_queue import ShowQueueActions
+    from medusa.show.queue import ShowQueueActions
     from medusa.helper.common import dateTimeFormat
     from random import choice
+    from six import iteritems
 %>
 <%block name="content">
 <%
@@ -47,7 +56,7 @@
             </tr>
         </thead>
         <tbody>
-            % for schedulerName, scheduler in schedulerList.iteritems():
+            % for schedulerName, scheduler in iteritems(schedulerList):
                <% service = getattr(app, scheduler) %>
            <tr>
                <td>${schedulerName}</td>
@@ -76,16 +85,16 @@
                <td>True</td>
                    % else:
                        % try:
-                       <% amActive = service.action.amActive %>
-               <td>${amActive}</td>
+                       <% am_active = service.action.am_active %>
+               <td>${am_active}</td>
                        % except Exception:
                <td>N/A</td>
                        % endtry
                    % endif
                % else:
                    % try:
-                   <% amActive = service.action.amActive %>
-               <td>${amActive}</td>
+                   <% am_active = service.action.am_active %>
+               <td>${am_active}</td>
                    % except Exception:
                <td>N/A</td>
                    % endtry
@@ -95,10 +104,10 @@
                % else:
                <td align="right"></td>
                % endif
-               <% cycleTime = (service.cycleTime.microseconds + (service.cycleTime.seconds + service.cycleTime.days * 24 * 3600) * 10**6) / 10**6 %>
-               <td align="right" data-seconds="${cycleTime}">${helpers.pretty_time_delta(cycleTime)}</td>
+               <% cycle_time = (service.cycle_time.microseconds + (service.cycle_time.seconds + service.cycle_time.days * 24 * 3600) * 10**6) / 10**6 %>
+               <td align="right" data-seconds="${cycle_time}">${helpers.pretty_time_delta(cycle_time)}</td>
                % if service.enable:
-                   <% timeLeft = (service.timeLeft().microseconds + (service.timeLeft().seconds + service.timeLeft().days * 24 * 3600) * 10**6) / 10**6 %>
+                   <% timeLeft = (service.time_left().microseconds + (service.time_left().seconds + service.time_left().days * 24 * 3600) * 10**6) / 10**6 %>
                <td align="right" data-seconds="${timeLeft}">${helpers.pretty_time_delta(timeLeft)}</td>
                % else:
                <td></td>
@@ -211,11 +220,11 @@
             </tr>
             % endif
             <tr>
-                <td rowspan=${len(rootDir)}>Media Root Directories</td>
-                % for cur_dir in rootDir:
+                <td rowspan=${len(root_dir)}>Media Root Directories</td>
+                % for cur_dir in root_dir:
                     <td>${cur_dir}</td>
-                    % if rootDir[cur_dir] is not False:
-                        <td align="middle">${rootDir[cur_dir]}</td>
+                    % if root_dir[cur_dir] is not False:
+                        <td align="middle">${root_dir[cur_dir]}</td>
                     % else:
                         <td align="middle"><i>Missing</i></td>
                     % endif

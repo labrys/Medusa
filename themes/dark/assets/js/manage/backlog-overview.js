@@ -1,9 +1,9 @@
-MEDUSA.manage.backlogOverview = function() {
+MEDUSA.manage.backlog_overview = function() {
     checkForcedSearch();
 
     function checkForcedSearch() {
         let pollInterval = 5000;
-        const searchStatusUrl = 'home/getManualSearchStatus';
+        const searchStatusUrl = 'home/get_manual_search_status';
         const indexerName = $('#indexer-name').val();
         const seriesId = $('#series-id').val();
         const url = seriesId === undefined ? searchStatusUrl : searchStatusUrl + '?indexername=' + indexerName + '&seriesid=' + seriesId;
@@ -62,7 +62,7 @@ MEDUSA.manage.backlogOverview = function() {
 
     $('#backlog_period').on('change', function() {
         api.patch('config/main', {
-            backlogOverview: {
+            backlog_overview: {
                 period: $(this).val()
             }
         }).then(response => {
@@ -75,7 +75,7 @@ MEDUSA.manage.backlogOverview = function() {
 
     $('#backlog_status').on('change', function() {
         api.patch('config/main', {
-            backlogOverview: {
+            backlog_overview: {
                 status: $(this).val()
             }
         }).then(response => {
@@ -86,7 +86,7 @@ MEDUSA.manage.backlogOverview = function() {
         });
     });
 
-    $('.forceBacklog').on('click', function() {
+    $('.force_backlog').on('click', function() {
         $.get($(this).attr('href'));
         $(this).text('Searching...');
         return false;

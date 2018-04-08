@@ -15,24 +15,24 @@
 # You should have received a copy of the GNU General Public License
 # along with Medusa. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
+
+
+from tornroutes import route
 
 from medusa.server.web.core import PageTemplate
 from medusa.server.web.home.handler import Home
 
-from tornroutes import route
 
-
-@route('/addRecommended(/?.*)')
+@route('/add_recommended(/?.*)')
 class HomeAddRecommended(Home):
     """Landing page for the recommended shows."""
 
     def __init__(self, *args, **kwargs):
         """Initialize route."""
-        super(HomeAddRecommended, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         """Render template for route /home/addRecommeded."""
-        t = PageTemplate(rh=self, filename="addRecommended.mako")
+        t = PageTemplate(rh=self, filename="add_recommended.mako")
         return t.render(title='Add Recommended Shows', header='Add Recommended Shows',
-                        topmenu='home', controller="addShows", action="index")
+                        topmenu='home', controller="add_series", action="index")

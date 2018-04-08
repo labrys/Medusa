@@ -1,30 +1,13 @@
 # coding=utf-8
-# Author: Nic Wolfe <nic@wolfeden.ca>
-#
-# This file is part of Medusa.
-#
-# Medusa is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Medusa is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Medusa. If not, see <http://www.gnu.org/licenses/>.
 """Collection of generic used classes."""
 import logging
+from urllib.request import FancyURLopener
 
 from dateutil import parser
 
 from medusa import app
 from medusa.common import Quality, USER_AGENT
 from medusa.logger.adapters.style import BraceAdapter
-
-from six.moves.urllib.request import FancyURLopener
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -34,7 +17,7 @@ class ApplicationURLopener(FancyURLopener, object):
     version = USER_AGENT
 
 
-class SearchResult(object):
+class SearchResult:
     """Represents a search result from an indexer."""
 
     def __init__(self, episodes=None, provider=None):
@@ -134,6 +117,10 @@ class SearchResult(object):
 
     @property
     def actual_episode(self):
+        """
+
+        :return:
+        """
         return self._actual_episode
 
     @actual_episode.setter
@@ -142,6 +129,10 @@ class SearchResult(object):
 
     @property
     def actual_episodes(self):
+        """
+
+        :return:
+        """
         return self._actual_episodes
 
     @actual_episodes.setter
@@ -152,6 +143,10 @@ class SearchResult(object):
 
     @property
     def show(self):
+        """
+
+        :return:
+        """
         log.warning(
             'Please use SearchResult.series and not show. Show has been deprecated.',
             DeprecationWarning,
@@ -188,6 +183,10 @@ class SearchResult(object):
         return my_string
 
     def file_name(self):
+        """
+
+        :return:
+        """
         return u'{0}.{1}'.format(self.episodes[0].pretty_name(), self.result_type)
 
     def add_result_to_cache(self, cache):
@@ -209,6 +208,10 @@ class SearchResult(object):
         return self.episodes
 
     def finish_search_result(self, provider):
+        """
+
+        :param provider:
+        """
         self.size = provider._get_size(self.item)
         self.pubdate = provider._get_pubdate(self.item)
 
@@ -217,7 +220,7 @@ class NZBSearchResult(SearchResult):
     """Regular NZB result with an URL to the NZB."""
 
     def __init__(self, episodes, provider=None):
-        super(NZBSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'nzb'
 
 
@@ -225,7 +228,7 @@ class NZBDataSearchResult(SearchResult):
     """NZB result where the actual NZB XML data is stored in the extra_info."""
 
     def __init__(self, episodes, provider=None):
-        super(NZBDataSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'nzbdata'
 
 
@@ -233,11 +236,11 @@ class TorrentSearchResult(SearchResult):
     """Torrent result with an URL to the torrent."""
 
     def __init__(self, episodes, provider=None):
-        super(TorrentSearchResult, self).__init__(episodes, provider=provider)
+        super().__init__(episodes, provider=provider)
         self.result_type = u'torrent'
 
 
-class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
+class AllShowsListUI:  # pylint: disable=too-few-public-methods
     """This class is for indexer api.
 
     Instead of prompting with a UI to pick the desired result out of a
@@ -250,6 +253,11 @@ class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
         self.log = log
 
     def select_series(self, all_series):
+        """
+
+        :param all_series:
+        :return:
+        """
         from medusa.helper.common import dateTimeFormat
 
         search_results = []
@@ -281,7 +289,7 @@ class AllShowsListUI(object):  # pylint: disable=too-few-public-methods
         return search_results
 
 
-class ShowListUI(object):  # pylint: disable=too-few-public-methods
+class ShowListUI:  # pylint: disable=too-few-public-methods
     """This class is for tvdb-api.
 
     Instead of prompting with a UI to pick the desired result out of a
@@ -295,6 +303,11 @@ class ShowListUI(object):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def select_series(all_series):
+        """
+
+        :param all_series:
+        :return:
+        """
         try:
             # try to pick a show that's in my show list
             show_id_list = [int(x.indexerid) for x in app.showList]
@@ -308,7 +321,7 @@ class ShowListUI(object):  # pylint: disable=too-few-public-methods
         return all_series[0]
 
 
-class Viewer(object):
+class Viewer:
     """Keep the Errors to be displayed in the UI."""
 
     def __init__(self):

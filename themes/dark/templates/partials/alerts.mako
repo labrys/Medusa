@@ -1,5 +1,12 @@
 <%!
+    import logging
+
     from medusa import app
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading alerts')
 %>
 <!-- BEGIN ALERTS -->
 % if app.BRANCH and app.BRANCH != 'master' and not app.DEVELOPER and loggedIn:

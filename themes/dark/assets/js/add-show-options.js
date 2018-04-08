@@ -10,15 +10,15 @@ $(document).ready(() => {
         });
 
         // @TODO: Move this to API
-        $.get('config/general/saveAddShowDefaults', {
-            defaultStatus: $('#statusSelect').val(),
+        $.get('config/general/save_add_show_defaults', {
+            default_status: $('#statusSelect').val(),
             allowed_qualities: anyQualArray.join(','), // eslint-disable-line camelcase
             preferred_qualities: bestQualArray.join(','), // eslint-disable-line camelcase
             defaultFlattenFolders: $('#flatten_folders').prop('checked'),
             subtitles: $('#subtitles').prop('checked'),
             anime: $('#anime').prop('checked'),
             scene: $('#scene').prop('checked'),
-            defaultStatusAfter: $('#statusSelectAfter').val()
+            default_status_after: $('#statusSelectAfter').val()
         });
 
         $(this).prop('disabled', true);

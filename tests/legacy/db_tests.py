@@ -31,7 +31,7 @@ class DBBasicTests(test.AppTestDBCase):
     def setUp(self):
         """Unittest set up."""
         super(DBBasicTests, self).setUp()
-        self.db = test.db.DBConnection()
+        self.db = medusa.databases.db.DBConnection()
 
     def test_select(self):
         self.db.select("SELECT * FROM tv_episodes WHERE showid = ? AND location != ''", [0000])
@@ -43,7 +43,7 @@ class DBMultiTests(test.AppTestDBCase):
     def setUp(self):
         """Unittest set up."""
         super(DBMultiTests, self).setUp()
-        self.db = test.db.DBConnection()
+        self.db = medusa.databases.db.DBConnection()
 
     def select(self):
         """Select from the database."""

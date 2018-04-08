@@ -6,12 +6,11 @@ import datetime
 import logging
 import threading
 
-from medusa import app, common, db, scheduler, ui
+from medusa import app, common, scheduler, ui
+from medusa.databases import db
 from medusa.helper.common import episode_num
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.search.queue import BacklogQueueItem
-
-from six import iteritems
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -30,19 +29,19 @@ class BacklogSearchScheduler(scheduler.Scheduler):
         if self.action._last_backlog <= 1:
             return datetime.date.today()
         else:
-            backlog_frequency_in_days = int(self.action.cycleTime)
+            backlog_frequency_in_days = int(self.action.cycle_time)
             return datetime.date.fromordinal(self.action._last_backlog + backlog_frequency_in_days)
 
 
-class BacklogSearcher(object):
+class BacklogSearcher:
     """Backlog Searcher class."""
 
     def __init__(self):
         """Initialize the class."""
         self._last_backlog = self._get_last_backlog()
-        self.cycleTime = app.BACKLOG_FREQUENCY / 60.0 / 24
+        self.cycle_time = app.BACKLOG_FREQUENCY / 60.0 / 24
         self.lock = threading.Lock()
-        self.amActive = False
+        self.am_active = False
         self.amPaused = False
         self.amWaiting = False
         self.forced = False
@@ -57,19 +56,19 @@ class BacklogSearcher(object):
 
     def get_progress_indicator(self):
         """Get backlog search progress indicator."""
-        if self.amActive:
+        if self.am_active:
             return ui.ProgressIndicator(self.percentDone, self.currentSearchInfo)
         else:
             return None
 
     def am_running(self):
         """Check if backlog is running."""
-        log.debug(u'amWaiting: {0}, amActive: {1}', self.amWaiting, self.amActive)
-        return (not self.amWaiting) and self.amActive
+        log.debug(u'amWaiting: {0}, am_active: {1}', self.amWaiting, self.am_active)
+        return (not self.amWaiting) and self.am_active
 
     def search_backlog(self, which_shows=None):
         """Run the backlog search for given shows."""
-        if self.amActive:
+        if self.am_active:
             log.debug(u'Backlog is still running, not starting it again')
             return
 
@@ -77,7 +76,7 @@ class BacklogSearcher(object):
             log.warning(u'Manual search is running. Unable to start Backlog Search')
             return
 
-        self.amActive = True
+        self.am_active = True
         self.amPaused = False
 
         if which_shows:
@@ -105,7 +104,7 @@ class BacklogSearcher(object):
 
             segments = self._get_segments(series_obj, from_date)
 
-            for season, segment in iteritems(segments):
+            for season, segment in segments.items():
                 self.currentSearchInfo = {'title': '{series_name} Season {season}'.format(series_name=series_obj.name,
                                                                                           season=season)}
 
@@ -120,7 +119,7 @@ class BacklogSearcher(object):
         if from_date == datetime.date.fromordinal(1) and not which_shows:
             self._set_last_backlog(cur_date)
 
-        self.amActive = False
+        self.am_active = False
         self._reset_pi()
 
     def _get_last_backlog(self):
@@ -208,5 +207,5 @@ class BacklogSearcher(object):
                 self.forced = True
             self.search_backlog()
         except Exception:
-            self.amActive = False
+            self.am_active = False
             raise

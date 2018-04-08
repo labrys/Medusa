@@ -1,8 +1,8 @@
-MEDUSA.addShows.recommendedShows = function() {
+MEDUSA.add_series.recommended_series = function() {
     // Cleanest way of not showing the black/whitelist, when there isn't a show to show it for
     $.updateBlackWhiteList(undefined);
-    $('#recommendedShows').loadRemoteShows(
-        'addShows/getRecommendedShows/',
+    $('#recommended_series').loadRemoteShows(
+        'add_series/getrecommended_series/',
         'Loading recommended shows...',
         'Trakt timed out, refresh page to try again'
     );
@@ -10,5 +10,5 @@ MEDUSA.addShows.recommendedShows = function() {
     $.initAddShowById();
     $.initBlackListShowById();
     $.initRemoteShowGrid();
-    $.rootDirCheck();
+    $.root_dirCheck();
 };

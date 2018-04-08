@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import print_function
+
 
 import logging
 import socket
@@ -8,16 +8,15 @@ import socket
 import gntp
 
 from medusa import app, common
-from medusa.helper.exceptions import ex
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     def test_notify(self, host, password):
-        self._sendRegistration(host, password)
+        self._send_registration(host, password)
         return self._sendGrowl('Test Growl', 'Testing Growl settings from Medusa', 'Test', host, password,
                                force=True)
 
@@ -67,7 +66,7 @@ class Notifier(object):
         if message:
             notice.add_header('Notification-Text', message)
 
-        response = self._send(options['host'], options['port'], notice.encode(), options['debug'])
+        response = self._send(options['host'], options['port'], notice, options['debug'])
         return True if isinstance(response, gntp.GNTPOK) else False
 
     @staticmethod
@@ -95,16 +94,16 @@ class Notifier(object):
             name = title
 
         if host is None:
-            hostParts = app.GROWL_HOST.split(':')
+            host_parts = app.GROWL_HOST.split(':')
         else:
-            hostParts = host.split(':')
+            host_parts = host.split(':')
 
-        if len(hostParts) != 2 or hostParts[1] == '':
+        if len(host_parts) != 2 or host_parts[1] == '':
             port = 23053
         else:
-            port = int(hostParts[1])
+            port = int(host_parts[1])
 
-        growlHosts = [(hostParts[0], port)]
+        growl_hosts = [(host_parts[0], port)]
 
         opts = {
             'name': name,
@@ -122,7 +121,7 @@ class Notifier(object):
 
         opts['icon'] = True
 
-        for pc in growlHosts:
+        for pc in growl_hosts:
             opts['host'] = pc[0]
             opts['port'] = pc[1]
             log.debug(
@@ -133,31 +132,31 @@ class Notifier(object):
                 if self._send_growl(opts, message):
                     return True
                 else:
-                    if self._sendRegistration(host, password):
+                    if self._send_registration(host, password):
                         return self._send_growl(opts, message)
                     else:
                         return False
             except Exception as error:
                 log.warning(
                     u'GROWL: Unable to send growl to {host}:{port} - {msg!r}',
-                    {'msg': ex(error), 'host': opts['host'], 'port': opts['port']}
+                    {'msg': error, 'host': opts['host'], 'port': opts['port']}
                 )
                 return False
 
-    def _sendRegistration(self, host=None, password=None):
+    def _send_registration(self, host=None, password=None):
         opts = {}
 
         if host is None:
-            hostParts = app.GROWL_HOST.split(':')
+            host_parts = app.GROWL_HOST.split(':')
         else:
-            hostParts = host.split(':')
+            host_parts = host.split(':')
 
-        if len(hostParts) != 2 or hostParts[1] == '':
+        if len(host_parts) != 2 or host_parts[1] == '':
             port = 23053
         else:
-            port = int(hostParts[1])
+            port = int(host_parts[1])
 
-        opts['host'] = hostParts[0]
+        opts['host'] = host_parts[0]
         opts['port'] = port
 
         if password is None:
@@ -182,10 +181,10 @@ class Notifier(object):
             register.set_password(opts['password'])
 
         try:
-            return self._send(opts['host'], opts['port'], register.encode(), opts['debug'])
+            return self._send(opts['host'], opts['port'], register, opts['debug'])
         except Exception as error:
             log.warning(
                 u'GROWL: Unable to send growl to {host}:{port} - {msg!r}',
-                {'msg': ex(error), 'host': opts['host'], 'port': opts['port']}
+                {'msg': error, 'host': opts['host'], 'port': opts['port']}
             )
             return False

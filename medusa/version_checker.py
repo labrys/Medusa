@@ -1,21 +1,4 @@
 # coding=utf-8
-# Author: Nic Wolfe <nic@wolfeden.ca>
-#
-# This file is part of Medusa.
-#
-# Medusa is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Medusa is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Medusa. If not, see <http://www.gnu.org/licenses/>.
-
 import datetime
 import logging
 import os
@@ -27,11 +10,12 @@ import subprocess
 import tarfile
 import time
 from logging import DEBUG, WARNING
-from medusa import app, db, helpers, notifiers, ui
+
+from medusa import app, helpers, notifiers, ui
+from medusa.databases import db
 from medusa.github_client import get_github_repo
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.session.core import MedusaSafeSession
-
 
 ERROR_MESSAGE = ('Unable to find your git executable. Set git executable path in Advanced Settings '
                  'OR shutdown application and delete your .git folder and run from source to enable updates.')
@@ -40,13 +24,13 @@ log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class CheckVersion(object):
+class CheckVersion:
     """Version check class meant to run as a thread object with the sr scheduler."""
 
     def __init__(self):
         self.updater = None
         self.install_type = None
-        self.amActive = False
+        self.am_active = False
         self.install_type = self.find_install_type()
         if self.install_type == 'git':
             self.updater = GitUpdateManager()
@@ -57,7 +41,11 @@ class CheckVersion(object):
 
     def run(self, force=False):
 
-        self.amActive = True
+        """
+
+        :param force:
+        """
+        self.am_active = True
 
         # Update remote branches and store in app.GIT_REMOTE_BRANCHES
         self.list_remote_branches()
@@ -81,21 +69,25 @@ class CheckVersion(object):
 
             self.check_for_new_news(force)
 
-        self.amActive = False
+        self.am_active = False
 
     def run_backup_if_safe(self):
-        return self.safe_to_update() is True and self._runbackup() is True
+        """
 
-    def _runbackup(self):
+        :return:
+        """
+        return self.safe_to_update() is True and self._run_backup() is True
+
+    def _run_backup(self):
         # Do a system backup before update
         log.info(u'Config backup in progress...')
         ui.notifications.message('Backup', 'Config backup in progress...')
         try:
-            backupDir = os.path.join(app.DATA_DIR, app.BACKUP_DIR)
-            if not os.path.isdir(backupDir):
-                os.mkdir(backupDir)
+            backup_dir = os.path.join(app.DATA_DIR, app.BACKUP_DIR)
+            if not os.path.isdir(backup_dir):
+                os.mkdir(backup_dir)
 
-            if self._keeplatestbackup(backupDir) and self._backup(backupDir):
+            if self._keep_latest_backup(backup_dir) and self._backup(backup_dir):
                 log.info(u'Config backup successful, updating...')
                 ui.notifications.message('Backup', 'Config backup successful, updating...')
                 return True
@@ -109,12 +101,12 @@ class CheckVersion(object):
             return False
 
     @staticmethod
-    def _keeplatestbackup(backupDir=None):
-        if not backupDir:
+    def _keep_latest_backup(backup_dir=None):
+        if not backup_dir:
             return False
 
         import glob
-        files = glob.glob(os.path.join(backupDir, '*.zip'))
+        files = glob.glob(os.path.join(backup_dir, '*.zip'))
         if not files:
             return True
 
@@ -133,8 +125,8 @@ class CheckVersion(object):
 
     # TODO: Merge with backup in helpers
     @staticmethod
-    def _backup(backupDir=None):
-        if not backupDir:
+    def _backup(backup_dir=None):
+        if not backup_dir:
             return False
         source = [
             os.path.join(app.DATA_DIR, app.APPLICATION_DB),
@@ -142,12 +134,12 @@ class CheckVersion(object):
             os.path.join(app.DATA_DIR, app.FAILED_DB),
             os.path.join(app.DATA_DIR, app.CACHE_DB)
         ]
-        target = os.path.join(backupDir, app.BACKUP_FILENAME.format(timestamp=time.strftime('%Y%m%d%H%M%S')))
+        target = os.path.join(backup_dir, app.BACKUP_FILENAME.format(timestamp=time.strftime('%Y%m%d%H%M%S')))
 
         for (path, dirs, files) in os.walk(app.CACHE_DIR, topdown=True):
-            for dirname in dirs:
-                if path == app.CACHE_DIR and dirname not in ['images']:
-                    dirs.remove(dirname)
+            for directory in dirs:
+                if path == app.CACHE_DIR and directory not in ['images']:
+                    dirs.remove(directory)
             for filename in files:
                 source.append(os.path.join(path, filename))
 
@@ -155,7 +147,17 @@ class CheckVersion(object):
 
     def safe_to_update(self):
 
+        """
+
+        :return:
+        """
+
         def db_safe(self):
+            """
+
+            :param self:
+            :return:
+            """
             message = {
                 'equal': {
                     'type': DEBUG,
@@ -168,7 +170,7 @@ class CheckVersion(object):
                     'text': u"We can't proceed with the update. New update has a old DB version. It's not possible to downgrade"},
             }
             try:
-                result = self.getDBcompare()
+                result = self.get_db_compare()
                 if result in message:
                     log.log(message[result]['type'], message[result]['text'])  # unpack the result message into a log entry
                 else:
@@ -179,7 +181,11 @@ class CheckVersion(object):
                 return False
 
         def postprocessor_safe():
-            if not app.auto_post_processor_scheduler.action.amActive:
+            """
+
+            :return:
+            """
+            if not app.auto_post_processor_scheduler.action.am_active:
                 log.debug(u'We can proceed with the update. Post-Processor is not running')
                 return True
             else:
@@ -187,7 +193,11 @@ class CheckVersion(object):
                 return False
 
         def showupdate_safe():
-            if not app.show_update_scheduler.action.amActive:
+            """
+
+            :return:
+            """
+            if not app.show_update_scheduler.action.am_active:
                 log.debug(u'We can proceed with the update. Shows are not being updated')
                 return True
             else:
@@ -205,7 +215,7 @@ class CheckVersion(object):
             log.debug(u'Auto update aborted')
             return False
 
-    def getDBcompare(self):
+    def get_db_compare(self):
         """
         Compare the current DB version with the new branch version.
 
@@ -217,7 +227,7 @@ class CheckVersion(object):
             assert len(cur_hash) == 40, 'Commit hash wrong length: {length} hash: {hash}'.format(
                 length=len(cur_hash), hash=cur_hash)
 
-            check_url = 'http://cdn.rawgit.com/{org}/{repo}/{commit}/medusa/databases/main_db.py'.format(
+            check_url = 'http://cdn.rawgit.com/{org}/{repo}/{commit}/medusa/databases/main.py'.format(
                 org=app.GIT_ORG, repo=app.GIT_REPO, commit=cur_hash)
             response = self.session.get(check_url)
 
@@ -229,7 +239,7 @@ class CheckVersion(object):
 
             # Check local DB version
             main_db_con = db.DBConnection()
-            cur_branch_major_db_version, cur_branch_minor_db_version = main_db_con.checkDBVersion()
+            cur_branch_major_db_version, cur_branch_minor_db_version = main_db_con.check_db_version()
 
             if any([cur_branch_major_db_version is None, cur_branch_minor_db_version is None,
                     new_branch_major_db_version is None, new_branch_min_db_version is None]):
@@ -336,10 +346,18 @@ class CheckVersion(object):
         return news
 
     def need_update(self):
+        """
+
+        :return:
+        """
         if self.updater:
             return self.updater.need_update()
 
     def update(self):
+        """
+
+        :return:
+        """
         if self.updater:
             # update branch with current config branch value
             self.updater.branch = app.BRANCH
@@ -348,17 +366,21 @@ class CheckVersion(object):
             if self.updater.need_update():
                 return self.updater.update()
 
-    def list_remote_branches(self):
+    @property
+    def remote_branches(self):
         if self.updater:
-            app.GIT_REMOTE_BRANCHES = self.updater.list_remote_branches()
+            app.GIT_REMOTE_BRANCHES = list(self.updater.remote_branches)
         return app.GIT_REMOTE_BRANCHES
+
+    def list_remote_branches(self):
+        return self.remote_branches
 
     def get_branch(self):
         if self.updater:
             return self.updater.branch
 
 
-class UpdateManager(object):
+class UpdateManager:
     @staticmethod
     def get_github_org():
         return app.GIT_ORG
@@ -373,6 +395,10 @@ class UpdateManager(object):
 
 
 class GitUpdateManager(UpdateManager):
+    """
+
+    """
+
     def __init__(self):
         self._git_path = self._find_working_git()
         self.github_org = self.get_github_org()
@@ -387,17 +413,33 @@ class GitUpdateManager(UpdateManager):
         self._cur_version = ''
 
     def get_cur_commit_hash(self):
+        """
+
+        :return:
+        """
         return self._cur_commit_hash
 
     def get_newest_commit_hash(self):
+        """
+
+        :return:
+        """
         return self._newest_commit_hash
 
     def get_cur_version(self):
+        """
+
+        :return:
+        """
         if self._cur_commit_hash or self._find_installed_version():
             self._cur_version = self._run_git(self._git_path, 'describe --tags --abbrev=0 {0}'.format(self._cur_commit_hash))[0]
         return self._cur_version
 
     def get_newest_version(self):
+        """
+
+        :return:
+        """
         if self._newest_commit_hash:
             self._cur_version = self._run_git(self._git_path, "describe --tags --abbrev=0 " + self._newest_commit_hash)[0]
         else:
@@ -405,9 +447,17 @@ class GitUpdateManager(UpdateManager):
         return self._cur_version
 
     def get_num_commits_behind(self):
+        """
+
+        :return:
+        """
         return self._num_commits_behind
 
     def get_num_commits_ahead(self):
+        """
+
+        :return:
+        """
         return self._num_commits_ahead
 
     def _find_working_git(self):
@@ -462,7 +512,8 @@ class GitUpdateManager(UpdateManager):
     @staticmethod
     def _run_git(git_path, args):
 
-        output = err = exit_status = None
+        output = ''
+        err = ''
 
         if not git_path:
             log.warning(u"No git specified, can't use git commands")
@@ -474,17 +525,19 @@ class GitUpdateManager(UpdateManager):
         # String will be updated as soon we check github
         app.NEWEST_VERSION_STRING = None
 
-        cmd = git_path + ' ' + args
+        cmd = '{git} {args}'.format(
+            git=git_path,
+            args=args,
+        )
 
         try:
             log.debug(u'Executing {cmd} with your shell in {dir}', {'cmd': cmd, 'dir': app.PROG_DIR})
             p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                  shell=True, cwd=app.PROG_DIR)
             output, err = p.communicate()
+            output = output.decode()
             exit_status = p.returncode
-
-            if output:
-                output = output.strip()
+            output = output.strip()
 
         except OSError:
             log.info(u"Command {cmd} didn't work", {'cmd': cmd})
@@ -512,6 +565,7 @@ class GitUpdateManager(UpdateManager):
             log.warning(u'{cmd} returned : {output}. Treat as error for now', {'cmd': cmd, 'output': output})
             exit_status = 1
 
+        log.debug('{} {} {}'.format(output, err, exit_status))
         return output, err, exit_status
 
     def _find_installed_version(self):
@@ -525,6 +579,8 @@ class GitUpdateManager(UpdateManager):
 
         if exit_status == 0 and output:
             cur_commit_hash = output.strip()
+            if isinstance(cur_commit_hash, bytes):
+                cur_commit_hash = cur_commit_hash
             if not re.match('^[a-z0-9]+$', cur_commit_hash):
                 log.warning(u"Output doesn't look like a hash, not using it")
                 return False
@@ -545,10 +601,10 @@ class GitUpdateManager(UpdateManager):
 
     def _check_github_for_update(self):
         """
-        Uses git commands to check if there is a newer version that the provided
-        commit hash. If there is a newer version it sets _num_commits_behind.
-        """
+        Uses git commands to check if there is a newer version that the provided commit hash.
 
+        If there is a newer version it sets _num_commits_behind.
+        """
         self._num_commits_behind = 0
         self._num_commits_ahead = 0
 
@@ -595,6 +651,10 @@ class GitUpdateManager(UpdateManager):
     def set_newest_text(self):
 
         # if we're up to date then don't set this
+        """
+
+        :return:
+        """
         app.NEWEST_VERSION_STRING = None
 
         if self._num_commits_behind > 0 or self._is_hard_reset_allowed():
@@ -626,6 +686,10 @@ class GitUpdateManager(UpdateManager):
 
     def need_update(self):
 
+        """
+
+        :return:
+        """
         if self.branch != self._find_installed_branch():
             log.debug(u'Branch checkout: {0}->{1}', self._find_installed_branch(), self.branch)
             return True
@@ -729,8 +793,8 @@ class GitUpdateManager(UpdateManager):
         if exit_status == 0:
             return True
 
-    def list_remote_branches(self):
-        # update remote origin url
+    @property
+    def remote_branches(self):
         self.update_remote_origin()
         app.BRANCH = self._find_installed_branch()
 
@@ -740,7 +804,13 @@ class GitUpdateManager(UpdateManager):
                 return re.findall(r'refs/heads/(.*)', branches)
         return []
 
+    def list_remote_branches(self):
+        return self.remote_branches
+
     def update_remote_origin(self):
+        """
+
+        """
         self._run_git(self._git_path, 'config remote.%s.url %s' % (app.GIT_REMOTE, app.GIT_REMOTE_URL))
         if app.GIT_AUTH_TYPE == 0:
             if app.GIT_USERNAME:
@@ -779,27 +849,55 @@ class SourceUpdateManager(UpdateManager):
         return app.CUR_COMMIT_BRANCH if app.CUR_COMMIT_BRANCH else "master"
 
     def get_cur_commit_hash(self):
+        """
+
+        :return:
+        """
         return self._cur_commit_hash
 
     def get_newest_commit_hash(self):
+        """
+
+        :return:
+        """
         return self._newest_commit_hash
 
     @staticmethod
     def get_cur_version():
+        """
+
+        :return:
+        """
         return ""
 
     @staticmethod
     def get_newest_version():
+        """
+
+        :return:
+        """
         return ""
 
     def get_num_commits_behind(self):
+        """
+
+        :return:
+        """
         return self._num_commits_behind
 
     def get_num_commits_ahead(self):
+        """
+
+        :return:
+        """
         return self._num_commits_ahead
 
     def need_update(self):
         # need this to run first to set self._newest_commit_hash
+        """
+
+        :return:
+        """
         try:
             self._check_github_for_update()
         except Exception as error:
@@ -824,13 +922,13 @@ class SourceUpdateManager(UpdateManager):
         return True
 
     def _check_github_for_update(self):
-        """Use pygithub to ask github if there is a newer version..
+        """
+        Use pygithub to ask github if there is a newer version..
 
         If there is a newer version it sets application's version text.
 
-        commit_hash: hash that we're checking against
+        :param commit_hash: hash that we're checking against
         """
-
         self._num_commits_behind = 0
         self._newest_commit_hash = None
 
@@ -869,6 +967,10 @@ class SourceUpdateManager(UpdateManager):
     def set_newest_text(self):
 
         # if we're up to date then don't set this
+        """
+
+        :return:
+        """
         app.NEWEST_VERSION_STRING = None
 
         if not self._cur_commit_hash:
@@ -896,10 +998,7 @@ class SourceUpdateManager(UpdateManager):
         app.NEWEST_VERSION_STRING = newest_text
 
     def update(self):
-        """
-        Downloads the latest source tarball from github and installs it over the existing version.
-        """
-
+        """Downloads the latest source tarball from github and installs it over the existing version."""
         tar_download_url = 'http://github.com/' + self.github_org + '/' + self.github_repo + '/tarball/' + self.branch
 
         try:
@@ -985,7 +1084,15 @@ class SourceUpdateManager(UpdateManager):
             log.debug(u'Unable to send update notification. Continuing the update process')
         return True
 
-    @staticmethod
-    def list_remote_branches():
+    @property
+    def remote_branches(self):
         gh = get_github_repo(app.GIT_ORG, app.GIT_REPO)
-        return [x.name for x in gh.get_branches() if x]
+        return (
+            x.name
+            for x in gh.get_branches()
+            if x
+        )
+
+    @classmethod
+    def list_remote_branches(cls):
+        return list(cls.remote_branches)

@@ -2,10 +2,10 @@
 
 """Configure Anime Look & Feel and AniDB authentication."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
+
+from tornroutes import route
 
 from medusa import (
     app,
@@ -14,7 +14,6 @@ from medusa import (
 )
 from medusa.server.web.config.handler import Config
 from medusa.server.web.core import PageTemplate
-from tornroutes import route
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -22,29 +21,22 @@ log.addHandler(logging.NullHandler())
 
 @route('/config/anime(/?.*)')
 class ConfigAnime(Config):
-    """
-    Handler for Anime configuration
-    """
+    """Handler for Anime configuration."""
+
     def __init__(self, *args, **kwargs):
-        super(ConfigAnime, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
-        """
-        Render the Anime configuration page
-        """
-
+        """Render the Anime configuration page."""
         t = PageTemplate(rh=self, filename='config_anime.mako')
 
-        return t.render(submenu=self.ConfigMenu(), title='Config - Anime',
+        return t.render(submenu=self.config_menu(), title='Config - Anime',
                         header='Anime', topmenu='config',
                         controller='config', action='anime')
 
-    def saveAnime(self, use_anidb=None, anidb_username=None, anidb_password=None, anidb_use_mylist=None,
-                  split_home=None, split_home_in_tabs=None):
-        """
-        Save anime related settings
-        """
-
+    def save_anime(self, use_anidb=None, anidb_username=None, anidb_password=None, anidb_use_mylist=None,
+                   split_home=None, split_home_in_tabs=None):
+        """Save anime related settings."""
         results = []
 
         app.USE_ANIDB = config.checkbox_to_value(use_anidb)

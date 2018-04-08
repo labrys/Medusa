@@ -16,23 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with Medusa. If not, see <http://www.gnu.org/licenses/>.
 """Post Processor Module."""
-from __future__ import unicode_literals
+
 
 import logging
 import os.path
 
-from medusa import app, process_tv
-
+from medusa import app
+from medusa.processing import tv
 
 logger = logging.getLogger(__name__)
 
 
-class PostProcessor(object):
+class PostProcessor:
     """Post Processor Scheduler Action."""
 
     def __init__(self):
         """Init method."""
-        self.amActive = False
+        self.am_active = False
 
     def run(self, force=False):
         """Run the postprocessor.
@@ -40,7 +40,7 @@ class PostProcessor(object):
         :param force: Forces postprocessing run
         :type force: bool
         """
-        self.amActive = True
+        self.am_active = True
         try:
             if not os.path.isdir(app.TV_DOWNLOAD_DIR):
                 logger.error(u"Automatic post-processing attempted but directory doesn't exist: {folder}",
@@ -53,6 +53,6 @@ class PostProcessor(object):
                              folder=app.TV_DOWNLOAD_DIR)
                 return
 
-            process_tv.ProcessResult(app.TV_DOWNLOAD_DIR, app.PROCESS_METHOD).process(force=force)
+            tv.ProcessResult(app.TV_DOWNLOAD_DIR, app.PROCESS_METHOD).process(force=force)
         finally:
-            self.amActive = False
+            self.am_active = False

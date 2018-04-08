@@ -7,34 +7,38 @@ import threading
 log = logging.getLogger()
 
 
-class QueuePriorities(object):
+class QueuePriorities:
     LOW = 10
     NORMAL = 20
     HIGH = 30
 
 
-class GenericQueue(object):
+class GenericQueue:
+    """
+
+    """
+
     def __init__(self):
         self.currentItem = None
         self.queue = []
         self.queue_name = "QUEUE"
         self.min_priority = 0
         self.lock = threading.Lock()
-        self.amActive = False
+        self.am_active = False
 
     def pause(self):
         """Pauses this queue."""
         log.info(u"Pausing queue")
         self.min_priority = 999999999999
 
-    def unpause(self):
+    def resume(self):
         """Unpauses this queue."""
         log.info(u"Unpausing queue")
         self.min_priority = 0
 
     def add_item(self, item):
         """
-        Adds an item to this queue
+        Adds an item to this queue.
 
         :param item: Queue object to add
         :return: item
@@ -47,7 +51,7 @@ class GenericQueue(object):
 
     def run(self, force=False):
         """
-        Process items in this queue
+        Process items in this queue.
 
         :param force: Force queue processing (currently not implemented)
         """
@@ -66,21 +70,13 @@ class GenericQueue(object):
                 if self.queue:
 
                     # sort by priority
-                    def sorter(x, y):
+                    def sorter(x):
                         """
-                        Sorts by priority descending then time ascending
+                        Sorts by priority descending then time ascending.
                         """
-                        if x.priority == y.priority:
-                            if y.added == x.added:
-                                return 0
-                            elif y.added < x.added:
-                                return 1
-                            elif y.added > x.added:
-                                return -1
-                        else:
-                            return y.priority - x.priority
+                        return x.priority, x.added
 
-                    self.queue.sort(cmp=sorter)
+                    self.queue.sort(key=sorter)
                     if self.queue[0].priority < self.min_priority:
                         return
 
@@ -92,12 +88,16 @@ class GenericQueue(object):
                     )
                     self.currentItem.start()
 
-        self.amActive = False
+        self.am_active = False
 
 
 class QueueItem(threading.Thread):
+    """
+
+    """
+
     def __init__(self, name, action_id=0):
-        super(QueueItem, self).__init__()
+        super().__init__()
         self.name = name.replace(" ", "-").upper()
         self.inProgress = False
         self.priority = QueuePriorities.NORMAL

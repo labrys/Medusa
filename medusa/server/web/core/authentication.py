@@ -5,10 +5,10 @@ Authentication Handlers:
 Login, Logout and API key
 """
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
+
+from tornado.web import RequestHandler
 
 from medusa import (
     app,
@@ -20,18 +20,15 @@ from medusa.server.web.core.base import (
     PageTemplate,
 )
 
-from tornado.web import RequestHandler
-
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
 class KeyHandler(RequestHandler):
-    """
-    Handler for API Keys
-    """
+    """Handler for API Keys."""
+
     def __init__(self, *args, **kwargs):
-        super(KeyHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get(self, *args, **kwargs):
         """
@@ -55,11 +52,12 @@ class KeyHandler(RequestHandler):
 
 class LoginHandler(BaseHandler):
     """
-    Handler for Login
+    Handler for Login.
     """
+
     def get(self, *args, **kwargs):
         """
-        Render the Login page
+        Render the Login page.
         """
         if self.get_current_user():
             self.redirect('/{page}/'.format(page=app.DEFAULT_PAGE))
@@ -71,7 +69,6 @@ class LoginHandler(BaseHandler):
         """
         Submit Login
         """
-
         api_key = None
 
         username = app.WEB_USERNAME
@@ -99,9 +96,8 @@ class LoginHandler(BaseHandler):
 
 
 class LogoutHandler(BaseHandler):
-    """
-    Handler for Logout
-    """
+    """Handler for Logout."""
+
     def get(self, *args, **kwargs):
         """
         Logout and redirect to the Login page

@@ -2,18 +2,15 @@
 
 """Provider code for Anizb provider."""
 
-from __future__ import unicode_literals
-
 import logging
 import traceback
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
 from medusa.helper.common import try_int
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.nzb.nzb_provider import NZBProvider
-
-from requests.compat import urljoin
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -24,7 +21,7 @@ class Anizb(NZBProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(Anizb, self).__init__('Anizb')
+        super().__init__('Anizb')
 
         # Credentials
         self.public = True

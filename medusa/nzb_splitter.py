@@ -1,31 +1,12 @@
 # coding=utf-8
-# Author: Nic Wolfe <nic@wolfeden.ca>
-
-#
-# This file is part of Medusa.
-#
-# Medusa is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Medusa is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Medusa. If not, see <http://www.gnu.org/licenses/>.
-
-# pylint: disable=line-too-long
-
 import logging
 import re
 
 from medusa import classes
-from medusa.helper.encoding import ss
-from medusa.helper.exceptions import ex
-from medusa.name_parser.parser import InvalidNameException, InvalidShowException, NameParser
+from medusa.name_parser.parser import (
+    InvalidNameException,
+    InvalidShowException, NameParser,
+)
 from medusa.session.core import MedusaSession
 
 try:
@@ -41,14 +22,13 @@ session = MedusaSession()
 
 def get_season_nzbs(name, url_data, season):
     """
-    Split a season NZB into episodes
+    Split a season NZB into episodes.
 
     :param name: NZB name
     :param url_data: URL to get data from
     :param season: Season to check
     :return: dict of (episode files, xml matches)
     """
-
     # TODO: clean up these regex'es, comment them, and make them all raw strings
     regex_string = {
         # Match the xmlns in an nzb
@@ -115,12 +95,12 @@ def create_nzb_string(file_elements, xmlns):
     for cur_file in file_elements:
         root_element.append(strip_xmlns(cur_file, xmlns))
 
-    return ETree.tostring(ss(root_element))
+    return ETree.tostring(root_element)
 
 
 def save_nzb(nzb_name, nzb_string):
     """
-    Save NZB to disk
+    Save NZB to disk.
 
     :param nzb_name: Filename/path to write to
     :param nzb_string: Content to write in file
@@ -130,7 +110,7 @@ def save_nzb(nzb_name, nzb_string):
             nzb_fh.write(nzb_string)
 
     except EnvironmentError as error:
-        log.error(u"Unable to save NZB: " + ex(error))  # pylint: disable=no-member
+        log.error(u"Unable to save NZB: {}".format(error))  # pylint: disable=no-member
 
 
 def strip_xmlns(element, xmlns):

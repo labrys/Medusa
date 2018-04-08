@@ -2,18 +2,17 @@
 
 """Episode tagger to extract information from episodes."""
 
-from __future__ import unicode_literals
-
 import re
 
 from medusa.helper.common import try_int
 from medusa.recompiled import tags
 
 
-class EpisodeTags(object):
+class EpisodeTags:
     """
-    Quality tags
+    Quality tags.
     """
+
     def __init__(self, name):
         self.name = name
         self.rex = {
@@ -46,7 +45,7 @@ class EpisodeTags(object):
     @property
     def res(self):
         """
-        The resolution tag found in the name
+        The resolution tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -57,7 +56,7 @@ class EpisodeTags(object):
     @property
     def vres(self):
         """
-        The vertical found in the name
+        The vertical found in the name.
 
         :returns: an empty string if not found
         """
@@ -68,7 +67,7 @@ class EpisodeTags(object):
     @property
     def scan(self):
         """
-        The type of scan found in the name
+        The type of scan found in the name.
 
         e.g. `i` for Interlaced, `p` for Progressive Scan
 
@@ -81,7 +80,7 @@ class EpisodeTags(object):
     @property
     def widescreen(self):
         """
-        The wide screen tag found in the name
+        The wide screen tag found in the name.
 
         :return: an empty string if not found
         """
@@ -93,7 +92,7 @@ class EpisodeTags(object):
     @property
     def bluray(self):
         """
-        The bluray tag found in the name
+        The bluray tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -104,7 +103,7 @@ class EpisodeTags(object):
     @property
     def hddvd(self):
         """
-        The hddvd tag found in the name
+        The hddvd tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -115,7 +114,7 @@ class EpisodeTags(object):
     @property
     def itunes(self):
         """
-        The iTunes tag found in the name
+        The iTunes tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -126,7 +125,7 @@ class EpisodeTags(object):
     @property
     def web(self):
         """
-        The web tag found in the name
+        The web tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -144,7 +143,7 @@ class EpisodeTags(object):
     @property
     def sat(self):
         """
-        The sat tag found in the name
+        The sat tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -155,7 +154,7 @@ class EpisodeTags(object):
     @property
     def dvdrip(self):
         """
-        The dvd tag found in the name
+        The dvd tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -166,7 +165,7 @@ class EpisodeTags(object):
     @property
     def dvd(self):
         """
-        The dvd tag found in the name
+        The dvd tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -184,7 +183,7 @@ class EpisodeTags(object):
     @property
     def hevc(self):
         """
-        The hevc tag found in the name
+        The hevc tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -193,7 +192,7 @@ class EpisodeTags(object):
     @property
     def avc(self):
         """
-        The avc tag found in the name
+        The avc tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -204,9 +203,9 @@ class EpisodeTags(object):
     @property
     def avc_free(self):
         """
-        The free avc codec found in the name
-        e.g.: x.265 or X264
+        The free avc codec found in the name.
 
+        e.g.: x.265 or X264
         :returns: an empty string if not found
         """
         return '' if self.avc_non_free else self.avc
@@ -214,9 +213,9 @@ class EpisodeTags(object):
     @property
     def avc_non_free(self):
         """
-        The non-free avc codec found in the name
-        e.g.: h.265 or H264
+        The non-free avc codec found in the name.
 
+        e.g.: h.265 or H264
         :returns: an empty string if not found
         """
         return '' if not self.avc.lower().startswith('h') else self.avc
@@ -224,7 +223,7 @@ class EpisodeTags(object):
     @property
     def mpeg(self):
         """
-        The mpeg tag found in the name
+        The mpeg tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -235,7 +234,7 @@ class EpisodeTags(object):
     @property
     def xvid(self):
         """
-        The xvid tag found in the name
+        The xvid tag found in the name.
 
         :returns: an empty string if not found
         """
@@ -247,7 +246,7 @@ class EpisodeTags(object):
     @property
     def hrws(self):
         """
-        The hrws tag found in the name
+        The hrws tag found in the name.
 
         HR = High Resolution
         WS = Wide Screen
@@ -265,7 +264,7 @@ class EpisodeTags(object):
     @property
     def raw(self):
         """
-        The raw tag found in the name
+        The raw tag found in the name.
 
         :return: an empty string if not found
         """
@@ -279,7 +278,7 @@ class EpisodeTags(object):
     @property
     def aussie(self):
         """
-        Aussie p2p release groups
+        Aussie p2p release groups.
 
         :return: the aussie p2p release group
         """
@@ -290,7 +289,7 @@ class EpisodeTags(object):
     @property
     def netflix(self):
         """
-        Netflix tag found in name
+        Netflix tag found in name.
 
         :return: an empty string if not found
         """

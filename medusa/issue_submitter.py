@@ -1,6 +1,6 @@
 # coding=utf-8
 """GitHub issue submitter."""
-from __future__ import unicode_literals
+
 
 import difflib
 import locale
@@ -8,11 +8,17 @@ import logging
 import platform
 import sys
 from datetime import datetime, timedelta
+
 from github import InputFileContent
 from github.GithubException import GithubException, RateLimitExceededException
-from medusa import app, db
+
+from medusa import app
 from medusa.classes import ErrorViewer
-from medusa.github_client import authenticate, get_github_repo, token_authenticate
+from medusa.databases import db
+from medusa.github_client import (
+    authenticate, get_github_repo,
+    token_authenticate,
+)
 from medusa.logger.adapters.style import BraceAdapter
 
 log = BraceAdapter(logging.getLogger(__name__))
@@ -34,7 +40,7 @@ _STAFF NOTIFIED_: @{org}/support @{org}/moderators
 """
 
 
-class IssueSubmitter(object):
+class IssueSubmitter:
     """GitHub issue submitter."""
 
     MISSING_CREDENTIALS = 'Please set your GitHub Username and Password in the config.  Unable to submit issue ticket to GitHub.'
@@ -73,7 +79,7 @@ class IssueSubmitter(object):
 
         # Get current DB version
         main_db_con = db.DBConnection()
-        cur_branch_major_db_version, cur_branch_minor_db_version = main_db_con.checkDBVersion()
+        cur_branch_major_db_version, cur_branch_minor_db_version = main_db_con.check_db_version()
 
         commit = app.CUR_COMMIT_HASH
         base_url = '../blob/{commit}'.format(commit=commit) if commit else None
@@ -121,6 +127,12 @@ class IssueSubmitter(object):
     def submit_github_issue(self, version_checker, max_issues=500):
         """Submit errors to github."""
         def result(message, level=logging.WARNING):
+            """
+
+            :param message:
+            :param level:
+            :return:
+            """
             log.log(level, message)
             return [(message, None)]
 

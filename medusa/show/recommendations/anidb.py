@@ -1,25 +1,26 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
 import traceback
+
+from simpleanidb import (Anidb, REQUEST_HOT)
+from simpleanidb.exceptions import GeneralError
 
 from medusa import app
 from medusa.indexers.config import INDEXER_TVDB
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.session.core import MedusaSession
-from medusa.show.recommendations.recommended import (MissingTvdbMapping, RecommendedShow)
-
-from simpleanidb import (Anidb, REQUEST_HOT)
-from simpleanidb.exceptions import GeneralError
-
+from medusa.show.recommendations.recommended import (
+    MissingTvdbMapping, RecommendedShow,
+)
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class AnidbPopular(object):  # pylint: disable=too-few-public-methods
+class AnidbPopular:  # pylint: disable=too-few-public-methods
     def __init__(self):
         """Class retrieves a specified recommended show list from Trakt.
 
@@ -67,7 +68,7 @@ class AnidbPopular(object):  # pylint: disable=too-few-public-methods
 
         return rec_show
 
-    def fetch_popular_shows(self, list_type=REQUEST_HOT):
+    def fetch_popular_series(self, list_type=REQUEST_HOT):
         """Get popular show information from IMDB."""
         shows = []
         result = []

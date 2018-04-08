@@ -1,16 +1,16 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
+
 import markdown2
+from tornroutes import route
 
 from medusa import app
 from medusa.server.web.core import PageTemplate
 from medusa.server.web.home.handler import Home
 from medusa.session.core import MedusaSafeSession
-
-from tornroutes import route
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -21,7 +21,7 @@ class HomeChangeLog(Home):
     session = MedusaSafeSession()
 
     def __init__(self, *args, **kwargs):
-        super(HomeChangeLog, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def index(self):
         # TODO: SESSION: Check if this needs some more explicit exception handling.

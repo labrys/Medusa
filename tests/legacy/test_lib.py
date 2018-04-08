@@ -28,8 +28,8 @@ import unittest
 
 from configobj import ConfigObj
 
-from medusa import app, config, db, providers
-from medusa.databases import cache_db, failed_db, main_db
+from medusa import app, config, providers
+from medusa.databases import cache, db, failed, main
 from medusa.providers.nzb.newznab import NewznabProvider
 from medusa.tv import Episode, cache
 
@@ -157,7 +157,7 @@ class TestCacheDBConnection(TestDBConnection, object):
 
         # Create the table if it's not already there
         try:
-            if not self.hasTable(provider_name):
+            if not self.has_table(provider_name):
                 sql = "CREATE TABLE [" + provider_name + \
                       "] (name TEXT, season NUMERIC, episodes TEXT, indexerid NUMERIC, url TEXT, time NUMERIC, quality TEXT, release_group TEXT)"
                 self.connection.execute(sql)
@@ -169,8 +169,8 @@ class TestCacheDBConnection(TestDBConnection, object):
                 raise
 
             # add version column to table if missing
-            if not self.hasColumn(provider_name, 'version'):
-                self.addColumn(provider_name, 'version', "NUMERIC", "-1")
+            if not self.has_column(provider_name, 'version'):
+                self.add_column(provider_name, 'version', "NUMERIC", "-1")
 
         # Create the table if it's not already there
         try:
@@ -196,21 +196,21 @@ def setup_test_db():
     """Set up the test databases."""
     # Upgrade the db to the latest version.
     # upgrading the db
-    db.upgradeDatabase(db.DBConnection(), main_db.InitialSchema)
+    db.upgrade_database(db.DBConnection(), main.InitialSchema)
 
     # fix up any db problems
-    db.sanityCheckDatabase(db.DBConnection(), main_db.MainSanityCheck)
+    db.sanity_check_database(db.DBConnection(), main.MainSanityCheck)
 
     # and for cache.db too
-    db.upgradeDatabase(db.DBConnection('cache.db'), cache_db.InitialSchema)
+    db.upgrade_database(db.DBConnection('cache.db'), cache.InitialSchema)
 
     # and for failed.db too
-    db.upgradeDatabase(db.DBConnection('failed.db'), failed_db.InitialSchema)
+    db.upgrade_database(db.DBConnection('failed.db'), failed.InitialSchema)
 
 
 def teardown_test_db():
     """Tear down the test database."""
-    from medusa.db import db_cons
+    from medusa.databases.db import db_cons
     for connection in db_cons:
         db_cons[connection].commit()
     #     db_cons[connection].close()

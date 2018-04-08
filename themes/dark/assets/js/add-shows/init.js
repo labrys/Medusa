@@ -1,4 +1,4 @@
-MEDUSA.addShows.init = function() {
+MEDUSA.add_series.init = function() {
     $('#tabs').tabs({
         collapsible: true,
         selected: (MEDUSA.config.sortArticle ? -1 : 0)
@@ -44,8 +44,8 @@ MEDUSA.addShows.init = function() {
             });
         });
 
-        $('#rootDirs').on('change', () => {
-            $.rootDirCheck();
+        $('#root_dirs').on('change', () => {
+            $.root_dirCheck();
         });
 
         $('#showsortdirection').on('change', function() {
@@ -98,7 +98,7 @@ MEDUSA.addShows.init = function() {
             $(this).html('Blacklisted').prop('disabled', true);
             $(this).parent().find('button[data-add-show]').prop('disabled', true);
 
-            $.get('addShows/addShowToBlacklist?seriesid=' + $(this).attr('data-indexer-id'));
+            $.get('add_series/add_series_to_blacklist?seriesid=' + $(this).attr('data-indexer-id'));
             return false;
         });
     };
@@ -131,8 +131,8 @@ MEDUSA.addShows.init = function() {
             const anime = $('#anime').prop('checked');
             const configureShowOptions = $('#configure_show_options').prop('checked');
 
-            $.get('addShows/addShowByID?indexername=' + $(this).attr('data-indexer') + '&seriesid=' + $(this).attr('data-indexer-id'), {
-                root_dir: $('#rootDirs option:selected').val(), // eslint-disable-line camelcase
+            $.get('add_series/add_series_by_id?indexername=' + $(this).attr('data-indexer') + '&seriesid=' + $(this).attr('data-indexer-id'), {
+                root_dir: $('#root_dirs option:selected').val(), // eslint-disable-line camelcase
                 configure_show_options: configureShowOptions, // eslint-disable-line camelcase
                 show_name: $(this).attr('data-show-name'), // eslint-disable-line camelcase
                 quality_preset: $('#qualityPreset').val(), // eslint-disable-line camelcase
@@ -158,15 +158,15 @@ MEDUSA.addShows.init = function() {
                 bestQualArray.push($(d).val());
             });
 
-            $.get('config/general/saveAddShowDefaults', {
-                defaultStatus: $('#statusSelect').val(),
+            $.get('config/general/save_add_show_defaults', {
+                default_status: $('#statusSelect').val(),
                 allowed_qualities: anyQualArray.join(','), // eslint-disable-line camelcase
                 preferred_qualities: bestQualArray.join(','),  // eslint-disable-line camelcase
                 defaultFlattenFolders: $('#flatten_folders').prop('checked'),
                 subtitles: $('#subtitles').prop('checked'),
                 anime: $('#anime').prop('checked'),
                 scene: $('#scene').prop('checked'),
-                defaultStatusAfter: $('#statusSelectAfter').val()
+                default_status_after: $('#statusSelectAfter').val()
             });
 
             $(this).prop('disabled', true);
@@ -195,7 +195,7 @@ MEDUSA.addShows.init = function() {
         if ($('#anime').prop('checked') && showName) {
             $('#blackwhitelist').show();
             if (showName) {
-                $.getJSON('home/fetch_releasegroups', {
+                $.getJSON('home/fetch_release_groups', {
                     show_name: showName // eslint-disable-line camelcase
                 }, data => {
                     if (data.result === 'success') {

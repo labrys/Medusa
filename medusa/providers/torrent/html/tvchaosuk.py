@@ -2,11 +2,10 @@
 
 """Provider code for TVChaosUK."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 import traceback
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -18,8 +17,6 @@ from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.torrent.torrent_provider import TorrentProvider
 
-from requests.compat import urljoin
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
@@ -29,7 +26,7 @@ class TVChaosUKProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(TVChaosUKProvider, self).__init__('TvChaosUK')
+        super().__init__('TvChaosUK')
 
         # Credentials
         self.username = None
@@ -172,7 +169,7 @@ class TVChaosUKProvider(TorrentProvider):
                         title = re.sub(r'(.*)(?i)Series', r'\1Season', title)
 
                     # Strip year from the end or we can't parse it!
-                    title = re.sub(r'(.*)[\. ]?\(\d{4}\)', r'\1', title)
+                    title = re.sub(r'(.*)[. ]?\(\d{4}\)', r'\1', title)
                     title = re.sub(r'\s+', r' ', title)
 
                     torrent_size = row('td')[labels.index('Size')].get_text(strip=True)

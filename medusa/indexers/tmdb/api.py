@@ -2,24 +2,21 @@
 
 """TMDB module."""
 
-
-from __future__ import unicode_literals
-
 import logging
 from collections import OrderedDict
 from datetime import datetime, timedelta
 
+import tmdbsimple as tmdb
 from dateutil import parser
+from requests.exceptions import RequestException
 
 from medusa.app import TMDB_API_KEY
 from medusa.indexers.base import (Actor, Actors, BaseIndexer)
-from medusa.indexers.exceptions import IndexerError, IndexerException, IndexerShowIncomplete, IndexerUnavailable
+from medusa.indexers.exceptions import (
+    IndexerError, IndexerException,
+    IndexerShowIncomplete, IndexerUnavailable,
+)
 from medusa.logger.adapters.style import BraceAdapter
-
-from requests.exceptions import RequestException
-from six import integer_types, string_types, text_type
-
-import tmdbsimple as tmdb
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -35,7 +32,7 @@ class Tmdb(BaseIndexer):
 
     def __init__(self, *args, **kwargs):  # pylint: disable=too-many-locals,too-many-arguments
         """Tmdb api constructor."""
-        super(Tmdb, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.tmdb = tmdb
         self.tmdb.API_KEY = TMDB_API_KEY
@@ -90,6 +87,7 @@ class Tmdb(BaseIndexer):
 
         :type tmdb_response: object
         """
+
         def week_day(input_date):
             days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
             week_day_number = parser.parse(input_date).weekday()
@@ -109,8 +107,8 @@ class Tmdb(BaseIndexer):
 
                     # Do some value sanitizing
                     if isinstance(value, list) and key not in ['episode_run_time']:
-                        if all(isinstance(x, (string_types, integer_types)) for x in value):
-                            value = list_separator.join(text_type(v) for v in value)
+                        if all(isinstance(x, (str, int)) for x in value):
+                            value = list_separator.join(value)
 
                     # Process genres
                     if key == 'genres':
@@ -177,7 +175,7 @@ class Tmdb(BaseIndexer):
         :param series: The query for the series name
         :return: An ordered dict with the show searched for. In the format of OrderedDict{"series": [list of shows]}
         """
-        series = series.encode('utf-8')
+        series = series
         log.debug('Searching for show: {0}', series)
 
         results = self._show_search(series, request_language=self.config['language'])
@@ -299,19 +297,33 @@ class Tmdb(BaseIndexer):
 
         This interface will be improved in future versions.
         """
-        key_mapping = {'file_path': 'bannerpath', 'vote_count': 'ratingcount', 'vote_average': 'rating', 'id': 'id'}
-        image_sizes = {'fanart': 'backdrop_sizes', 'poster': 'poster_sizes'}
-        typecasts = {'rating': float, 'ratingcount': int}
+        key_mapping = {
+            'file_path': 'bannerpath',
+            'vote_count': 'ratingcount',
+            'vote_average': 'rating',
+            'id': 'id',
+        }
+        image_sizes = {
+            'fanart': 'backdrop_sizes',
+            'poster': 'poster_sizes',
+        }
+        typecasts = {
+            'rating': float,
+            'ratingcount': int,
+        }
 
         log.debug('Getting show banners for {0}', sid)
         _images = {}
 
         # Let's get the different type of images available for this series
-        params = {'include_image_language': '{search_language},null'.format(search_language=self.config['language'])}
+        language = self.config['language']
+        params = {
+            'include_image_language': f'{language},null',
+        }
 
         images = self.tmdb.TV(sid).images(params=params)
         bid = images['id']
-        for image_type, images in {'poster': images['posters'], 'fanart': images['backdrops']}.iteritems():
+        for image_type, images in {'poster': images['posters'], 'fanart': images['backdrops']}.items():
             try:
                 if image_type not in _images:
                     _images[image_type] = {}
@@ -568,9 +580,6 @@ class Tmdb(BaseIndexer):
         """Search tmdb for a show, using an external id.
 
         Accepts as kwargs, so you'l need to add the externals as key/values.
-        :param tvrage_id: The tvrage id.
-        :param tvdb_id: The tvdb id.
-        :param imdb_id: An imdb id (inc. tt).
         :returns: A dict with externals, including the tvmaze id.
         """
         wanted_externals = ['tvdb_id', 'imdb_id', 'tvrage_id']

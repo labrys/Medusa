@@ -1,20 +1,21 @@
 """Slack notifier."""
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import json
 import logging
+
+import requests
+
 from medusa import app, common
 from medusa.logger.adapters.style import BraceAdapter
-import requests
-import six
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     """Slack notifier class."""
 
     def notify_snatch(self, ep_name, is_proper):
@@ -87,10 +88,7 @@ class Notifier(object):
         log.info('Sending slack message: {message}', {'message': message})
         log.info('Sending slack message  to url: {url}', {'url': webhook})
 
-        if isinstance(message, six.text_type):
-            message = message.encode('utf-8')
-
-        headers = {b'Content-Type': b'application/json'}
+        headers = {'Content-Type': 'application/json'}
         data = {
             'text': message,
             'username': 'MedusaBot',

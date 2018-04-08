@@ -43,10 +43,10 @@ home.mako
 }
 
 /* =======================================================================
-displayShow.mako
+display_series.mako
 ========================================================================== */
 
-.displayShowTable th.row-seasonheader {
+.display_seriesTable th.row-seasonheader {
     border: none !important;
     background-color: rgb(255, 255, 255) !important;
     color: rgb(0, 0, 0) !important;
@@ -54,7 +54,7 @@ displayShow.mako
     text-align: left !important;
 }
 
-.displayShowTableFanArt th.row-seasonheader {
+.display_seriesTableFanArt th.row-seasonheader {
     border: none !important;
     background-color: transparent !important;
     color: rgb(0, 0, 0) !important;
@@ -67,7 +67,7 @@ displayShow.mako
 }
 
 /* =======================================================================
-testRename.mako
+test_rename.mako
 ========================================================================== */
 
 tr.seasonheader {

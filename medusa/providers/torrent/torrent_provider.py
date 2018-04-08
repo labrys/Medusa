@@ -2,14 +2,11 @@
 
 """Provider code for Generic Torrent Provider."""
 
-from __future__ import unicode_literals
-
 import logging
 import os
 
 import bencode
 from bencode.BTL import BTFailure
-
 from feedparser.util import FeedParserDict
 
 from medusa import app
@@ -28,7 +25,7 @@ class TorrentProvider(GenericProvider):
 
     def __init__(self, name):
         """Initialize the class."""
-        super(TorrentProvider, self).__init__(name)
+        super().__init__(name)
 
         self.ratio = None
         self.provider_type = GenericProvider.TORRENT

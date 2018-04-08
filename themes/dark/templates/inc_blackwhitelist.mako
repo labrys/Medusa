@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading inc_blackwhitelist')
+%>
 <div id="blackwhitelist">
     <input type="hidden" name="whitelist" id="whitelist"/>
     <input type="hidden" name="blacklist" id="blacklist"/>

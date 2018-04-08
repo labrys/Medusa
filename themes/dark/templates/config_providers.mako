@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
@@ -33,7 +41,7 @@ $('#config-components').tabs();
 % endif
 <div id="config">
     <div id="config-content">
-        <form id="configForm" action="config/providers/saveProviders" method="post">
+        <form id="configForm" action="config/providers/save_providers" method="post">
             <div id="config-components">
                 <ul>
                     ## @TODO: Fix this stupid hack

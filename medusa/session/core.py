@@ -1,21 +1,18 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import errno
 import logging
 import traceback
 
 import certifi
-
-import factory
+import requests
 
 import medusa.common
 from medusa import app
 from medusa.logger.adapters.style import BraceAdapter
-from medusa.session import hooks
-
-import requests
+from medusa.session import factory, hooks
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -72,7 +69,7 @@ class MedusaSession(BaseSession):
         cache_control = kwargs.pop('cache_control', None)
 
         # Initialize request.session after we've done the pop's.
-        super(MedusaSession, self).__init__(**kwargs)
+        super().__init__()
 
         # Add cache control of provided as a dict. Needs to be attached after super init.
         if cache_control:
@@ -91,9 +88,9 @@ class MedusaSession(BaseSession):
         self.headers.update(self.default_headers)
 
     def request(self, method, url, data=None, params=None, headers=None, timeout=30, verify=True, **kwargs):
-        return super(MedusaSession, self).request(method, url, data=data, params=params, headers=headers,
-                                                  timeout=timeout, verify=self._get_ssl_cert(verify),
-                                                  **kwargs)
+        return super().request(method, url, data=data, params=params, headers=headers,
+                               timeout=timeout, verify=self._get_ssl_cert(verify),
+                               **kwargs)
 
     def get_json(self, url, method='GET', *args, **kwargs):
         """Overwrite request, to be able to return the json value if possible. Else it will fail silently."""
@@ -131,32 +128,3 @@ class MedusaSafeSession(MedusaSession):
     :example: {'cache_etags': True, 'serializer': None, 'heuristic': None}
     :return: The response as text or False.
     """
-
-    def __init__(self, *args, **kwargs):
-        # Initialize request.session
-        super(MedusaSafeSession, self).__init__(**kwargs)
-
-    def request(self, method, url, data=None, params=None, headers=None, timeout=30, verify=True, **kwargs):
-        """Overwrite request, for adding basic exception handling."""
-        resp = None
-        try:
-            resp = super(MedusaSafeSession, self).request(method, url, data=data, params=params, headers=headers,
-                                                          timeout=timeout, verify=verify, **kwargs)
-            resp.raise_for_status()
-        except requests.exceptions.HTTPError as error:
-            log.debug(u'The response returned a non-200 response while requestion url {url}. Error: {err_msg!r}'.format(url=url, err_msg=error))
-            return resp or error.response
-        except requests.exceptions.RequestException as error:
-            log.debug(u'Error requesting url {url}. Error: {err_msg}'.format(url=url, err_msg=error))
-            return resp or error.response
-        except Exception as error:
-            if u'ECONNRESET' in error or (hasattr(error, u'errno') and error.errno == errno.ECONNRESET):
-                log.warning(
-                    u'Connection reset by peer accessing url {url}. Error: {err_msg}'.format(url=url, err_msg=error)
-                )
-            else:
-                log.info(u'Unknown exception in url {url}. Error: {err_msg}'.format(url=url, err_msg=error))
-                log.debug(traceback.format_exc())
-            return None
-
-        return resp

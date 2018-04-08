@@ -2,12 +2,9 @@
 
 """Provider code for Torrent9."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
-
-from requests.compat import urljoin
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -24,7 +21,7 @@ log.logger.addHandler(logging.NullHandler())
 # Torrent9 replaces non-word and underscore characters with a dash (-)
 # The dash is included in the regex to remove multiple dashes (e.g. ---)
 # in the string even though it does not affect the search
-re_clean = re.compile('[\W-_]+')
+re_clean = re.compile('[\W_-]+')
 
 
 class Torrent9Provider(TorrentProvider):
@@ -32,13 +29,13 @@ class Torrent9Provider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(Torrent9Provider, self).__init__('Torrent9')
+        super().__init__('Torrent9')
 
         # Credentials
         self.public = True
 
         # URLs
-        self.url = 'http://www.torrent9.bz'
+        self.url = 'http://www.torrent9.red'
         self.urls = {
             'search': urljoin(self.url, '/search_torrent/{query}.html'),
             'daily': urljoin(self.url, '/torrents_series.html,trie-date-d'),

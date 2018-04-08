@@ -46,7 +46,7 @@ def available_generators():
     return [x for x in __all__ if x not in ['generic']]
 
 
-def _getMetadataModule(name):
+def _get_metadata_module(name):
     name = name.lower()
     prefix = __name__ + '.'
     if name in available_generators() and prefix + name in sys.modules:
@@ -55,8 +55,8 @@ def _getMetadataModule(name):
         return None
 
 
-def _getMetadataClass(name):
-    module = _getMetadataModule(name)
+def _get_metadata_class(name):
+    module = _get_metadata_module(name)
 
     if not module:
         return None
@@ -67,7 +67,7 @@ def _getMetadataClass(name):
 def get_metadata_generator_dict():
     result = dict()
     for cur_generator_id in available_generators():
-        cur_generator = _getMetadataClass(cur_generator_id)
+        cur_generator = _get_metadata_class(cur_generator_id)
         if not cur_generator:
             continue
         result[cur_generator.name] = cur_generator

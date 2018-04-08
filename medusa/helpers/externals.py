@@ -4,15 +4,24 @@
 
 import logging
 
-from medusa import app, db
-from medusa.indexers.api import indexerApi
+from requests.exceptions import RequestException
+from traktor import (
+    AuthException,
+    TokenExpiredException,
+    TraktApi,
+    TraktException,
+)
+
+from medusa import app
+from medusa.databases import db
+from medusa.indexers.api import IndexerAPI
 from medusa.indexers.config import indexerConfig
-from medusa.indexers.exceptions import IndexerException, IndexerShowAllreadyInLibrary, IndexerUnavailable
+from medusa.indexers.exceptions import (
+    IndexerException,
+    IndexerShowAllreadyInLibrary, IndexerUnavailable,
+)
 from medusa.indexers.utils import mappings
 from medusa.logger.adapters.style import BraceAdapter
-
-from requests.exceptions import RequestException
-from traktor import AuthException, TokenExpiredException, TraktApi, TraktException
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -82,7 +91,7 @@ def get_externals(show=None, indexer=None, indexed_show=None):
     else:
         if not indexer or not indexed_show:
             raise Exception('Need a minimum of a show object or an indexer + indexer_api '
-                            '(Show searched through indexerApi.')
+                            '(Show searched through IndexerAPI.')
         new_show_externals = getattr(indexed_show, 'externals', {})
 
     # For this show let's get all externals, and use them.
@@ -93,14 +102,14 @@ def get_externals(show=None, indexer=None, indexed_show=None):
     # If tmdb doesn't have a mapping to imdb, but tvmaze does, there is a small chance we can use that.
 
     for other_indexer in other_indexers:
-        lindexer_api_pararms = indexerApi(other_indexer).api_params.copy()
+        lindexer_api_pararms = IndexerAPI(other_indexer).api_params.copy()
         try:
-            t = indexerApi(other_indexer).indexer(**lindexer_api_pararms)
+            t = IndexerAPI(other_indexer).indexer(**lindexer_api_pararms)
         except IndexerUnavailable:
             continue
         if hasattr(t, 'get_id_by_external'):
             log.debug(u"Trying other indexer: {indexer} get_id_by_external",
-                      {'indexer': indexerApi(other_indexer).name})
+                      {'indexer': IndexerAPI(other_indexer).name})
             # Call the get_id_by_external and pass all the externals we have,
             # except for the indexers own.
             try:
@@ -109,7 +118,7 @@ def get_externals(show=None, indexer=None, indexed_show=None):
                 log.warning(
                     u'Error getting external ids for other'
                     u' indexer {name}: {reason}',
-                    {'name': indexerApi(show.indexer).name, 'reason': error.message})
+                    {'name': IndexerAPI(show.indexer).name, 'reason': error.message})
 
     # Try to update with the Trakt externals.
     if app.USE_TRAKT:
@@ -118,7 +127,7 @@ def get_externals(show=None, indexer=None, indexed_show=None):
     return new_show_externals
 
 
-def check_existing_shows(indexed_show, indexer):
+def check_existing_series(indexed_show, indexer):
     """Check if the searched show already exists in the current library.
 
     :param indexed_show: (Indexer Show object) The indexed show from -for example- tvdb. It might already have some
@@ -143,8 +152,8 @@ def check_existing_shows(indexed_show, indexer):
                       {'name': show.name, 'id': indexed_show['id']})
             raise IndexerShowAllreadyInLibrary('The show {0} has already been added by the indexer {1}. '
                                                'Please remove the show, before you can add it through {2}.'
-                                               .format(show.name, indexerApi(show.indexer).name,
-                                                       indexerApi(indexer).name))
+                                               .format(show.name, IndexerAPI(show.indexer).name,
+                                                       IndexerAPI(indexer).name))
 
         for new_show_external_key in new_show_externals.keys():
             if show.indexer not in other_indexers:
@@ -166,8 +175,8 @@ def check_existing_shows(indexed_show, indexer):
                 )
                 raise IndexerShowAllreadyInLibrary('The show {0} has already been added by the indexer {1}. '
                                                    'Please remove the show, before you can add it through {2}.'
-                                                   .format(show.name, indexerApi(show.indexer).name,
-                                                           indexerApi(indexer).name))
+                                                   .format(show.name, IndexerAPI(show.indexer).name,
+                                                           IndexerAPI(indexer).name))
 
 
 def load_externals_from_db(indexer=None, indexer_id=None):
@@ -181,20 +190,20 @@ def load_externals_from_db(indexer=None, indexer_id=None):
     externals = {}
 
     main_db_con = db.DBConnection()
-    sql = (b'SELECT indexer, indexer_id, mindexer, mindexer_id '
-           b'FROM indexer_mapping '
-           b'WHERE (indexer = ? AND indexer_id = ?) '
-           b'OR (mindexer = ? AND mindexer_id = ?)')
+    sql = ('SELECT indexer, indexer_id, mindexer, mindexer_id '
+           'FROM indexer_mapping '
+           'WHERE (indexer = ? AND indexer_id = ?) '
+           'OR (mindexer = ? AND mindexer_id = ?)')
 
     results = main_db_con.select(sql, [indexer, indexer_id, indexer, indexer_id])
 
     for result in results:
         try:
-            if result[b'indexer'] == indexer:
-                externals[mappings[result[b'mindexer']]] = result[b'mindexer_id']
+            if result['indexer'] == indexer:
+                externals[mappings[result['mindexer']]] = result['mindexer_id']
             else:
-                externals[mappings[result[b'indexer']]] = result[b'indexer_id']
+                externals[mappings[result['indexer']]] = result['indexer_id']
         except KeyError as e:
-            log.error(u'Indexer not supported in current mappings: {id}', {'id': e.message})
+            log.error(u'Indexer not supported in current mappings: {id}', {'id': e})
 
     return externals

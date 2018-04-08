@@ -2,8 +2,6 @@
 
 """Provider code for Nyaa."""
 
-from __future__ import unicode_literals
-
 import logging
 
 from medusa import tv
@@ -20,7 +18,7 @@ class NyaaProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(NyaaProvider, self).__init__('Nyaa')
+        super().__init__('Nyaa')
 
         # Credentials
         self.public = True

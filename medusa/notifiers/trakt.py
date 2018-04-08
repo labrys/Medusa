@@ -1,22 +1,25 @@
 """Trakt notifier module."""
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import logging
+
+from traktor import (
+    AuthException, TokenExpiredException, TraktApi,
+    TraktException,
+)
 
 from medusa import app
 from medusa.helpers import get_title_without_year
 from medusa.indexers.utils import get_trakt_indexer
 from medusa.logger.adapters.style import BraceAdapter
 
-from traktor import AuthException, TokenExpiredException, TraktApi, TraktException
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
 
-class Notifier(object):
+class Notifier:
     """A "notifier" for trakt.tv which keeps track of what has and hasn't been added to your library."""
 
     def notify_snatch(self, ep_name, is_proper):

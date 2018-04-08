@@ -2,58 +2,94 @@
 """First modules to initialize."""
 
 import codecs
+import collections
 import datetime
+import logging
 import mimetypes
 import os
-import shutil
 import sys
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
 
 
 def initialize():
     """Initialize all fixes and workarounds."""
+    log.debug('Beginning initializations')
     _check_python_version()
-    _configure_syspath()
-    _monkey_patch_fs_functions()
     _early_basic_logging()
-    _register_utf8_codec()
-    _ssl_configuration()
-    _configure_mimetypes()
-    _handle_old_tornado()
-    _unload_system_dogpile()
-    _use_shutil_custom()
-    _urllib3_disable_warnings()
     _strptime_workaround()
+    _register_utf8_codec()
+    _configure_syspath()
+    _unload_system_dogpile()
+    # configuration
+    _configure_mimetypes()
+    _configure_ssl()
     _configure_guessit()
     _configure_subliminal()
     _configure_knowit()
+    log.debug('Finished initializations')
 
 
 def _check_python_version():
+    log.debug('Checking python version: {}'.format(sys.version))
     if sys.version_info < (2, 7):
-        print('Sorry, requires Python 2.7.x')
-        sys.exit(1)
+        sys.exit('Sorry, requires Python 2.7.x')
 
 
-def _lib_location():
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'lib'))
+def _root_location():
+    here = os.path.dirname(__file__)
+    root = os.path.join(here, '..', '..')
+    abs_root = os.path.abspath(root)
+    return abs_root
 
 
-def _ext_lib_location():
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'ext'))
+def _pkg_location(root):
+    return os.path.join(root, 'pkgs')
+
+
+def _custom_pkg_locatoin(root):
+    return os.path.join(root, 'custom')
+
+
+def _common_pkg_location(root):
+    return os.path.join(root, 'common')
+
+
+def _py_version_specific_packages(root, version):
+    return os.path.join(root, 'py{0}'.format(version))
 
 
 def _configure_syspath():
-    sys.path.insert(1, _lib_location())
-    sys.path.insert(1, _ext_lib_location())
+    root = _root_location()
+    log.debug('Project root location: {}'.format(root))
+    pkg_root = _pkg_location(root)
+    log.debug('Package root location: {}'.format(pkg_root))
+
+    py_ver = sys.version_info
+    major_ver_pkgs = _py_version_specific_packages(pkg_root, py_ver.major)
+
+    pkgs = collections.OrderedDict()
+    pkgs['Custom'] = _custom_pkg_locatoin(pkg_root)
+    pkgs['Common'] = _common_pkg_location(pkg_root)
+    pkgs['Python version specific'] = major_ver_pkgs
+
+    log.debug('Initial sys.path = {}'.format(sys.path))
+    log.debug('Inserting libs')
+    for pkg, loc in pkgs.items():
+        log.debug('{name} package location: {dir}'.format(name=pkg, dir=loc))
+        sys.path.insert(1, loc)
+    log.debug('Current sys.path = {}'.format(sys.path))
 
 
 def _register_utf8_codec():
-    codecs.register(lambda name: codecs.lookup('utf-8') if name == 'cp65001' else None)
-
-
-def _monkey_patch_fs_functions():
-    from medusa.init import filesystem
-    filesystem.initialize()
+    def _register_utf8(value):
+        if value.lower() == 'cp65001':
+            utf8 = codecs.lookup('utf-8')
+            log.debug('Registering {}'.format(utf8))
+            return utf8
+    log.debug('Registering codecs')
+    codecs.register(_register_utf8)
 
 
 def _early_basic_logging():
@@ -61,7 +97,7 @@ def _early_basic_logging():
     logging.basicConfig()
 
 
-def _ssl_configuration():
+def _configure_ssl():
     # https://mail.python.org/pipermail/python-dev/2014-September/136300.html
     if sys.version_info >= (2, 7, 9):
         import ssl
@@ -70,42 +106,33 @@ def _ssl_configuration():
 
 def _configure_mimetypes():
     # Fix mimetypes on misconfigured systems
-    mimetypes.add_type("text/css", ".css")
-    mimetypes.add_type("application/sfont", ".otf")
-    mimetypes.add_type("application/sfont", ".ttf")
-    mimetypes.add_type("application/javascript", ".js")
-    mimetypes.add_type("application/font-woff", ".woff")
-    # Not sure about this one, but we also have halflings in .woff so I think it wont matter
-    # mimetypes.add_type("application/font-woff2", ".woff2")
+    fixes = {
+        '.css': 'text/css',
+        '.js': 'application/javascript',
+        '.otf': 'application/sfont',
+        '.ttf': 'application/sfont',
+        '.woff': 'application/font-woff',
+        '.woff2': 'application/font-woff2',
+    }
+    for extension, mimetype in fixes.items():
+        mimetypes.add_type(mimetype, extension)
 
 
-def _handle_old_tornado():
-    # Do this before application imports, to prevent locked files and incorrect import
-    old_tornado = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'tornado'))
-    if os.path.isdir(old_tornado):
-        shutil.move(old_tornado, old_tornado + '_kill')
-        shutil.rmtree(old_tornado + '_kill')
+def _unload_modules(name):
+    log.debug('Checking if {module} is loaded'.format(module=name))
+    if name in sys.modules:
+        log.debug('{module} is loaded; attempting to remove it')
+        del sys.modules[name]
+        log.debug('{module} removed')
 
 
 def _unload_system_dogpile():
-    # An issue found on synology DSM makes the dogpile module from the system to be always loaded before
-    # sys.path is changed. # That causes the application to fail to start because that version is old and some submodules are not found.
-    # http://stackoverflow.com/questions/2918898/prevent-python-from-caching-the-imported-modules
-    try:
-        if 'dogpile' in sys.modules:
-            del sys.modules['dogpile']
-    except AttributeError:
-        pass
-
-
-def _use_shutil_custom():
-    import shutil_custom
-    shutil.copyfile = shutil_custom.copyfile_custom
-
-
-def _urllib3_disable_warnings():
-    import requests
-    requests.packages.urllib3.disable_warnings()
+    # An issue found on Synology DSM makes the dogpile module from the system
+    # always load before sys.path is changed causing the application to fail
+    # to start because that version is old and some submodules are not found.
+    # prevent
+    # http://stackoverflow.com/questions/2918898
+    _unload_modules('dogpile')
 
 
 def _strptime_workaround():
@@ -124,32 +151,61 @@ def _configure_guessit():
 
 def _configure_subliminal():
     """Load subliminal with our custom configuration."""
-    from subliminal import provider_manager, refiner_manager
+    log.debug('Configuring subliminal')
 
-    basename = __name__.split('.')[0]
+    try:
+        from subliminal import provider_manager, refiner_manager
+    except ImportError:
+        log.warning('Subliminal not available!'
+                    ' Subtitles will not be donwloaded')
+        return
 
-    # Unregister
-    # for name in ('legendastv = subliminal.providers.legendastv:LegendasTVProvider',):
-    #    provider_manager.internal_extensions.remove(name)
-    #    provider_manager.registered_extensions.append(name)
-    #    provider_manager.unregister(name)
+    base = __name__.split('.')[0]
+    application = '{base}.subtitles'.format(base=base)
 
-    # Register
-    for name in ('napiprojekt = subliminal.providers.napiprojekt:NapiProjektProvider',
-                 'itasa = {basename}.subtitle_providers.itasa:ItaSAProvider'.format(basename=basename),
-                 'wizdom = {basename}.subtitle_providers.wizdom:WizdomProvider'.format(basename=basename)):
-        provider_manager.register(name)
+    provider_config = {
+        'subliminal': {
+            'napiprojekt': 'napiprojekt:NapiProjektProvider',
+        },
+        application: {
+            'itasa': 'itasa:ItaSAProvider',
+            'wizdom': 'wizdom:WizdomProvider',
+        }
+    }
 
-    refiner_manager.register('release = {basename}.refiners.release:refine'.format(basename=basename))
-    refiner_manager.register('tvepisode = {basename}.refiners.tv_episode:refine'.format(basename=basename))
+    refiner_config = {
+        application: {
+            'release': 'release:refine',
+            'tvepisode': 'tv_episode:refine',
+        }
+    }
+
+    def configure(category, config, manager):
+        for source, items in config.items():
+            for name, item in items.items():
+                msg = 'Registering {type} from {source}: {name}'
+                log.info(msg.format(type=category, source=source, name=name))
+                entry_point = '{name} = {source}.{category}s.{item}'.format(
+                    name=name, source=source, category=category,
+                    item=item.format(base=source),
+                )
+                manager.register(entry_point)
+
+    configure('provider', provider_config, provider_manager)
+    configure('refiner', refiner_config, refiner_manager)
 
 
 def _configure_knowit():
     from knowit import api
     from knowit.utils import detect_os
 
+    log.debug('Configuring knowit')
+
     os_family = detect_os()
-    suggested_path = os.path.join(_lib_location(), 'native', os_family)
+    root = _root_location()
+    pkg_root = _pkg_location(root)
+    custom = _custom_pkg_locatoin(pkg_root)
+    suggested_path = os.path.join(custom, 'native', os_family)
     if os_family == 'windows':
         subfolder = 'x86_64' if sys.maxsize > 2 ** 32 else 'i386'
         suggested_path = os.path.join(suggested_path, subfolder)

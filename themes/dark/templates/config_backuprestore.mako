@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     import datetime
@@ -5,7 +13,7 @@
     from medusa import app
     from medusa.common import SKIPPED, WANTED, UNAIRED, ARCHIVED, IGNORED, SNATCHED, SNATCHED_PROPER, SNATCHED_BEST, FAILED
     from medusa.common import Quality, qualityPresets, statusStrings, qualityPresetStrings, cpu_presets
-    from medusa.sbdatetime import sbdatetime, date_presets, time_presets
+    from medusa.date_time import DateTime, date_presets, time_presets
     from medusa import config
     from medusa import metadata
     from medusa.metadata.generic import GenericMetadata
@@ -38,7 +46,7 @@
                         <div class="field-pair">
                             Select the folder you wish to save your backup file to:
                             <br><br>
-                            <input type="text" name="backupDir" id="backupDir" class="form-control input-sm input350"/>
+                            <input type="text" name="backup_dir" id="backup_dir" class="form-control input-sm input350"/>
                             <input class="btn btn-inline" type="button" value="Backup" id="Backup" />
                             <br>
                         </div>

@@ -43,10 +43,10 @@ const lintTheme = theme => {
 const lint = () => {
     return gulp
         .src([
-            'themes-default/*/static/js/**/*.js',
-            '!themes-default/*/static/js/lib/**',
-            '!themes-default/*/static/js/*.min.js',
-            '!themes-default/*/static/js/vender.js',
+            'themes/*/assets/js/**/*.js',
+            '!themes/*/assets/js/lib/**',
+            '!themes/*/assets/js/*.min.js',
+            '!themes/*/assets/js/vender.js',
             '!node_modules/**'
         ])
         .pipe(xo())

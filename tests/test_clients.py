@@ -1,12 +1,13 @@
 # coding=utf-8
-"""Tests for medusa.clients.torrent module."""
+"""Tests for medusa.downloaders.torrent module."""
 
-import medusa.clients.torrent as sut
-from medusa.clients.torrent import (
-    deluge_client, deluged_client, download_station_client, mlnet_client,
-    qbittorrent_client, rtorrent_client, transmission_client, utorrent_client
-)
 import pytest
+
+import medusa.downloaders.torrent as sut
+from medusa.downloaders.torrent import (
+    deluge_client, deluged_client, download_station_client, mlnet_client,
+    qbittorrent_client, rtorrent_client, transmission_client, utorrent_client,
+)
 
 
 @pytest.mark.parametrize('p', [

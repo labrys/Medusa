@@ -13,10 +13,6 @@ class MutexLock(AbstractFileLock):
     """:class:`MutexLock` is a thread-based rw lock based on :class:`dogpile.core.ReadWriteMutex`."""
 
     def __init__(self, filename):
-        """Constructor.
-
-        :param filename:
-        """
         self.mutex = ReadWriteMutex()
 
     def acquire_read_lock(self, wait):
@@ -37,8 +33,11 @@ class MutexLock(AbstractFileLock):
         """Default release_write_lock."""
         return self.mutex.release_write_lock()
 
+
 cache = make_region()
+cache.invalidate(hard=True)
 memory_cache = make_region()
+memory_cache.invalidate(hard=True)
 
 
 def configure(cache_dir):
@@ -46,20 +45,30 @@ def configure(cache_dir):
     # memory cache
     from subliminal.cache import region as subliminal_cache
 
-    memory_cache.configure('dogpile.cache.memory', expiration_time=timedelta(hours=1))
+    memory_cache.configure(
+        'dogpile.cache.memory',
+        expiration_time=timedelta(hours=1),
+    )
 
     # subliminal cache
-    subliminal_cache.configure('dogpile.cache.dbm',
-                               expiration_time=timedelta(days=30),
-                               arguments={
-                                   'filename': os.path.join(cache_dir, 'subliminal.dbm'),
-                                   'lock_factory': MutexLock})
+    subliminal_cache.configure(
+        'dogpile.cache.dbm',
+        expiration_time=timedelta(days=30),
+        arguments={
+            'filename': os.path.join(cache_dir, 'subliminal.dbm'),
+            'lock_factory': MutexLock
+        }
+    )
 
     # application cache
-    cache.configure('dogpile.cache.dbm',
-                    expiration_time=timedelta(days=1),
-                    arguments={'filename': os.path.join(cache_dir, 'application.dbm'),
-                               'lock_factory': MutexLock})
+    cache.configure(
+        'dogpile.cache.dbm',
+        expiration_time=timedelta(days=1),
+        arguments={
+            'filename': os.path.join(cache_dir, 'application.dbm'),
+            'lock_factory': MutexLock
+        }
+    )
 
 
 def fallback():

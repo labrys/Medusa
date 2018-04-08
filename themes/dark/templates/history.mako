@@ -1,3 +1,11 @@
+<%
+    import logging
+
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
+    log.debug('Loading {}'.format(__file__))
+%>
 <%inherit file="/layouts/main.mako"/>
 <%!
     from medusa import app
@@ -7,7 +15,7 @@
     import time
     from random import choice
     from medusa import providers
-    from medusa.sbdatetime import sbdatetime
+    from medusa.date_time import DateTime
     from medusa.common import SKIPPED, WANTED, UNAIRED, ARCHIVED, IGNORED, SNATCHED, SNATCHED_PROPER, SNATCHED_BEST, FAILED, DOWNLOADED, SUBTITLED
     from medusa.common import Quality, statusStrings, Overview
     from medusa.show.history import History
@@ -79,11 +87,11 @@
                     <% composite = Quality.split_composite_status(int(hItem.action)) %>
                     <tr>
                         <td align="center" class="triggerhighlight">
-                            <% airDate = sbdatetime.sbfdatetime(datetime.strptime(str(hItem.date), History.date_format), show_seconds=True) %>
+                            <% airDate = DateTime.display_datetime(datetime.strptime(str(hItem.date), History.date_format), show_seconds=True) %>
                             <% isoDate = datetime.strptime(str(hItem.date), History.date_format).isoformat('T') %>
                             <time datetime="${isoDate}" class="date">${airDate}</time>
                         </td>
-                        <td class="tvShow triggerhighlight"><a data-indexer-to-name="${hItem.indexer_id}") href="home/displayShow?indexername=indexer-to-name&seriesid=${hItem.show_id}#season-${hItem.season}">${hItem.show_name} - ${"S%02i" % int(hItem.season)}${"E%02i" % int(hItem.episode)} ${'<span class="quality Proper">Proper</span>' if hItem.proper_tags else ''} </a></td>
+                        <td class="tvShow triggerhighlight"><a data-indexer-to-name="${hItem.indexer_id}") href="home/display_series?indexername=indexer-to-name&seriesid=${hItem.show_id}#season-${hItem.season}">${hItem.show_name} - ${"S%02i" % int(hItem.season)}${"E%02i" % int(hItem.episode)} ${'<span class="quality Proper">Proper</span>' if hItem.proper_tags else ''} </a></td>
                         <td class="triggerhighlight"align="center" ${'class="subtitles_column"' if composite.status == SUBTITLED else ''}>
                         % if composite.status == SUBTITLED:
                             <img width="16" height="11" style="vertical-align:middle;" src="images/subtitles/flags/${hItem.resource}.png" onError="this.onerror=null;this.src='images/flags/unknown.png';">
@@ -98,13 +106,13 @@
                         </td>
                         <td align="center" class="triggerhighlight">
                         % if composite.status in [DOWNLOADED, ARCHIVED]:
-                            % if hItem.provider != "-1":
+                            % if int(hItem.provider) != -1:
                                 <span style="vertical-align:middle;"><i>${hItem.provider}</i></span>
                             % else:
                                 <span style="vertical-align:middle;"><i>Unknown</i></span>
                             % endif
                         % else:
-                            % if hItem.provider > 0:
+                            % if int(hItem.provider) > 0:
                                 % if composite.status in [SNATCHED, FAILED]:
                                     <% provider = providers.get_provider_class(GenericProvider.make_id(hItem.provider)) %>
                                     % if provider is not None:
@@ -147,13 +155,13 @@
                 % for hItem in compactResults:
                     <tr>
                         <td align="center" class="triggerhighlight">
-                            <% airDate = sbdatetime.sbfdatetime(datetime.strptime(str(hItem.actions[0].date), History.date_format), show_seconds=True) %>
+                            <% airDate = DateTime.display_datetime(datetime.strptime(str(hItem.actions[0].date), History.date_format), show_seconds=True) %>
                             <% isoDate = datetime.strptime(str(hItem.actions[0].date), History.date_format).isoformat('T') %>
                             <time datetime="${isoDate}" class="date">${airDate}</time>
                         </td>
                         <td class="tvShow triggerhighlight">
                             <% proper_tags = [action.proper_tags for action in hItem.actions if action.proper_tags] %>
-                            <span><a data-indexer-to-name="${hItem.index.indexer_id}") href="home/displayShow?indexername=indexer-to-name&seriesid=${hItem.index.show_id}#season-${hItem.index.season}">${hItem.show_name} - ${"S%02i" % int(hItem.index.season)}${"E%02i" % int(hItem.index.episode)} ${'<span class="quality Proper">Proper</span>' if proper_tags else ''}</a></span>
+                            <span><a data-indexer-to-name="${hItem.index.indexer_id}") href="home/display_series?indexername=indexer-to-name&seriesid=${hItem.index.show_id}#season-${hItem.index.season}">${hItem.show_name} - ${"S%02i" % int(hItem.index.season)}${"E%02i" % int(hItem.index.episode)} ${'<span class="quality Proper">Proper</span>' if proper_tags else ''}</a></span>
                         </td>
                         <td class="triggerhighlight" align="center" provider="${str(sorted(hItem.actions)[0].provider)}">
                             % for cur_action in sorted(hItem.actions, key=lambda x: x.date):

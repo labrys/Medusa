@@ -25,26 +25,27 @@ from medusa.common import (
     UNAIRED,
     WANTED,
 )
-from medusa.db import DBConnection
+from medusa.databases.db import DBConnection
+from medusa.date_time import DateTime
 from medusa.helper.common import dateFormat, timeFormat
 from medusa.helpers.quality import get_quality_string
 from medusa.network_timezones import parse_date_time
-from medusa.sbdatetime import sbdatetime
 from medusa.tv.series import SeriesIdentifier
 
 
-class ComingEpisodes(object):
+class ComingEpisodes:
     """
     Missed:   yesterday...(less than 1 week)
     Today:    today
     Soon:     tomorrow till next week
     Later:    later than next week
     """
+
     categories = ['later', 'missed', 'soon', 'today']
     sorts = {
-        'date': (lambda a, b: cmp(a['localtime'], b['localtime'])),
-        'network': (lambda a, b: cmp((a['network'], a['localtime']), (b['network'], b['localtime']))),
-        'show': (lambda a, b: cmp((a['show_name'], a['localtime']), (b['show_name'], b['localtime']))),
+        'date': (lambda a: a['localtime']),
+        'network': (lambda a: (a['network'], a['localtime'])),
+        'show': (lambda a: (a['show_name'], a['localtime'])),
     }
 
     def __init__(self):
@@ -59,7 +60,6 @@ class ComingEpisodes(object):
         :param paused: ``True`` to include paused shows, ``False`` otherwise
         :return: The list of coming episodes
         """
-
         categories = ComingEpisodes._get_categories(categories)
         sort = ComingEpisodes._get_sort(sort)
 
@@ -123,10 +123,10 @@ class ComingEpisodes(object):
 
         for index, item in enumerate(results):
             item['series_slug'] = str(SeriesIdentifier.from_id(int(item['indexer']), item['indexer_id']))
-            results[index]['localtime'] = sbdatetime.convert_to_setting(
+            results[index]['localtime'] = DateTime.convert_to_setting(
                 parse_date_time(item['airdate'], item['airs'], item['network']))
 
-        results.sort(ComingEpisodes.sorts[sort])
+        results.sort(key=ComingEpisodes.sorts[sort])
 
         if not group:
             return results
@@ -156,10 +156,10 @@ class ComingEpisodes(object):
                 result['network'] = ''
 
             result['quality'] = get_quality_string(result['quality'])
-            result['airs'] = sbdatetime.sbftime(result['localtime'], t_preset=timeFormat).lstrip('0').replace(' 0', ' ')
+            result['airs'] = DateTime.display_time(result['localtime'], t_preset=timeFormat).lstrip('0').replace(' 0', ' ')
             result['weekday'] = 1 + date.fromordinal(result['airdate']).weekday()
             result['tvdbid'] = result['indexer_id']
-            result['airdate'] = sbdatetime.sbfdate(result['localtime'], d_preset=dateFormat)
+            result['airdate'] = DateTime.display_date(result['localtime'], d_preset=dateFormat)
             result['localtime'] = result['localtime'].toordinal()
 
             grouped_results[category].append(result)

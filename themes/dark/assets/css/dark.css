@@ -230,11 +230,11 @@ td.tvShow a:hover {
 }
 
 /* =======================================================================
-home_addShows.mako
+home_add_series.mako
 ========================================================================== */
 
 /* =======================================================================
-home_newShow.mako
+home_new_series.mako
 ========================================================================== */
 
 #displayText {
@@ -249,7 +249,7 @@ home_newShow.mako
 home_addExistingShow.mako
 ========================================================================== */
 
-ul#rootDirStaticList li {
+ul#root_dirStaticList li {
     padding: 4px 5px;
     margin: 2px;
     list-style: none outside none;
@@ -260,7 +260,7 @@ ul#rootDirStaticList li {
 }
 
 /* =======================================================================
-home_recommendedShows.mako
+home_recommended_series.mako
 ========================================================================== */
 
 .recommended-container {
@@ -272,7 +272,7 @@ home_recommendedShows.mako
 }
 
 /* =======================================================================
-displayShow.mako
+display_series.mako
 ========================================================================== */
 
 #prevShow,
@@ -463,7 +463,7 @@ config*.mako
 }
 
 /* =======================================================================
-config_postProcessing.mako
+config_post_processing.mako
 ========================================================================== */
 
 #config div.example {

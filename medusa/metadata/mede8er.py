@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from __future__ import unicode_literals
+
 
 import datetime
 import io
@@ -9,18 +9,18 @@ import os
 
 from medusa import helpers
 from medusa.helper.common import dateFormat, episode_num, replace_extension
-from medusa.helper.exceptions import ex
-from medusa.indexers.api import indexerApi
-from medusa.indexers.exceptions import IndexerEpisodeNotFound, IndexerSeasonNotFound
+from medusa.indexers.api import IndexerAPI
+from medusa.indexers.exceptions import (
+    IndexerEpisodeNotFound,
+    IndexerSeasonNotFound,
+)
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.metadata import media_browser
 
-from six import string_types, text_type
-
 try:
-    import xml.etree.cElementTree as etree
+    import xml.etree.cElementTree as ETree
 except ImportError:
-    import xml.etree.ElementTree as etree
+    import xml.etree.ElementTree as ETree
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -97,35 +97,35 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
         if not my_show:
             return False
 
-        root_node = etree.Element('details')
-        tv_node = etree.SubElement(root_node, 'movie')
+        root_node = ETree.Element('details')
+        tv_node = ETree.SubElement(root_node, 'movie')
         tv_node.attrib['isExtra'] = 'false'
         tv_node.attrib['isSet'] = 'false'
         tv_node.attrib['isTV'] = 'true'
 
-        title = etree.SubElement(tv_node, 'title')
+        title = ETree.SubElement(tv_node, 'title')
         title.text = my_show['seriesname']
 
         if getattr(my_show, 'genre', None):
-            genres = etree.SubElement(tv_node, 'genres')
+            genres = ETree.SubElement(tv_node, 'genres')
             for genre in my_show['genre'].split('|'):
                 if genre and genre.strip():
-                    cur_genre = etree.SubElement(genres, 'Genre')
+                    cur_genre = ETree.SubElement(genres, 'Genre')
                     cur_genre.text = genre.strip()
 
         if getattr(my_show, 'firstaired', None):
-            first_aired = etree.SubElement(tv_node, 'premiered')
+            first_aired = ETree.SubElement(tv_node, 'premiered')
             first_aired.text = my_show['firstaired']
             try:
-                year_text = text_type(datetime.datetime.strptime(my_show['firstaired'], dateFormat).year)
+                year_text = datetime.datetime.strptime(my_show['firstaired'], dateFormat).year
                 if year_text:
-                    year = etree.SubElement(tv_node, 'year')
+                    year = ETree.SubElement(tv_node, 'year')
                     year.text = year_text
             except Exception:
                 pass
 
         if getattr(my_show, 'overview', None):
-            plot = etree.SubElement(tv_node, 'plot')
+            plot = ETree.SubElement(tv_node, 'plot')
             plot.text = my_show['overview']
 
         if getattr(my_show, 'rating', None):
@@ -135,59 +135,57 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
                 rating = 0
 
             if rating:
-                rating = etree.SubElement(tv_node, 'rating')
-                rating.text = text_type(rating)
+                rating = ETree.SubElement(tv_node, 'rating')
+                rating.text = rating
 
         if getattr(my_show, 'status', None):
-            status = etree.SubElement(tv_node, 'status')
+            status = ETree.SubElement(tv_node, 'status')
             status.text = my_show['status']
 
         if getattr(my_show, 'contentrating', None):
-            mpaa = etree.SubElement(tv_node, 'mpaa')
+            mpaa = ETree.SubElement(tv_node, 'mpaa')
             mpaa.text = my_show['contentrating']
 
         if getattr(my_show, 'imdb_id', None):
-            imdb_id = etree.SubElement(tv_node, 'id')
+            imdb_id = ETree.SubElement(tv_node, 'id')
             imdb_id.attrib['moviedb'] = 'imdb'
             imdb_id.text = my_show['imdb_id']
 
         if getattr(my_show, 'id', None):
-            indexer_id = etree.SubElement(tv_node, 'indexerid')
+            indexer_id = ETree.SubElement(tv_node, 'indexerid')
             indexer_id.text = my_show['id']
 
         if getattr(my_show, 'runtime', None):
-            runtime = etree.SubElement(tv_node, 'runtime')
+            runtime = ETree.SubElement(tv_node, 'runtime')
             runtime.text = my_show['runtime']
 
         if getattr(my_show, '_actors', None):
-            cast = etree.SubElement(tv_node, 'cast')
+            cast = ETree.SubElement(tv_node, 'cast')
             for actor in my_show['_actors']:
                 if 'name' in actor and actor['name'].strip():
-                    cur_actor = etree.SubElement(cast, 'actor')
+                    cur_actor = ETree.SubElement(cast, 'actor')
                     cur_actor.text = actor['name'].strip()
 
         helpers.indent_xml(root_node)
 
-        data = etree.ElementTree(root_node)
+        data = ETree.ElementTree(root_node)
 
         return data
 
     def _ep_data(self, ep_obj):
         """
-        Creates an elementTree XML structure for a MediaBrowser style episode.xml
-        and returns the resulting data object.
+        Creates an elementTree XML structure for a MediaBrowser style episode.xml and returns the resulting data object.
 
-        show_obj: a Series instance to create the NFO for
+        :param ep_obj: an Episode instance to create the NFO for
         """
-
         eps_to_write = [ep_obj] + ep_obj.related_episodes
 
         my_show = self._get_show_data(ep_obj.series)
         if not my_show:
             return None
 
-        root_node = etree.Element('details')
-        movie = etree.SubElement(root_node, 'movie')
+        root_node = ETree.Element('details')
+        movie = ETree.SubElement(root_node, 'movie')
 
         movie.attrib['isExtra'] = 'false'
         movie.attrib['isSet'] = 'false'
@@ -203,7 +201,7 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
                     'Unable to find episode {ep_num} on {indexer}...'
                     ' has it been removed? Should I delete from db?', {
                         'ep_num': episode_num(ep_to_write.season, ep_to_write.episode),
-                        'indexer': indexerApi(ep_obj.series.indexer).name,
+                        'indexer': IndexerAPI(ep_obj.series.indexer).name,
                     }
                 )
                 return None
@@ -213,7 +211,7 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
 
                 # default to today's date for specials if firstaired is not set
                 if ep_to_write.season == 0 and not getattr(my_ep, 'firstaired', None):
-                    my_ep['firstaired'] = text_type(datetime.date.fromordinal(1))
+                    my_ep['firstaired'] = datetime.date.fromordinal(1)
 
                 if not (getattr(my_ep, 'episodename', None) and getattr(my_ep, 'firstaired', None)):
                     return None
@@ -221,34 +219,34 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
                 episode = movie
 
                 if ep_to_write.name:
-                    episode_name = etree.SubElement(episode, 'title')
+                    episode_name = ETree.SubElement(episode, 'title')
                     episode_name.text = ep_to_write.name
 
-                season_number = etree.SubElement(episode, 'season')
-                season_number.text = text_type(ep_to_write.season)
+                season_number = ETree.SubElement(episode, 'season')
+                season_number.text = ep_to_write.season
 
-                episode_number = etree.SubElement(episode, 'episode')
-                episode_number.text = text_type(ep_to_write.episode)
+                episode_number = ETree.SubElement(episode, 'episode')
+                episode_number.text = ep_to_write.episode
 
                 if getattr(my_show, 'firstaired', None):
                     try:
-                        year_text = text_type(datetime.datetime.strptime(my_show['firstaired'], dateFormat).year)
+                        year_text = datetime.datetime.strptime(my_show['firstaired'], dateFormat).year
                         if year_text:
-                            year = etree.SubElement(episode, 'year')
+                            year = ETree.SubElement(episode, 'year')
                             year.text = year_text
                     except Exception:
                         pass
 
                 if getattr(my_show, 'overview', None):
-                    plot = etree.SubElement(episode, 'plot')
+                    plot = ETree.SubElement(episode, 'plot')
                     plot.text = my_show['overview']
 
                 if ep_to_write.description:
-                    overview = etree.SubElement(episode, 'episodeplot')
+                    overview = ETree.SubElement(episode, 'episodeplot')
                     overview.text = ep_to_write.description
 
                 if getattr(my_show, 'contentrating', None):
-                    mpaa = etree.SubElement(episode, 'mpaa')
+                    mpaa = ETree.SubElement(episode, 'mpaa')
                     mpaa.text = my_show['contentrating']
 
                 if not ep_obj.related_episodes and getattr(my_ep, 'rating', None):
@@ -258,28 +256,28 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
                         rating = 0
 
                     if rating:
-                        rating = etree.SubElement(episode, 'rating')
-                        rating.text = text_type(rating)
+                        rating = ETree.SubElement(episode, 'rating')
+                        rating.text = rating
 
                 if getattr(my_ep, 'director', None):
-                    director = etree.SubElement(episode, 'director')
+                    director = ETree.SubElement(episode, 'director')
                     director.text = my_ep['director']
 
                 if getattr(my_ep, 'writer', None):
-                    writer = etree.SubElement(episode, 'credits')
+                    writer = ETree.SubElement(episode, 'credits')
                     writer.text = my_ep['writer']
 
                 if getattr(my_show, '_actors', None) or getattr(my_ep, 'gueststars', None):
-                    cast = etree.SubElement(episode, 'cast')
-                    if getattr(my_ep, 'gueststars', None) and isinstance(my_ep['gueststars'], string_types):
+                    cast = ETree.SubElement(episode, 'cast')
+                    if getattr(my_ep, 'gueststars', None) and isinstance(my_ep['gueststars'], str):
                         for actor in (x.strip() for x in my_ep['gueststars'].split('|') if x.strip()):
-                            cur_actor = etree.SubElement(cast, 'actor')
+                            cur_actor = ETree.SubElement(cast, 'actor')
                             cur_actor.text = actor
 
                     if getattr(my_show, '_actors', None):
                         for actor in my_show['_actors']:
                             if 'name' in actor and actor['name'].strip():
-                                cur_actor = etree.SubElement(cast, 'actor')
+                                cur_actor = ETree.SubElement(cast, 'actor')
                                 cur_actor.text = actor['name'].strip()
 
             else:
@@ -300,7 +298,7 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
         # Make it purdy
         helpers.indent_xml(root_node)
 
-        data = etree.ElementTree(root_node)
+        data = ETree.ElementTree(root_node)
 
         return data
 
@@ -309,16 +307,12 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
         Generates and writes show_obj's metadata under the given path to the
         filename given by get_show_file_path()
 
-        show_obj: Series object for which to create the metadata
-
-        path: An absolute or relative path where we should put the file. Note that
-                the file name will be the default show_file_name.
-
         Note that this method expects that _show_data will return an ElementTree
         object. If your _show_data returns data in another format you'll need to
         override this method.
-        """
 
+        :param show_obj: Series object for which to create the metadata
+        """
         data = self._show_data(show_obj)
 
         if not data:
@@ -349,7 +343,7 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
         except IOError as error:
             log.error(
                 'Unable to write file to {location} - are you sure the folder is writable? {error}',
-                {'location': nfo_file_path, 'error': ex(error)}
+                {'location': nfo_file_path, 'error': error}
             )
             return False
 
@@ -361,17 +355,12 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
         given filename root. Uses the episode's name with the extension in
         _ep_nfo_extension.
 
-        ep_obj: Episode object for which to create the metadata
-
-        file_name_path: The file name to use for this metadata. Note that the extension
-                will be automatically added based on _ep_nfo_extension. This should
-                include an absolute path.
-
         Note that this method expects that _ep_data will return an ElementTree
         object. If your _ep_data returns data in another format you'll need to
         override this method.
-        """
 
+        :param ep_obj: an Episode object for which to create the metadata
+        """
         data = self._ep_data(ep_obj)
 
         if not data:
@@ -398,7 +387,7 @@ class Mede8erMetadata(media_browser.MediaBrowserMetadata):
 
         except IOError as e:
             log.error('Unable to write file to {location} - are you sure the folder is writable? {error}',
-                      {'location': nfo_file_path, 'error': ex(e)})
+                      {'location': nfo_file_path, 'error': e})
             return False
 
         return True

@@ -31,7 +31,7 @@ from medusa.server.web.core import (
 )
 from medusa.server.web.home import (
     Home,
-    HomeAddShows,
+    HomeAddSeries,
     HomeChangeLog,
     HomeIRC,
     HomeNews,

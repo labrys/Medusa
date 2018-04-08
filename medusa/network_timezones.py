@@ -1,34 +1,14 @@
 # coding=utf-8
-# Author: Nic Wolfe <nic@wolfeden.ca>
-
-#
-# This file is part of Medusa.
-#
-# Medusa is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Medusa is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Medusa. If not, see <http://www.gnu.org/licenses/>.
-
 import datetime
 import logging
 import re
 
 from dateutil import tz
 
-from medusa import db
-from medusa.app import BASE_PYMEDUSA_URL
+from medusa.app import GITHUB_IO_URL
+from medusa.databases import db
 from medusa.helper.common import try_int
 from medusa.session.core import MedusaSafeSession
-
-from six import iteritems
 
 try:
     app_timezone = tz.tzwinlocal() if tz.tzwinlocal else tz.tzlocal()
@@ -51,9 +31,8 @@ session = MedusaSafeSession()
 # update the network timezone table
 def update_network_dict():
     """Update timezone information from Medusa repositories."""
-
     log.debug(u'Started updating network timezones')
-    url = '{base_url}/sb_network_timezones/network_timezones.txt'.format(base_url=BASE_PYMEDUSA_URL)
+    url = '{base_url}/sb_network_timezones/network_timezones.txt'.format(base_url=GITHUB_IO_URL)
     response = session.get(url)
     if not response or not response.text:
         log.info(u'Updating network timezones failed, this can happen from time to time. URL: %s' % url)
@@ -81,7 +60,7 @@ def update_network_dict():
     network_list = dict(cache_db_con.select('SELECT * FROM network_timezones;'))
 
     queries = []
-    for network, timezone in iteritems(remote_networks):
+    for network, timezone in remote_networks.items():
         existing = network in network_list
         if not existing:
             queries.append(['INSERT OR IGNORE INTO network_timezones VALUES (?,?);', [network, timezone]])
@@ -107,7 +86,7 @@ def update_network_dict():
 # load network timezones from db into dict
 def load_network_dict():
     """
-    Load network timezones from db into dict network_dict (global dict)
+    Load network timezones from db into dict network_dict (global dict).
     """
     try:
         cache_db_con = db.DBConnection('cache.db')
@@ -126,13 +105,12 @@ def load_network_dict():
 # get timezone of a network or return default timezone
 def get_network_timezone(network, _network_dict):
     """
-    Get a timezone of a network from a given network dict
+    Get a timezone of a network from a given network dict.
 
     :param network: network to look up (needle)
     :param _network_dict: dict to look up in (haystack)
     :return:
     """
-
     # Get the name of the networks timezone from _network_dict
     network_tz_name = _network_dict[network] if network in _network_dict else None
 
@@ -147,14 +125,13 @@ def get_network_timezone(network, _network_dict):
 # parse date and time string into local time
 def parse_date_time(d, t, network):
     """
-    Parse date and time string into local time
+    Parse date and time string into local time.
 
     :param d: date string
     :param t: time string
     :param network: network to use as base
     :return: datetime object containing local time
     """
-
     if not network_dict:
         load_network_dict()
 
@@ -185,4 +162,9 @@ def parse_date_time(d, t, network):
 
 
 def test_timeformat(time_string):
+    """
+
+    :param time_string:
+    :return:
+    """
     return time_regex.search(time_string) is not None

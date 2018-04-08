@@ -1,20 +1,4 @@
 # coding=utf-8
-# Author: Nic Wolfe <nic@wolfeden.ca>
-#
-# This file is part of Medusa.
-#
-# Medusa is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Medusa is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Medusa. If not, see <http://www.gnu.org/licenses/>.
 """Common interface for Quality and Status."""
 
 import operator
@@ -23,20 +7,15 @@ import platform
 import re
 import uuid
 from collections import namedtuple
+from functools import reduce
 from os import path
-from fake_useragent import UserAgent, settings as ua_settings
 
 import knowit
+from fake_useragent import UserAgent, settings as ua_settings
 
 from medusa.numdict import NumDict
 from medusa.recompiled import tags
 from medusa.search import PROPER_SEARCH
-
-from six import PY3
-from six.moves import reduce
-
-if PY3:
-    long = int
 
 # If some provider has an issue with functionality of Medusa, other than user
 # agents, it's best to come talk to us rather than block.  It is no different
@@ -50,7 +29,7 @@ VERSION = '0.1.23'
 USER_AGENT = u'Medusa/{version} ({system}; {release}; {instance})'.format(
     version=VERSION, system=platform.system(), release=platform.release(),
     instance=INSTANCE_ID)
-ua_settings.DB = path.abspath(path.join(path.dirname(__file__), '../lib/fake_useragent/ua.json'))
+ua_settings.DB = path.abspath(path.join(path.dirname(__file__), 'ua.json'))
 UA_POOL = UserAgent()
 if SPOOF_USER_AGENT:
     USER_AGENT = UA_POOL.random
@@ -128,7 +107,7 @@ MULTI_EP_STRINGS = NumDict({
 })
 
 
-class Quality(object):
+class Quality:
     """Determine quality and set status codes."""
 
     NONE = 0  # 0
@@ -156,7 +135,7 @@ class Quality(object):
     UNKNOWN = 1 << 15  # 32768
 
     qualityStrings = NumDict({
-        None: "None",
+        # None: "None",
         NONE: "N/A",
         UNKNOWN: "Unknown",
         SDTV: "SDTV",
@@ -204,7 +183,7 @@ class Quality(object):
     })
 
     cssClassStrings = NumDict({
-        None: "None",
+        # None: "None",
         NONE: "N/A",
         UNKNOWN: "Unknown",
         SDTV: "SDTV",
@@ -255,6 +234,12 @@ class Quality(object):
 
     @staticmethod
     def combine_qualities(allowed_qualities, preferred_qualities):
+        """
+
+        :param allowed_qualities:
+        :param preferred_qualities:
+        :return:
+        """
         any_quality = 0
         best_quality = 0
         if allowed_qualities:
@@ -265,6 +250,11 @@ class Quality(object):
 
     @staticmethod
     def split_quality(quality):
+        """
+
+        :param quality:
+        :return:
+        """
         if quality is None:
             quality = Quality.NONE
         allowed_qualities = []
@@ -457,12 +447,23 @@ class Quality(object):
 
     @staticmethod
     def composite_status(status, quality):
+        """
+
+        :param status:
+        :param quality:
+        :return:
+        """
         if quality is None:
             quality = Quality.NONE
         return status + 100 * quality
 
     @staticmethod
     def quality_downloaded(status):
+        """
+
+        :param status:
+        :return:
+        """
         return (status - DOWNLOADED) / 100
 
     @staticmethod
@@ -473,7 +474,7 @@ class Quality(object):
         :param status: to split
         :returns: a namedtuple containing (status, quality)
         """
-        status = long(status)
+        status = int(status)
         if status == UNKNOWN:
             return Quality.composite_status_quality(UNKNOWN, Quality.UNKNOWN)
 
@@ -489,11 +490,8 @@ class Quality(object):
         Get Scene naming parameters from filename and quality.
 
         :param name: filename to check
-        :type name: text_type
         :param quality: int of quality to make sure we get the right release type
-        :type quality: int
         :return: release type and/or encoder type for scene quality naming
-        :rtype: text_type
         """
         rel_type = ''
         name = name.lower()
@@ -533,17 +531,17 @@ class Quality(object):
         # If SDDVD
         if quality == 2:
             rel_type = ' BDRip'
-            if re.search(r'br(-| |\.)?(rip|mux)', name):
+            if re.search(r'br[- .]?(rip|mux)', name):
                 rel_type = ' BRRip'
-            elif re.search(r'dvd(-| |\.)?(rip|mux)', name):
+            elif re.search(r'dvd[- .]?(rip|mux)', name):
                 rel_type = ' DVDRip'
 
         # If any WEB type
         if quality in (32, 64, 1024, 8192):
             rel_type = ' WEB'
-            if re.search(r'web(-| |\.)?dl', name):
+            if re.search(r'web[- .]?dl', name):
                 rel_type = ' WEB-DL'
-            elif re.search(r'web(-| |\.)?(rip|mux)', name):
+            elif re.search(r'web[- .]?(rip|mux)', name):
                 rel_type = ' WEBRip'
 
         return rel_type + codec
@@ -826,7 +824,7 @@ HD = Quality.combine_qualities([HD720p, HD1080p], [])
 UHD = Quality.combine_qualities([UHD_4K, UHD_8K], [])
 ANY = Quality.combine_qualities([SD, HD, UHD], [])
 
-# legacy template, cant remove due to reference in main_db upgrade?
+# legacy template, cant remove due to reference in main upgrade?
 BEST = Quality.combine_qualities([Quality.SDTV, Quality.HDTV, Quality.HDWEBDL], [Quality.HDTV])
 
 qualityPresets = (
@@ -898,7 +896,7 @@ statusStrings = StatusStrings({
 })
 
 
-class Overview(object):
+class Overview:
     UNAIRED = UNAIRED  # 1
     SNATCHED = SNATCHED  # 2
     WANTED = WANTED  # 3
@@ -918,7 +916,7 @@ class Overview(object):
         UNAIRED: "unaired",
         SNATCHED: "snatched",
         # we can give these a different class later, otherwise
-        # breaks checkboxes in displayShow for showing different statuses
+        # breaks checkboxes in display_series for showing different statuses
         SNATCHED_BEST: "snatched",
         SNATCHED_PROPER: "snatched"
     })

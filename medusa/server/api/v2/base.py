@@ -8,22 +8,18 @@ import operator
 import traceback
 from datetime import date, datetime
 
-from babelfish.language import Language
-
 import jwt
-
-from medusa import app
-
-from six import string_types, text_type
-
+from babelfish.language import Language
 from tornado.httpclient import HTTPError
 from tornado.web import RequestHandler
+
+from medusa import app
 
 
 class BaseRequestHandler(RequestHandler):
     """A base class used for shared RequestHandler methods."""
 
-    DEFAULT_ALLOWED_METHODS = ('OPTIONS', )
+    DEFAULT_ALLOWED_METHODS = ('OPTIONS',)
 
     #: resource name
     name = None
@@ -58,7 +54,7 @@ class BaseRequestHandler(RequestHandler):
             except jwt.DecodeError:
                 return self._unauthorized('Invalid token.')
         elif authorization.startswith('Basic'):
-            auth_decoded = base64.decodestring(authorization[6:])
+            auth_decoded = base64.decodebytes(authorization[6:])
             username, password = auth_decoded.split(':', 2)
             if username != app.WEB_USERNAME or password != app.WEB_PASSWORD:
                 return self._unauthorized('Invalid user/pass.')
@@ -153,7 +149,7 @@ class BaseRequestHandler(RequestHandler):
         if isinstance(e, HTTPError):
             self.api_finish(e.code, e.message)
         else:
-            super(BaseRequestHandler, self)._handle_request_exception(e)
+            super()._handle_request_exception(e)
 
     def _ok(self, data=None, headers=None, stream=None, content_type=None):
         self.api_finish(200, data=data, headers=headers, stream=stream, content_type=content_type)
@@ -303,7 +299,7 @@ class BaseRequestHandler(RequestHandler):
         :param value:
         :return:
         """
-        if isinstance(value, text_type):
+        if isinstance(value, str):
             return value.lower() == 'true'
 
         return cls._parse(value, bool)
@@ -343,7 +339,7 @@ def json_default_encoder(o):
     if isinstance(o, date):
         return o.isoformat()
 
-    return text_type(o)
+    return o
 
 
 def iter_nested_items(data, prefix=''):
@@ -369,7 +365,7 @@ def set_nested_value(data, key, value):
     data[keys[-1]] = value
 
 
-class PatchField(object):
+class PatchField:
     """Represent a field to be patched."""
 
     def __init__(self, target_type, attr, attr_type,
@@ -406,8 +402,8 @@ class StringField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(StringField, self).__init__(target_type, attr, string_types, validator=validator, converter=converter,
-                                          default_value=default_value, post_processor=post_processor)
+        super().__init__(target_type, attr, str, validator=validator, converter=converter,
+                         default_value=default_value, post_processor=post_processor)
 
 
 class IntegerField(PatchField):
@@ -415,8 +411,8 @@ class IntegerField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(IntegerField, self).__init__(target_type, attr, int, validator=validator, converter=converter,
-                                           default_value=default_value, post_processor=post_processor)
+        super().__init__(target_type, attr, int, validator=validator, converter=converter,
+                         default_value=default_value, post_processor=post_processor)
 
 
 class ListField(PatchField):
@@ -424,8 +420,8 @@ class ListField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(ListField, self).__init__(target_type, attr, list, validator=validator, converter=converter,
-                                        default_value=default_value, post_processor=post_processor)
+        super().__init__(target_type, attr, list, validator=validator, converter=converter,
+                         default_value=default_value, post_processor=post_processor)
 
 
 class BooleanField(PatchField):
@@ -433,15 +429,15 @@ class BooleanField(PatchField):
 
     def __init__(self, target_type, attr, validator=None, converter=int, default_value=None, post_processor=None):
         """Constructor."""
-        super(BooleanField, self).__init__(target_type, attr, bool, validator=validator, converter=converter,
-                                           default_value=default_value, post_processor=post_processor)
+        super().__init__(target_type, attr, bool, validator=validator, converter=converter,
+                         default_value=default_value, post_processor=post_processor)
 
 
 class EnumField(PatchField):
     """Patch enumeration fields."""
 
-    def __init__(self, target_type, attr, enums, attr_type=text_type,
+    def __init__(self, target_type, attr, enums, attr_type=str,
                  converter=None, default_value=None, post_processor=None):
         """Constructor."""
-        super(EnumField, self).__init__(target_type, attr, attr_type, validator=lambda v: v in enums,
-                                        converter=converter, default_value=default_value, post_processor=post_processor)
+        super().__init__(target_type, attr, attr_type, validator=lambda v: v in enums,
+                         converter=converter, default_value=default_value, post_processor=post_processor)

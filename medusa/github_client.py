@@ -61,10 +61,6 @@ def token_authenticate(token):
 def get_user(gh=None):
     """Return the github repository.
 
-    :param organization:
-    :type organization: string
-    :param repo:
-    :type repo: string
     :param gh:
     :type gh: Github
     :return:

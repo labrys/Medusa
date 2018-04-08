@@ -1,4 +1,4 @@
-MEDUSA.addShows.addExistingShow = function() {
+MEDUSA.add_series.addExistingShow = function() {
     // Hide the black/whitelist, because it can only be used for a single anime show
     $.updateBlackWhiteList(undefined);
 
@@ -30,7 +30,7 @@ MEDUSA.addShows.addExistingShow = function() {
             return false;
         }
 
-        window.location.href = $('base').attr('href') + 'addShows/addExistingShows?promptForSettings=' + ($('#promptForSettings').prop('checked') ? 'on' : 'off') + '&shows_to_add=' + dirArr.join('&shows_to_add=');
+        window.location.href = $('base').attr('href') + 'add_series/add_existing_series?prompt_for_settings=' + ($('#prompt_for_settings').prop('checked') ? 'on' : 'off') + '&series_to_add=' + dirArr.join('&series_to_add=');
     });
 
     function loadContent() {
@@ -40,12 +40,12 @@ MEDUSA.addShows.addExistingShow = function() {
                 if (url.length !== 0) {
                     url += '&';
                 }
-                url += 'rootDir=' + encodeURIComponent($(w).attr('id'));
+                url += 'root_dir=' + encodeURIComponent($(w).attr('id'));
             }
         });
 
         $('#tableDiv').html('<img id="searchingAnim" src="images/loading32.gif" height="32" width="32" /> loading folders...');
-        $.get('addShows/massAddTable/', url, data => {
+        $.get('add_series/mass_add_table/', url, data => {
             $('#tableDiv').html(data);
             $('#addRootDirTable').tablesorter({
                 // SortList: [[1,0]],
@@ -61,22 +61,22 @@ MEDUSA.addShows.addExistingShow = function() {
     // @TODO this needs a real name, for now this fixes the issue of the page not loading at all,
     //       before I added this I couldn't get the directories to show in the table
     const a = function() {
-        if (lastTxt === $('#rootDirText').val()) {
+        if (lastTxt === $('#root_dirText').val()) {
             return false;
         }
-        lastTxt = $('#rootDirText').val();
-        $('#rootDirStaticList').html('');
-        $('#rootDirs option').each((i, w) => {
-            $('#rootDirStaticList').append('<li class="ui-state-default ui-corner-all"><input type="checkbox" class="cb dir_check" id="' + $(w).val() + '" checked=checked> <label for="' + $(w).val() + '"><b>' + $(w).val() + '</b></label></li>');
+        lastTxt = $('#root_dirText').val();
+        $('#root_dirStaticList').html('');
+        $('#root_dirs option').each((i, w) => {
+            $('#root_dirStaticList').append('<li class="ui-state-default ui-corner-all"><input type="checkbox" class="cb dir_check" id="' + $(w).val() + '" checked=checked> <label for="' + $(w).val() + '"><b>' + $(w).val() + '</b></label></li>');
         });
         loadContent();
     };
 
     a();
 
-    $('#rootDirText').on('change', a);
+    $('#root_dirText').on('change', a);
 
-    $('#rootDirStaticList').on('click', '.dir_check', loadContent);
+    $('#root_dirStaticList').on('click', '.dir_check', loadContent);
 
     $('#tableDiv').on('click', '.showManage', event => {
         event.preventDefault();

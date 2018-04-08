@@ -2,15 +2,12 @@
 
 """Provider code for Shazbat."""
 
-from __future__ import unicode_literals
-
 import logging
+from urllib.parse import urljoin
 
 from medusa import tv
 from medusa.helper.exceptions import AuthException
 from medusa.providers.torrent.torrent_provider import TorrentProvider
-
-from requests.compat import urljoin
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -21,7 +18,7 @@ class ShazbatProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(ShazbatProvider, self).__init__('Shazbat.tv')
+        super().__init__('Shazbat.tv')
 
         # Credentials
         self.passkey = None

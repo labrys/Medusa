@@ -17,7 +17,7 @@ class ExpiringList(list):
         :param implicit_clean: If enabled, run the clean() method, to check for expired items. Else you'll have to run
         this periodically.
         """
-        list.__init__(self, items or [])
+        super().__init__(items or [])
         self.cache_timeout = cache_timeout
         self.implicit_clean = implicit_clean
 
@@ -25,7 +25,7 @@ class ExpiringList(list):
         """Add new items to the list."""
         if self.implicit_clean:
             self.clean()
-        super(ExpiringList, self).append((int(time.time()), item))
+        super().append((int(time.time()), item))
 
     def clean(self):
         """Use the cache_timeout to remove expired items."""
@@ -86,7 +86,7 @@ class ExpiringKeyValue(list):
         :param implicit_clean: If enabled, run the clean() method, to check for expired items. Else you'll have to run
         this periodically.
         """
-        list.__init__(self, items or [])
+        super().__init__(items or [])
         self.cache_timeout = cache_timeout
         self.implicit_clean = implicit_clean
 
@@ -94,7 +94,7 @@ class ExpiringKeyValue(list):
         """Add new items to the list."""
         if self.implicit_clean:
             self.clean()
-        super(ExpiringKeyValue, self).append((int(time.time()), key, value))
+        super().append((int(time.time()), key, value))
 
     def clean(self):
         """Use the cache_timeout to remove expired items."""

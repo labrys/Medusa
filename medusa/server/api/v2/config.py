@@ -4,10 +4,12 @@ import logging
 import platform
 import sys
 
+from tornado.escape import json_decode
+
 from medusa import (
     app,
-    db,
 )
+from medusa.databases import db
 from medusa.helper.mappings import NonEmptyDict
 from medusa.indexers.config import indexerConfig
 from medusa.server.api.v2.base import (
@@ -20,10 +22,6 @@ from medusa.server.api.v2.base import (
     iter_nested_items,
     set_nested_value,
 )
-
-from six import iteritems, text_type
-
-from tornado.escape import json_decode
 
 log = logging.getLogger(__name__)
 
@@ -66,8 +64,8 @@ class ConfigHandler(BaseRequestHandler):
         'layout.show.specials': BooleanField(app, 'DISPLAY_SHOW_SPECIALS'),
         'layout.show.showListOrder': ListField(app, 'SHOW_LIST_ORDER'),
         'theme.name': StringField(app, 'THEME_NAME'),
-        'backlogOverview.period': StringField(app, 'BACKLOG_PERIOD'),
-        'backlogOverview.status': StringField(app, 'BACKLOG_STATUS'),
+        'backlog_overview.period': StringField(app, 'BACKLOG_PERIOD'),
+        'backlog_overview.status': StringField(app, 'BACKLOG_STATUS'),
     }
 
     def get(self, identifier, path_param=None):
@@ -90,7 +88,7 @@ class ConfigHandler(BaseRequestHandler):
         config_data['themeName'] = app.THEME_NAME
         config_data['posterSortby'] = app.POSTER_SORTBY
         config_data['posterSortdir'] = app.POSTER_SORTDIR
-        config_data['rootDirs'] = app.ROOT_DIRS
+        config_data['root_dirs'] = app.ROOT_DIRS
         config_data['sortArticle'] = app.SORT_ARTICLE
         config_data['timePreset'] = app.TIME_PRESET
         config_data['trimZero'] = app.TRIM_ZERO
@@ -105,11 +103,11 @@ class ConfigHandler(BaseRequestHandler):
         config_data['databaseVersion']['major'] = app.MAJOR_DB_VERSION
         config_data['databaseVersion']['minor'] = app.MINOR_DB_VERSION
         config_data['os'] = platform.platform()
-        config_data['locale'] = '.'.join([text_type(loc or 'Unknown') for loc in app.LOCALE])
+        config_data['locale'] = '.'.join([loc or 'Unknown' for loc in app.LOCALE])
         config_data['localUser'] = app.OS_USER or 'Unknown'
         config_data['programDir'] = app.PROG_DIR
         config_data['configFile'] = app.CONFIG_FILE
-        config_data['dbFilename'] = db.dbFilename()
+        config_data['db_filename'] = db.db_filename()
         config_data['cacheDir'] = app.CACHE_DIR
         config_data['logDir'] = app.LOG_DIR
         config_data['appArgs'] = app.MY_ARGS
@@ -178,12 +176,14 @@ class ConfigHandler(BaseRequestHandler):
         config_data['layout']['show']['specials'] = bool(app.DISPLAY_SHOW_SPECIALS)
         config_data['layout']['show']['showListOrder'] = app.SHOW_LIST_ORDER
         config_data['selectedRootIndex'] = int(app.SELECTED_ROOT) if app.SELECTED_ROOT is not None else -1  # All paths
-        config_data['backlogOverview'] = NonEmptyDict()
-        config_data['backlogOverview']['period'] = app.BACKLOG_PERIOD
-        config_data['backlogOverview']['status'] = app.BACKLOG_STATUS
+        config_data['backlog_overview'] = NonEmptyDict()
+        config_data['backlog_overview']['period'] = app.BACKLOG_PERIOD
+        config_data['backlog_overview']['status'] = app.BACKLOG_STATUS
         config_data['indexers'] = NonEmptyDict()
-        config_data['indexers']['config'] = {text_type(indexer_id): indexer['identifier'] for indexer_id,
-                                             indexer in iteritems(indexerConfig)}
+        config_data['indexers']['config'] = {
+            indexer_id: indexer['identifier']
+            for indexer_id, indexer in indexerConfig.items()
+        }
 
         if not identifier:
             return self._paginate([config_data])

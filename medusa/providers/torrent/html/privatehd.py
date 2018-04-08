@@ -2,9 +2,10 @@
 
 """Provider code for PrivateHD."""
 
-from __future__ import unicode_literals
-
 import logging
+from urllib.parse import urljoin
+
+from requests.utils import dict_from_cookiejar
 
 from medusa import tv
 from medusa.bs4_parser import BS4Parser
@@ -12,9 +13,6 @@ from medusa.helper.common import convert_size
 from medusa.helper.exceptions import AuthException
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.providers.torrent.torrent_provider import TorrentProvider
-
-from requests.compat import urljoin
-from requests.utils import dict_from_cookiejar
 
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
@@ -25,7 +23,7 @@ class PrivateHDProvider(TorrentProvider):
 
     def __init__(self):
         """Initialize the class."""
-        super(PrivateHDProvider, self).__init__('PrivateHD')
+        super().__init__('PrivateHD')
 
         # Credentials
         self.username = None

@@ -2,8 +2,6 @@
 
 """Provider code for Generic Provider."""
 
-from __future__ import unicode_literals
-
 import logging
 import re
 from base64 import b16encode, b32decode
@@ -14,6 +12,8 @@ from os.path import join
 from random import shuffle
 
 from dateutil import parser, tz
+from pytimeparse import parse
+from requests.utils import add_dict_to_cookiejar, dict_from_cookiejar
 
 from medusa import (
     app,
@@ -30,7 +30,7 @@ from medusa.common import (
     SEASON_RESULT,
     USER_AGENT,
 )
-from medusa.db import DBConnection
+from medusa.databases.db import DBConnection
 from medusa.helper.common import (
     sanitize_filename,
 )
@@ -50,10 +50,6 @@ from medusa.session.core import MedusaSafeSession
 from medusa.session.hooks import cloudflare
 from medusa.show.show import Show
 
-from pytimeparse import parse
-
-from requests.utils import add_dict_to_cookiejar, dict_from_cookiejar
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
@@ -61,7 +57,7 @@ log.logger.addHandler(logging.NullHandler())
 recent_results = {}
 
 
-class GenericProvider(object):
+class GenericProvider:
     """Generic provider."""
 
     NZB = 'nzb'
@@ -160,11 +156,11 @@ class GenericProvider(object):
         results = []
 
         for proper_candidate in proper_candidates:
-            series_obj = Show.find_by_id(app.showList, proper_candidate[b'indexer'], proper_candidate[b'showid'])
+            series_obj = Show.find_by_id(app.showList, proper_candidate['indexer'], proper_candidate['showid'])
 
             if series_obj:
                 self.series = series_obj
-                episode_obj = series_obj.get_episode(proper_candidate[b'season'], proper_candidate[b'episode'])
+                episode_obj = series_obj.get_episode(proper_candidate['season'], proper_candidate['episode'])
 
                 for term in self.proper_strings:
                     search_strings = self._get_episode_search_strings(episode_obj, add_string=term)
@@ -196,10 +192,12 @@ class GenericProvider(object):
         :param pk: Primary key for removing duplicates
         :return: An iterable of unique mappings
         """
-        return OrderedDict(
+        gen_items = (
             (item[pk], item)
             for item in items
-        ).values()
+        )
+        unique = OrderedDict(gen_items).values()
+        return list(unique)
 
     def find_search_results(self, series, episodes, search_mode, forced_search=False, download_current_quality=False,
                             manual_search=False, manual_search_type='episode'):
@@ -357,9 +355,9 @@ class GenericProvider(object):
                         # Compare the episodes and season from the result with what was searched.
                         if not [searched_episode for searched_episode in episodes
                                 if searched_episode.season == search_result.parsed_result.season_number and
-                                (searched_episode.episode, searched_episode.scene_episode)
-                                [searched_episode.series.is_scene] in
-                                search_result.parsed_result.episode_numbers]:
+                                                (searched_episode.episode, searched_episode.scene_episode)
+                                                [searched_episode.series.is_scene] in
+                                                search_result.parsed_result.episode_numbers]:
                             log.debug(
                                 "The result {0} doesn't seem to match an episode that we are currently trying to "
                                 "snatch, skipping it", search_result.name
@@ -393,13 +391,13 @@ class GenericProvider(object):
                         )
 
                         if len(sql_results) == 2:
-                            if int(sql_results[0][b'season']) == 0 and int(sql_results[1][b'season']) != 0:
-                                search_result.actual_season = int(sql_results[1][b'season'])
-                                search_result.actual_episodes = [int(sql_results[1][b'episode'])]
+                            if int(sql_results[0]['season']) == 0 and int(sql_results[1]['season']) != 0:
+                                search_result.actual_season = int(sql_results[1]['season'])
+                                search_result.actual_episodes = [int(sql_results[1]['episode'])]
                                 search_result.same_day_special = True
-                            elif int(sql_results[1][b'season']) == 0 and int(sql_results[0][b'season']) != 0:
-                                search_result.actual_season = int(sql_results[0][b'season'])
-                                search_result.actual_episodes = [int(sql_results[0][b'episode'])]
+                            elif int(sql_results[1]['season']) == 0 and int(sql_results[0]['season']) != 0:
+                                search_result.actual_season = int(sql_results[0]['season'])
+                                search_result.actual_episodes = [int(sql_results[0]['episode'])]
                                 search_result.same_day_special = True
                         elif len(sql_results) != 1:
                             log.warning(
@@ -411,8 +409,8 @@ class GenericProvider(object):
 
                         # @TODO: Need to verify and test this.
                         if search_result.result_wanted and not search_result.same_day_special:
-                            search_result.actual_season = int(sql_results[0][b'season'])
-                            search_result.actual_episodes = [int(sql_results[0][b'episode'])]
+                            search_result.actual_season = int(sql_results[0]['season'])
+                            search_result.actual_episodes = [int(sql_results[0]['episode'])]
 
         # Iterate again over the search results, and see if there is anything we want.
         for search_result in search_results:
@@ -488,7 +486,7 @@ class GenericProvider(object):
         if request.method.upper() == 'POST':
             body = request.body
             # try to log post data using various codecs to decode
-            if isinstance(body, unicode):
+            if isinstance(body, str):
                 log.debug('With post data: {0}', body)
                 return
 
@@ -598,7 +596,7 @@ class GenericProvider(object):
                         matched_time = int(round(float(matched_time.strip())))
 
                     seconds = parse('{0} {1}'.format(matched_time, matched_granularity))
-                return datetime.now(tz.tzlocal()) - timedelta(seconds=seconds)
+                return datetime.now(tz.tzlocal()) - timedelta(seconds=seconds or 0)
 
             if fromtimestamp:
                 dt = datetime.fromtimestamp(int(pubdate), tz=tz.gettz('UTC'))
@@ -647,7 +645,7 @@ class GenericProvider(object):
             elif episode.series.anime:
                 # If the showname is a season scene exception, we want to use the indexer episode number.
                 if (episode.scene_season > 1 and
-                        show_name in get_season_scene_exceptions(episode.series, episode.scene_season)):
+                            show_name in get_season_scene_exceptions(episode.series, episode.scene_season)):
                     # This is apparently a season exception, let's use the scene_episode instead of absolute
                     ep = episode.scene_episode
                 else:
@@ -835,7 +833,7 @@ class GenericProvider(object):
                 'result': False,
                 'message': "You haven't configured the requied cookies. Please login at {provider_url}, "
                            "and make sure you have copied the following cookies: {required_cookies!r}"
-                           .format(provider_url=self.name, required_cookies=self.required_cookies)
+                    .format(provider_url=self.name, required_cookies=self.required_cookies)
             }
 
         # cookie_validator got at least one cookie key/value pair, let's return success

@@ -142,23 +142,23 @@ MEDUSA.common.init = function() {
         $(this).parent().find('.triggerhighlight').css('background-color', revertBackgroundColor); // Reverting back to original background-color
     });
 
-    $.rootDirCheck = function() {
-        if ($('#rootDirs option:selected').length === 0) {
+    $.root_dirCheck = function() {
+        if ($('#root_dirs option:selected').length === 0) {
             $('button[data-add-show]').prop('disabled', true);
             if (!$('#configure_show_options').is(':checked')) {
                 $('#configure_show_options').prop('checked', true);
                 $('#content_configure_show_options').fadeIn('fast', 'linear');
             }
-            if ($('#rootDirAlert').length === 0) {
-                $('#content-row').before('<div id="rootDirAlert"><div class="text-center">' +
+            if ($('#root_dirAlert').length === 0) {
+                $('#content-row').before('<div id="root_dirAlert"><div class="text-center">' +
                   '<div class="alert alert-danger upgrade-notification hidden-print role="alert">' +
                   '<strong>ERROR!</strong> Unable to add recommended shows.  Please set a default directory first.' +
                   '</div></div></div>');
             } else {
-                $('#rootDirAlert').show();
+                $('#root_dirAlert').show();
             }
         } else {
-            $('#rootDirAlert').hide();
+            $('#root_dirAlert').hide();
             $('button[data-add-show]').prop('disabled', false);
         }
     };

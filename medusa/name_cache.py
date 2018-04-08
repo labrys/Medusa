@@ -5,7 +5,8 @@
 import logging
 import threading
 
-from medusa import app, db
+from medusa import app
+from medusa.databases import db
 from medusa.helpers import full_sanitize_scene_name
 from medusa.logger.adapters.style import BraceAdapter
 from medusa.scene_exceptions import (
@@ -14,8 +15,6 @@ from medusa.scene_exceptions import (
     retrieve_exceptions,
 )
 
-from six import iteritems
-
 log = BraceAdapter(logging.getLogger(__name__))
 log.logger.addHandler(logging.NullHandler())
 
@@ -23,7 +22,7 @@ name_cache = {}
 nameCacheLock = threading.Lock()
 
 
-def addNameToCache(name, indexer_id=1, series_id=0):
+def add_name_to_cache(name, indexer_id=1, series_id=0):
     """
     Add the show & tvdb id to the scene_names table in cache.db.
 
@@ -40,7 +39,7 @@ def addNameToCache(name, indexer_id=1, series_id=0):
         cache_db_con.action('INSERT OR REPLACE INTO scene_names (indexer_id, name, indexer) VALUES (?, ?, ?)', [series_id, name, indexer_id])
 
 
-def retrieveNameFromCache(name):
+def retrieve_name_from_cache(name):
     """
     Look up the given name in the scene_names table in cache.db.
 
@@ -66,7 +65,7 @@ def clear_cache(indexer_id=0, series_id=0):
     )
 
     keys = []
-    for key, value in iteritems(name_cache):
+    for key, value in name_cache.items():
         i_id, s_id = value
         if i_id in indexer_ids and s_id in series_ids:
             keys.append(key)
@@ -75,11 +74,11 @@ def clear_cache(indexer_id=0, series_id=0):
         del name_cache[key]
 
 
-def saveNameCacheToDb():
+def save_name_cache_to_db():
     """Commit cache to database file."""
     cache_db_con = db.DBConnection('cache.db')
 
-    for name, series in iteritems(name_cache):
+    for name, series in name_cache.items():
         indexer_id, series_id = series
         cache_db_con.action("INSERT OR REPLACE INTO scene_names (indexer_id, name, indexer) VALUES (?, ?, ?)", [series_id, name, indexer_id])
 
@@ -88,7 +87,6 @@ def build_name_cache(series_obj=None):
     """Build internal name cache.
 
     :param series_obj: Specify series to build name cache for, if None, just do all series
-    :param force: Force the build name cache. Do not depend on the scene_exception_refresh table.
     """
     def _cache_name(cache_series_obj):
         """Build the name cache for a single show."""
