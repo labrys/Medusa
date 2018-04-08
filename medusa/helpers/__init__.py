@@ -416,6 +416,7 @@ def make_dirs(path):
     :param path:
     :rtype path: str
     """
+    import pathlib
     log.debug(u'Checking if the path {path} already exists', {'path': path})
 
     if not os.path.isdir(path):
@@ -1753,7 +1754,7 @@ def get_broken_providers():
     # Update last broken providers update-timestamp to avoid updating again in less than 60 minutes
     app.BROKEN_PROVIDERS_UPDATE = datetime.datetime.now()
 
-    url = '{base_url}/providers/broken_providers.json'.format(base_url=app.BASE_PYMEDUSA_URL)
+    url = '{base_url}/providers/broken_providers.json'.format(base_url=app.GITHUB_IO_URL)
 
     response = MedusaSafeSession().get_json(url)
     if response is None:

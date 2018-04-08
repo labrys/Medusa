@@ -892,7 +892,7 @@ class Home(WebRoot):
                 })
                 submenu.append({
                     'title': 'Force Full Update',
-                    'path': 'home/update_show?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'path': 'home/update_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                     'icon': 'ui-icon ui-icon-transfer-e-w',
                 })
                 submenu.append({
@@ -1206,7 +1206,7 @@ class Home(WebRoot):
                 })
                 submenu.append({
                     'title': 'Force Full Update',
-                    'path': 'home/update_show?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
+                    'path': 'home/update_series?indexername={series_obj.indexer_name}&seriesid={series_obj.series_id}'.format(series_obj=series_obj),
                     'icon': 'ui-icon ui-icon-transfer-e-w',
                 })
                 submenu.append({
@@ -1692,7 +1692,7 @@ class Home(WebRoot):
         # force the update
         if do_update:
             try:
-                app.show_queue_scheduler.action.update_show(series_obj)
+                app.show_queue_scheduler.action.update_series(series_obj)
                 time.sleep(cpu_presets[app.CPU_PRESET])
             except CantUpdateShowException as e:
                 errors += 1
@@ -1848,7 +1848,7 @@ class Home(WebRoot):
 
         # force the update
         try:
-            app.show_queue_scheduler.action.update_show(series_obj)
+            app.show_queue_scheduler.action.update_series(series_obj)
         except CantUpdateShowException as e:
             ui.notifications.error('Unable to update this show.', e)
 

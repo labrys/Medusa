@@ -25,7 +25,7 @@ MEDUSA.manage.episode_statuses = function() {
             $.getJSON('manage/show_episode_statuses', {
                 indexername: indexerName,
                 seriesid: seriesId, // eslint-disable-line camelcase
-                which_status: $('#oldStatus').val()
+                which_status: $('#old_status').val()
             }, data => {
                 $.each(data, (season, eps) => {
                     $.each(eps, (episode, name) => {

@@ -248,7 +248,7 @@ class GenericMetadata:
             return self.write_ep_file(ep_obj)
         return False
 
-    def update_show_indexer_metadata(self, show_obj):
+    def update_series_indexer_metadata(self, show_obj):
         if self.show_metadata and show_obj and self._has_show_metadata(show_obj):
             log.debug(
                 u'Metadata provider {name} updating series indexer info metadata file for {series}',

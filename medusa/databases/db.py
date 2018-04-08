@@ -244,15 +244,14 @@ class DBConnection:
         with db_locks[self.filename]:
             self._set_row_factory()
             while attempt < 5:
-                try:
-                    if args is None:
-                        log.debug(self.filename + ": " + query)
-                    else:
-                        log.debug(self.filename + ": " + query + " with args " + str(args))
+                if args is None:
+                    log.debug(self.filename + ": " + query)
+                else:
+                    log.debug(self.filename + ": " + query + " with args " + str(args))
 
+                try:
                     sql_results = self._execute(query, args, fetchall=fetchall, fetchone=fetchone)
                     self.connection.commit()
-
                     # get out of the connection attempt loop since we were successful
                     break
                 except sqlite3.OperationalError as e:

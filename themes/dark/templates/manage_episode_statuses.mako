@@ -35,7 +35,7 @@ Manage episodes with status <select name="which_status" class="form-control form
 </form>
 % else:
 <form action="manage/change_episode_statuses" method="post">
-<input type="hidden" id="oldStatus" name="oldStatus" value="${which_status}" />
+<input type="hidden" id="old_status" name="old_status" value="${which_status}" />
 <h2>Shows containing ${common.statusStrings[which_status]} episodes</h2>
 <br>
 <%
@@ -45,7 +45,7 @@ Manage episodes with status <select name="which_status" class="form-control form
         row_class = common.Overview.overviewStrings[int(which_status)]
 %>
 <input type="hidden" id="row_class" value="${row_class}" />
-Set checked shows/episodes to <select name="newStatus" class="form-control form-control-inline input-sm">
+Set checked shows/episodes to <select name="new_status" class="form-control form-control-inline input-sm">
 <%
     statusList = [common.SKIPPED, common.WANTED, common.IGNORED] + common.Quality.DOWNLOADED + common.Quality.ARCHIVED
     # Do not allow setting to bare downloaded or archived!

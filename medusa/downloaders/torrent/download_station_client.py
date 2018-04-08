@@ -157,7 +157,7 @@ class DownloadStationAPI(GenericClient):
             return True
 
         params = {
-            'api': 'SYNO.DSM.Info',
+            'api': 'SYNO.DownloadStation.Info',
             'version': 2,
             'method': 'getinfo',
             'session': 'DownloadStation',

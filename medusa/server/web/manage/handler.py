@@ -724,7 +724,7 @@ class Manage(Home, WebRoot):
 
             if slug in to_update:
                 try:
-                    app.show_queue_scheduler.action.update_show(series_obj)
+                    app.show_queue_scheduler.action.update_series(series_obj)
                     updates.append(series_obj.name)
                 except CantUpdateShowException as msg:
                     errors.append('Unable to update show: {error}'.format(error=msg))

@@ -2665,7 +2665,7 @@ class CmdSeriesUpdate(ApiCall):
             return _responds(RESULT_FAILURE, msg='Show not found')
 
         try:
-            app.show_queue_scheduler.action.update_show(show_obj)
+            app.show_queue_scheduler.action.update_series(show_obj)
             return _responds(RESULT_SUCCESS, msg='{0} has queued to be updated'.format(show_obj.name))
         except CantUpdateShowException as error:
             log.debug(u'API::Unable to update show: {0}', error)

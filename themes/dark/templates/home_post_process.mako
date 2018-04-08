@@ -23,7 +23,7 @@
 </div>
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <form name="processForm" class="lineH-40" method="post" action="home/postprocess/processEpisode">
+        <form name="processForm" class="lineH-40" method="post" action="home/postprocess/process_episode">
         <table id="process" class="col-md-12">
             <input type="hidden" id="proc_type" name="type" value="manual">
             <tr>

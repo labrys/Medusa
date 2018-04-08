@@ -159,7 +159,7 @@ class ShowQueue(generic_queue.GenericQueue):
 
     loading_show_list = property(_get_loading_show_list)
 
-    def update_show(self, show, season=None):
+    def update_series(self, show, season=None):
         if self.is_being_added(show):
             raise CantUpdateShowException(
                 u"{show_name} is still being added, wait until it is finished before you update."
@@ -177,11 +177,11 @@ class ShowQueue(generic_queue.GenericQueue):
                 u"can't update again until it's done."
                     .format(show_name=show.name))
 
-        queue_item_update_show = QueueItemUpdate(show) if season is None else QueueItemSeasonUpdate(show, season)
+        queue_item_update_series = QueueItemUpdate(show) if season is None else QueueItemSeasonUpdate(show, season)
 
-        self.add_item(queue_item_update_show)
+        self.add_item(queue_item_update_series)
 
-        return queue_item_update_show
+        return queue_item_update_series
 
     def refresh_show(self, show, force=False):
         if self.is_being_refreshed(show) and not force:

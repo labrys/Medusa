@@ -214,7 +214,7 @@ class Cache:
                 results = []
                 index = 0
                 for index, item in enumerate(data['entries'] or []):
-                    log.debug('{} {}'.format(index, item))
+                    log.logger.debug(f'{index} {item}')
                     if item['link'] in {
                         cache_item['link']
                         for cache_item in recent_results
